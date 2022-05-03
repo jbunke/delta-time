@@ -1,7 +1,8 @@
 package com.jordanbunke.jbjgl.fonts;
 
+import com.jordanbunke.jbjgl.image.JBJGLImage;
+
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.nio.file.Path;
 import java.util.Map;
 
@@ -36,7 +37,7 @@ public class Font {
         return new Font(characterMap);
     }
 
-    public BufferedImage drawChar(final char c, final Color color) {
+    public JBJGLImage drawChar(final char c, final Color color) {
         if (CHARACTER_MAP.containsKey(c))
             return CHARACTER_MAP.get(c).getImage(color);
         else {

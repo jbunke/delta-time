@@ -1,17 +1,15 @@
 package com.jordanbunke.jbjgl.image;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
-public class ImageMath {
-    public static Color colorAtPixel(final BufferedImage image, final int x, final int y) {
+public class ImageProcessing {
+    public static Color colorAtPixel(final JBJGLImage image, final int x, final int y) {
         return new Color(image.getRGB(x, y), true);
     }
 
-    public static BufferedImage replaceColor(final BufferedImage original,
+    public static JBJGLImage replaceColor(final JBJGLImage original,
                                              final Color toReplace, final Color replaceWith) {
-        BufferedImage replacement = new BufferedImage(original.getWidth(), original.getHeight(),
-                BufferedImage.TYPE_INT_ARGB);
+        JBJGLImage replacement = JBJGLImage.create(original.getWidth(), original.getHeight());
         Graphics g = replacement.getGraphics();
         g.setColor(replaceWith);
 
@@ -29,9 +27,16 @@ public class ImageMath {
         return replacement;
     }
 
-    public static BufferedImage scaleUp(final BufferedImage image, final int scaleFactor) {
-        BufferedImage scaledUp = new BufferedImage(image.getWidth() * scaleFactor,
-                image.getHeight() * scaleFactor, BufferedImage.TYPE_INT_ARGB);
+    public static void drawOnto(
+            final JBJGLImage drawnOn, final JBJGLImage toDraw, final int xOffset, final int yOffset
+    ) {
+        Graphics g = drawnOn.getGraphics();
+        g.drawImage(toDraw, xOffset, yOffset, null);
+    }
+
+    public static JBJGLImage scaleUp(final JBJGLImage image, final int scaleFactor) {
+        JBJGLImage scaledUp = JBJGLImage.create(image.getWidth() * scaleFactor,
+                image.getHeight() * scaleFactor);
         Graphics g = scaledUp.getGraphics();
 
         for (int x = 0; x < image.getWidth(); x++) {

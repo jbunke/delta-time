@@ -1,34 +1,44 @@
 package com.jordanbunke.jbjgl.window;
 
+import com.jordanbunke.jbjgl.image.JBJGLImage;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 public class JBJGLCanvas extends JPanel {
+    private JBJGLImage image;
+
     private JBJGLCanvas(final int width, final int height) {
         setSize(width, height);
         setPreferredSize(new Dimension(width, height));
+
+        image = JBJGLImage.create(width, height);
     }
 
-    public static JBJGLCanvas create(final int width, final int height) {
+    static JBJGLCanvas create(final int width, final int height) {
         return new JBJGLCanvas(width, height);
     }
 
-    public void draw(final BufferedImage image) {
-        Graphics g = this.getGraphics();
-        g.drawImage(image, 0, 0, null);
-        g.dispose();
+    void draw(final JBJGLImage image) {
+        this.image = image;
+        repaint();
     }
 
-    public void clear() {
-        Graphics g = this.getGraphics();
-        g.setColor(new Color(0, 0, 0, 255));
-        g.fillRect(0, 0, this.getWidth(), this.getHeight());
-        g.dispose();
+    void clear() {
+        image = JBJGLImage.create(getWidth(), getHeight());
+        repaint();
     }
 
-    public void setSizeFromWindow(final int width, final int height) {
+    void setSizeFromWindow(final int width, final int height) {
         setSize(width, height);
         setPreferredSize(new Dimension(width, height));
+        clear();
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.drawImage(image, 0, 0, null);
+        g.dispose();
     }
 }

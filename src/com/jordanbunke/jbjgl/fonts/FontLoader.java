@@ -1,10 +1,10 @@
 package com.jordanbunke.jbjgl.fonts;
 
-import com.jordanbunke.jbjgl.image.ImageMath;
+import com.jordanbunke.jbjgl.image.ImageProcessing;
+import com.jordanbunke.jbjgl.image.JBJGLImage;
 import com.jordanbunke.jbjgl.io.JBJGLImageIO;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +21,7 @@ public class FontLoader {
     private static final int CHARS_ON_ROW = 16;
 
     public static Map<Character, Grapheme> loadASCIIFromSource(final Path source) {
-        BufferedImage image = JBJGLImageIO.readImage(source);
+        JBJGLImage image = JBJGLImageIO.readImage(source);
         Map<Character, Grapheme> map = new HashMap<>();
 
         map.put(' ', whitespace());
@@ -39,7 +39,7 @@ public class FontLoader {
     }
 
     public static Map<Character, Grapheme> loadLatinExtendedFromSource(final Path source) {
-        BufferedImage image = JBJGLImageIO.readImage(source);
+        JBJGLImage image = JBJGLImageIO.readImage(source);
         Map<Character, Grapheme> map = new HashMap<>();
 
         for (int i = 0; i < NUM_LATIN_EXTENDED_CHARS; i++) {
@@ -57,7 +57,7 @@ public class FontLoader {
     }
 
     // HELPER FUNCTIONS:
-    private static Grapheme graphemeFromCoordinates(final BufferedImage image,
+    private static Grapheme graphemeFromCoordinates(final JBJGLImage image,
                                                     final char c, final int[] coordinates) {
         final int[] start = new int[]
                 { coordinates[X_INDEX] * X_INCREMENT, coordinates[Y_INDEX] * Y_INCREMENT };
@@ -68,21 +68,20 @@ public class FontLoader {
         int firstXWithout = firstXWithout(image, start, size);
 
         // COPY
-        BufferedImage grapheme = getGrapheme(image, start, size, firstXWith, firstXWithout);
+        JBJGLImage grapheme = getGrapheme(image, start, size, firstXWith, firstXWithout);
 
         return Grapheme.create(grapheme, c, firstXWithout - firstXWith, size[Y_INDEX]);
     }
 
-    private static BufferedImage getGrapheme(final BufferedImage image, final int[] start, final int[] size,
+    private static JBJGLImage getGrapheme(final JBJGLImage image, final int[] start, final int[] size,
                                              final int firstXWith, final int firstXWithout) {
-        BufferedImage grapheme = new BufferedImage(firstXWithout - firstXWith, size[Y_INDEX],
-                BufferedImage.TYPE_INT_ARGB);
+        JBJGLImage grapheme = JBJGLImage.create(firstXWithout - firstXWith, size[Y_INDEX]);
         Graphics g = grapheme.getGraphics();
         g.setColor(MATCH_COLOR);
 
         for (int x = firstXWith; x < firstXWithout; x++) {
             for (int y = start[Y_INDEX]; y < start[Y_INDEX] + size[Y_INDEX]; y++) {
-                if (ImageMath.colorAtPixel(image, x, y).equals(MATCH_COLOR)) {
+                if (ImageProcessing.colorAtPixel(image, x, y).equals(MATCH_COLOR)) {
                     g.fillRect(x - firstXWith, y - start[Y_INDEX], 1, 1);
                 }
             }
@@ -95,14 +94,13 @@ public class FontLoader {
 
     private static Grapheme whitespace() {
         final int width = 8;
-        return Grapheme.create(new BufferedImage(width, LINE_HEIGHT, BufferedImage.TYPE_INT_ARGB),
-                ' ', width, LINE_HEIGHT);
+        return Grapheme.create(JBJGLImage.create(width, LINE_HEIGHT), ' ', width, LINE_HEIGHT);
     }
 
-    private static int firstXWithout(final BufferedImage image, final int[] start, final int[] size) {
+    private static int firstXWithout(final JBJGLImage image, final int[] start, final int[] size) {
         for (int x = (start[X_INDEX] + size[X_INDEX]) - 1; x >= start[X_INDEX]; x--) {
             for (int y = start[Y_INDEX]; y < start[Y_INDEX] + size[Y_INDEX]; y++) {
-                if (ImageMath.colorAtPixel(image, x, y).equals(MATCH_COLOR)) {
+                if (ImageProcessing.colorAtPixel(image, x, y).equals(MATCH_COLOR)) {
                     return x + 1;
                 }
             }
@@ -111,10 +109,10 @@ public class FontLoader {
         return start[X_INDEX] + size[X_INDEX];
     }
 
-    private static int firstXWith(final BufferedImage image, final int[] start, final int[] size) {
+    private static int firstXWith(final JBJGLImage image, final int[] start, final int[] size) {
         for (int x = start[X_INDEX]; x < start[X_INDEX] + size[X_INDEX]; x++) {
             for (int y = start[Y_INDEX]; y < start[Y_INDEX] + size[Y_INDEX]; y++) {
-                if (ImageMath.colorAtPixel(image, x, y).equals(MATCH_COLOR)) {
+                if (ImageProcessing.colorAtPixel(image, x, y).equals(MATCH_COLOR)) {
                     return x;
                 }
             }
@@ -152,6 +150,7 @@ public class FontLoader {
             case 24 -> 'Ú';
             case 25 -> 'Ù';
             case 26 -> 'Û';
+            // GAP
             case 32 -> 'ä';
             case 33 -> 'á';
             case 34 -> 'à';

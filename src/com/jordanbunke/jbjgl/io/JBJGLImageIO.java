@@ -1,24 +1,26 @@
 package com.jordanbunke.jbjgl.io;
 
-import java.awt.image.BufferedImage;
+import com.jordanbunke.jbjgl.image.JBJGLImage;
+
+import javax.imageio.ImageIO;
 import java.io.IOException;
 import java.nio.file.Path;
 
 public class JBJGLImageIO {
-    public static BufferedImage readImage(final Path filepath) {
+    public static JBJGLImage readImage(final Path filepath) {
         try {
-            return javax.imageio.ImageIO.read(filepath.toFile());
+            return JBJGLImage.create(ImageIO.read(filepath.toFile()));
         } catch (IOException e) {
             // TODO
             e.printStackTrace();
         }
 
-        return new BufferedImage(0, 0, BufferedImage.TYPE_INT_ARGB);
+        return JBJGLImage.create(0, 0);
     }
 
-    public static void writeImage(final Path filepath, final BufferedImage image) {
+    public static void writeImage(final Path filepath, final JBJGLImage image) {
         try {
-            javax.imageio.ImageIO.write(image, "PNG", filepath.toFile());
+            ImageIO.write(image, "PNG", filepath.toFile());
         } catch (IOException e) {
             // TODO
             e.printStackTrace();

@@ -2,9 +2,9 @@ package com.jordanbunke.jbjgl.text;
 
 import com.jordanbunke.jbjgl.fonts.Font;
 import com.jordanbunke.jbjgl.fonts.FontConstants;
+import com.jordanbunke.jbjgl.image.JBJGLImage;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 public class JBJGLTextComponent extends JBJGLTextBlock {
     private final String contents;
@@ -36,9 +36,10 @@ public class JBJGLTextComponent extends JBJGLTextBlock {
         return width;
     }
 
-    public BufferedImage draw() {
-        BufferedImage image = new BufferedImage(calculateProspectiveWidth(),
-                FontConstants.LINE_HEIGHT, BufferedImage.TYPE_INT_ARGB);
+    public JBJGLImage draw() {
+        JBJGLImage image = JBJGLImage.create(
+                calculateProspectiveWidth(), FontConstants.LINE_HEIGHT
+        );
         Graphics g = image.getGraphics();
 
         int processed = 0;

@@ -1,9 +1,9 @@
 package com.jordanbunke.jbjgl.text;
 
-import com.jordanbunke.jbjgl.image.ImageMath;
+import com.jordanbunke.jbjgl.image.ImageProcessing;
+import com.jordanbunke.jbjgl.image.JBJGLImage;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,8 +67,8 @@ public class JBJGLText {
         return lines;
     }
 
-    public BufferedImage draw() {
-        BufferedImage[] drawnLines = new BufferedImage[lines.length];
+    public JBJGLImage draw() {
+        JBJGLImage[] drawnLines = new JBJGLImage[lines.length];
         int maxWidth = 0;
 
         for (int i = 0; i < lines.length; i++) {
@@ -76,7 +76,7 @@ public class JBJGLText {
             for (int j = 0; j < lines[i].length; j++)
                 width += lines[i][j].calculateProspectiveWidth();
 
-            BufferedImage drawnLine = new BufferedImage(width, LINE_HEIGHT, BufferedImage.TYPE_INT_ARGB);
+            JBJGLImage drawnLine = JBJGLImage.create(width, LINE_HEIGHT);
             maxWidth = Math.max(maxWidth, width);
             Graphics g = drawnLine.getGraphics();
             int processed = 0;
@@ -91,8 +91,7 @@ public class JBJGLText {
             drawnLines[i] = drawnLine;
         }
 
-        BufferedImage image = new BufferedImage(maxWidth,
-                LINE_HEIGHT * lines.length, BufferedImage.TYPE_INT_ARGB);
+        JBJGLImage image = JBJGLImage.create(maxWidth, LINE_HEIGHT * lines.length);
         Graphics g = image.getGraphics();
 
         for (int i = 0; i < drawnLines.length; i++) {
@@ -109,7 +108,7 @@ public class JBJGLText {
 
         g.dispose();
 
-        return ImageMath.scaleUp(image, textSize);
+        return ImageProcessing.scaleUp(image, textSize);
     }
 
     public int getWidthAllowance() {
