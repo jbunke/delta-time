@@ -1,16 +1,14 @@
 package com.jordanbunke.jbjgl.io;
 
-import com.jordanbunke.jbjgl.events.JBJGLEvent;
-import com.jordanbunke.jbjgl.events.JBJGLKeyEvent;
-import com.jordanbunke.jbjgl.events.JBJGLMouseEvent;
-import com.jordanbunke.jbjgl.events.JBJGLMoveEvent;
+import com.jordanbunke.jbjgl.events.*;
 import com.jordanbunke.jbjgl.window.JBJGLCanvas;
 
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JBJGLListener implements KeyListener, MouseListener, MouseMotionListener {
+public class JBJGLListener implements
+        KeyListener, MouseListener, MouseMotionListener, WindowListener {
 
     private final List<JBJGLEvent> eventList;
 
@@ -111,6 +109,55 @@ public class JBJGLListener implements KeyListener, MouseListener, MouseMotionLis
                 JBJGLMoveEvent.generate(new int[] {
                         e.getX(), e.getY()
                 }, JBJGLMoveEvent.Action.MOVE)
+        );
+    }
+
+    @Override
+    public void windowOpened(WindowEvent e) {
+        eventList.add(
+                JBJGLWindowEvent.generate(JBJGLWindowEvent.Action.OPENED)
+        );
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        eventList.add(
+                JBJGLWindowEvent.generate(JBJGLWindowEvent.Action.CLOSING)
+        );
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+        eventList.add(
+                JBJGLWindowEvent.generate(JBJGLWindowEvent.Action.CLOSED)
+        );
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+        eventList.add(
+                JBJGLWindowEvent.generate(JBJGLWindowEvent.Action.ICONIFIED)
+        );
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+        eventList.add(
+                JBJGLWindowEvent.generate(JBJGLWindowEvent.Action.DEICONIFIED)
+        );
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+        eventList.add(
+                JBJGLWindowEvent.generate(JBJGLWindowEvent.Action.ACTIVATED)
+        );
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
+        eventList.add(
+                JBJGLWindowEvent.generate(JBJGLWindowEvent.Action.DEACTIVATED)
         );
     }
 }

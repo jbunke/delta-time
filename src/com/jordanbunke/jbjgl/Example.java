@@ -27,7 +27,7 @@ public class Example {
                 return JBJGLTextBuilder.initialize(
                         textSize, JBJGLText.Orientation.CENTER,
                         new Color(0, 0, 0, 255), JBJGLFonts.BASIC_BOLD()
-                ).addText("OITIOitOooOiT").build().draw();
+                ).addText("EXAMPLE").build().draw();
             }
 
             @Override
