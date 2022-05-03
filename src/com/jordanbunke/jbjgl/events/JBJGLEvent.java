@@ -14,4 +14,10 @@ public abstract class JBJGLEvent {
     public void markAsProcessed() {
         processed = true;
     }
+
+    @Override
+    public abstract boolean equals(Object o);
+
+    @Override
+    public abstract int hashCode();
 }

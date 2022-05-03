@@ -12,10 +12,17 @@ public class JBJGLWindow {
     private final JBJGLCanvas canvas;
     private final JBJGLListener listener;
 
+    private final String title;
+    private int width, height;
+
     private JBJGLWindow(
             final String title, final int width, final int height, final JBJGLImage icon,
             final boolean exitOnClose, final boolean resizable, final boolean maximized
     ) {
+        this.title = title;
+        this.width = width;
+        this.height = height;
+
         frame = new JFrame(title);
         canvas = JBJGLCanvas.create(width, height);
         listener = JBJGLListener.create(canvas);
@@ -48,7 +55,7 @@ public class JBJGLWindow {
         clearCanvas();
     }
 
-    public static JBJGLWindow create(
+    public static JBJGLWindow createWithoutIcon(
             final String title, final int width, final int height,
             final boolean exitOnClose, final boolean resizable, final boolean maximized
     ) {
@@ -65,6 +72,9 @@ public class JBJGLWindow {
     }
 
     public void setSize(final int width, final int height) {
+        this.width = width;
+        this.height = height;
+
         canvas.setSizeFromWindow(width, height);
         frame.pack();
     }
@@ -79,5 +89,17 @@ public class JBJGLWindow {
 
     public List<JBJGLEvent> getEventList() {
         return listener.getEventList();
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 }

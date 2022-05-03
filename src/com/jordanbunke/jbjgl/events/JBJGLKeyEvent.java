@@ -17,4 +17,17 @@ public class JBJGLKeyEvent extends JBJGLEvent {
     public static JBJGLKeyEvent generate(final char keyChar, final Action action) {
         return new JBJGLKeyEvent(keyChar, action);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof JBJGLKeyEvent oke))
+            return false;
+        return this.keyChar == oke.keyChar && this.action == oke.action;
+    }
+
+    @Override
+    public int hashCode() {
+        return keyChar * action.ordinal();
+    }
+
 }
