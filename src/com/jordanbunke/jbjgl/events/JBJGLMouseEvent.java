@@ -1,18 +1,18 @@
 package com.jordanbunke.jbjgl.events;
 
-public class JBJGLMouseEvent extends JBJGLEvent {
-    private final static int X = 0, Y = 1;
+import static com.jordanbunke.jbjgl.utility.RenderConstants.*;
 
-    private final int[] mouseLocation;
+public class JBJGLMouseEvent extends JBJGLEvent {
+    private final int[] mousePosition;
     private final Action action;
 
     public enum Action {
         DOWN, UP, CLICK
     }
 
-    private JBJGLMouseEvent(final int[] mouseLocation, final Action action) {
+    private JBJGLMouseEvent(final int[] mousePosition, final Action action) {
         super();
-        this.mouseLocation = mouseLocation;
+        this.mousePosition = mousePosition;
         this.action = action;
     }
 
@@ -20,16 +20,20 @@ public class JBJGLMouseEvent extends JBJGLEvent {
         return new JBJGLMouseEvent(mouseLocation, action);
     }
 
+    public boolean matchesAction(final Action action) {
+        return this.action == action;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof JBJGLMouseEvent ome))
             return false;
-        return this.mouseLocation[X] == ome.mouseLocation[X] &&
-                this.mouseLocation[Y] == ome.mouseLocation[Y] && this.action == ome.action;
+        return this.mousePosition[X] == ome.mousePosition[X] &&
+                this.mousePosition[Y] == ome.mousePosition[Y] && this.action == ome.action;
     }
 
     @Override
     public int hashCode() {
-        return (1000 * mouseLocation[X]) + mouseLocation[Y];
+        return (1000 * mousePosition[X]) + mousePosition[Y];
     }
 }

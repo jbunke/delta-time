@@ -1,11 +1,11 @@
 package com.jordanbunke.jbjgl.game_manager;
 
 import com.jordanbunke.jbjgl.contexts.ProgramContext;
-import com.jordanbunke.jbjgl.events.JBJGLEvent;
+import com.jordanbunke.jbjgl.debug.JBJGLMessageLog;
 import com.jordanbunke.jbjgl.events.JBJGLEventHandler;
+import com.jordanbunke.jbjgl.io.JBJGLListener;
 
 import java.awt.*;
-import java.util.List;
 
 public class JBJGLGameManager implements
         JBJGLGameLogicHandler, JBJGLGameRenderer, JBJGLEventHandler {
@@ -32,18 +32,22 @@ public class JBJGLGameManager implements
         return activeStateIndex;
     }
 
-    @Override
-    public void process(List<JBJGLEvent> eventList) {
-        gameStates[activeStateIndex].process(eventList);
+    public ProgramContext getActiveGameState() {
+        return gameStates[activeStateIndex];
     }
 
     @Override
-    public void update() {
-        gameStates[activeStateIndex].update();
+    public void process(final JBJGLListener listener) {
+        gameStates[activeStateIndex].process(listener);
     }
 
     @Override
-    public void render(Graphics g) {
+    public void update(final JBJGLMessageLog messageLog) {
+        gameStates[activeStateIndex].update(messageLog);
+    }
+
+    @Override
+    public void render(final Graphics g) {
         gameStates[activeStateIndex].render(g);
     }
 }

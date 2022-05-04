@@ -118,4 +118,18 @@ public class JBJGLText {
     public boolean areComponentsSplittable() {
         return componentsSplittable;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        for (JBJGLTextComponent[] line : lines) {
+            for (JBJGLTextComponent component : line) {
+                sb.append(component);
+            }
+            sb.append("\n");
+        }
+
+        return sb.toString();
+    }
 }

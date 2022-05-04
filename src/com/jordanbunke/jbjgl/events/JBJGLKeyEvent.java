@@ -1,33 +1,36 @@
 package com.jordanbunke.jbjgl.events;
 
 public class JBJGLKeyEvent extends JBJGLEvent {
-    private final char keyChar;
+    private final JBJGLKey key;
     private final Action action;
 
     public enum Action {
         PRESS, RELEASE, TYPE
     }
 
-    private JBJGLKeyEvent(final char keyChar, final Action action) {
+    private JBJGLKeyEvent(final JBJGLKey key, final Action action) {
         super();
-        this.keyChar = keyChar;
+        this.key = key;
         this.action = action;
     }
 
-    public static JBJGLKeyEvent generate(final char keyChar, final Action action) {
-        return new JBJGLKeyEvent(keyChar, action);
+    public static JBJGLKeyEvent generate(final JBJGLKey key, final Action action) {
+        return new JBJGLKeyEvent(key, action);
+    }
+
+    public boolean matchesAction(final Action action) {
+        return this.action == action;
     }
 
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof JBJGLKeyEvent oke))
             return false;
-        return this.keyChar == oke.keyChar && this.action == oke.action;
+        return this.key == oke.key && this.action == oke.action;
     }
 
     @Override
     public int hashCode() {
-        return keyChar * action.ordinal();
+        return key.ordinal() * action.ordinal();
     }
-
 }

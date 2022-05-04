@@ -1,16 +1,20 @@
 package com.jordanbunke.jbjgl.io;
 
 import com.jordanbunke.jbjgl.events.*;
+import com.jordanbunke.jbjgl.utility.CollectionProcessing;
+import com.jordanbunke.jbjgl.utility.RenderConstants;
 import com.jordanbunke.jbjgl.window.JBJGLCanvas;
 
 import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class JBJGLListener implements
         KeyListener, MouseListener, MouseMotionListener, WindowListener {
 
     private final List<JBJGLEvent> eventList;
+    private final Map<JBJGLKey, Boolean> characterPressedStatusMap;
+    private final int[] mousePosition;
 
     private JBJGLListener(final JBJGLCanvas canvas) {
         canvas.addKeyListener(this);
@@ -18,34 +22,72 @@ public class JBJGLListener implements
         canvas.addMouseMotionListener(this);
         
         eventList = new ArrayList<>();
+        characterPressedStatusMap = new HashMap<>();
+        mousePosition = new int[2];
     }
 
     public static JBJGLListener create(final JBJGLCanvas canvas) {
         return new JBJGLListener(canvas);
     }
 
-    public List<JBJGLEvent> getEventList() {
-        return eventList;
+    public List<JBJGLEvent> getUnprocessedEvents() {
+        try {
+            return eventList.stream().filter(x -> !x.isProcessed()).collect(Collectors.toList());
+        } catch (ConcurrentModificationException e) {
+            // TODO: integrate debugger
+            return new ArrayList<>();
+        }
+    }
+
+    public void emptyEventList() {
+        CollectionProcessing.emptyList(eventList);
+    }
+
+    private void updateMousePosition(final MouseEvent e) {
+        mousePosition[RenderConstants.X] = e.getX();
+        mousePosition[RenderConstants.Y] = e.getY();
+    }
+
+    public int[] getMousePosition() {
+        return mousePosition;
+    }
+
+    public boolean isPressed(final JBJGLKey key) {
+        return characterPressedStatusMap.getOrDefault(key, false);
     }
 
     @Override
     public void keyTyped(KeyEvent e) {
+        JBJGLKey key = JBJGLKey.fromKeyEvent(e);
+
         eventList.add(
-                JBJGLKeyEvent.generate(e.getKeyChar(), JBJGLKeyEvent.Action.TYPE)
+                JBJGLKeyEvent.generate(key, JBJGLKeyEvent.Action.TYPE)
         );
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
+        JBJGLKey key = JBJGLKey.fromKeyEvent(e);
+
+        if (characterPressedStatusMap.containsKey(key) && characterPressedStatusMap.get(key))
+            return;
+
+        characterPressedStatusMap.put(key, true);
         eventList.add(
-                JBJGLKeyEvent.generate(e.getKeyChar(), JBJGLKeyEvent.Action.PRESS)
+                JBJGLKeyEvent.generate(key, JBJGLKeyEvent.Action.PRESS)
         );
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
+        JBJGLKey key = JBJGLKey.fromKeyEvent(e);
+
+        if (characterPressedStatusMap.containsKey(key) && !characterPressedStatusMap.get(key))
+            return;
+
+        characterPressedStatusMap.put(key, false);
         eventList.add(
-                JBJGLKeyEvent.generate(e.getKeyChar(), JBJGLKeyEvent.Action.RELEASE)
+                JBJGLKeyEvent.generate(key, JBJGLKeyEvent.Action.RELEASE)
         );
     }
 
@@ -78,6 +120,7 @@ public class JBJGLListener implements
 
     @Override
     public void mouseEntered(MouseEvent e) {
+        updateMousePosition(e);
         eventList.add(
                 JBJGLMoveEvent.generate(new int[] {
                         e.getX(), e.getY()
@@ -87,6 +130,7 @@ public class JBJGLListener implements
 
     @Override
     public void mouseExited(MouseEvent e) {
+        updateMousePosition(e);
         eventList.add(
                 JBJGLMoveEvent.generate(new int[] {
                         e.getX(), e.getY()
@@ -96,6 +140,7 @@ public class JBJGLListener implements
 
     @Override
     public void mouseDragged(MouseEvent e) {
+        updateMousePosition(e);
         eventList.add(
                 JBJGLMoveEvent.generate(new int[] {
                         e.getX(), e.getY()
@@ -105,6 +150,7 @@ public class JBJGLListener implements
 
     @Override
     public void mouseMoved(MouseEvent e) {
+        updateMousePosition(e);
         eventList.add(
                 JBJGLMoveEvent.generate(new int[] {
                         e.getX(), e.getY()

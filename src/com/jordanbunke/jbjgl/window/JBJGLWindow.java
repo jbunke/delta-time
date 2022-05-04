@@ -1,11 +1,9 @@
 package com.jordanbunke.jbjgl.window;
 
-import com.jordanbunke.jbjgl.events.JBJGLEvent;
 import com.jordanbunke.jbjgl.image.JBJGLImage;
 import com.jordanbunke.jbjgl.io.JBJGLListener;
 
 import javax.swing.*;
-import java.util.List;
 
 public class JBJGLWindow {
     private final JFrame frame;
@@ -87,8 +85,8 @@ public class JBJGLWindow {
         canvas.clear();
     }
 
-    public List<JBJGLEvent> getEventList() {
-        return listener.getEventList();
+    public JBJGLListener getListener() {
+        return listener;
     }
 
     public String getTitle() {

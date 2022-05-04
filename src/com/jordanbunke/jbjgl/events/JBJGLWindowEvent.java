@@ -16,6 +16,10 @@ public class JBJGLWindowEvent extends JBJGLEvent {
         return new JBJGLWindowEvent(action);
     }
 
+    public boolean matchesAction(final Action action) {
+        return this.action == action;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof JBJGLWindowEvent owe))

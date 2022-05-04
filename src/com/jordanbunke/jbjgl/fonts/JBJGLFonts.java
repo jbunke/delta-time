@@ -11,6 +11,9 @@ public class JBJGLFonts {
             "font-basic", "font-basic-bold", FontFamily.NOT_AVAILABLE,
             true
     );
+    private static final Font CLASSIC = Font.loadFromSource(
+            FONT_PATH, "font-classic", true
+    );
 
     public static Font BASIC() {
         return BASIC.getStandard();
@@ -20,9 +23,7 @@ public class JBJGLFonts {
         return BASIC.getBold();
     }
 
-    /*
-    public static Font BASIC_ITALICS() {
-        return BASIC.getItalics();
+    public static Font CLASSIC() {
+        return CLASSIC;
     }
-     */
 }

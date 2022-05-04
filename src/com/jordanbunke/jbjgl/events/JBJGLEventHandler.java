@@ -1,7 +1,7 @@
 package com.jordanbunke.jbjgl.events;
 
-import java.util.List;
+import com.jordanbunke.jbjgl.io.JBJGLListener;
 
 public interface JBJGLEventHandler {
-    void process(final List<JBJGLEvent> eventList);
+    void process(final JBJGLListener listener);
 }
