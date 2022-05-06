@@ -1,6 +1,7 @@
 package com.jordanbunke.jbjgl.game;
 
 import com.jordanbunke.jbjgl.contexts.ProgramContext;
+import com.jordanbunke.jbjgl.debug.JBJGLGameDebugger;
 import com.jordanbunke.jbjgl.events.JBJGLEventHandler;
 import com.jordanbunke.jbjgl.io.JBJGLListener;
 
@@ -52,8 +53,8 @@ public class JBJGLGameManager implements
     }
 
     @Override
-    public void render(final Graphics g) {
-        gameStates[activeStateIndex].render(g);
+    public void render(final Graphics g, final JBJGLGameDebugger debugger) {
+        gameStates[activeStateIndex].render(g, debugger);
     }
 
     @Override

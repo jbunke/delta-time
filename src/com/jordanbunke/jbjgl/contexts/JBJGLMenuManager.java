@@ -1,5 +1,6 @@
 package com.jordanbunke.jbjgl.contexts;
 
+import com.jordanbunke.jbjgl.debug.JBJGLGameDebugger;
 import com.jordanbunke.jbjgl.io.JBJGLListener;
 import com.jordanbunke.jbjgl.menus.JBJGLMenu;
 
@@ -51,14 +52,19 @@ public class JBJGLMenuManager extends ProgramContext {
     }
 
     @Override
-    public void render(final Graphics g) {
+    public void render(final Graphics g, final JBJGLGameDebugger debugger) {
         if (menuMap.containsKey(activeMenuID))
-            menuMap.get(activeMenuID).render(g);
+            menuMap.get(activeMenuID).render(g, debugger);
     }
 
     @Override
     public void process(final JBJGLListener listener) {
         if (menuMap.containsKey(activeMenuID))
             menuMap.get(activeMenuID).process(listener, this);
+    }
+
+    @Override
+    public String toString() {
+        return "Menu manager (active menu: \"" + activeMenuID + "\")";
     }
 }

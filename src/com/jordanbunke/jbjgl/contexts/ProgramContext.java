@@ -1,5 +1,6 @@
 package com.jordanbunke.jbjgl.contexts;
 
+import com.jordanbunke.jbjgl.debug.JBJGLGameDebugger;
 import com.jordanbunke.jbjgl.events.JBJGLEventHandler;
 import com.jordanbunke.jbjgl.game.JBJGLGameLogicHandler;
 import com.jordanbunke.jbjgl.game.JBJGLGameRenderer;
@@ -14,7 +15,7 @@ public abstract class ProgramContext implements
     public abstract void update();
 
     @Override
-    public abstract void render(Graphics g);
+    public abstract void render(final Graphics g, final JBJGLGameDebugger debugger);
 
     @Override
     public abstract void process(final JBJGLListener listener);

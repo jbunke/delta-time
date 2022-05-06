@@ -43,4 +43,8 @@ public class JBJGLFileIO {
     public static void writeFile(final Path filepath, final String[] lines) {
         writeFile(filepath, lines, false);
     }
+
+    public static void writeFileOf(final Path filepath, final String... lines) {
+        writeFile(filepath, lines, false);
+    }
 }

@@ -1,33 +1,24 @@
 package com.jordanbunke.jbjgl;
 
 import com.jordanbunke.jbjgl.contexts.JBJGLMenuManager;
-import com.jordanbunke.jbjgl.contexts.ProgramContext;
-import com.jordanbunke.jbjgl.events.JBJGLEvent;
-import com.jordanbunke.jbjgl.events.JBJGLKey;
-import com.jordanbunke.jbjgl.events.JBJGLKeyEvent;
 import com.jordanbunke.jbjgl.fonts.JBJGLFonts;
 import com.jordanbunke.jbjgl.game.JBJGLGame;
 import com.jordanbunke.jbjgl.game.JBJGLGameManager;
-import com.jordanbunke.jbjgl.game.JBJGLGameEngine;
 import com.jordanbunke.jbjgl.image.JBJGLImage;
-import com.jordanbunke.jbjgl.io.JBJGLListener;
 import com.jordanbunke.jbjgl.menus.JBJGLMenu;
 import com.jordanbunke.jbjgl.menus.menu_elements.JBJGLAnimationMenuElement;
 import com.jordanbunke.jbjgl.menus.menu_elements.JBJGLClickableMenuElement;
 import com.jordanbunke.jbjgl.menus.menu_elements.JBJGLMenuElement;
 import com.jordanbunke.jbjgl.text.JBJGLText;
-import com.jordanbunke.jbjgl.text.JBJGLTextBuilder;
 import com.jordanbunke.jbjgl.text.JBJGLTextComponent;
 
 import java.awt.*;
-import java.util.List;
 
 public class Example {
     private static final int width = 1200, height = 675;
 
     public static void main(String[] args) {
         example1();
-        example2();
     }
 
     private static JBJGLImage button(final boolean highlighted) {
@@ -36,7 +27,7 @@ public class Example {
                 new Color(0, 0, 0, 255);
         return JBJGLText.createOf(
                 3, JBJGLText.Orientation.CENTER,
-                JBJGLTextComponent.add("QUIT", JBJGLFonts.CLASSIC(), c)
+                JBJGLTextComponent.add("i WANT 2 quit", JBJGLFonts.CLASSIC(), c)
         ).draw();
     }
 
@@ -74,83 +65,11 @@ public class Example {
         JBJGLGameManager manager = JBJGLGameManager.createOf(
                 0, JBJGLMenuManager.initialize(menu, "instant quit")
         );
-        JBJGLGame.create(
+        JBJGLGame game = JBJGLGame.create(
                 "Example 1", manager, width, height,
                 JBJGLImage.create(20, 20),
                 true, false
         );
-    }
-
-    private static void example2() {
-
-        ProgramContext b = new ProgramContext() {
-            private int i = 0;
-            private boolean right = true;
-            private int textSize = 1;
-            private JBJGLImage text = drawText();
-
-            private JBJGLImage drawText() {
-                return JBJGLTextBuilder.initialize(
-                                textSize, JBJGLText.Orientation.CENTER,
-                                new Color(0, 0, 0, 255), JBJGLFonts.CLASSIC()
-                        ).addText("EXAMPLE TEXT")
-                        .addLineBreak().addText("[UP / DOWN] TEXT SIZE - [M] MOVEMENT DIRECTION").build().draw();
-            }
-
-            @Override
-            public void update() {
-                if (right) {
-                    i += 2;
-                    if (i > width - (text.getWidth() + 20))
-                        right = false;
-                } else {
-                    i -= 2;
-                    if (i <= 0)
-                        right = true;
-                }
-            }
-
-            @Override
-            public void render(Graphics g) {
-                g.drawImage(text, i + 20, 100, null);
-            }
-
-            @Override
-            public void process(final JBJGLListener listener) {
-                List<JBJGLEvent> eventList = listener.getUnprocessedEvents();
-                for (JBJGLEvent event : eventList) {
-                    if (event.isProcessed())
-                        continue;
-
-                    if (event.equals(
-                            JBJGLKeyEvent.generate(JBJGLKey.M, JBJGLKeyEvent.Action.PRESS)
-                    )) {
-                        right = !right;
-
-                        event.markAsProcessed();
-                    } else if (event.equals(
-                            JBJGLKeyEvent.generate(JBJGLKey.UP_ARROW, JBJGLKeyEvent.Action.PRESS)
-                    )) {
-                        textSize++;
-                        text = drawText();
-
-                        event.markAsProcessed();
-                    } else if (event.equals(
-                            JBJGLKeyEvent.generate(JBJGLKey.DOWN_ARROW, JBJGLKeyEvent.Action.PRESS)
-                    )) {
-                        if (textSize > 1) textSize--;
-                        text = drawText();
-
-                        event.markAsProcessed();
-                    }
-                }
-            }
-        };
-
-        JBJGLGameManager manager = JBJGLGameManager.createOf(JBJGLGameManager.PLAY, b);
-        JBJGLGameEngine.newWindowed(
-                "Example 2", width, height, JBJGLImage.create(20, 20),
-                false, false, manager, manager, manager,
-                60.0, 60.0, 5);
+        game.getGameEngine().getDebugger().hideBoundingBoxes();
     }
 }

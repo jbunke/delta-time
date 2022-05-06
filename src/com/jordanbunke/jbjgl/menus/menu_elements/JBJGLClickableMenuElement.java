@@ -1,6 +1,7 @@
 package com.jordanbunke.jbjgl.menus.menu_elements;
 
 import com.jordanbunke.jbjgl.contexts.JBJGLMenuManager;
+import com.jordanbunke.jbjgl.debug.JBJGLGameDebugger;
 import com.jordanbunke.jbjgl.events.JBJGLEvent;
 import com.jordanbunke.jbjgl.events.JBJGLMouseEvent;
 import com.jordanbunke.jbjgl.image.JBJGLImage;
@@ -45,12 +46,15 @@ public class JBJGLClickableMenuElement extends JBJGLMenuElement {
     }
 
     @Override
-    public void render(Graphics g) {
+    public void render(final Graphics g, final JBJGLGameDebugger debugger) {
         draw(isHighlighted ? highlightedImage : nonHighlightedImage, g);
+
+        // Debug
+        renderBoundingBox(g, debugger);
     }
 
     @Override
-    public void process(JBJGLListener listener, JBJGLMenuManager menuManager) {
+    public void process(final JBJGLListener listener, final JBJGLMenuManager menuManager) {
         isHighlighted = mouseIsWithinBounds(listener.getMousePosition());
 
         if (!isHighlighted)

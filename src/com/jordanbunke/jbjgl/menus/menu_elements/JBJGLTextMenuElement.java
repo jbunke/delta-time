@@ -1,6 +1,7 @@
 package com.jordanbunke.jbjgl.menus.menu_elements;
 
 import com.jordanbunke.jbjgl.contexts.JBJGLMenuManager;
+import com.jordanbunke.jbjgl.debug.JBJGLGameDebugger;
 import com.jordanbunke.jbjgl.image.JBJGLImage;
 import com.jordanbunke.jbjgl.io.JBJGLListener;
 import com.jordanbunke.jbjgl.text.JBJGLText;
@@ -31,12 +32,15 @@ public class JBJGLTextMenuElement extends JBJGLMenuElement {
     }
 
     @Override
-    public void render(Graphics g) {
+    public void render(final Graphics g, final JBJGLGameDebugger debugger) {
         draw(image, g);
+
+        // Debug
+        renderBoundingBox(g, debugger);
     }
 
     @Override
-    public void process(JBJGLListener listener, JBJGLMenuManager menuManager) {
+    public void process(final JBJGLListener listener, final JBJGLMenuManager menuManager) {
 
     }
 }

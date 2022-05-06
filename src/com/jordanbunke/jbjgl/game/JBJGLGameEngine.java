@@ -24,7 +24,7 @@ public class JBJGLGameEngine implements Runnable {
     private final JBJGLGameRenderer renderer;
     private final JBJGLGameLogicHandler logicHandler;
 
-    private final JBJGLGameDebugger debugger;
+    private JBJGLGameDebugger debugger;
 
     private JBJGLGameEngine(
             final JBJGLWindow window, final JBJGLEventHandler eventHandler,
@@ -187,8 +187,13 @@ public class JBJGLGameEngine implements Runnable {
     private void render() {
         JBJGLImage toDraw = JBJGLImage.create(window.getWidth(), window.getHeight());
         Graphics g = toDraw.getGraphics();
-        renderer.render(g);
+        renderer.render(g, debugger);
         window.draw(toDraw);
+    }
+
+    // SETTERS
+    public void overrideDebugger(final JBJGLGameDebugger debugger) {
+        this.debugger = debugger;
     }
 
     // GETTERS

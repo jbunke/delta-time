@@ -1,6 +1,7 @@
 package com.jordanbunke.jbjgl.menus.menu_elements;
 
 import com.jordanbunke.jbjgl.contexts.JBJGLMenuManager;
+import com.jordanbunke.jbjgl.debug.JBJGLGameDebugger;
 import com.jordanbunke.jbjgl.image.JBJGLImage;
 import com.jordanbunke.jbjgl.io.JBJGLListener;
 import com.jordanbunke.jbjgl.utility.RenderConstants;
@@ -40,7 +41,7 @@ public abstract class JBJGLMenuElement {
     }
 
     public abstract void update();
-    public abstract void render(final Graphics g);
+    public abstract void render(final Graphics g, final JBJGLGameDebugger debugger);
     public abstract void process(final JBJGLListener listener, final JBJGLMenuManager menuManager);
 
     public void draw(final JBJGLImage image, final Graphics g) {
@@ -137,6 +138,20 @@ public abstract class JBJGLMenuElement {
                 mousePosition[RenderConstants.X] < max[RenderConstants.X] &&
                 mousePosition[RenderConstants.Y] >= min[RenderConstants.Y] &&
                 mousePosition[RenderConstants.Y] < max[RenderConstants.Y];
+    }
+
+    public void renderBoundingBox(final Graphics g, final JBJGLGameDebugger debugger) {
+        if (debugger == null || !debugger.isShowingBoundingBoxes())
+            return;
+
+        Graphics2D g2D = (Graphics2D) g;
+        final int[] renderPosition = getRenderPosition();
+        g2D.setColor(new Color(0, 255, 0, 255));
+        g2D.setStroke(new BasicStroke(1));
+        g.drawRect(
+                renderPosition[RenderConstants.X], renderPosition[RenderConstants.Y],
+                dimensions[RenderConstants.WIDTH], dimensions[RenderConstants.HEIGHT]
+        );
     }
 
     @Override

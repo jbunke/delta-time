@@ -31,9 +31,28 @@ public class JBJGLListener implements
         return new JBJGLListener(canvas);
     }
 
+    public void checkForMatchingKeyStroke(
+            final JBJGLKey key, final JBJGLKeyEvent.Action action,
+            final Runnable behaviour
+    ) {
+        List<JBJGLEvent> eventList = getUnprocessedEvents();
+        JBJGLKeyEvent toMatch = JBJGLKeyEvent.generate(key, action);
+
+        for (JBJGLEvent event : eventList) {
+            if (event.isProcessed())
+                continue;
+
+            if (event.equals(toMatch)) {
+                behaviour.run();
+                event.markAsProcessed();
+            }
+        }
+    }
+
     public List<JBJGLEvent> getUnprocessedEvents() {
         try {
-            return eventList.stream().filter(x -> !x.isProcessed()).collect(Collectors.toList());
+            return List.copyOf(eventList).stream()
+                    .filter(x -> !x.isProcessed()).collect(Collectors.toList());
         } catch (ConcurrentModificationException e) {
             JBJGLGlobal.printErrorToJBJGLChannel(
                     "Attempted to fetch unprocessed input events as one occurred. Events were not returned."

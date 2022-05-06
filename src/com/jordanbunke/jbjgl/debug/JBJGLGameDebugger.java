@@ -5,9 +5,9 @@ import java.util.Map;
 
 public class JBJGLGameDebugger extends JBJGLDebugger {
 
-    public static final String PERFORMANCE_CHANNEL = "PERFORMANCE";
-    public static final String LOGIC_CHANNEL = "LOGIC";
-    public static final String MEMORY_CHANNEL = "MEMORY";
+    public static final String PERFORMANCE_CHANNEL = "performance";
+    public static final String LOGIC_CHANNEL = "logic";
+    public static final String MEMORY_CHANNEL = "memory management";
 
     private boolean showingBoundingBoxes;
     private int fps;
