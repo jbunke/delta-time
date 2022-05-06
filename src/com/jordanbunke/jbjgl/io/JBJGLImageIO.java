@@ -1,6 +1,7 @@
 package com.jordanbunke.jbjgl.io;
 
 import com.jordanbunke.jbjgl.image.JBJGLImage;
+import com.jordanbunke.jbjgl.utility.JBJGLGlobal;
 
 import javax.imageio.ImageIO;
 import java.io.IOException;
@@ -11,8 +12,7 @@ public class JBJGLImageIO {
         try {
             return JBJGLImage.create(ImageIO.read(filepath.toFile()));
         } catch (IOException e) {
-            // TODO
-            e.printStackTrace();
+            JBJGLGlobal.printErrorToJBJGLChannel("Couldn't read image file: " + filepath);
         }
 
         return JBJGLImage.create(0, 0);
@@ -22,8 +22,7 @@ public class JBJGLImageIO {
         try {
             ImageIO.write(image, "PNG", filepath.toFile());
         } catch (IOException e) {
-            // TODO
-            e.printStackTrace();
+            JBJGLGlobal.printErrorToJBJGLChannel("Couldn't write to image file: " + filepath);
         }
     }
 }

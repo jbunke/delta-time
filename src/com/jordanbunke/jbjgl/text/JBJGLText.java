@@ -31,8 +31,17 @@ public class JBJGLText {
         this.lines = setLines(blocks);
     }
 
-    public static JBJGLText create(final JBJGLTextBlock[] blocks, final int textSize,
-                                   final Orientation orientation) {
+    public static JBJGLText createOf(
+            final int textSize, final Orientation orientation,
+            final JBJGLTextBlock... blocks
+    ) {
+        return new JBJGLText(blocks, textSize, -1, false, orientation);
+    }
+
+    public static JBJGLText create(
+            final JBJGLTextBlock[] blocks,
+            final int textSize, final Orientation orientation
+    ) {
         return new JBJGLText(blocks, textSize, -1, false, orientation);
     }
 

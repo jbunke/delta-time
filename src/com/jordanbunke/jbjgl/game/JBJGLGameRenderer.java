@@ -1,4 +1,4 @@
-package com.jordanbunke.jbjgl.game_manager;
+package com.jordanbunke.jbjgl.game;
 
 import java.awt.*;
 

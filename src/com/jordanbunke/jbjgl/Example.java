@@ -2,13 +2,13 @@ package com.jordanbunke.jbjgl;
 
 import com.jordanbunke.jbjgl.contexts.JBJGLMenuManager;
 import com.jordanbunke.jbjgl.contexts.ProgramContext;
-import com.jordanbunke.jbjgl.debug.JBJGLMessageLog;
 import com.jordanbunke.jbjgl.events.JBJGLEvent;
 import com.jordanbunke.jbjgl.events.JBJGLKey;
 import com.jordanbunke.jbjgl.events.JBJGLKeyEvent;
 import com.jordanbunke.jbjgl.fonts.JBJGLFonts;
-import com.jordanbunke.jbjgl.game_manager.JBJGLGameManager;
-import com.jordanbunke.jbjgl.game_manager.JBJGLGameEngine;
+import com.jordanbunke.jbjgl.game.JBJGLGame;
+import com.jordanbunke.jbjgl.game.JBJGLGameManager;
+import com.jordanbunke.jbjgl.game.JBJGLGameEngine;
 import com.jordanbunke.jbjgl.image.JBJGLImage;
 import com.jordanbunke.jbjgl.io.JBJGLListener;
 import com.jordanbunke.jbjgl.menus.JBJGLMenu;
@@ -16,7 +16,6 @@ import com.jordanbunke.jbjgl.menus.menu_elements.JBJGLAnimationMenuElement;
 import com.jordanbunke.jbjgl.menus.menu_elements.JBJGLClickableMenuElement;
 import com.jordanbunke.jbjgl.menus.menu_elements.JBJGLMenuElement;
 import com.jordanbunke.jbjgl.text.JBJGLText;
-import com.jordanbunke.jbjgl.text.JBJGLTextBlock;
 import com.jordanbunke.jbjgl.text.JBJGLTextBuilder;
 import com.jordanbunke.jbjgl.text.JBJGLTextComponent;
 
@@ -24,25 +23,27 @@ import java.awt.*;
 import java.util.List;
 
 public class Example {
-    private final static int width = 1200, height = 675;
+    private static final int width = 1200, height = 675;
 
     public static void main(String[] args) {
         example1();
+        example2();
     }
 
     private static JBJGLImage button(final boolean highlighted) {
         Color c = highlighted ?
                 new Color(255, 255, 255, 255) :
                 new Color(0, 0, 0, 255);
-        return JBJGLText.create(new JBJGLTextBlock[] {
+        return JBJGLText.createOf(
+                3, JBJGLText.Orientation.CENTER,
                 JBJGLTextComponent.add("QUIT", JBJGLFonts.CLASSIC(), c)
-        }, 3, JBJGLText.Orientation.CENTER).draw();
+        ).draw();
     }
 
     private static JBJGLImage drawBackground(final int index) {
         JBJGLImage image = JBJGLImage.create(width, height);
         Graphics g = image.getGraphics();
-        g.setColor(new Color(index * 51, 0, 255 - (index * 51), 255));
+        g.setColor(new Color(index * 17, 0, 255 - (index * 17), 255));
         g.fillRect(0, 0, width, height);
         g.dispose();
         return image;
@@ -51,30 +52,33 @@ public class Example {
     private static void example1() {
         JBJGLAnimationMenuElement animationMenuElement = JBJGLAnimationMenuElement.generate(
                 new int[] { 0, 0 }, new int[] { 1200, 675 }, JBJGLMenuElement.Anchor.LEFT_TOP,
-                20, new JBJGLImage[] {
+                5, new JBJGLImage[] {
                         drawBackground(0), drawBackground(1), drawBackground(2),
-                        drawBackground(3), drawBackground(4), drawBackground(5)
+                        drawBackground(3), drawBackground(4), drawBackground(5),
+                        drawBackground(6), drawBackground(7), drawBackground(8),
+                        drawBackground(9), drawBackground(10), drawBackground(11),
+                        drawBackground(12), drawBackground(13), drawBackground(14),
+                        drawBackground(15)
                 }
         );
         JBJGLImage button = button(false), highlightedButton = button(true);
         JBJGLClickableMenuElement clickableMenuElement = JBJGLClickableMenuElement.generate(
-                new int[]{width / 2, height / 2},
-                new int[]{button.getWidth(), button.getHeight()},
+                new int[]{ width / 2, height / 2 },
+                new int[]{ button.getWidth(), button.getHeight() },
                 JBJGLMenuElement.Anchor.CENTRAL, button, highlightedButton,
                 () -> System.exit(0)
         );
-        JBJGLMenu menu = JBJGLMenu.generate(new JBJGLMenuElement[] {
+        JBJGLMenu menu = JBJGLMenu.of(
                 animationMenuElement, clickableMenuElement
-        });
-        JBJGLGameManager manager = JBJGLGameManager.create(
-                new ProgramContext[] {
-                        JBJGLMenuManager.initialize(menu, "instant quit")
-                }, 0
         );
-        JBJGLGameEngine.newWindowed(
-                "Example 1", width, height, JBJGLImage.create(20, 20),
-                true, false, manager, manager, manager,
-                60.0, 60.0, 5);
+        JBJGLGameManager manager = JBJGLGameManager.createOf(
+                0, JBJGLMenuManager.initialize(menu, "instant quit")
+        );
+        JBJGLGame.create(
+                "Example 1", manager, width, height,
+                JBJGLImage.create(20, 20),
+                true, false
+        );
     }
 
     private static void example2() {
@@ -94,7 +98,7 @@ public class Example {
             }
 
             @Override
-            public void update(final JBJGLMessageLog messageLog) {
+            public void update() {
                 if (right) {
                     i += 2;
                     if (i > width - (text.getWidth() + 20))
@@ -143,11 +147,7 @@ public class Example {
             }
         };
 
-        JBJGLGameManager manager = JBJGLGameManager.create(
-                new ProgramContext[] {
-                        b
-                }, JBJGLGameManager.PLAY
-        );
+        JBJGLGameManager manager = JBJGLGameManager.createOf(JBJGLGameManager.PLAY, b);
         JBJGLGameEngine.newWindowed(
                 "Example 2", width, height, JBJGLImage.create(20, 20),
                 false, false, manager, manager, manager,

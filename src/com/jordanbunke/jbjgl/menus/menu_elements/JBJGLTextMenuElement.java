@@ -1,7 +1,6 @@
 package com.jordanbunke.jbjgl.menus.menu_elements;
 
 import com.jordanbunke.jbjgl.contexts.JBJGLMenuManager;
-import com.jordanbunke.jbjgl.debug.JBJGLMessageLog;
 import com.jordanbunke.jbjgl.image.JBJGLImage;
 import com.jordanbunke.jbjgl.io.JBJGLListener;
 import com.jordanbunke.jbjgl.text.JBJGLText;
@@ -27,7 +26,7 @@ public class JBJGLTextMenuElement extends JBJGLMenuElement {
     }
 
     @Override
-    public void update(final JBJGLMessageLog messageLog) {
+    public void update() {
 
     }
 

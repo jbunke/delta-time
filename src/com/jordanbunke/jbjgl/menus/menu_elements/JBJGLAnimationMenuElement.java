@@ -1,9 +1,9 @@
 package com.jordanbunke.jbjgl.menus.menu_elements;
 
 import com.jordanbunke.jbjgl.contexts.JBJGLMenuManager;
-import com.jordanbunke.jbjgl.debug.JBJGLMessageLog;
 import com.jordanbunke.jbjgl.image.JBJGLImage;
 import com.jordanbunke.jbjgl.io.JBJGLListener;
+import com.jordanbunke.jbjgl.utility.JBJGLGlobal;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -43,10 +43,11 @@ public class JBJGLAnimationMenuElement extends JBJGLMenuElement {
     }
 
     @Override
-    public void update(final JBJGLMessageLog messageLog) {
+    public void update() {
         if (frames.length != frameTimings.length) {
-            messageLog.printMessage(
-                    "Animation menu element does not have the same number of frames as timings and could not be displaced"
+            JBJGLGlobal.printMessageToJBJGLChannel(
+                    "Animation menu element does not have the same number" +
+                            " of frames as it does timings, and thus could not be displayed"
             );
             return;
         }

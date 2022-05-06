@@ -2,6 +2,7 @@ package com.jordanbunke.jbjgl.io;
 
 import com.jordanbunke.jbjgl.events.*;
 import com.jordanbunke.jbjgl.utility.CollectionProcessing;
+import com.jordanbunke.jbjgl.utility.JBJGLGlobal;
 import com.jordanbunke.jbjgl.utility.RenderConstants;
 import com.jordanbunke.jbjgl.window.JBJGLCanvas;
 
@@ -34,7 +35,9 @@ public class JBJGLListener implements
         try {
             return eventList.stream().filter(x -> !x.isProcessed()).collect(Collectors.toList());
         } catch (ConcurrentModificationException e) {
-            // TODO: integrate debugger
+            JBJGLGlobal.printErrorToJBJGLChannel(
+                    "Attempted to fetch unprocessed input events as one occurred. Events were not returned."
+            );
             return new ArrayList<>();
         }
     }

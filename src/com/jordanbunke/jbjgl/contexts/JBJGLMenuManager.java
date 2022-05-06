@@ -1,6 +1,5 @@
 package com.jordanbunke.jbjgl.contexts;
 
-import com.jordanbunke.jbjgl.debug.JBJGLMessageLog;
 import com.jordanbunke.jbjgl.io.JBJGLListener;
 import com.jordanbunke.jbjgl.menus.JBJGLMenu;
 
@@ -46,9 +45,9 @@ public class JBJGLMenuManager extends ProgramContext {
     }
 
     @Override
-    public void update(final JBJGLMessageLog messageLog) {
+    public void update() {
         if (menuMap.containsKey(activeMenuID))
-            menuMap.get(activeMenuID).update(messageLog);
+            menuMap.get(activeMenuID).update();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.jordanbunke.jbjgl.fonts;
 
 import com.jordanbunke.jbjgl.image.JBJGLImage;
+import com.jordanbunke.jbjgl.utility.JBJGLGlobal;
 
 import java.awt.*;
 import java.nio.file.Path;
@@ -41,7 +42,10 @@ public class Font {
         if (CHARACTER_MAP.containsKey(c))
             return CHARACTER_MAP.get(c).getImage(color);
         else {
-            // TODO: report unsupported character call
+            JBJGLGlobal.printErrorToJBJGLChannel(
+                    "Attempted to draw the character \"" + c +
+                            "\", which is unsupported by this font."
+            );
             return CHARACTER_MAP.get(' ').getImage(color);
         }
     }
@@ -50,7 +54,10 @@ public class Font {
         if (CHARACTER_MAP.containsKey(c))
             return CHARACTER_MAP.get(c).getWidth();
         else {
-            // TODO: report unsupported character call
+            JBJGLGlobal.printErrorToJBJGLChannel(
+                    "Attempted to call the character \"" + c +
+                            "\", which is unsupported by this font."
+            );
             return 0;
         }
     }

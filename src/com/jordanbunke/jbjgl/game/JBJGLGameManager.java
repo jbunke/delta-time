@@ -1,7 +1,6 @@
-package com.jordanbunke.jbjgl.game_manager;
+package com.jordanbunke.jbjgl.game;
 
 import com.jordanbunke.jbjgl.contexts.ProgramContext;
-import com.jordanbunke.jbjgl.debug.JBJGLMessageLog;
 import com.jordanbunke.jbjgl.events.JBJGLEventHandler;
 import com.jordanbunke.jbjgl.io.JBJGLListener;
 
@@ -24,6 +23,12 @@ public class JBJGLGameManager implements
         return new JBJGLGameManager(gameStates, initialStateIndex);
     }
 
+    public static JBJGLGameManager createOf(
+            final int initialStateIndex, final ProgramContext... gameStates
+    ) {
+        return new JBJGLGameManager(gameStates, initialStateIndex);
+    }
+
     public void setActiveStateIndex(int activeStateIndex) {
         this.activeStateIndex = activeStateIndex;
     }
@@ -42,12 +47,25 @@ public class JBJGLGameManager implements
     }
 
     @Override
-    public void update(final JBJGLMessageLog messageLog) {
-        gameStates[activeStateIndex].update(messageLog);
+    public void update() {
+        gameStates[activeStateIndex].update();
     }
 
     @Override
     public void render(final Graphics g) {
         gameStates[activeStateIndex].render(g);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Game Manager: ").append("\n\n");
+
+        for (int i = 0; i < gameStates.length; i++) {
+            sb.append(i == activeStateIndex ? "> " : "  ");
+            sb.append(i).append(" - ").append(gameStates[i]);
+        }
+
+        return sb.toString();
     }
 }

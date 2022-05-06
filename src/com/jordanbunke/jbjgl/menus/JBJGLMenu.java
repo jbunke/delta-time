@@ -1,7 +1,6 @@
 package com.jordanbunke.jbjgl.menus;
 
 import com.jordanbunke.jbjgl.contexts.JBJGLMenuManager;
-import com.jordanbunke.jbjgl.debug.JBJGLMessageLog;
 import com.jordanbunke.jbjgl.io.JBJGLListener;
 import com.jordanbunke.jbjgl.menus.menu_elements.JBJGLMenuElement;
 
@@ -18,9 +17,13 @@ public class JBJGLMenu {
         return new JBJGLMenu(menuElements);
     }
 
-    public void update(final JBJGLMessageLog messageLog) {
+    public static JBJGLMenu of(final JBJGLMenuElement... menuElements) {
+        return new JBJGLMenu(menuElements);
+    }
+
+    public void update() {
         for (JBJGLMenuElement element : menuElements)
-            element.update(messageLog);
+            element.update();
     }
 
     public void render(final Graphics g) {

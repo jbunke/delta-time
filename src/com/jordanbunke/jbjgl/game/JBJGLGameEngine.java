@@ -1,6 +1,6 @@
-package com.jordanbunke.jbjgl.game_manager;
+package com.jordanbunke.jbjgl.game;
 
-import com.jordanbunke.jbjgl.debug.JBJGLMessageLog;
+import com.jordanbunke.jbjgl.debug.JBJGLGameDebugger;
 import com.jordanbunke.jbjgl.events.JBJGLEventHandler;
 import com.jordanbunke.jbjgl.image.JBJGLImage;
 import com.jordanbunke.jbjgl.window.JBJGLWindow;
@@ -19,34 +19,12 @@ public class JBJGLGameEngine implements Runnable {
 
     private boolean running;
 
+    // 3 interfaces ideally implemented as a single game manager
     private final JBJGLEventHandler eventHandler;
     private final JBJGLGameRenderer renderer;
     private final JBJGLGameLogicHandler logicHandler;
-    private final JBJGLMessageLog messageLog;
 
-    private JBJGLGameEngine(
-            final String title, final int width, final int height,
-            final JBJGLImage icon,
-            final boolean exitOnClose, final boolean resizable, final boolean maximized,
-            final JBJGLEventHandler eventHandler,
-            final JBJGLGameRenderer renderer, final JBJGLGameLogicHandler logicHandler,
-            final double UPDATE_HZ, final double TARGET_FPS, final int MUST_UPDATE_BEFORE_RENDER
-    ) {
-        window = JBJGLWindow.create(
-                title, width, height, icon, exitOnClose, resizable, maximized
-        );
-        updateThread = new Thread(this, "[ " + title + " execution thread ]");
-        this.eventHandler = eventHandler;
-        this.renderer = renderer;
-        this.logicHandler = logicHandler;
-        messageLog = JBJGLMessageLog.initialize(title + " log", System.out::println, true);
-
-        this.UPDATE_HZ = UPDATE_HZ;
-        this.TARGET_FPS = TARGET_FPS;
-        this.MUST_UPDATE_BEFORE_RENDER = MUST_UPDATE_BEFORE_RENDER;
-
-        initialize();
-    }
+    private final JBJGLGameDebugger debugger;
 
     private JBJGLGameEngine(
             final JBJGLWindow window, final JBJGLEventHandler eventHandler,
@@ -58,13 +36,22 @@ public class JBJGLGameEngine implements Runnable {
         this.eventHandler = eventHandler;
         this.renderer = renderer;
         this.logicHandler = logicHandler;
-        messageLog = JBJGLMessageLog.initialize(window.getTitle() + " log", System.out::println, true);
+        debugger = JBJGLGameDebugger.create();
 
         this.UPDATE_HZ = UPDATE_HZ;
         this.TARGET_FPS = TARGET_FPS;
         this.MUST_UPDATE_BEFORE_RENDER = MUST_UPDATE_BEFORE_RENDER;
 
         initialize();
+    }
+
+    public static JBJGLGameEngine newForGame(
+            final JBJGLWindow window, final JBJGLGameManager gameManager
+    ) {
+        return new JBJGLGameEngine(
+                window, gameManager, gameManager, gameManager,
+                60.0, 60.0, 5
+        );
     }
 
     public static JBJGLGameEngine newWindowed(
@@ -75,10 +62,12 @@ public class JBJGLGameEngine implements Runnable {
             final JBJGLGameRenderer renderer, final JBJGLGameLogicHandler logicHandler,
             final double UPDATE_HZ, final double TARGET_FPS, final int MUST_UPDATE_BEFORE_RENDER
     ) {
+        JBJGLWindow window = JBJGLWindow.create(
+                title, width, height, icon, exitOnClose, resizable, false
+        );
+
         return new JBJGLGameEngine(
-                title, width, height, icon,
-                exitOnClose, resizable, false,
-                eventHandler, renderer, logicHandler,
+                window, eventHandler, renderer, logicHandler,
                 UPDATE_HZ, TARGET_FPS, MUST_UPDATE_BEFORE_RENDER
         );
     }
@@ -92,10 +81,13 @@ public class JBJGLGameEngine implements Runnable {
     ) {
         final int width = Toolkit.getDefaultToolkit().getScreenSize().width;
         final int height = Toolkit.getDefaultToolkit().getScreenSize().height;
+
+        JBJGLWindow window = JBJGLWindow.create(
+                title, width, height, icon, exitOnClose, false, true
+        );
+
         return new JBJGLGameEngine(
-                title, width, height, icon,
-                exitOnClose, false, true,
-                eventHandler, renderer, logicHandler,
+                window, eventHandler, renderer, logicHandler,
                 UPDATE_HZ, TARGET_FPS, MUST_UPDATE_BEFORE_RENDER
         );
     }
@@ -112,10 +104,11 @@ public class JBJGLGameEngine implements Runnable {
     }
 
     private void initialize() {
-        updateThread.start();
         running = true;
+        updateThread.start();
     }
 
+    // GAME LOOP
     @Override
     public void run() {
         final double NANOSECONDS_IN_SECOND = 1e9;
@@ -157,7 +150,9 @@ public class JBJGLGameEngine implements Runnable {
 
             if (thisSecondSlice != lastSecondSlice) {
                 if (frameCount != oldFrameCount) {
-                    messageLog.printMessage(frameCount + " FPS (TARGET: " + TARGET_FPS + " FPS)");
+                    debugger.updateFPS(frameCount);
+                    debugger.getChannel(JBJGLGameDebugger.PERFORMANCE_CHANNEL).
+                            printMessage(frameCount + " FPS (TARGET: " + TARGET_FPS + " FPS)");
                     oldFrameCount = frameCount;
                 }
                 frameCount = 0;
@@ -186,7 +181,7 @@ public class JBJGLGameEngine implements Runnable {
     }
 
     private void update() {
-        logicHandler.update(messageLog);
+        logicHandler.update();
     }
 
     private void render() {
@@ -194,5 +189,10 @@ public class JBJGLGameEngine implements Runnable {
         Graphics g = toDraw.getGraphics();
         renderer.render(g);
         window.draw(toDraw);
+    }
+
+    // GETTERS
+    public JBJGLGameDebugger getDebugger() {
+        return debugger;
     }
 }

@@ -36,4 +36,9 @@ public class Grapheme {
     public JBJGLImage getImage(final Color color) {
         return ImageProcessing.replaceColor(image, MATCH_COLOR, color);
     }
+
+    @Override
+    public String toString() {
+        return c + " ( " + width + "x" + height + " )";
+    }
 }

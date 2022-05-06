@@ -1,7 +1,6 @@
 package com.jordanbunke.jbjgl.menus.menu_elements;
 
 import com.jordanbunke.jbjgl.contexts.JBJGLMenuManager;
-import com.jordanbunke.jbjgl.debug.JBJGLMessageLog;
 import com.jordanbunke.jbjgl.events.JBJGLEvent;
 import com.jordanbunke.jbjgl.events.JBJGLMouseEvent;
 import com.jordanbunke.jbjgl.image.JBJGLImage;
@@ -41,7 +40,7 @@ public class JBJGLClickableMenuElement extends JBJGLMenuElement {
     }
 
     @Override
-    public void update(JBJGLMessageLog messageLog) {
+    public void update() {
 
     }
 

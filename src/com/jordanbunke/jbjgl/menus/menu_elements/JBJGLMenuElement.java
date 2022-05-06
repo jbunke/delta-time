@@ -1,7 +1,6 @@
 package com.jordanbunke.jbjgl.menus.menu_elements;
 
 import com.jordanbunke.jbjgl.contexts.JBJGLMenuManager;
-import com.jordanbunke.jbjgl.debug.JBJGLMessageLog;
 import com.jordanbunke.jbjgl.image.JBJGLImage;
 import com.jordanbunke.jbjgl.io.JBJGLListener;
 import com.jordanbunke.jbjgl.utility.RenderConstants;
@@ -40,7 +39,7 @@ public abstract class JBJGLMenuElement {
         this.anchor = anchor;
     }
 
-    public abstract void update(final JBJGLMessageLog messageLog);
+    public abstract void update();
     public abstract void render(final Graphics g);
     public abstract void process(final JBJGLListener listener, final JBJGLMenuManager menuManager);
 

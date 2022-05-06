@@ -1,11 +1,14 @@
 package com.jordanbunke.jbjgl.fonts;
 
+import com.jordanbunke.jbjgl.utility.JBJGLGlobal;
+
 import java.nio.file.Path;
 
 public class FontFamily {
-    static final String NOT_AVAILABLE = "NOT AVAILABLE";
+    public static final String NOT_AVAILABLE = "NOT AVAILABLE";
+    public static final int STANDARD = 0, BOLD = 1, ITALICS = 2;
+    private static final int LENGTH = 3;
 
-    private final int STANDARD = 0, BOLD = 1, ITALICS = 2, LENGTH = 3;
     private final Font[] types = new Font[LENGTH];
     private final String name;
 
@@ -37,35 +40,39 @@ public class FontFamily {
         return new FontFamily(name, standard, bold, italics);
     }
 
-    public boolean doesNotHaveStandard() {
+    public boolean hasType(final int index) {
         return types[STANDARD] == null;
     }
 
-    public boolean doesNotHaveBold() {
-        return types[BOLD] == null;
-    }
-
-    public boolean doesNotHaveItalics() {
-        return types[ITALICS] == null;
-    }
-
     public Font getStandard() {
-        if (doesNotHaveStandard()) {
-            // TODO
+        if (!hasType(STANDARD)) {
+            JBJGLGlobal.printErrorToJBJGLChannel(
+                    name + " does not have a standard font. " +
+                            "Retrieving the JBJGL Basic font instead..."
+            );
+            return JBJGLFonts.BASIC();
         }
         return types[STANDARD];
     }
 
     public Font getBold() {
-        if (doesNotHaveBold()) {
-            // TODO
+        if (!hasType(BOLD)) {
+            JBJGLGlobal.printErrorToJBJGLChannel(
+                    name + " does not have a bold variant. " +
+                            "Retrieving the standard font instead..."
+            );
+            return getStandard();
         }
         return types[BOLD];
     }
 
     public Font getItalics() {
-        if (doesNotHaveItalics()) {
-            // TODO
+        if (!hasType(ITALICS)) {
+            JBJGLGlobal.printErrorToJBJGLChannel(
+                    name + " does not have an italic variant. " +
+                            "Retrieving the standard font instead..."
+            );
+            return getStandard();
         }
         return types[ITALICS];
     }
