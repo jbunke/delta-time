@@ -25,6 +25,11 @@ public class JBJGLWindow {
         canvas = JBJGLCanvas.create(width, height);
         listener = JBJGLListener.create(canvas);
 
+        if (maximized) {
+            frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+            frame.setUndecorated(true);
+        }
+
         frame.setContentPane(canvas);
 
         // Prevents flickering upon render
@@ -43,11 +48,6 @@ public class JBJGLWindow {
         frame.setDefaultCloseOperation(
                 exitOnClose ? JFrame.EXIT_ON_CLOSE : JFrame.DISPOSE_ON_CLOSE
         );
-
-        if (maximized) {
-            frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-            frame.setUndecorated(true);
-        }
 
         frame.setVisible(true);
         clearCanvas();

@@ -15,7 +15,8 @@ import com.jordanbunke.jbjgl.text.JBJGLTextComponent;
 import java.awt.*;
 
 public class Example {
-    private static final int width = 1200, height = 675;
+    private static final int width = Toolkit.getDefaultToolkit().getScreenSize().width,
+            height = Toolkit.getDefaultToolkit().getScreenSize().height;
 
     public static void main(String[] args) {
         example1();
@@ -42,7 +43,7 @@ public class Example {
 
     private static void example1() {
         JBJGLAnimationMenuElement animationMenuElement = JBJGLAnimationMenuElement.generate(
-                new int[] { 0, 0 }, new int[] { 1200, 675 }, JBJGLMenuElement.Anchor.LEFT_TOP,
+                new int[] { 0, 0 }, new int[] { width, height }, JBJGLMenuElement.Anchor.LEFT_TOP,
                 5, new JBJGLImage[] {
                         drawBackground(0), drawBackground(1), drawBackground(2),
                         drawBackground(3), drawBackground(4), drawBackground(5),
@@ -55,7 +56,7 @@ public class Example {
         JBJGLImage button = button(false), highlightedButton = button(true);
         JBJGLClickableMenuElement clickableMenuElement = JBJGLClickableMenuElement.generate(
                 new int[]{ width / 2, height / 2 },
-                new int[]{ button.getWidth(), button.getHeight() },
+                new int[]{ button.getWidth() + 100, button.getHeight() - 20 },
                 JBJGLMenuElement.Anchor.CENTRAL, button, highlightedButton,
                 () -> System.exit(0)
         );
@@ -68,8 +69,8 @@ public class Example {
         JBJGLGame game = JBJGLGame.create(
                 "Example 1", manager, width, height,
                 JBJGLImage.create(20, 20),
-                true, false
+                true, true
         );
-        game.getGameEngine().getDebugger().hideBoundingBoxes();
+        // game.getGameEngine().getDebugger().hideBoundingBoxes();
     }
 }

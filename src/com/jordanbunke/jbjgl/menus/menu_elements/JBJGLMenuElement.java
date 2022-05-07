@@ -45,14 +45,18 @@ public abstract class JBJGLMenuElement {
     public abstract void process(final JBJGLListener listener, final JBJGLMenuManager menuManager);
 
     public void draw(final JBJGLImage image, final Graphics g) {
-        final int[] renderPosition = this.getRenderPosition();
+        final int[] offset = new int[] {
+                (dimensions[RenderConstants.WIDTH] - image.getWidth()) / 2,
+                (dimensions[RenderConstants.HEIGHT] - image.getHeight()) / 2
+        };
+        final int[] renderPosition = getRenderPosition(offset);
         g.drawImage(
                 image, renderPosition[RenderConstants.X],
                 renderPosition[RenderConstants.Y], null
         );
     }
 
-    public int[] getRenderPosition() {
+    public int[] getRenderPosition(final int[] offset) {
         final int[] bounds = new int[2];
 
         switch (anchor) {
@@ -124,11 +128,14 @@ public abstract class JBJGLMenuElement {
             }
         }
 
+        bounds[RenderConstants.X] += offset[RenderConstants.X];
+        bounds[RenderConstants.Y] += offset[RenderConstants.Y];
+
         return bounds;
     }
 
     public boolean mouseIsWithinBounds(final int[] mousePosition) {
-        final int[] min = getRenderPosition();
+        final int[] min = getRenderPosition(new int[] { 0, 0 });
         final int[] max = new int[] {
                 min[RenderConstants.X] + dimensions[RenderConstants.WIDTH],
                 min[RenderConstants.Y] + dimensions[RenderConstants.HEIGHT]
@@ -145,7 +152,7 @@ public abstract class JBJGLMenuElement {
             return;
 
         Graphics2D g2D = (Graphics2D) g;
-        final int[] renderPosition = getRenderPosition();
+        final int[] renderPosition = getRenderPosition(new int[] { 0, 0 });
         g2D.setColor(new Color(0, 255, 0, 255));
         g2D.setStroke(new BasicStroke(1));
         g.drawRect(
