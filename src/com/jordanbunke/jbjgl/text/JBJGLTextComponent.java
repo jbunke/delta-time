@@ -30,7 +30,7 @@ public class JBJGLTextComponent extends JBJGLTextBlock {
 
         for (char c : s.toCharArray()) {
             width += font.getCharWidth(c);
-            width++; // 1 PIXEL IN BETWEEN
+            width += font.getPixelSpacing();
         }
 
         return width;
@@ -47,7 +47,7 @@ public class JBJGLTextComponent extends JBJGLTextBlock {
         for (char c : contents.toCharArray()) {
             g.drawImage(font.drawChar(c, color), processed, 0, null);
             processed += font.getCharWidth(c);
-            processed++; // 1 PIXEL IN BETWEEN
+            processed += font.getPixelSpacing();
         }
 
         g.dispose();

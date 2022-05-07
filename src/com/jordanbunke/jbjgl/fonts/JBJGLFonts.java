@@ -9,10 +9,10 @@ public class JBJGLFonts {
     private static final FontFamily BASIC = FontFamily.loadFromSources(
             "Basic", FONT_PATH,
             "font-basic", "font-basic-bold", FontFamily.NOT_AVAILABLE,
-            true
+            2, 2, 0,true
     );
     private static final Font CLASSIC = Font.loadFromSource(
-            FONT_PATH, "font-classic", true
+            FONT_PATH, "font-classic", true, 2
     );
 
     public static Font BASIC() {

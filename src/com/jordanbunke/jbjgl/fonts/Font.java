@@ -13,13 +13,18 @@ public class Font {
     private static final String LATIN_EXTENDED_SUFFIX = "-latin-extended" + FILE_SUFFIX;
 
     private final Map<Character, Grapheme> CHARACTER_MAP;
+    private final int pixelSpacing;
 
-    private Font(final Map<Character, Grapheme> characterMap) {
+    private Font(final Map<Character, Grapheme> characterMap, final int pixelSpacing) {
         CHARACTER_MAP = characterMap;
+        this.pixelSpacing = pixelSpacing;
     }
 
-    public static Font loadFromSource(final Path folder, final String baseName,
-                                      boolean hasLatinExtended) {
+    public static Font loadFromSource(
+            final Path folder, final String baseName,
+            final boolean hasLatinExtended,
+            final int pixelSpacing
+    ) {
         final Path asciiFilepath = folder.resolve(baseName + ASCII_SUFFIX);
 
         Map<Character, Grapheme> characterMap =
@@ -35,7 +40,7 @@ public class Font {
                 characterMap.put(c, latinExtendedMap.get(c));
         }
 
-        return new Font(characterMap);
+        return new Font(characterMap, pixelSpacing);
     }
 
     public JBJGLImage drawChar(final char c, final Color color) {
@@ -60,5 +65,9 @@ public class Font {
             );
             return 0;
         }
+    }
+
+    public int getPixelSpacing() {
+        return pixelSpacing;
     }
 }
