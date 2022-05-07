@@ -41,7 +41,7 @@ public class FontFamily {
     }
 
     public boolean hasType(final int index) {
-        return types[STANDARD] == null;
+        return types[index] != null;
     }
 
     public Font getStandard() {
