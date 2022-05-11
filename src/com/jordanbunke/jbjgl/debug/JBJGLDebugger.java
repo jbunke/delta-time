@@ -8,11 +8,13 @@ public class JBJGLDebugger {
     public static final String DEFAULT_CHANNEL = "DEFAULT";
 
     private final Map<String, JBJGLDebugChannel> channelMap;
+    private final Map<String, Boolean> customFields;
 
     JBJGLDebugger(final Map<String, JBJGLDebugChannel> channelMap) {
         JBJGLDebugger.addDefaultChannel(channelMap);
 
         this.channelMap = channelMap;
+        this.customFields = new HashMap<>();
     }
 
     public static void standardChannelAddition(
@@ -34,7 +36,7 @@ public class JBJGLDebugger {
         return new JBJGLDebugger(channelMap);
     }
 
-
+    // CHANNELS
     public static void addDefaultChannel(final Map<String, JBJGLDebugChannel> channelMap) {
         if (!channelMap.containsKey(DEFAULT_CHANNEL))
             channelMap.put(DEFAULT_CHANNEL, JBJGLDebugChannel.initialize(
@@ -72,5 +74,14 @@ public class JBJGLDebugger {
 
             return channelMap.get(DEFAULT_CHANNEL);
         }
+    }
+
+    // CUSTOM FIELDS
+    public void setCustomField(final String id, final boolean value) {
+        customFields.put(id, value);
+    }
+
+    public boolean isCustomField(final String id) {
+        return customFields.getOrDefault(id, false);
     }
 }
