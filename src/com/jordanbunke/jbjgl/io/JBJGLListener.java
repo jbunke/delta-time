@@ -32,11 +32,9 @@ public class JBJGLListener implements
     }
 
     public void checkForMatchingKeyStroke(
-            final JBJGLKey key, final JBJGLKeyEvent.Action action,
-            final Runnable behaviour
+            final JBJGLKeyEvent toMatch, final Runnable behaviour
     ) {
         List<JBJGLEvent> eventList = getUnprocessedEvents();
-        JBJGLKeyEvent toMatch = JBJGLKeyEvent.generate(key, action);
 
         for (JBJGLEvent event : eventList) {
             if (event.isProcessed())
@@ -47,6 +45,14 @@ public class JBJGLListener implements
                 event.markAsProcessed();
             }
         }
+    }
+
+    public void checkForMatchingKeyStroke(
+            final JBJGLKey key, final JBJGLKeyEvent.Action action,
+            final Runnable behaviour
+    ) {
+        JBJGLKeyEvent toMatch = JBJGLKeyEvent.generate(key, action);
+        checkForMatchingKeyStroke(toMatch, behaviour);
     }
 
     public List<JBJGLEvent> getUnprocessedEvents() {

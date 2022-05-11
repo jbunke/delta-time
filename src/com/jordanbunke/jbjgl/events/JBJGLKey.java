@@ -5,7 +5,7 @@ import java.awt.event.KeyEvent;
 public enum JBJGLKey {
     DOWN_ARROW, UP_ARROW, LEFT_ARROW, RIGHT_ARROW,
 
-    ENTER, BACKSPACE, DELETE, TAB, SHIFT, ESCAPE,
+    ENTER, BACKSPACE, DELETE, TAB, SHIFT, ESCAPE, SPACE,
 
     A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,
 
@@ -25,6 +25,7 @@ public enum JBJGLKey {
             case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ->
                     JBJGLKey.valueOf("_" + character);
             case '\n' -> ENTER;
+            case ' ' -> SPACE;
             case '\uFFFF' ->
                     switch (code) {
                         case 8 -> BACKSPACE;
