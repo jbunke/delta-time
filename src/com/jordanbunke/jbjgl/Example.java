@@ -69,7 +69,8 @@ public class Example {
         JBJGLGame game = JBJGLGame.create(
                 "Example 1", manager, width, height,
                 JBJGLImage.create(20, 20),
-                true, true
+                true, true,
+                30.0, 60.0
         );
         // game.getGameEngine().getDebugger().hideBoundingBoxes();
     }

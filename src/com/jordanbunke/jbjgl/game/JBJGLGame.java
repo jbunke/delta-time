@@ -22,12 +22,14 @@ public class JBJGLGame {
             final String title, final JBJGLGameManager gameManager,
             final int width, final int height,
             final JBJGLImage icon,
-            final boolean exitOnClose, final boolean maximized
+            final boolean exitOnClose, final boolean maximized,
+            final double UPDATE_HZ, final double TARGET_FPS
     ) {
         JBJGLWindow window = JBJGLWindow.create(
                 title, width, height, icon, exitOnClose, false, maximized
         );
-        JBJGLGameEngine gameEngine = JBJGLGameEngine.newForGame(window, gameManager);
+        JBJGLGameEngine gameEngine =
+                JBJGLGameEngine.newForGame(window, gameManager, UPDATE_HZ, TARGET_FPS);
         return new JBJGLGame(title, gameManager, gameEngine);
     }
 

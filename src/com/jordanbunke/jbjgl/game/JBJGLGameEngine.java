@@ -54,6 +54,16 @@ public class JBJGLGameEngine implements Runnable {
         );
     }
 
+    public static JBJGLGameEngine newForGame(
+            final JBJGLWindow window, final JBJGLGameManager gameManager,
+            final double UPDATE_HZ, final double TARGET_FPS
+    ) {
+        return new JBJGLGameEngine(
+                window, gameManager, gameManager, gameManager,
+                UPDATE_HZ, TARGET_FPS, 5
+        );
+    }
+
     public static JBJGLGameEngine newWindowed(
             final String title, final int width, final int height,
             final JBJGLImage icon,
