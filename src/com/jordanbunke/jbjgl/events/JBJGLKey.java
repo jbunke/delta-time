@@ -26,20 +26,22 @@ public enum JBJGLKey {
                     JBJGLKey.valueOf("_" + character);
             case '\n' -> ENTER;
             case ' ' -> SPACE;
-            case '\uFFFF' ->
-                    switch (code) {
-                        case 8 -> BACKSPACE;
-                        case 9 -> TAB;
-                        case 10 -> ENTER;
-                        case 16 -> SHIFT;
-                        case 27 -> ESCAPE;
-                        case 37 -> LEFT_ARROW;
-                        case 38 -> UP_ARROW;
-                        case 39 -> RIGHT_ARROW;
-                        case 40 -> DOWN_ARROW;
-                        case 127 -> DELETE;
-                        default -> UNSUPPORTED;
-                    };
+            default -> getFromCode(code);
+        };
+    }
+    
+    private static JBJGLKey getFromCode(final int code) {
+        return switch (code) {
+            case 8 -> BACKSPACE;
+            case 9 -> TAB;
+            case 10 -> ENTER;
+            case 16 -> SHIFT;
+            case 27 -> ESCAPE;
+            case 37 -> LEFT_ARROW;
+            case 38 -> UP_ARROW;
+            case 39 -> RIGHT_ARROW;
+            case 40 -> DOWN_ARROW;
+            case 127 -> DELETE;
             default -> UNSUPPORTED;
         };
     }
