@@ -12,6 +12,7 @@ public abstract class JBJGLMenuElement {
     private final int[] position;
     private final int[] dimensions;
     private final Anchor anchor;
+    private final boolean isVisible;
 
     public enum Anchor {
         LEFT_TOP, CENTRAL_TOP, RIGHT_TOP,
@@ -34,10 +35,14 @@ public abstract class JBJGLMenuElement {
         }
     }
 
-    public JBJGLMenuElement(final int[] position, final int[] dimensions, final Anchor anchor) {
+    public JBJGLMenuElement(
+            final int[] position, final int[] dimensions,
+            final Anchor anchor, final boolean isVisible
+    ) {
         this.position = position;
         this.dimensions = dimensions;
         this.anchor = anchor;
+        this.isVisible = isVisible;
     }
 
     public abstract void update();
@@ -45,6 +50,9 @@ public abstract class JBJGLMenuElement {
     public abstract void process(final JBJGLListener listener, final JBJGLMenuManager menuManager);
 
     public void draw(final JBJGLImage image, final Graphics g) {
+        if (!isVisible)
+            return;
+
         final int[] offset = new int[] {
                 (dimensions[RenderConstants.WIDTH] - image.getWidth()) / 2,
                 (dimensions[RenderConstants.HEIGHT] - image.getHeight()) / 2
@@ -135,6 +143,9 @@ public abstract class JBJGLMenuElement {
     }
 
     public boolean mouseIsWithinBounds(final int[] mousePosition) {
+        if (!isVisible)
+            return false;
+
         final int[] min = getRenderPosition(new int[] { 0, 0 });
         final int[] max = new int[] {
                 min[RenderConstants.X] + dimensions[RenderConstants.WIDTH],
@@ -148,7 +159,7 @@ public abstract class JBJGLMenuElement {
     }
 
     public void renderBoundingBox(final Graphics g, final JBJGLGameDebugger debugger) {
-        if (debugger == null || !debugger.isShowingBoundingBoxes())
+        if (debugger == null || !debugger.isShowingBoundingBoxes() || !isVisible)
             return;
 
         Graphics2D g2D = (Graphics2D) g;

@@ -14,7 +14,7 @@ public class JBJGLTextMenuElement extends JBJGLMenuElement {
     private JBJGLTextMenuElement(
             final int[] position, final int[] dimensions, final Anchor anchor, final JBJGLImage image
     ) {
-        super(position, dimensions, anchor);
+        super(position, dimensions, anchor, true);
         this.image = image;
     }
 

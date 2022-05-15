@@ -22,7 +22,7 @@ public class JBJGLClickableMenuElement extends JBJGLMenuElement {
             final JBJGLImage nonHighlightedImage, final JBJGLImage highlightedImage,
             final Runnable onClickBehaviour
     ) {
-        super(position, dimensions, anchor);
+        super(position, dimensions, anchor, true);
 
         this.nonHighlightedImage = nonHighlightedImage;
         this.highlightedImage = highlightedImage;

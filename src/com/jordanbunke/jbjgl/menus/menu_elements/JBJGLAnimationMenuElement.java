@@ -18,7 +18,7 @@ public class JBJGLAnimationMenuElement extends JBJGLMenuElement {
             final int[] position, final int[] dimensions, final Anchor anchor,
             final int[] frameTimings, final JBJGLImage[] frames
     ) {
-        super(position, dimensions, anchor);
+        super(position, dimensions, anchor, true);
 
         this.frameTimings = frameTimings;
         this.frames = frames;
