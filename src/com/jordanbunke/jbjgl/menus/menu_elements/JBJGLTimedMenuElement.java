@@ -40,12 +40,12 @@ public class JBJGLTimedMenuElement extends JBJGLMenuElement {
     }
 
     @Override
-    public void render(Graphics g, JBJGLGameDebugger debugger) {
+    public void render(final Graphics g, final JBJGLGameDebugger debugger) {
 
     }
 
     @Override
-    public void process(JBJGLListener listener, JBJGLMenuManager menuManager) {
+    public void process(final JBJGLListener listener, final JBJGLMenuManager menuManager) {
 
     }
 }
