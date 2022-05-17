@@ -22,6 +22,14 @@ public class JBJGLKeyEvent extends JBJGLEvent {
         return this.action == action;
     }
 
+    public JBJGLKey getKey() {
+        return key;
+    }
+
+    public Action getAction() {
+        return action;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof JBJGLKeyEvent oke))
