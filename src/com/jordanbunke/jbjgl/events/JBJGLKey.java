@@ -13,6 +13,18 @@ public enum JBJGLKey {
 
     UNSUPPORTED;
 
+    public String print() {
+        return "[ " + switch (this) {
+            case A, B, C, D, E, F, G, H, I, J, K, L, M,
+                    N, O, P, Q, R, S, T, U, V, W, X, Y, Z,
+                    ENTER, BACKSPACE, DELETE, TAB, SHIFT, ESCAPE, SPACE -> name();
+            case _0, _1, _2, _3, _4, _5, _6, _7, _8, _9 -> name().substring(1);
+            case UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW ->
+                    name().replace("_", " ");
+            default -> "UNKNOWN INPUT";
+        } + " ]";
+    }
+
     public static JBJGLKey fromKeyEvent(final KeyEvent keyEvent) {
         final char character = keyEvent.getKeyChar();
         final int code = keyEvent.getKeyCode();
