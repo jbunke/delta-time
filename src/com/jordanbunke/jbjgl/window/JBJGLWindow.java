@@ -79,7 +79,7 @@ public class JBJGLWindow {
     }
 
     public void closeInstance() {
-        frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSED));
+        frame.dispose();
     }
 
     public void draw(final JBJGLImage image) {
