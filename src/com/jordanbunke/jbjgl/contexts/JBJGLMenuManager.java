@@ -45,6 +45,10 @@ public class JBJGLMenuManager extends ProgramContext {
         this.activeMenuID = activeMenuID;
     }
 
+    public String getActiveMenuID() {
+        return activeMenuID;
+    }
+
     @Override
     public void update() {
         if (menuMap.containsKey(activeMenuID))
