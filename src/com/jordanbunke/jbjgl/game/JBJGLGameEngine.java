@@ -14,7 +14,7 @@ public class JBJGLGameEngine implements Runnable {
     private final double TARGET_FPS;
 
     // Fields
-    private final JBJGLWindow window;
+    private JBJGLWindow window;
     private final Thread updateThread;
 
     private boolean running;
@@ -118,8 +118,9 @@ public class JBJGLGameEngine implements Runnable {
         updateThread.start();
     }
 
-    public void closeWindow() {
+    public void replaceWindow(final JBJGLWindow replacement) {
         window.closeInstance();
+        window = replacement;
     }
 
     // GAME LOOP
