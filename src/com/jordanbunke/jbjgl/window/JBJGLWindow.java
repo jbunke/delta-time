@@ -4,6 +4,7 @@ import com.jordanbunke.jbjgl.image.JBJGLImage;
 import com.jordanbunke.jbjgl.io.JBJGLListener;
 
 import javax.swing.*;
+import java.awt.event.WindowEvent;
 
 public class JBJGLWindow {
     private final JFrame frame;
@@ -75,6 +76,10 @@ public class JBJGLWindow {
 
         canvas.setSizeFromWindow(width, height);
         frame.pack();
+    }
+
+    public void closeInstance() {
+        frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSED));
     }
 
     public void draw(final JBJGLImage image) {

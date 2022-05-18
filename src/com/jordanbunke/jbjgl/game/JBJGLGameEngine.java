@@ -118,6 +118,10 @@ public class JBJGLGameEngine implements Runnable {
         updateThread.start();
     }
 
+    public void closeWindow() {
+        window.closeInstance();
+    }
+
     // GAME LOOP
     @Override
     public void run() {

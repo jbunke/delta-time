@@ -33,6 +33,10 @@ public class JBJGLGame {
         return new JBJGLGame(title, gameManager, gameEngine);
     }
 
+    public void closeWindow() {
+
+    }
+
     public JBJGLGameEngine getGameEngine() {
         return gameEngine;
     }
