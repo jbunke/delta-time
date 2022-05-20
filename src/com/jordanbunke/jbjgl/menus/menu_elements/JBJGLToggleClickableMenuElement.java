@@ -10,33 +10,38 @@ import com.jordanbunke.jbjgl.io.JBJGLListener;
 import java.awt.*;
 import java.util.List;
 
-public class JBJGLClickableMenuElement extends JBJGLMenuElement {
-
+public class JBJGLToggleClickableMenuElement extends JBJGLMenuElement {
     private boolean isHighlighted;
-    private final JBJGLImage nonHighlightedImage;
-    private final JBJGLImage highlightedImage;
-    private final Runnable onClickBehaviour;
+    private final JBJGLImage[] nonHighlightedImages;
+    private final JBJGLImage[] highlightedImages;
+    private final Runnable[] onClickBehaviours;
 
-    private JBJGLClickableMenuElement(
+    private int index;
+    private final int length;
+
+    private JBJGLToggleClickableMenuElement(
             final int[] position, final int[] dimensions, final Anchor anchor,
-            final JBJGLImage nonHighlightedImage, final JBJGLImage highlightedImage,
-            final Runnable onClickBehaviour
+            final JBJGLImage[] nonHighlightedImages, final JBJGLImage[] highlightedImages,
+            final Runnable[] onClickBehaviours
     ) {
         super(position, dimensions, anchor, true);
 
-        this.nonHighlightedImage = nonHighlightedImage;
-        this.highlightedImage = highlightedImage;
-        this.onClickBehaviour = onClickBehaviour;
+        this.index = 0;
+        this.length = nonHighlightedImages.length;
+
+        this.nonHighlightedImages = nonHighlightedImages;
+        this.highlightedImages = highlightedImages;
+        this.onClickBehaviours = onClickBehaviours;
     }
 
-    public static JBJGLClickableMenuElement generate(
+    public static JBJGLToggleClickableMenuElement generate(
             final int[] position, final int[] dimensions, final Anchor anchor,
-            final JBJGLImage nonHighlightedImage, final JBJGLImage highlightedImage,
-            final Runnable onClickBehaviour
+            final JBJGLImage[] nonHighlightedImages, final JBJGLImage[] highlightedImages,
+            final Runnable[] onClickBehaviours
     ) {
-        return new JBJGLClickableMenuElement(
+        return new JBJGLToggleClickableMenuElement(
                 position, dimensions, anchor,
-                nonHighlightedImage, highlightedImage, onClickBehaviour
+                nonHighlightedImages, highlightedImages, onClickBehaviours
         );
     }
 
@@ -47,7 +52,7 @@ public class JBJGLClickableMenuElement extends JBJGLMenuElement {
 
     @Override
     public void render(final Graphics g, final JBJGLGameDebugger debugger) {
-        draw(isHighlighted ? highlightedImage : nonHighlightedImage, g);
+        draw(isHighlighted ? highlightedImages[index] : nonHighlightedImages[index], g);
 
         // Debug
         renderBoundingBox(g, debugger);
@@ -65,7 +70,9 @@ public class JBJGLClickableMenuElement extends JBJGLMenuElement {
             if (e instanceof JBJGLMouseEvent mouseEvent &&
                     mouseEvent.matchesAction(JBJGLMouseEvent.Action.CLICK)) {
                 mouseEvent.markAsProcessed();
-                onClickBehaviour.run();
+                onClickBehaviours[index].run();
+                index++;
+                index %= length;
 
                 isHighlighted = false;
             }
