@@ -6,9 +6,11 @@ import com.jordanbunke.jbjgl.events.JBJGLEvent;
 import com.jordanbunke.jbjgl.events.JBJGLMouseEvent;
 import com.jordanbunke.jbjgl.image.JBJGLImage;
 import com.jordanbunke.jbjgl.io.JBJGLListener;
+import com.jordanbunke.jbjgl.utility.JBJGLGlobal;
 
 import java.awt.*;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 public class JBJGLToggleClickableMenuElement extends JBJGLMenuElement {
     private boolean isHighlighted;
@@ -16,18 +18,22 @@ public class JBJGLToggleClickableMenuElement extends JBJGLMenuElement {
     private final JBJGLImage[] highlightedImages;
     private final Runnable[] onClickBehaviours;
 
+    private final Callable<Integer> updateIndexLogic;
+
     private int index;
     private final int length;
 
     private JBJGLToggleClickableMenuElement(
             final int[] position, final int[] dimensions, final Anchor anchor,
             final JBJGLImage[] nonHighlightedImages, final JBJGLImage[] highlightedImages,
-            final Runnable[] onClickBehaviours
+            final Runnable[] onClickBehaviours, final Callable<Integer> updateIndexLogic
     ) {
         super(position, dimensions, anchor, true);
 
         this.index = 0;
         this.length = nonHighlightedImages.length;
+
+        this.updateIndexLogic = updateIndexLogic;
 
         this.nonHighlightedImages = nonHighlightedImages;
         this.highlightedImages = highlightedImages;
@@ -41,13 +47,33 @@ public class JBJGLToggleClickableMenuElement extends JBJGLMenuElement {
     ) {
         return new JBJGLToggleClickableMenuElement(
                 position, dimensions, anchor,
-                nonHighlightedImages, highlightedImages, onClickBehaviours
+                nonHighlightedImages, highlightedImages,
+                onClickBehaviours, null
+        );
+    }
+
+    public static JBJGLToggleClickableMenuElement generate(
+            final int[] position, final int[] dimensions, final Anchor anchor,
+            final JBJGLImage[] nonHighlightedImages, final JBJGLImage[] highlightedImages,
+            final Runnable[] onClickBehaviours, final Callable<Integer> updateIndexLogic
+    ) {
+        return new JBJGLToggleClickableMenuElement(
+                position, dimensions, anchor,
+                nonHighlightedImages, highlightedImages,
+                onClickBehaviours, updateIndexLogic
         );
     }
 
     @Override
     public void update() {
-
+        try {
+            index = updateIndexLogic.call();
+        } catch (Exception e) {
+            JBJGLGlobal.printErrorToJBJGLChannel(
+                    "Could not perform index update in JBJGLToggleClickableMenuElement " +
+                            this + "."
+            );
+        }
     }
 
     @Override
