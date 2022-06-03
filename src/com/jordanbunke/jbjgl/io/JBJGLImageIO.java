@@ -15,7 +15,7 @@ public class JBJGLImageIO {
             JBJGLGlobal.printErrorToJBJGLChannel("Couldn't read image file: " + filepath);
         }
 
-        return JBJGLImage.create(0, 0);
+        return JBJGLImage.create(1, 1);
     }
 
     public static void writeImage(final Path filepath, final JBJGLImage image) {
