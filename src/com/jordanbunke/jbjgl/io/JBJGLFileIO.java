@@ -27,6 +27,7 @@ public class JBJGLFileIO {
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(filepath.toFile(), append));
             bw.write(contents);
+            bw.close();
         } catch (IOException e) {
             JBJGLGlobal.printErrorToJBJGLChannel("Couldn't write to file: " + filepath);
         }
