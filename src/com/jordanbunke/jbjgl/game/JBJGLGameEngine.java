@@ -215,4 +215,8 @@ public class JBJGLGameEngine implements Runnable {
     public JBJGLGameDebugger getDebugger() {
         return debugger;
     }
+
+    public JBJGLWindow getWindow() {
+        return window;
+    }
 }
