@@ -14,8 +14,6 @@ public class JBJGLListener implements
         KeyListener, MouseListener, MouseMotionListener, WindowListener {
 
     private final List<JBJGLInputTask> tasks;
-    private boolean suspended;
-    private final List<JBJGLKeyEvent> suspensionEventWaitList;
 
     private final List<JBJGLEvent> eventList;
     private final Map<JBJGLKey, Boolean> characterPressedStatusMap;
@@ -27,8 +25,6 @@ public class JBJGLListener implements
         canvas.addMouseMotionListener(this);
 
         tasks = new ArrayList<>();
-        suspended = false;
-        suspensionEventWaitList = new ArrayList<>();
 
         eventList = new ArrayList<>();
         characterPressedStatusMap = new HashMap<>();
@@ -108,25 +104,7 @@ public class JBJGLListener implements
         return characterPressedStatusMap.getOrDefault(key, false);
     }
 
-    public void suspend() {
-        suspended = true;
-    }
-
-    public void free() {
-        suspended = false;
-
-        while (!suspensionEventWaitList.isEmpty()) {
-            handleKeyEvent(suspensionEventWaitList.get(0));
-            suspensionEventWaitList.remove(0);
-        }
-    }
-
     private void handleKeyEvent(final JBJGLKeyEvent event) {
-        if (suspended) {
-            suspensionEventWaitList.add(event);
-            return;
-        }
-
         // check in tasks
         for (JBJGLInputTask task : tasks)
             if (task.getEvent().equals(event)) {
