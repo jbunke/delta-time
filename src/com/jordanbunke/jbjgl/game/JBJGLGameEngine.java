@@ -3,6 +3,7 @@ package com.jordanbunke.jbjgl.game;
 import com.jordanbunke.jbjgl.debug.JBJGLGameDebugger;
 import com.jordanbunke.jbjgl.events.JBJGLEventHandler;
 import com.jordanbunke.jbjgl.image.JBJGLImage;
+import com.jordanbunke.jbjgl.io.JBJGLListener;
 import com.jordanbunke.jbjgl.window.JBJGLWindow;
 
 import java.awt.*;
@@ -200,10 +201,15 @@ public class JBJGLGameEngine implements Runnable {
     }
 
     private void render() {
+        final JBJGLListener listener = window.getListener();
+        listener.suspend();
+
         JBJGLImage toDraw = JBJGLImage.create(window.getWidth(), window.getHeight());
         Graphics g = toDraw.getGraphics();
         renderer.render(g, debugger);
         window.draw(toDraw);
+
+        listener.free();
     }
 
     // SETTERS

@@ -14,6 +14,8 @@ public class JBJGLListener implements
         KeyListener, MouseListener, MouseMotionListener, WindowListener {
 
     private final List<JBJGLInputTask> tasks;
+    private boolean suspended;
+    private final List<JBJGLKeyEvent> suspensionEventWaitList;
 
     private final List<JBJGLEvent> eventList;
     private final Map<JBJGLKey, Boolean> characterPressedStatusMap;
@@ -25,6 +27,8 @@ public class JBJGLListener implements
         canvas.addMouseMotionListener(this);
 
         tasks = new ArrayList<>();
+        suspended = false;
+        suspensionEventWaitList = new ArrayList<>();
 
         eventList = new ArrayList<>();
         characterPressedStatusMap = new HashMap<>();
@@ -104,7 +108,25 @@ public class JBJGLListener implements
         return characterPressedStatusMap.getOrDefault(key, false);
     }
 
-    private void handleEvent(final JBJGLEvent event) {
+    public void suspend() {
+        suspended = true;
+    }
+
+    public void free() {
+        suspended = false;
+
+        while (!suspensionEventWaitList.isEmpty()) {
+            handleKeyEvent(suspensionEventWaitList.get(0));
+            suspensionEventWaitList.remove(0);
+        }
+    }
+
+    private void handleKeyEvent(final JBJGLKeyEvent event) {
+        if (suspended) {
+            suspensionEventWaitList.add(event);
+            return;
+        }
+
         // check in tasks
         for (JBJGLInputTask task : tasks)
             if (task.getEvent().equals(event)) {
@@ -120,7 +142,7 @@ public class JBJGLListener implements
     public void keyTyped(KeyEvent e) {
         JBJGLKey key = JBJGLKey.fromKeyEvent(e);
 
-        handleEvent(
+        handleKeyEvent(
                 JBJGLKeyEvent.generate(key, JBJGLKeyEvent.Action.TYPE)
         );
     }
@@ -133,7 +155,7 @@ public class JBJGLListener implements
             return;
 
         characterPressedStatusMap.put(key, true);
-        handleEvent(
+        handleKeyEvent(
                 JBJGLKeyEvent.generate(key, JBJGLKeyEvent.Action.PRESS)
         );
     }
@@ -146,14 +168,14 @@ public class JBJGLListener implements
             return;
 
         characterPressedStatusMap.put(key, false);
-        handleEvent(
+        handleKeyEvent(
                 JBJGLKeyEvent.generate(key, JBJGLKeyEvent.Action.RELEASE)
         );
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        handleEvent(
+        eventList.add(
                 JBJGLMouseEvent.generate(new int[] {
                         e.getX(), e.getY()
                 }, JBJGLMouseEvent.Action.CLICK)
@@ -162,7 +184,7 @@ public class JBJGLListener implements
 
     @Override
     public void mousePressed(MouseEvent e) {
-        handleEvent(
+        eventList.add(
                 JBJGLMouseEvent.generate(new int[] {
                         e.getX(), e.getY()
                 }, JBJGLMouseEvent.Action.DOWN)
@@ -171,7 +193,7 @@ public class JBJGLListener implements
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        handleEvent(
+        eventList.add(
                 JBJGLMouseEvent.generate(new int[] {
                         e.getX(), e.getY()
                 }, JBJGLMouseEvent.Action.UP)
@@ -181,7 +203,7 @@ public class JBJGLListener implements
     @Override
     public void mouseEntered(MouseEvent e) {
         updateMousePosition(e);
-        handleEvent(
+        eventList.add(
                 JBJGLMoveEvent.generate(new int[] {
                         e.getX(), e.getY()
                 }, JBJGLMoveEvent.Action.ENTER)
@@ -191,7 +213,7 @@ public class JBJGLListener implements
     @Override
     public void mouseExited(MouseEvent e) {
         updateMousePosition(e);
-        handleEvent(
+        eventList.add(
                 JBJGLMoveEvent.generate(new int[] {
                         e.getX(), e.getY()
                 }, JBJGLMoveEvent.Action.EXIT)
@@ -201,7 +223,7 @@ public class JBJGLListener implements
     @Override
     public void mouseDragged(MouseEvent e) {
         updateMousePosition(e);
-        handleEvent(
+        eventList.add(
                 JBJGLMoveEvent.generate(new int[] {
                         e.getX(), e.getY()
                 }, JBJGLMoveEvent.Action.DRAG)
@@ -211,7 +233,7 @@ public class JBJGLListener implements
     @Override
     public void mouseMoved(MouseEvent e) {
         updateMousePosition(e);
-        handleEvent(
+        eventList.add(
                 JBJGLMoveEvent.generate(new int[] {
                         e.getX(), e.getY()
                 }, JBJGLMoveEvent.Action.MOVE)
@@ -220,49 +242,49 @@ public class JBJGLListener implements
 
     @Override
     public void windowOpened(WindowEvent e) {
-        handleEvent(
+        eventList.add(
                 JBJGLWindowEvent.generate(JBJGLWindowEvent.Action.OPENED)
         );
     }
 
     @Override
     public void windowClosing(WindowEvent e) {
-        handleEvent(
+        eventList.add(
                 JBJGLWindowEvent.generate(JBJGLWindowEvent.Action.CLOSING)
         );
     }
 
     @Override
     public void windowClosed(WindowEvent e) {
-        handleEvent(
+        eventList.add(
                 JBJGLWindowEvent.generate(JBJGLWindowEvent.Action.CLOSED)
         );
     }
 
     @Override
     public void windowIconified(WindowEvent e) {
-        handleEvent(
+        eventList.add(
                 JBJGLWindowEvent.generate(JBJGLWindowEvent.Action.ICONIFIED)
         );
     }
 
     @Override
     public void windowDeiconified(WindowEvent e) {
-        handleEvent(
+        eventList.add(
                 JBJGLWindowEvent.generate(JBJGLWindowEvent.Action.DEICONIFIED)
         );
     }
 
     @Override
     public void windowActivated(WindowEvent e) {
-        handleEvent(
+        eventList.add(
                 JBJGLWindowEvent.generate(JBJGLWindowEvent.Action.ACTIVATED)
         );
     }
 
     @Override
     public void windowDeactivated(WindowEvent e) {
-        handleEvent(
+        eventList.add(
                 JBJGLWindowEvent.generate(JBJGLWindowEvent.Action.DEACTIVATED)
         );
     }

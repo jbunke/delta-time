@@ -1,29 +1,30 @@
 package com.jordanbunke.jbjgl.io;
 
 import com.jordanbunke.jbjgl.events.JBJGLEvent;
+import com.jordanbunke.jbjgl.events.JBJGLKeyEvent;
 import com.jordanbunke.jbjgl.utility.JBJGLGlobal;
 
 import java.util.concurrent.Callable;
 
 public class JBJGLInputTask {
-    private final Callable<JBJGLEvent> eventGetter;
+    private final Callable<JBJGLKeyEvent> eventGetter;
     private final Runnable task;
 
     private JBJGLInputTask(
-            final Callable<JBJGLEvent> eventGetter, final Runnable task
+            final Callable<JBJGLKeyEvent> eventGetter, final Runnable task
     ) {
         this.eventGetter = eventGetter;
         this.task = task;
     }
 
     public static JBJGLInputTask create(
-            final Callable<JBJGLEvent> eventGetter, final Runnable task
+            final Callable<JBJGLKeyEvent> eventGetter, final Runnable task
     ) {
         return new JBJGLInputTask(eventGetter, task);
     }
 
     public static JBJGLInputTask create(
-            final Callable<JBJGLEvent> eventGetter,
+            final Callable<JBJGLKeyEvent> eventGetter,
             final Callable<Boolean> precondition, final Runnable task
     ) {
         final Runnable conditionalTask = () -> {
@@ -42,9 +43,9 @@ public class JBJGLInputTask {
     }
 
     public static JBJGLInputTask create(
-            final JBJGLEvent event, final Runnable task
+            final JBJGLKeyEvent event, final Runnable task
     ) {
-        final Callable<JBJGLEvent> eventGetter = () -> event;
+        final Callable<JBJGLKeyEvent> eventGetter = () -> event;
         return new JBJGLInputTask(eventGetter, task);
     }
 
