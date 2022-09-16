@@ -55,7 +55,8 @@ public class JBJGLText {
         } else {
             int processed = 0;
             for (int i = 0; i <= blocks.length; i++) {
-                if ((i == blocks.length && i - processed > 0) || blocks[i] instanceof JBJGLLineBreak) {
+                if ((i == blocks.length && i - processed > 0) ||
+                        (i < blocks.length && blocks[i] instanceof JBJGLLineBreak)) {
                     JBJGLTextComponent[] line = new JBJGLTextComponent[i - processed];
 
                     for (int j = processed; j < i; j++)
