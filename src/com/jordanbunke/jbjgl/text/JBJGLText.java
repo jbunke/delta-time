@@ -85,6 +85,9 @@ public class JBJGLText {
             for (int j = 0; j < lines[i].length; j++)
                 width += lines[i][j].calculateProspectiveWidth();
 
+            if (width == 0)
+                continue;
+
             JBJGLImage drawnLine = JBJGLImage.create(width, LINE_HEIGHT);
             maxWidth = Math.max(maxWidth, width);
             Graphics g = drawnLine.getGraphics();
