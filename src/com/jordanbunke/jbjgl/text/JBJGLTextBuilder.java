@@ -8,13 +8,13 @@ import java.util.List;
 
 public class JBJGLTextBuilder {
     private final List<JBJGLTextBlock> textBlocks;
-    private final int textSize;
+    private final double textSize;
     private final JBJGLText.Orientation orientation;
     private Color currentColor;
     private Font currentFont;
 
     private JBJGLTextBuilder(
-            final int textSize, final JBJGLText.Orientation orientation,
+            final double textSize, final JBJGLText.Orientation orientation,
             final Color initialColor, final Font initialFont
     ) {
         this.textSize = textSize;
@@ -26,7 +26,7 @@ public class JBJGLTextBuilder {
     }
 
     public static JBJGLTextBuilder initialize(
-            final int textSize, final JBJGLText.Orientation orientation,
+            final double textSize, final JBJGLText.Orientation orientation,
             final Color initialColor, final Font initialFont
     ) {
         return new JBJGLTextBuilder(textSize, orientation, initialColor, initialFont);
