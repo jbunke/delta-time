@@ -32,6 +32,13 @@ public class JBJGLTextBuilder {
         return new JBJGLTextBuilder(textSize, orientation, initialColor, initialFont);
     }
 
+    public static JBJGLTextBuilder initialize(
+            final int textSize, final JBJGLText.Orientation orientation,
+            final Color initialColor, final Font initialFont
+    ) {
+        return new JBJGLTextBuilder(textSize, orientation, initialColor, initialFont);
+    }
+
     public JBJGLText build() {
         JBJGLTextBlock[] textBlockArray = new JBJGLTextBlock[textBlocks.size()];
         return JBJGLText.create(textBlocks.toArray(textBlockArray), textSize, orientation);
