@@ -32,6 +32,7 @@ public class JBJGLTextBuilder {
         return new JBJGLTextBuilder(textSize, orientation, initialColor, initialFont);
     }
 
+    @Deprecated
     public static JBJGLTextBuilder initialize(
             final int textSize, final JBJGLText.Orientation orientation,
             final Color initialColor, final Font initialFont
