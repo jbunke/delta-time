@@ -3,6 +3,7 @@ package com.jordanbunke.jbjgl.fonts;
 import com.jordanbunke.jbjgl.image.ImageProcessing;
 import com.jordanbunke.jbjgl.image.JBJGLImage;
 import com.jordanbunke.jbjgl.io.JBJGLImageIO;
+import com.jordanbunke.jbjgl.utility.JBJGLGlobal;
 
 import java.awt.*;
 import java.nio.file.Path;
@@ -10,6 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.jordanbunke.jbjgl.fonts.FontConstants.LINE_HEIGHT;
+import static com.jordanbunke.jbjgl.fonts.FontConstants.FONT_SOURCE_BASE_WIDTH;
+import static com.jordanbunke.jbjgl.fonts.FontConstants.FONT_SOURCE_BASE_HEIGHT;
 import static com.jordanbunke.jbjgl.fonts.FontConstants.MATCH_COLOR;
 
 public class FontLoader {
@@ -24,14 +27,16 @@ public class FontLoader {
         JBJGLImage image = JBJGLImageIO.readImage(source);
         Map<Character, Grapheme> map = new HashMap<>();
 
-        map.put(' ', whitespace());
+        final int scaleMultiplier = sourceToScaleMultiplier(image);
+
+        map.put(' ', whitespace(scaleMultiplier));
 
         for (char c = STARTING_ASCII; c <= FINAL_ASCII; c++) {
             int[] coordinates = asciiToCoordinates(c);
 
             if (coordinates.length != 2) continue;
 
-            Grapheme grapheme = graphemeFromCoordinates(image, c, coordinates);
+            Grapheme grapheme = graphemeFromCoordinates(image, c, coordinates, scaleMultiplier);
             map.put(c, grapheme);
         }
 
@@ -42,6 +47,8 @@ public class FontLoader {
         JBJGLImage image = JBJGLImageIO.readImage(source);
         Map<Character, Grapheme> map = new HashMap<>();
 
+        final int scaleMultiplier = sourceToScaleMultiplier(image);
+
         for (int i = 0; i < NUM_LATIN_EXTENDED_CHARS; i++) {
             int[] coordinates = asciiToCoordinates((char) i);
 
@@ -49,7 +56,7 @@ public class FontLoader {
 
             char c = charFromIndexLatinExtended(i);
 
-            Grapheme grapheme = graphemeFromCoordinates(image, c, coordinates);
+            Grapheme grapheme = graphemeFromCoordinates(image, c, coordinates, scaleMultiplier);
             map.put(c, grapheme);
         }
 
@@ -57,66 +64,68 @@ public class FontLoader {
     }
 
     // HELPER FUNCTIONS:
-    private static Grapheme graphemeFromCoordinates(final JBJGLImage image,
-                                                    final char c, final int[] coordinates) {
-        final int[] start = new int[]
-                { coordinates[X_INDEX] * X_INCREMENT, coordinates[Y_INDEX] * Y_INCREMENT };
-        final int[] size = new int[] { X_INCREMENT - 1, Y_INCREMENT - 1 };
+    private static Grapheme graphemeFromCoordinates(
+            final JBJGLImage image, final char c, final int[] coordinates,
+            final int scaleMultiplier
+    ) {
+        final int[] start = new int[] {
+                coordinates[X_INDEX] * X_INCREMENT * scaleMultiplier,
+                coordinates[Y_INDEX] * Y_INCREMENT * scaleMultiplier
+        };
+        final int[] size = new int[] {
+                (X_INCREMENT - 1) * scaleMultiplier,
+                (Y_INCREMENT - 1) * scaleMultiplier
+        };
 
         // BOUNDS DETERMINATION
         int firstXWith = firstXWith(image, start, size);
         int firstXWithout = firstXWithout(image, start, size);
 
         // COPY
-        JBJGLImage grapheme = getGrapheme(image, start, size, firstXWith, firstXWithout);
+        JBJGLImage grapheme = retrieveGrapheme(image, start, size, firstXWith, firstXWithout);
 
         return Grapheme.create(grapheme, c, firstXWithout - firstXWith, size[Y_INDEX]);
     }
 
-    private static JBJGLImage getGrapheme(final JBJGLImage image, final int[] start, final int[] size,
-                                             final int firstXWith, final int firstXWithout) {
+    private static JBJGLImage retrieveGrapheme(
+            final JBJGLImage image, final int[] start, final int[] size,
+            final int firstXWith, final int firstXWithout
+    ) {
         JBJGLImage grapheme = JBJGLImage.create(firstXWithout - firstXWith, size[Y_INDEX]);
         Graphics g = grapheme.getGraphics();
         g.setColor(MATCH_COLOR);
 
-        for (int x = firstXWith; x < firstXWithout; x++) {
-            for (int y = start[Y_INDEX]; y < start[Y_INDEX] + size[Y_INDEX]; y++) {
-                if (ImageProcessing.colorAtPixel(image, x, y).equals(MATCH_COLOR)) {
+        for (int x = firstXWith; x < firstXWithout; x++)
+            for (int y = start[Y_INDEX]; y < start[Y_INDEX] + size[Y_INDEX]; y++)
+                if (ImageProcessing.colorAtPixel(image, x, y).equals(MATCH_COLOR))
                     g.fillRect(x - firstXWith, y - start[Y_INDEX], 1, 1);
-                }
-            }
-        }
 
         g.dispose();
 
         return grapheme;
     }
 
-    private static Grapheme whitespace() {
-        final int width = 8;
-        return Grapheme.create(JBJGLImage.create(width, LINE_HEIGHT), ' ', width, LINE_HEIGHT);
+    private static Grapheme whitespace(final int scaleMultiplier) {
+        final int width = 8 * scaleMultiplier;
+        return Grapheme.create(
+                JBJGLImage.create(width, LINE_HEIGHT * scaleMultiplier),
+                ' ', width, LINE_HEIGHT * scaleMultiplier);
     }
 
     private static int firstXWithout(final JBJGLImage image, final int[] start, final int[] size) {
-        for (int x = (start[X_INDEX] + size[X_INDEX]) - 1; x >= start[X_INDEX]; x--) {
-            for (int y = start[Y_INDEX]; y < start[Y_INDEX] + size[Y_INDEX]; y++) {
-                if (ImageProcessing.colorAtPixel(image, x, y).equals(MATCH_COLOR)) {
+        for (int x = (start[X_INDEX] + size[X_INDEX]) - 1; x >= start[X_INDEX]; x--)
+            for (int y = start[Y_INDEX]; y < start[Y_INDEX] + size[Y_INDEX]; y++)
+                if (ImageProcessing.colorAtPixel(image, x, y).equals(MATCH_COLOR))
                     return x + 1;
-                }
-            }
-        }
 
         return start[X_INDEX] + size[X_INDEX];
     }
 
     private static int firstXWith(final JBJGLImage image, final int[] start, final int[] size) {
-        for (int x = start[X_INDEX]; x < start[X_INDEX] + size[X_INDEX]; x++) {
-            for (int y = start[Y_INDEX]; y < start[Y_INDEX] + size[Y_INDEX]; y++) {
-                if (ImageProcessing.colorAtPixel(image, x, y).equals(MATCH_COLOR)) {
+        for (int x = start[X_INDEX]; x < start[X_INDEX] + size[X_INDEX]; x++)
+            for (int y = start[Y_INDEX]; y < start[Y_INDEX] + size[Y_INDEX]; y++)
+                if (ImageProcessing.colorAtPixel(image, x, y).equals(MATCH_COLOR))
                     return x;
-                }
-            }
-        }
 
         return start[X_INDEX];
     }
@@ -186,5 +195,20 @@ public class FontLoader {
         final int x = c % CHARS_ON_ROW, y = c / CHARS_ON_ROW;
 
         return new int[] { x, y };
+    }
+
+    private static int sourceToScaleMultiplier(final JBJGLImage source) {
+        final int width = source.getWidth(), height = source.getHeight();
+
+        final boolean isMultiple = width % FONT_SOURCE_BASE_WIDTH == 0,
+                isProportional = width / (double) FONT_SOURCE_BASE_WIDTH ==
+                        height / (double) FONT_SOURCE_BASE_HEIGHT;
+
+        if (!(isMultiple && isProportional))
+            JBJGLGlobal.printErrorToJBJGLChannel(
+                    "Source image file is not sized correctly, must be multiple of " +
+                            FONT_SOURCE_BASE_WIDTH + "x" + FONT_SOURCE_BASE_HEIGHT);
+
+        return width / FONT_SOURCE_BASE_WIDTH;
     }
 }

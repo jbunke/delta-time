@@ -27,7 +27,7 @@ public class Example {
                 new Color(255, 255, 255, 255) :
                 new Color(0, 0, 0, 255);
         return JBJGLText.createOf(
-                3, JBJGLText.Orientation.CENTER,
+                7.5, JBJGLText.Orientation.CENTER,
                 JBJGLTextComponent.add("i WANT 2 quit", JBJGLFonts.CLASSIC(), c)
         ).draw();
     }
