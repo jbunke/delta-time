@@ -168,7 +168,7 @@ public abstract class JBJGLMenuElement {
         g2D.setStroke(new BasicStroke(1));
         g.drawRect(
                 renderPosition[RenderConstants.X], renderPosition[RenderConstants.Y],
-                dimensions[RenderConstants.WIDTH], dimensions[RenderConstants.HEIGHT]
+                dimensions[RenderConstants.WIDTH] - 1, dimensions[RenderConstants.HEIGHT] - 1
         );
     }
 

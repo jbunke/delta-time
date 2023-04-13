@@ -13,11 +13,12 @@ public class Font {
     private static final String LATIN_EXTENDED_SUFFIX = "-latin-extended" + FILE_SUFFIX;
 
     private final Map<Character, Grapheme> CHARACTER_MAP;
-    private final int pixelSpacing;
+    private final int pixelSpacing, height;
 
-    private Font(final Map<Character, Grapheme> characterMap, final int pixelSpacing) {
+    private Font(final Map<Character, Grapheme> characterMap, final int pixelSpacing, final int height) {
         CHARACTER_MAP = characterMap;
         this.pixelSpacing = pixelSpacing;
+        this.height = height;
     }
 
     public static Font loadFromSource(
@@ -30,7 +31,7 @@ public class Font {
         Map<Character, Grapheme> characterMap =
                 FontLoader.loadASCIIFromSource(asciiFilepath);
 
-        // Each additional charset can be introduced with an analogous code block and font loader
+        // TODO: Each additional charset can be introduced with an analogous code block and font loader
         if (hasLatinExtended) {
             final Path latinExtendedFilepath = folder.resolve(baseName + LATIN_EXTENDED_SUFFIX);
             Map<Character, Grapheme> latinExtendedMap =
@@ -40,7 +41,9 @@ public class Font {
                 characterMap.put(c, latinExtendedMap.get(c));
         }
 
-        return new Font(characterMap, pixelSpacing);
+        final int height = characterMap.get(' ').getHeight();
+
+        return new Font(characterMap, pixelSpacing, height);
     }
 
     public JBJGLImage drawChar(final char c, final Color color) {
@@ -51,7 +54,7 @@ public class Font {
                     "Attempted to draw the character \"" + c +
                             "\", which is unsupported by this font."
             );
-            return CHARACTER_MAP.get(' ').getImage(color);
+            return CHARACTER_MAP.get(' ').getImage(color); // TODO: add � to fonts and call instead
         }
     }
 
@@ -69,5 +72,9 @@ public class Font {
 
     public int getPixelSpacing() {
         return pixelSpacing;
+    }
+
+    public int getHeight() {
+        return height;
     }
 }

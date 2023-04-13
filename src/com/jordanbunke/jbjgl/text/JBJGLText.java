@@ -11,7 +11,7 @@ import static com.jordanbunke.jbjgl.fonts.FontConstants.LINE_HEIGHT;
 
 public class JBJGLText {
     private final JBJGLTextComponent[][] lines;
-    private final int textSize;
+    private final double textSize;
     private final int widthAllowance;
     private final boolean componentsSplittable;
     private final Orientation orientation;
@@ -20,7 +20,7 @@ public class JBJGLText {
         LEFT, CENTER, RIGHT
     }
 
-    private JBJGLText(final JBJGLTextBlock[] blocks, final int textSize,
+    private JBJGLText(final JBJGLTextBlock[] blocks, final double textSize,
                       final int widthAllowance, boolean componentsSplittable,
                       Orientation orientation) {
         this.textSize = textSize;
@@ -32,7 +32,7 @@ public class JBJGLText {
     }
 
     public static JBJGLText createOf(
-            final int textSize, final Orientation orientation,
+            final double textSize, final Orientation orientation,
             final JBJGLTextBlock... blocks
     ) {
         return new JBJGLText(blocks, textSize, -1, false, orientation);
@@ -40,7 +40,7 @@ public class JBJGLText {
 
     public static JBJGLText create(
             final JBJGLTextBlock[] blocks,
-            final int textSize, final Orientation orientation
+            final double textSize, final Orientation orientation
     ) {
         return new JBJGLText(blocks, textSize, -1, false, orientation);
     }
@@ -83,19 +83,29 @@ public class JBJGLText {
 
         for (int i = 0; i < lines.length; i++) {
             int width = 0;
-            for (int j = 0; j < lines[i].length; j++)
-                width += lines[i][j].calculateProspectiveWidth();
+            for (int j = 0; j < lines[i].length; j++) {
+                final double scaleFactor = textSize * (LINE_HEIGHT / (double)lines[i][j].getFont().getHeight());
+                width += lines[i][j].calculateProspectiveWidth() * scaleFactor;
+            }
 
             width = Math.max(width, 1);
 
-            JBJGLImage drawnLine = JBJGLImage.create(width, LINE_HEIGHT);
+            JBJGLImage drawnLine = JBJGLImage.create(width, (int)(textSize * LINE_HEIGHT));
+
             maxWidth = Math.max(maxWidth, width);
+
             Graphics g = drawnLine.getGraphics();
             int processed = 0;
 
             for (int j = 0; j < lines[i].length; j++) {
-                g.drawImage(lines[i][j].draw(), processed, 0, null);
-                processed += lines[i][j].calculateProspectiveWidth();
+                final double scaleFactor = textSize * (LINE_HEIGHT / (double)lines[i][j].getFont().getHeight());
+                final JBJGLImage drawnComponent = lines[i][j].draw();
+
+                g.drawImage(scaleFactor == 1.
+                                ? drawnComponent
+                                : ImageProcessing.scaleUp(drawnComponent, scaleFactor),
+                        processed, 0, null);
+                processed += lines[i][j].calculateProspectiveWidth() * scaleFactor;
             }
 
             g.dispose();
@@ -103,24 +113,26 @@ public class JBJGLText {
             drawnLines[i] = drawnLine;
         }
 
-        JBJGLImage image = JBJGLImage.create(maxWidth, LINE_HEIGHT * lines.length);
+        JBJGLImage image = JBJGLImage.create(maxWidth, lines.length * (int)(textSize * LINE_HEIGHT));
         Graphics g = image.getGraphics();
 
-        for (int i = 0; i < drawnLines.length; i++) {
+        int drawnHeight = 0;
+
+        for (JBJGLImage drawnLine : drawnLines) {
             switch (orientation) {
-                case LEFT ->
-                        g.drawImage(drawnLines[i], 0, i * LINE_HEIGHT, null);
-                case RIGHT ->
-                        g.drawImage(drawnLines[i], maxWidth - drawnLines[i].getWidth(),
-                                i * LINE_HEIGHT, null);
-                case CENTER -> g.drawImage(drawnLines[i], (maxWidth - drawnLines[i].getWidth()) / 2,
-                        i * LINE_HEIGHT, null);
+                case LEFT -> g.drawImage(drawnLine, 0, drawnHeight, null);
+                case RIGHT -> g.drawImage(drawnLine, maxWidth - drawnLine.getWidth(),
+                        drawnHeight, null);
+                case CENTER -> g.drawImage(drawnLine, (maxWidth - drawnLine.getWidth()) / 2,
+                        drawnHeight, null);
             }
+
+            drawnHeight += drawnLine.getHeight();
         }
 
         g.dispose();
 
-        return ImageProcessing.scaleUp(image, textSize);
+        return image;
     }
 
     public int getWidthAllowance() {

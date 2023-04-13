@@ -1,7 +1,6 @@
 package com.jordanbunke.jbjgl.text;
 
 import com.jordanbunke.jbjgl.fonts.Font;
-import com.jordanbunke.jbjgl.fonts.FontConstants;
 import com.jordanbunke.jbjgl.image.JBJGLImage;
 
 import java.awt.*;
@@ -38,8 +37,7 @@ public class JBJGLTextComponent extends JBJGLTextBlock {
 
     public JBJGLImage draw() {
         JBJGLImage image = JBJGLImage.create(
-                calculateProspectiveWidth(), FontConstants.LINE_HEIGHT
-        );
+                calculateProspectiveWidth(), font.getHeight());
         Graphics g = image.getGraphics();
 
         int processed = 0;
@@ -53,6 +51,10 @@ public class JBJGLTextComponent extends JBJGLTextBlock {
         g.dispose();
 
         return image;
+    }
+
+    public Font getFont() {
+        return font;
     }
 
     @Override

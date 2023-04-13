@@ -35,6 +35,8 @@ public class ImageProcessing {
     }
 
     public static JBJGLImage scaleUp(final JBJGLImage image, final int scaleFactor) {
+        // TODO: scaleFactor >= 1
+
         JBJGLImage scaledUp = JBJGLImage.create(image.getWidth() * scaleFactor,
                 image.getHeight() * scaleFactor);
         Graphics g = scaledUp.getGraphics();
@@ -43,6 +45,28 @@ public class ImageProcessing {
             for (int y = 0; y < image.getHeight(); y++) {
                 g.setColor(colorAtPixel(image, x, y));
                 g.fillRect(x * scaleFactor, y * scaleFactor, scaleFactor, scaleFactor);
+            }
+        }
+
+        g.dispose();
+
+        return scaledUp;
+    }
+
+    public static JBJGLImage scaleUp(final JBJGLImage image, final double scaleFactor) {
+        // TODO: scaleFactor >= 1.0
+
+        JBJGLImage scaledUp = JBJGLImage.create((int)(image.getWidth() * scaleFactor),
+                (int)(image.getHeight() * scaleFactor));
+        Graphics g = scaledUp.getGraphics();
+
+        for (int x = 0; x < image.getWidth(); x++) {
+            for (int y = 0; y < image.getHeight(); y++) {
+                g.setColor(colorAtPixel(image, x, y));
+                g.fillRect(
+                        (int)(x * scaleFactor), (int)(y * scaleFactor),
+                        (int)Math.ceil(scaleFactor), (int)Math.ceil(scaleFactor)
+                );
             }
         }
 
