@@ -1,6 +1,6 @@
 package com.jordanbunke.jbjgl.io;
 
-import com.jordanbunke.jbjgl.utility.JBJGLGlobal;
+import com.jordanbunke.jbjgl.error.JBJGLError;
 import com.jordanbunke.jbjgl.utility.StringProcessing;
 
 import java.io.*;
@@ -17,7 +17,7 @@ public class JBJGLFileIO {
 
             contents.deleteCharAt(contents.toString().length() - 1);
         } catch (IOException e) {
-            JBJGLGlobal.printErrorToJBJGLChannel("Couldn't read file: " + filepath);
+            JBJGLError.send("Couldn't read file: " + filepath);
         }
 
         return contents.toString();
@@ -29,7 +29,7 @@ public class JBJGLFileIO {
             bw.write(contents);
             bw.close();
         } catch (IOException e) {
-            JBJGLGlobal.printErrorToJBJGLChannel("Couldn't write to file: " + filepath);
+            JBJGLError.send("Couldn't write to file: " + filepath);
         }
     }
 

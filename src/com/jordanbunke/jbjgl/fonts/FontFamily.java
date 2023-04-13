@@ -1,6 +1,6 @@
 package com.jordanbunke.jbjgl.fonts;
 
-import com.jordanbunke.jbjgl.utility.JBJGLGlobal;
+import com.jordanbunke.jbjgl.error.JBJGLError;
 
 import java.nio.file.Path;
 
@@ -57,34 +57,38 @@ public class FontFamily {
 
     public Font getStandard() {
         if (!hasType(STANDARD)) {
-            JBJGLGlobal.printErrorToJBJGLChannel(
-                    name + " does not have a standard font. " +
-                            "Retrieving the JBJGL Basic font instead..."
-            );
-            return JBJGLFonts.BASIC();
+            JBJGLError.send(
+                    "Font family \"" + name +
+                            "\" does not have a standard font.", () -> {},
+                    true, true);
         }
+
         return types[STANDARD];
     }
 
     public Font getBold() {
         if (!hasType(BOLD)) {
-            JBJGLGlobal.printErrorToJBJGLChannel(
-                    name + " does not have a bold variant. " +
-                            "Retrieving the standard font instead..."
-            );
+            JBJGLError.send(
+                    "Font family \"" + name +
+                            "\" does not have a bold font... " +
+                            "Attempting to retrieve standard font instead");
+
             return getStandard();
         }
+
         return types[BOLD];
     }
 
     public Font getItalics() {
         if (!hasType(ITALICS)) {
-            JBJGLGlobal.printErrorToJBJGLChannel(
-                    name + " does not have an italic variant. " +
-                            "Retrieving the standard font instead..."
-            );
+            JBJGLError.send(
+                    "Font family \"" + name +
+                            "\" does not have an italic font... " +
+                            "Attempting to retrieve standard font instead");
+
             return getStandard();
         }
+
         return types[ITALICS];
     }
 

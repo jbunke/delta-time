@@ -10,10 +10,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.jordanbunke.jbjgl.fonts.FontConstants.LINE_HEIGHT;
-import static com.jordanbunke.jbjgl.fonts.FontConstants.FONT_SOURCE_BASE_WIDTH;
-import static com.jordanbunke.jbjgl.fonts.FontConstants.FONT_SOURCE_BASE_HEIGHT;
-import static com.jordanbunke.jbjgl.fonts.FontConstants.MATCH_COLOR;
+import static com.jordanbunke.jbjgl.fonts.FontConstants.*;
 
 public class FontLoader {
     private static final int X_INCREMENT = 20, Y_INCREMENT = 38;
@@ -29,14 +26,21 @@ public class FontLoader {
 
         final int scaleMultiplier = sourceToScaleMultiplier(image);
 
+        // manual insertion of space character
         map.put(' ', whitespace(scaleMultiplier));
+
+        // manual insertion of replacement character
+        final Grapheme replacementGrapheme = graphemeFromCoordinates(
+                image, REPLACEMENT,
+                asciiToCoordinates((char)127), scaleMultiplier);
+        map.put(REPLACEMENT, replacementGrapheme);
 
         for (char c = STARTING_ASCII; c <= FINAL_ASCII; c++) {
             int[] coordinates = asciiToCoordinates(c);
 
             if (coordinates.length != 2) continue;
 
-            Grapheme grapheme = graphemeFromCoordinates(image, c, coordinates, scaleMultiplier);
+            final Grapheme grapheme = graphemeFromCoordinates(image, c, coordinates, scaleMultiplier);
             map.put(c, grapheme);
         }
 
@@ -51,10 +55,9 @@ public class FontLoader {
 
         for (int i = 0; i < NUM_LATIN_EXTENDED_CHARS; i++) {
             int[] coordinates = asciiToCoordinates((char) i);
-
-            if (coordinates.length != 2) continue;
-
             char c = charFromIndexLatinExtended(i);
+
+            if (coordinates.length != 2 || c == REPLACEMENT) continue;
 
             Grapheme grapheme = graphemeFromCoordinates(image, c, coordinates, scaleMultiplier);
             map.put(c, grapheme);
@@ -187,7 +190,7 @@ public class FontLoader {
             case 56 -> 'ú';
             case 57 -> 'ù';
             case 58 -> 'û';
-            default -> '�';
+            default -> REPLACEMENT;
         };
     }
 

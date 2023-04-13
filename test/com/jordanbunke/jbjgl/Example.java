@@ -1,7 +1,7 @@
 package com.jordanbunke.jbjgl;
 
 import com.jordanbunke.jbjgl.contexts.JBJGLMenuManager;
-import com.jordanbunke.jbjgl.fonts.JBJGLFonts;
+import com.jordanbunke.jbjgl.fonts.FontsForTests;
 import com.jordanbunke.jbjgl.game.JBJGLGame;
 import com.jordanbunke.jbjgl.game.JBJGLGameManager;
 import com.jordanbunke.jbjgl.image.JBJGLImage;
@@ -27,9 +27,11 @@ public class Example {
                 new Color(255, 255, 255, 255) :
                 new Color(0, 0, 0, 255);
         return JBJGLText.createOf(
-                7.5, JBJGLText.Orientation.CENTER,
-                JBJGLTextComponent.add("i WANT 2 quit", JBJGLFonts.CLASSIC(), c)
-        ).draw();
+                4.2, JBJGLText.Orientation.CENTER,
+                JBJGLTextComponent.add(
+                        "Você tem que respeitar as leis do país!",
+                        FontsForTests.CLASSIC.getItalics(), c
+                )).draw();
     }
 
     private static JBJGLImage drawBackground(final int index) {

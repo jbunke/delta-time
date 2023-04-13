@@ -7,10 +7,11 @@ import java.awt.*;
 import java.nio.file.Path;
 import java.util.Map;
 
+import static com.jordanbunke.jbjgl.fonts.FontConstants.ASCII_SUFFIX;
+import static com.jordanbunke.jbjgl.fonts.FontConstants.LATIN_EXTENDED_SUFFIX;
+
 public class Font {
-    private static final String FILE_SUFFIX = ".png";
-    private static final String ASCII_SUFFIX = "-ascii" + FILE_SUFFIX;
-    private static final String LATIN_EXTENDED_SUFFIX = "-latin-extended" + FILE_SUFFIX;
+
 
     private final Map<Character, Grapheme> CHARACTER_MAP;
     private final int pixelSpacing, height;
@@ -47,27 +48,11 @@ public class Font {
     }
 
     public JBJGLImage drawChar(final char c, final Color color) {
-        if (CHARACTER_MAP.containsKey(c))
-            return CHARACTER_MAP.get(c).getImage(color);
-        else {
-            JBJGLGlobal.printErrorToJBJGLChannel(
-                    "Attempted to draw the character \"" + c +
-                            "\", which is unsupported by this font."
-            );
-            return CHARACTER_MAP.get(' ').getImage(color); // TODO: add � to fonts and call instead
-        }
+        return getGrapheme(c).getImage(color);
     }
 
     public int getCharWidth(final char c) {
-        if (CHARACTER_MAP.containsKey(c))
-            return CHARACTER_MAP.get(c).getWidth();
-        else {
-            JBJGLGlobal.printErrorToJBJGLChannel(
-                    "Attempted to call the character \"" + c +
-                            "\", which is unsupported by this font."
-            );
-            return 0;
-        }
+        return getGrapheme(c).getWidth();
     }
 
     public int getPixelSpacing() {
@@ -76,5 +61,18 @@ public class Font {
 
     public int getHeight() {
         return height;
+    }
+
+    private Grapheme getGrapheme(final char c) {
+        if (CHARACTER_MAP.containsKey(c))
+            return CHARACTER_MAP.get(c);
+        else {
+            JBJGLGlobal.printErrorToJBJGLChannel(
+                    "Attempted to draw the character \"" + c +
+                            "\", which is unsupported by this font."
+            );
+
+            return CHARACTER_MAP.get(FontConstants.REPLACEMENT);
+        }
     }
 }

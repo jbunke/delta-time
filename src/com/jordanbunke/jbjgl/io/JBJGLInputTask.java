@@ -1,8 +1,8 @@
 package com.jordanbunke.jbjgl.io;
 
+import com.jordanbunke.jbjgl.error.JBJGLError;
 import com.jordanbunke.jbjgl.events.JBJGLEvent;
 import com.jordanbunke.jbjgl.events.JBJGLKeyEvent;
-import com.jordanbunke.jbjgl.utility.JBJGLGlobal;
 
 import java.util.concurrent.Callable;
 
@@ -32,10 +32,9 @@ public class JBJGLInputTask {
                 if (precondition.call())
                     task.run();
             } catch (Exception e) {
-                JBJGLGlobal.printErrorToJBJGLChannel(
-                        "Input event task precondition contained an error:\n"
-                );
-                e.printStackTrace();
+                JBJGLError.send(
+                        "Input event task precondition contained an error:",
+                        e::printStackTrace, true, false);
             }
         };
 
@@ -53,10 +52,9 @@ public class JBJGLInputTask {
         try {
             return eventGetter.call();
         } catch (Exception e) {
-            JBJGLGlobal.printErrorToJBJGLChannel(
-                    "Input event task event getter contained an error:\n"
-            );
-            e.printStackTrace();
+            JBJGLError.send(
+                    "Input event task event getter contained an error:",
+                    e::printStackTrace, true, false);
         }
 
         return null;
