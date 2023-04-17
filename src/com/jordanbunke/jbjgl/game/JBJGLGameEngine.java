@@ -3,7 +3,6 @@ package com.jordanbunke.jbjgl.game;
 import com.jordanbunke.jbjgl.debug.JBJGLGameDebugger;
 import com.jordanbunke.jbjgl.events.JBJGLEventHandler;
 import com.jordanbunke.jbjgl.image.JBJGLImage;
-import com.jordanbunke.jbjgl.io.JBJGLListener;
 import com.jordanbunke.jbjgl.window.JBJGLWindow;
 
 import java.awt.*;

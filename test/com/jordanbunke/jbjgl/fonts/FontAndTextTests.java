@@ -15,8 +15,9 @@ public class FontAndTextTests {
     private static final Path FONT_TEST_OUTPUT_PATH = Paths.get("test_out", "fonts");
     private static final Font[] FONTS = new Font[] {
             FontsForTests.ARIAL,
-            FontsForTests.HALF_SCALE_ARIAL,
-            FontsForTests.HAND_DRAWN,
+            // FontsForTests.HALF_SCALE_ARIAL,
+            FontsForTests.MY_HANDWRITING.getStandard(),
+            FontsForTests.MY_HANDWRITING.getItalics(),
             FontsForTests.BASIC.getStandard(),
             FontsForTests.BASIC.getBold(),
             FontsForTests.CLASSIC.getStandard(),

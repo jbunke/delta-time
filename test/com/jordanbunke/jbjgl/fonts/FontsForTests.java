@@ -18,14 +18,14 @@ public class FontsForTests {
             VIGILANT = FontFamily.loadFromSources(
                     "Vigilant", FONT_PATH, "font-vigilant",
                     FontFamily.NOT_AVAILABLE, "font-vigilant-italics",
-                    2, 2, 2, true);
-
-    public static final Font HAND_DRAWN = Font.loadFromSource(
-            FONT_PATH, "font-hand-drawn", false, 2);
+                    2, 2, 2, true),
+            MY_HANDWRITING = FontFamily.fromPreLoaded(
+                    "My Handwriting", Font.loadFromSource(FONT_PATH,
+                            "font-my-handwriting", false, 1.0, 0, true),
+                    null, Font.loadFromSource(FONT_PATH,
+                            "font-my-handwriting-italics", false, 1.0, -8, true)
+            );
 
     public static final Font ARIAL = Font.loadFromSource(
-            FONT_PATH, "font-arial", false, 4);
-
-    public static final Font HALF_SCALE_ARIAL = Font.loadFromSource(
-            FONT_PATH, "font-half-scale-arial", false, 2);
+            FONT_PATH, "font-precise-arial", false, 0.75, 15, true);
 }

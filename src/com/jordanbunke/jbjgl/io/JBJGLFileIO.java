@@ -7,6 +7,15 @@ import java.io.*;
 import java.nio.file.Path;
 
 public class JBJGLFileIO {
+    public static void safeMakeDirectory(final Path dirPath) {
+        File dir = dirPath.toFile();
+
+        if (dir.exists())
+            JBJGLError.send("Filepath already exists: " + dirPath);
+        else if (!dir.mkdirs())
+            JBJGLError.send("Couldn't create directory at specified filepath: " + dirPath);
+    }
+
     public static String readFile(final Path filepath) {
         StringBuilder contents = new StringBuilder();
 

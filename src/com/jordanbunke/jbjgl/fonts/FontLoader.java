@@ -19,15 +19,18 @@ public class FontLoader {
     private static final char STARTING_ASCII = 33, FINAL_ASCII = 126;
     private static final int NUM_LATIN_EXTENDED_CHARS = 59;
     private static final int CHARS_ON_ROW = 16;
+    private static final int BASE_WHITESPACE_BREADTH = 8;
 
-    public static Map<Character, Grapheme> loadASCIIFromSource(final Path source) {
+    public static Map<Character, Grapheme> loadASCIIFromSource(
+            final Path source, final double whitespaceBreadthMultiplier
+    ) {
         JBJGLImage image = JBJGLImageIO.readImage(source);
         Map<Character, Grapheme> map = new HashMap<>();
 
         final int scaleMultiplier = sourceToScaleMultiplier(image);
 
         // manual insertion of space character
-        map.put(' ', whitespace(scaleMultiplier));
+        map.put(' ', whitespace(scaleMultiplier, whitespaceBreadthMultiplier));
 
         // manual insertion of replacement character
         final Grapheme replacementGrapheme = graphemeFromCoordinates(
@@ -108,8 +111,10 @@ public class FontLoader {
         return grapheme;
     }
 
-    private static Grapheme whitespace(final int scaleMultiplier) {
-        final int width = 8 * scaleMultiplier;
+    private static Grapheme whitespace(
+            final int scaleMultiplier, final double whitespaceBreadthMultiplier
+    ) {
+        final int width = (int)(BASE_WHITESPACE_BREADTH * whitespaceBreadthMultiplier * scaleMultiplier);
         return Grapheme.create(
                 JBJGLImage.create(width, LINE_HEIGHT * scaleMultiplier),
                 ' ', width, LINE_HEIGHT * scaleMultiplier);

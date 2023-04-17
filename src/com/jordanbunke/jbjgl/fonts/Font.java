@@ -12,14 +12,19 @@ import static com.jordanbunke.jbjgl.fonts.FontConstants.LATIN_EXTENDED_SUFFIX;
 
 public class Font {
 
-
     private final Map<Character, Grapheme> CHARACTER_MAP;
     private final int pixelSpacing, height;
+    private final boolean smoothResizing;
 
-    private Font(final Map<Character, Grapheme> characterMap, final int pixelSpacing, final int height) {
+    private Font(
+            final Map<Character, Grapheme> characterMap,
+            final int pixelSpacing, final int height,
+            final boolean smoothResizing
+    ) {
         CHARACTER_MAP = characterMap;
         this.pixelSpacing = pixelSpacing;
         this.height = height;
+        this.smoothResizing = smoothResizing;
     }
 
     public static Font loadFromSource(
@@ -27,10 +32,23 @@ public class Font {
             final boolean hasLatinExtended,
             final int pixelSpacing
     ) {
+        return Font.loadFromSource(
+                folder, baseName, hasLatinExtended,
+                1.0, pixelSpacing, false
+        );
+    }
+
+    public static Font loadFromSource(
+            final Path folder, final String baseName,
+            final boolean hasLatinExtended,
+            final double whitespaceBreadthMultiplier,
+            final int pixelSpacing,
+            final boolean smoothResizing
+    ) {
         final Path asciiFilepath = folder.resolve(baseName + ASCII_SUFFIX);
 
         Map<Character, Grapheme> characterMap =
-                FontLoader.loadASCIIFromSource(asciiFilepath);
+                FontLoader.loadASCIIFromSource(asciiFilepath, whitespaceBreadthMultiplier);
 
         // TODO: Each additional charset can be introduced with an analogous code block and font loader
         if (hasLatinExtended) {
@@ -44,7 +62,7 @@ public class Font {
 
         final int height = characterMap.get(' ').getHeight();
 
-        return new Font(characterMap, pixelSpacing, height);
+        return new Font(characterMap, pixelSpacing, height, smoothResizing);
     }
 
     public JBJGLImage drawChar(final char c, final Color color) {
@@ -61,6 +79,10 @@ public class Font {
 
     public int getHeight() {
         return height;
+    }
+
+    public boolean hasSmoothResizing() {
+        return smoothResizing;
     }
 
     private Grapheme getGrapheme(final char c) {

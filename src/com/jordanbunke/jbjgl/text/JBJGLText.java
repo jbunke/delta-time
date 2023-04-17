@@ -79,7 +79,7 @@ public class JBJGLText {
 
     public JBJGLImage draw() {
         JBJGLImage[] drawnLines = new JBJGLImage[lines.length];
-        int maxWidth = 0;
+        int maxWidth = 1;
 
         for (int i = 0; i < lines.length; i++) {
             int width = 0;
@@ -103,7 +103,9 @@ public class JBJGLText {
 
                 g.drawImage(scaleFactor == 1.
                                 ? drawnComponent
-                                : ImageProcessing.scaleUp(drawnComponent, scaleFactor),
+                                : ImageProcessing.scaleUp(
+                                    drawnComponent, scaleFactor,
+                                    lines[i][j].getFont().hasSmoothResizing()),
                         processed, 0, null);
                 processed += lines[i][j].calculateProspectiveWidth() * scaleFactor;
             }
