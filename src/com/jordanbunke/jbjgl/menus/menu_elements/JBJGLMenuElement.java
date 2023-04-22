@@ -172,6 +172,46 @@ public abstract class JBJGLMenuElement {
         );
     }
 
+    public void setX(final int x) {
+        position[RenderConstants.X] = x;
+    }
+
+    public void setY(final int y) {
+        position[RenderConstants.Y] = y;
+    }
+
+    public void incrementX(final int deltaX) {
+        position[RenderConstants.X] += deltaX;
+    }
+
+    public void incrementY(final int deltaY) {
+        position[RenderConstants.X] += deltaY;
+    }
+
+    public int getX() {
+        return position[RenderConstants.X];
+    }
+
+    public int getY() {
+        return position[RenderConstants.Y];
+    }
+
+    public int getWidth() {
+        return dimensions[RenderConstants.WIDTH];
+    }
+
+    public int getHeight() {
+        return dimensions[RenderConstants.HEIGHT];
+    }
+
+    public Anchor getAnchor() {
+        return anchor;
+    }
+
+    public boolean isVisible() {
+        return isVisible;
+    }
+
     @Override
     public String toString() {
         return "at (" + position[RenderConstants.X] +

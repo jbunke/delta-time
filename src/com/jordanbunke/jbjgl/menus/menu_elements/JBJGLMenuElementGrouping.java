@@ -42,4 +42,8 @@ public class JBJGLMenuElementGrouping extends JBJGLMenuElement {
         for (JBJGLMenuElement menuElement : menuElements)
             menuElement.process(listener, menuManager);
     }
+
+    public JBJGLMenuElement[] getMenuElements() {
+        return menuElements;
+    }
 }
