@@ -71,6 +71,10 @@ public class JBJGLListener implements
         }
     }
 
+    public List<JBJGLEvent> getAllEvents() {
+        return List.copyOf(eventList);
+    }
+
     public void emptyEventList() {
         CollectionProcessing.emptyList(eventList);
     }
@@ -118,11 +122,9 @@ public class JBJGLListener implements
 
     @Override
     public void keyTyped(KeyEvent e) {
-        JBJGLKey key = JBJGLKey.fromKeyEvent(e);
+        char character = e.getKeyChar();
 
-        handleKeyEvent(
-                JBJGLKeyEvent.generate(key, JBJGLKeyEvent.Action.TYPE)
-        );
+        handleKeyEvent(JBJGLKeyEvent.generateTyped(character));
     }
 
     @Override
