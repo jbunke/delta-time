@@ -3,8 +3,12 @@ package com.jordanbunke.jbjgl.io;
 import com.jordanbunke.jbjgl.error.JBJGLError;
 import com.jordanbunke.jbjgl.utility.StringProcessing;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Optional;
 
 public class JBJGLFileIO {
     public static void safeMakeDirectory(final Path dirPath) {
@@ -56,5 +60,41 @@ public class JBJGLFileIO {
 
     public static void writeFileOf(final Path filepath, final String... lines) {
         writeFile(filepath, lines, false);
+    }
+
+    public static void makeDirectory(final Path filepath) {
+        final File directory = filepath.toFile();
+
+        if (!directory.exists()) directory.mkdirs();
+    }
+
+    public static void deleteFile(final Path filepath) {
+        try {
+            Files.delete(filepath);
+        } catch (IOException e) {
+            JBJGLError.send("Couldn't delete file: " + filepath);
+        }
+    }
+
+    public static Optional<File> openFileFromSystem() {
+        return openFileFromSystem(new String[] {}, new String[][] {});
+    }
+
+    public static Optional<File> openFileFromSystem(final String[] filterNames, final String[][] extensionFilters) {
+        final JFileChooser fc = new JFileChooser();
+
+        if (filterNames.length != extensionFilters.length) {
+            JBJGLError.send("Number of filter names does not match number of extensions in file chooser");
+            return Optional.empty();
+        }
+
+        for (int i = 0; i < filterNames.length; i++)
+            fc.setFileFilter(new FileNameExtensionFilter(filterNames[i], extensionFilters[i]));
+
+        final int result = fc.showOpenDialog(null);
+
+        if (result == JFileChooser.APPROVE_OPTION)
+            return Optional.of(fc.getSelectedFile());
+        else return Optional.empty();
     }
 }
