@@ -32,7 +32,9 @@ public class JBJGLTextComponent extends JBJGLTextBlock {
             width += font.getPixelSpacing();
         }
 
-        return width;
+        width -= font.getPixelSpacing();
+
+        return Math.max(1, width);
     }
 
     public JBJGLImage draw() {
