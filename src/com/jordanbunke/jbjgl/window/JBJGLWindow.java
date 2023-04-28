@@ -4,7 +4,6 @@ import com.jordanbunke.jbjgl.image.JBJGLImage;
 import com.jordanbunke.jbjgl.io.JBJGLListener;
 
 import javax.swing.*;
-import java.awt.event.WindowEvent;
 
 public class JBJGLWindow {
     private final JFrame frame;

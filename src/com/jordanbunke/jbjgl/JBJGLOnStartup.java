@@ -1,6 +1,5 @@
-package com.jordanbunke.jbjgl.window;
+package com.jordanbunke.jbjgl;
 
-import com.jordanbunke.jbjgl.Constants;
 import com.jordanbunke.jbjgl.error.JBJGLError;
 import com.jordanbunke.jbjgl.utility.JBJGLGlobal;
 
@@ -14,8 +13,8 @@ public class JBJGLOnStartup {
     }
 
     private static void startUpMessages() {
-        JBJGLGlobal.printMessageToJBJGLChannel(Constants.TITLE + " v" + Constants.VERSION + ": Running...");
-        JBJGLGlobal.printMessageToJBJGLChannel("... out of: " + Paths.get("").toAbsolutePath());
+        JBJGLGlobal.printMessageToJBJGLChannel(Constants.TITLE + " v" + Constants.VERSION +
+                " | running from directory: " + Paths.get("").toAbsolutePath());
     }
 
     private static void setLookAndFeel() {

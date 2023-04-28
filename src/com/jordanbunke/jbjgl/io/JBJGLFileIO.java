@@ -27,7 +27,7 @@ public class JBJGLFileIO {
             JBJGLError.send("File not found: " + filepath);
         }
 
-        return "";
+        return null;
     }
 
     public static String readResource(final InputStream in, final String name) {
@@ -42,7 +42,8 @@ public class JBJGLFileIO {
             while (br.ready())
                 contents.append(br.readLine()).append("\n");
 
-            contents.deleteCharAt(contents.toString().length() - 1);
+            if (contents.toString().length() > 0)
+                contents.deleteCharAt(contents.toString().length() - 1);
         } catch (IOException e) {
             JBJGLError.send("Couldn't read: " + name);
         }

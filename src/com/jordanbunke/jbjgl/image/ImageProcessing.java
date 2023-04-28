@@ -1,5 +1,7 @@
 package com.jordanbunke.jbjgl.image;
 
+import com.jordanbunke.jbjgl.utility.RenderConstants;
+
 import java.awt.*;
 
 public class ImageProcessing {
@@ -57,8 +59,12 @@ public class ImageProcessing {
             final JBJGLImage image, final double scaleFactor,
             final boolean smooth
     ) {
-        final JBJGLImage scaledUp = JBJGLImage.create((int)(image.getWidth() * scaleFactor),
-                (int)(image.getHeight() * scaleFactor));
+        final int[] dims = new int[] {
+                Math.max(1, (int)(image.getWidth() * scaleFactor)),
+                Math.max(1, (int)(image.getHeight() * scaleFactor))
+        };
+
+        final JBJGLImage scaledUp = JBJGLImage.create(dims[RenderConstants.X], dims[RenderConstants.Y]);
         Graphics g = scaledUp.getGraphics();
 
         if (smooth) {
