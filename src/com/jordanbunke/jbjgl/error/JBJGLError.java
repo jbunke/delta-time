@@ -3,6 +3,9 @@ package com.jordanbunke.jbjgl.error;
 import com.jordanbunke.jbjgl.utility.JBJGLGlobal;
 
 public class JBJGLError extends Exception {
+
+    private static final String ANSI_RESET = "\033[0m", ANSI_RED_BOLD = "\033[1;31m";
+
     private final String message;
     private final Runnable consequence;
     private final boolean printToGlobal;
@@ -35,7 +38,7 @@ public class JBJGLError extends Exception {
 
     public void process() {
         if (printToGlobal)
-            JBJGLGlobal.printErrorToJBJGLChannel(message);
+            JBJGLGlobal.printMessageToJBJGLChannel(ANSI_RED_BOLD + "ERROR: " + message + ANSI_RESET);
 
         consequence.run();
 

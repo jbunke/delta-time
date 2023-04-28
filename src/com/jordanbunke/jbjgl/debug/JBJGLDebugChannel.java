@@ -5,21 +5,25 @@ import java.util.function.Consumer;
 public class JBJGLDebugChannel {
 
     private boolean muted;
+    private final boolean printsChannelID;
     private final String id;
     private Consumer<String> outputFunction;
 
     private JBJGLDebugChannel(
-            final String id, final Consumer<String> outputFunction, final boolean initiallyMuted
+            final String id, final Consumer<String> outputFunction,
+            final boolean initiallyMuted, final boolean printsChannelID
     ) {
         this.id = id;
         this.outputFunction = outputFunction;
         muted = initiallyMuted;
+        this.printsChannelID = printsChannelID;
     }
 
     public static JBJGLDebugChannel initialize(
-            final String id, final Consumer<String> outputFunction, final boolean initiallyMuted
+            final String id, final Consumer<String> outputFunction,
+            final boolean initiallyMuted, final boolean printsChannelID
     ) {
-        return new JBJGLDebugChannel(id, outputFunction, initiallyMuted);
+        return new JBJGLDebugChannel(id, outputFunction, initiallyMuted, printsChannelID);
     }
 
     public void unmute() {
@@ -40,6 +44,6 @@ public class JBJGLDebugChannel {
 
     public void printMessage(final String message) {
         if (!muted)
-            outputFunction.accept("[ \"" + id + "\": " + message + " ]");
+            outputFunction.accept("[ " + (printsChannelID ? "\"" + id + "\": " : "") + message + " ]");
     }
 }

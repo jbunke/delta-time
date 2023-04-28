@@ -166,8 +166,9 @@ public class JBJGLGameEngine implements Runnable {
             if (thisSecondSlice != lastSecondSlice) {
                 if (frameCount != oldFrameCount) {
                     debugger.updateFPS(frameCount);
-                    debugger.getChannel(JBJGLGameDebugger.PERFORMANCE_CHANNEL).
-                            printMessage(frameCount + " FPS (TARGET: " + TARGET_FPS + " FPS)");
+                    debugger.getChannel(JBJGLGameDebugger.FRAME_RATE).
+                            printMessage(frameCount + " FPS" + (Math.abs(frameCount - TARGET_FPS) > 1.0
+                                    ? " (target: " + (int)TARGET_FPS + " FPS)" : ""));
                     oldFrameCount = frameCount;
                 }
                 frameCount = 0;

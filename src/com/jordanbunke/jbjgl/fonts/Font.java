@@ -1,7 +1,7 @@
 package com.jordanbunke.jbjgl.fonts;
 
+import com.jordanbunke.jbjgl.error.JBJGLError;
 import com.jordanbunke.jbjgl.image.JBJGLImage;
-import com.jordanbunke.jbjgl.utility.JBJGLGlobal;
 
 import java.awt.*;
 import java.nio.file.Path;
@@ -27,20 +27,18 @@ public class Font {
         this.smoothResizing = smoothResizing;
     }
 
-    public static Font loadFromSource(
-            final Path folder, final String baseName,
-            final boolean hasLatinExtended,
+    public static <T> Font loadFromSource(
+            final Path folder, final Class<T> loaderClass,
+            final String baseName, final boolean hasLatinExtended,
             final int pixelSpacing
     ) {
-        return Font.loadFromSource(
-                folder, baseName, hasLatinExtended,
-                1.0, pixelSpacing, false
-        );
+        return Font.loadFromSource(folder, loaderClass, baseName, hasLatinExtended,
+                1.0, pixelSpacing, false);
     }
 
-    public static Font loadFromSource(
-            final Path folder, final String baseName,
-            final boolean hasLatinExtended,
+    public static <T> Font loadFromSource(
+            final Path folder, final Class<T> loaderClass,
+            final String baseName, final boolean hasLatinExtended,
             final double whitespaceBreadthMultiplier,
             final int pixelSpacing,
             final boolean smoothResizing
@@ -48,13 +46,13 @@ public class Font {
         final Path asciiFilepath = folder.resolve(baseName + ASCII_SUFFIX);
 
         Map<Character, Grapheme> characterMap =
-                FontLoader.loadASCIIFromSource(asciiFilepath, whitespaceBreadthMultiplier);
+                FontLoader.loadASCIIFromSource(asciiFilepath, loaderClass, whitespaceBreadthMultiplier);
 
         // TODO: Each additional charset can be introduced with an analogous code block and font loader
         if (hasLatinExtended) {
             final Path latinExtendedFilepath = folder.resolve(baseName + LATIN_EXTENDED_SUFFIX);
             Map<Character, Grapheme> latinExtendedMap =
-                    FontLoader.loadLatinExtendedFromSource(latinExtendedFilepath);
+                    FontLoader.loadLatinExtendedFromSource(latinExtendedFilepath, loaderClass);
 
             for (Character c : latinExtendedMap.keySet())
                 characterMap.put(c, latinExtendedMap.get(c));
@@ -89,10 +87,8 @@ public class Font {
         if (CHARACTER_MAP.containsKey(c))
             return CHARACTER_MAP.get(c);
         else {
-            JBJGLGlobal.printErrorToJBJGLChannel(
-                    "Attempted to draw the character \"" + c +
-                            "\", which is unsupported by this font."
-            );
+            JBJGLError.send("Attempted to draw the character \"" + c +
+                            "\", which is unsupported by this font.");
 
             return CHARACTER_MAP.get(FontConstants.REPLACEMENT);
         }

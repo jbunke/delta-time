@@ -1,9 +1,10 @@
 package com.jordanbunke.jbjgl.fonts;
 
+import com.jordanbunke.jbjgl.error.JBJGLError;
 import com.jordanbunke.jbjgl.image.ImageProcessing;
 import com.jordanbunke.jbjgl.image.JBJGLImage;
 import com.jordanbunke.jbjgl.io.JBJGLImageIO;
-import com.jordanbunke.jbjgl.utility.JBJGLGlobal;
+import com.jordanbunke.jbjgl.io.JBJGLResourceLoader;
 
 import java.awt.*;
 import java.nio.file.Path;
@@ -21,10 +22,13 @@ public class FontLoader {
     private static final int CHARS_ON_ROW = 16;
     private static final int BASE_WHITESPACE_BREADTH = 8;
 
-    public static Map<Character, Grapheme> loadASCIIFromSource(
-            final Path source, final double whitespaceBreadthMultiplier
+    public static <T> Map<Character, Grapheme> loadASCIIFromSource(
+            final Path source, final Class<T> loaderClass,
+            final double whitespaceBreadthMultiplier
     ) {
-        JBJGLImage image = JBJGLImageIO.readImage(source);
+        JBJGLImage image = loaderClass == null
+                ? JBJGLImageIO.readImage(source)
+                : JBJGLResourceLoader.loadImageResource(loaderClass, source);
         Map<Character, Grapheme> map = new HashMap<>();
 
         final int scaleMultiplier = sourceToScaleMultiplier(image);
@@ -50,8 +54,12 @@ public class FontLoader {
         return map;
     }
 
-    public static Map<Character, Grapheme> loadLatinExtendedFromSource(final Path source) {
-        JBJGLImage image = JBJGLImageIO.readImage(source);
+    public static <T> Map<Character, Grapheme> loadLatinExtendedFromSource(
+            final Path source, final Class<T> loaderClass
+    ) {
+        JBJGLImage image = loaderClass == null
+                ? JBJGLImageIO.readImage(source)
+                : JBJGLResourceLoader.loadImageResource(loaderClass, source);
         Map<Character, Grapheme> map = new HashMap<>();
 
         final int scaleMultiplier = sourceToScaleMultiplier(image);
@@ -213,7 +221,7 @@ public class FontLoader {
                         height / (double) FONT_SOURCE_BASE_HEIGHT;
 
         if (!(isMultiple && isProportional))
-            JBJGLGlobal.printErrorToJBJGLChannel(
+            JBJGLError.send(
                     "Source image file is not sized correctly, must be multiple of " +
                             FONT_SOURCE_BASE_WIDTH + "x" + FONT_SOURCE_BASE_HEIGHT);
 

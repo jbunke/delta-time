@@ -43,7 +43,7 @@ public class FontAndTextTests {
     @Test
     public void renderASCIITextForInFonts() {
         renderTextForInFonts(
-                "I wonder whether this will work (exactly) as intended...",
+                "Resource fetching test",
                 "ascii-test");
     }
 

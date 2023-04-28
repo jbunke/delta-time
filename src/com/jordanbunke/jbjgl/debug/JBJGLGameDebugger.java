@@ -5,9 +5,9 @@ import java.util.Map;
 
 public class JBJGLGameDebugger extends JBJGLDebugger {
 
-    public static final String PERFORMANCE_CHANNEL = "performance";
-    public static final String LOGIC_CHANNEL = "logic";
-    public static final String MEMORY_CHANNEL = "memory management";
+    public static final String FRAME_RATE = "FRAME RATE";
+    public static final String LOGIC_CHANNEL = "GAME LOGIC";
+    public static final String PERFORMANCE = "PERFORMANCE";
 
     private boolean showingBoundingBoxes;
     private int fps;
@@ -27,9 +27,9 @@ public class JBJGLGameDebugger extends JBJGLDebugger {
 
     private static Map<String, JBJGLDebugChannel> createBasicGameChannelMap() {
         Map<String, JBJGLDebugChannel> channelMap = new HashMap<>();
-        JBJGLDebugger.standardChannelAddition(channelMap, PERFORMANCE_CHANNEL);
-        JBJGLDebugger.standardChannelAddition(channelMap, LOGIC_CHANNEL);
-        JBJGLDebugger.standardChannelAddition(channelMap, MEMORY_CHANNEL);
+        JBJGLDebugger.standardChannelAddition(channelMap, FRAME_RATE, true);
+        JBJGLDebugger.standardChannelAddition(channelMap, LOGIC_CHANNEL, true);
+        JBJGLDebugger.standardChannelAddition(channelMap, PERFORMANCE, true);
         return channelMap;
     }
 

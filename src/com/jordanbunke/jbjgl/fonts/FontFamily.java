@@ -25,8 +25,8 @@ public class FontFamily {
         return new FontFamily(name, standard, bold, italics);
     }
 
-    public static FontFamily loadFromSources(
-            final String name, final Path folder,
+    public static <T> FontFamily loadFromSources(
+            final String name, final Path folder, final Class<T> loaderClass,
             final String standardBaseName,
             final String boldBaseName,
             final String italicsBaseName,
@@ -36,17 +36,14 @@ public class FontFamily {
             final boolean hasLatinExtended
     ) {
         Font standard = standardBaseName.equals(NOT_AVAILABLE)
-                ? null : Font.loadFromSource(
-                folder, standardBaseName, hasLatinExtended, standardSpacing
-        );
+                ? null : Font.loadFromSource(folder, loaderClass,
+                standardBaseName, hasLatinExtended, standardSpacing);
         Font bold = boldBaseName.equals(NOT_AVAILABLE)
-                ? null : Font.loadFromSource(
-                folder, boldBaseName, hasLatinExtended, boldSpacing
-        );
+                ? null : Font.loadFromSource(folder, loaderClass,
+                boldBaseName, hasLatinExtended, boldSpacing);
         Font italics = italicsBaseName.equals(NOT_AVAILABLE)
-                ? null : Font.loadFromSource(
-                folder, italicsBaseName, hasLatinExtended, italicsSpacing
-        );
+                ? null : Font.loadFromSource(folder, loaderClass,
+                italicsBaseName, hasLatinExtended, italicsSpacing);
 
         return new FontFamily(name, standard, bold, italics);
     }

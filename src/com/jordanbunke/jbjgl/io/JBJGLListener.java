@@ -1,8 +1,8 @@
 package com.jordanbunke.jbjgl.io;
 
+import com.jordanbunke.jbjgl.error.JBJGLError;
 import com.jordanbunke.jbjgl.events.*;
 import com.jordanbunke.jbjgl.utility.CollectionProcessing;
-import com.jordanbunke.jbjgl.utility.JBJGLGlobal;
 import com.jordanbunke.jbjgl.utility.RenderConstants;
 import com.jordanbunke.jbjgl.window.JBJGLCanvas;
 
@@ -64,7 +64,7 @@ public class JBJGLListener implements
             return List.copyOf(eventList).stream()
                     .filter(x -> !x.isProcessed()).collect(Collectors.toList());
         } catch (ConcurrentModificationException e) {
-            JBJGLGlobal.printErrorToJBJGLChannel(
+            JBJGLError.send(
                     "Attempted to fetch unprocessed input events as one occurred. Events were not returned."
             );
             return new ArrayList<>();

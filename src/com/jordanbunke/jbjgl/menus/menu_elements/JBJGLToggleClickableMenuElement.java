@@ -2,11 +2,11 @@ package com.jordanbunke.jbjgl.menus.menu_elements;
 
 import com.jordanbunke.jbjgl.contexts.JBJGLMenuManager;
 import com.jordanbunke.jbjgl.debug.JBJGLGameDebugger;
+import com.jordanbunke.jbjgl.error.JBJGLError;
 import com.jordanbunke.jbjgl.events.JBJGLEvent;
 import com.jordanbunke.jbjgl.events.JBJGLMouseEvent;
 import com.jordanbunke.jbjgl.image.JBJGLImage;
 import com.jordanbunke.jbjgl.io.JBJGLListener;
-import com.jordanbunke.jbjgl.utility.JBJGLGlobal;
 
 import java.awt.*;
 import java.util.List;
@@ -69,10 +69,8 @@ public class JBJGLToggleClickableMenuElement extends JBJGLMenuElement {
         try {
             index = updateIndexLogic.call();
         } catch (Exception e) {
-            JBJGLGlobal.printErrorToJBJGLChannel(
-                    "Could not perform index update in JBJGLToggleClickableMenuElement " +
-                            this + "."
-            );
+            JBJGLError.send("Could not perform index update in JBJGLToggleClickableMenuElement " +
+                    this + ".");
         }
     }
 

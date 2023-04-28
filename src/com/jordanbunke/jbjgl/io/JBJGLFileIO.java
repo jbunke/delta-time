@@ -21,16 +21,30 @@ public class JBJGLFileIO {
     }
 
     public static String readFile(final Path filepath) {
+        try {
+            return read(new FileReader(filepath.toFile()), filepath.toString());
+        } catch (FileNotFoundException e) {
+            JBJGLError.send("File not found: " + filepath);
+        }
+
+        return "";
+    }
+
+    public static String readResource(final InputStream in, final String name) {
+        return read(new InputStreamReader(in), "input stream for \"" + name + "\"");
+    }
+
+    private static String read(final Reader reader, final String name) {
         StringBuilder contents = new StringBuilder();
 
         try {
-            BufferedReader br = new BufferedReader(new FileReader(filepath.toFile()));
+            BufferedReader br = new BufferedReader(reader);
             while (br.ready())
                 contents.append(br.readLine()).append("\n");
 
             contents.deleteCharAt(contents.toString().length() - 1);
         } catch (IOException e) {
-            JBJGLError.send("Couldn't read file: " + filepath);
+            JBJGLError.send("Couldn't read: " + name);
         }
 
         return contents.toString();

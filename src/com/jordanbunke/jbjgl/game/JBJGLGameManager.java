@@ -2,9 +2,9 @@ package com.jordanbunke.jbjgl.game;
 
 import com.jordanbunke.jbjgl.contexts.ProgramContext;
 import com.jordanbunke.jbjgl.debug.JBJGLGameDebugger;
+import com.jordanbunke.jbjgl.error.JBJGLError;
 import com.jordanbunke.jbjgl.events.JBJGLEventHandler;
 import com.jordanbunke.jbjgl.io.JBJGLListener;
-import com.jordanbunke.jbjgl.utility.JBJGLGlobal;
 
 import java.awt.*;
 
@@ -33,10 +33,8 @@ public class JBJGLGameManager implements
 
     public void setGameStateAtIndex(final int index, final ProgramContext gameState) {
         if (index < 0 || index >= gameStates.length) {
-            JBJGLGlobal.printErrorToJBJGLChannel(
-                    "Invalid index for this JBJGLGameManager -  index: " +
-                            index + ", length: " + gameStates.length
-            );
+            JBJGLError.send("Invalid index for this JBJGLGameManager -  index: " +
+                            index + ", length: " + gameStates.length);
         }
 
         gameStates[index] = gameState;

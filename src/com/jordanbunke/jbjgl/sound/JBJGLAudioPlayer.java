@@ -1,6 +1,6 @@
 package com.jordanbunke.jbjgl.sound;
 
-import com.jordanbunke.jbjgl.utility.JBJGLGlobal;
+import com.jordanbunke.jbjgl.error.JBJGLError;
 
 import javax.sound.sampled.*;
 import java.io.IOException;
@@ -18,17 +18,12 @@ public class JBJGLAudioPlayer {
             clip.setFramePosition(BEGINNING);
             clip.start();
         } catch (UnsupportedAudioFileException e) {
-            JBJGLGlobal.printErrorToJBJGLChannel(
-                    "This is not a supported audio file: " + filepath
-            );
+            JBJGLError.send("This is not a supported audio file: " +
+                    filepath);
         } catch (LineUnavailableException e) {
-            JBJGLGlobal.printErrorToJBJGLChannel(
-                    "The line is not available."
-            );
+            JBJGLError.send("The line is not available.");
         } catch (IOException e) {
-            JBJGLGlobal.printErrorToJBJGLChannel(
-                    "Could not get the input stream for file: " + filepath
-            );
+            JBJGLError.send("Could not get the input stream for file: " + filepath);
         }
     }
 }
