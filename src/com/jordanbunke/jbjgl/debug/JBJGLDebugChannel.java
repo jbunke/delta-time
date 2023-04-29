@@ -44,6 +44,6 @@ public class JBJGLDebugChannel {
 
     public void printMessage(final String message) {
         if (!muted)
-            outputFunction.accept("[ " + (printsChannelID ? "\"" + id + "\": " : "") + message + " ]");
+            outputFunction.accept("[ " + (printsChannelID ? id + " | " : "") + message + " ]");
     }
 }

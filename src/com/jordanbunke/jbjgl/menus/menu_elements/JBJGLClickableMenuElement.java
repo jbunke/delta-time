@@ -13,8 +13,7 @@ import java.util.List;
 public class JBJGLClickableMenuElement extends JBJGLMenuElement {
 
     private boolean isHighlighted;
-    private final JBJGLImage nonHighlightedImage;
-    private final JBJGLImage highlightedImage;
+    private final JBJGLImage nonHighlightedImage, highlightedImage;
     private final Runnable onClickBehaviour;
 
     private JBJGLClickableMenuElement(
@@ -34,10 +33,9 @@ public class JBJGLClickableMenuElement extends JBJGLMenuElement {
             final JBJGLImage nonHighlightedImage, final JBJGLImage highlightedImage,
             final Runnable onClickBehaviour
     ) {
-        return new JBJGLClickableMenuElement(
-                position, dimensions, anchor,
-                nonHighlightedImage, highlightedImage, onClickBehaviour
-        );
+        return new JBJGLClickableMenuElement(position, dimensions, anchor,
+                nonHighlightedImage, highlightedImage,
+                onClickBehaviour);
     }
 
     @Override
@@ -65,6 +63,7 @@ public class JBJGLClickableMenuElement extends JBJGLMenuElement {
             if (e instanceof JBJGLMouseEvent mouseEvent &&
                     mouseEvent.matchesAction(JBJGLMouseEvent.Action.CLICK)) {
                 mouseEvent.markAsProcessed();
+
                 onClickBehaviour.run();
 
                 isHighlighted = false;
