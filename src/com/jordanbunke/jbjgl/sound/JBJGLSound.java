@@ -18,6 +18,7 @@ public final class JBJGLSound {
 
     private Clip playbackClip;
     private int frame;
+    private boolean playing;
 
     // TODO: add last played in millis buffer so that sound cannot be played repeatedly in too short a span of time
 
@@ -31,7 +32,15 @@ public final class JBJGLSound {
             throw new Error(e);
         }
 
-        playbackClip = null;
+        try {
+            playbackClip = AudioSystem.getClip();
+            playbackClip.open(format, data, 0, data.length);
+            playbackClip.setFramePosition(0);
+        } catch (LineUnavailableException e) {
+            JBJGLError.send("The line is not available.");
+            playbackClip = null;
+        }
+
         frame = NOT_SET;
     }
 
@@ -68,50 +77,61 @@ public final class JBJGLSound {
 
     public void play() {
         if (!isPlaying()) {
-            playbackClip = JBJGLAudioPlayer.getSoundClip(this);
+            if (playbackClip.isActive())
+                playbackClip.stop();
 
-            if (playbackClip != null)
-                playbackClip.start();
+            playing = true;
+
+            playbackClip.setFramePosition(0);
+            playbackClip.loop(0);
+            playbackClip.start();
         }
     }
 
     public void loop() {
         if (!isPlaying()) {
-            playbackClip = JBJGLAudioPlayer.getSoundClip(this);
+            if (playbackClip.isActive())
+                playbackClip.stop();
 
-            if (playbackClip != null) {
-                playbackClip.setLoopPoints(JBJGLAudioPlayer.BEGINNING, JBJGLAudioPlayer.END);
+            playing = true;
 
-                playbackClip.start();
-                playbackClip.loop(Clip.LOOP_CONTINUOUSLY);
-            }
+            playbackClip.setFramePosition(0);
+            playbackClip.loop(Clip.LOOP_CONTINUOUSLY);
+            playbackClip.start();
         }
     }
 
     public void pause() {
         if (isPlaying()) {
+            playing = false;
+
             frame = playbackClip.getFramePosition();
             playbackClip.stop();
         }
     }
 
     public void resume() {
-        if (playbackClip != null && !playbackClip.isRunning() && playbackClip.isOpen() && frame != NOT_SET) {
+        if (!isPlaying() && frame != NOT_SET) {
+            playing = true;
+
             playbackClip.setFramePosition(frame);
             playbackClip.start();
+
+            frame = NOT_SET;
         }
     }
 
     public void stop() {
         if (isPlaying()) {
+            playing = false;
+
+            frame = NOT_SET;
             playbackClip.stop();
-            playbackClip.close();
-            playbackClip = null;
         }
     }
 
     public boolean isPlaying() {
-        return playbackClip != null && playbackClip.isRunning();
+        return playing && playbackClip != null && playbackClip.isRunning();
     }
 
     public String getId() {
@@ -124,5 +144,12 @@ public final class JBJGLSound {
 
     public byte[] getData() {
         return data;
+    }
+
+    @Override
+    public String toString() {
+        return id + (playbackClip != null
+                ? " [ " + (isPlaying() ? "playing" : "paused at frame " + frame)
+                : "not playing") + " ]";
     }
 }
