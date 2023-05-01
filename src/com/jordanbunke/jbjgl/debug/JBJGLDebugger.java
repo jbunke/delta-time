@@ -69,10 +69,8 @@ public class JBJGLDebugger {
     public JBJGLDebugChannel getChannel(final String id) {
         if (channelMap.containsKey(id))
             return channelMap.get(id);
-        else {
-
+        else
             return channelMap.get(DEFAULT_CHANNEL);
-        }
     }
 
     // CUSTOM FIELDS

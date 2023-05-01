@@ -11,8 +11,7 @@ public class JBJGLGlobal {
     private static final String JBJGL_CHANNEL = Constants.TITLE;
 
     private static final JBJGLDebugger DEBUGGER = JBJGLDebugger.createWithExistingChannels(
-            generateChannelMap()
-    );
+            generateChannelMap());
 
     private static Map<String, JBJGLDebugChannel> generateChannelMap() {
         Map<String, JBJGLDebugChannel> channelMap = new HashMap<>();
