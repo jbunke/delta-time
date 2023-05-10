@@ -117,7 +117,8 @@ public class JBJGLListener implements
             }
 
         // add to list of unprocessed events iff there is no matching task
-        eventList.add(event);
+        if (event != null)
+            eventList.add(event);
     }
 
     @Override

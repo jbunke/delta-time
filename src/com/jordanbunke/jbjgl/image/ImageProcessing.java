@@ -11,15 +11,15 @@ public class ImageProcessing {
 
     public static JBJGLImage replaceColor(final JBJGLImage original,
                                              final Color toReplace, final Color replaceWith) {
-        JBJGLImage replacement = JBJGLImage.create(original.getWidth(), original.getHeight());
-        Graphics g = replacement.getGraphics();
+        final JBJGLImage replacement = JBJGLImage.create(original.getWidth(), original.getHeight());
+        final Graphics g = replacement.getGraphics();
         g.setColor(replaceWith);
 
-        g.drawImage(original, 0, 0, null);
+        // g.drawImage(original, 0, 0, null);
 
         for (int x = 0; x < replacement.getWidth(); x++) {
             for (int y = 0; y < replacement.getHeight(); y++) {
-                if (colorAtPixel(replacement, x, y).equals(toReplace))
+                if (colorAtPixel(original, x, y).equals(toReplace))
                     g.fillRect(x, y, 1, 1);
             }
         }
@@ -114,11 +114,22 @@ public class ImageProcessing {
         } else {
             for (int x = 0; x < image.getWidth(); x++) {
                 for (int y = 0; y < image.getHeight(); y++) {
-                    g.setColor(colorAtPixel(image, x, y));
-                    g.fillRect(
-                            (int)(x * scaleFactor), (int)(y * scaleFactor),
-                            (int)Math.ceil(scaleFactor), (int)Math.ceil(scaleFactor)
-                    );
+                    final Color color = colorAtPixel(image, x, y);
+                    g.setColor(color);
+
+                    if (color.getAlpha() < 255) {
+                        final int xInit = (int)(x * scaleFactor),
+                                yInit = (int)(y * scaleFactor),
+                                xBound = Math.min(scaledUp.getWidth(), xInit + (int)Math.ceil(scaleFactor)),
+                                yBound = Math.min(scaledUp.getHeight(), yInit + (int)Math.ceil(scaleFactor));
+                        for (int xp = xInit; xp < xBound; xp++)
+                            for (int yp = yInit; yp < yBound; yp++)
+                                if (!colorAtPixel(scaledUp, xp, yp).equals(color))
+                                    g.fillRect(xp, yp, 1, 1);
+
+                    } else
+                        g.fillRect((int)(x * scaleFactor), (int)(y * scaleFactor),
+                                (int)Math.ceil(scaleFactor), (int)Math.ceil(scaleFactor));
                 }
             }
         }
