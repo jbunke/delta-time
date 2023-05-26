@@ -2,6 +2,7 @@ package com.jordanbunke.jbjgl.game;
 
 import com.jordanbunke.jbjgl.debug.JBJGLGameDebugger;
 import com.jordanbunke.jbjgl.events.JBJGLEventHandler;
+import com.jordanbunke.jbjgl.image.ImageProcessing;
 import com.jordanbunke.jbjgl.image.JBJGLImage;
 import com.jordanbunke.jbjgl.window.JBJGLWindow;
 
@@ -16,6 +17,8 @@ public class JBJGLGameEngine implements Runnable {
     // Fields
     private JBJGLWindow window;
     private final Thread updateThread;
+    private int renderWidth, renderHeight;
+    private boolean scaleUp;
 
     private boolean running;
 
@@ -33,9 +36,15 @@ public class JBJGLGameEngine implements Runnable {
     ) {
         this.window = window;
         updateThread = new Thread(this, "[ " + window.getTitle() + " execution thread ]");
+
+        renderWidth = window.getWidth();
+        renderHeight = window.getHeight();
+        scaleUp = false;
+
         this.eventHandler = eventHandler;
         this.renderer = renderer;
         this.logicHandler = logicHandler;
+
         debugger = JBJGLGameDebugger.create();
 
         this.UPDATE_HZ = UPDATE_HZ;
@@ -119,8 +128,14 @@ public class JBJGLGameEngine implements Runnable {
     }
 
     public void replaceWindow(final JBJGLWindow replacement) {
+        final boolean adjustSize = window.getWidth() == renderWidth &&
+                window.getHeight() == renderHeight;
+
         window.closeInstance();
         window = replacement;
+
+        if (adjustSize)
+            setRenderDimension(window.getWidth(), window.getHeight());
     }
 
     // GAME LOOP
@@ -201,15 +216,32 @@ public class JBJGLGameEngine implements Runnable {
     }
 
     private void render() {
-        JBJGLImage toDraw = JBJGLImage.create(window.getWidth(), window.getHeight());
+        JBJGLImage toDraw = JBJGLImage.create(renderWidth, renderHeight);
         Graphics g = toDraw.getGraphics();
         renderer.render(g, debugger);
-        window.draw(toDraw);
+
+        window.draw(scaleUp ? ImageProcessing.scaleUp(toDraw,
+                window.getWidth() / (double)renderWidth, false)
+                        : toDraw);
     }
 
     // SETTERS
     public void overrideDebugger(final JBJGLGameDebugger debugger) {
         this.debugger = debugger;
+    }
+
+    public void setRenderDimension(final int renderWidth, final int renderHeight) {
+        this.renderWidth = renderWidth;
+        this.renderHeight = renderHeight;
+
+        this.scaleUp = window.getWidth() != renderWidth ||
+                window.getHeight() != renderHeight;
+
+        if (scaleUp)
+            window.getListener().setScaleUpRatio(
+                    window.getWidth() / (double)renderWidth,
+                    window.getHeight() / (double)renderHeight
+            );
     }
 
     // GETTERS

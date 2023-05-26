@@ -6,7 +6,7 @@ import com.jordanbunke.jbjgl.io.JBJGLListener;
 
 import java.awt.*;
 
-public class JBJGLMenuElementGrouping extends JBJGLMenuElement {
+public class JBJGLMenuElementGrouping extends JBJGLMenuElementContainer {
     private final JBJGLMenuElement[] menuElements;
 
     private JBJGLMenuElementGrouping(
@@ -43,7 +43,13 @@ public class JBJGLMenuElementGrouping extends JBJGLMenuElement {
             menuElement.process(listener, menuManager);
     }
 
+    @Override
     public JBJGLMenuElement[] getMenuElements() {
         return menuElements;
+    }
+
+    @Override
+    public boolean hasNonTrivialBehaviour() {
+        return false;
     }
 }

@@ -1,4 +1,4 @@
-package com.jordanbunke.jbjgl.menus.menu_elements;
+package com.jordanbunke.jbjgl.menus.menu_elements.button;
 
 import com.jordanbunke.jbjgl.contexts.JBJGLMenuManager;
 import com.jordanbunke.jbjgl.debug.JBJGLGameDebugger;
@@ -6,10 +6,15 @@ import com.jordanbunke.jbjgl.events.JBJGLEvent;
 import com.jordanbunke.jbjgl.events.JBJGLMouseEvent;
 import com.jordanbunke.jbjgl.image.JBJGLImage;
 import com.jordanbunke.jbjgl.io.JBJGLListener;
+import com.jordanbunke.jbjgl.menus.menu_elements.JBJGLMenuElement;
 
 import java.awt.*;
 import java.util.List;
 
+/**
+ * Behaviour essentially replaced by {@link JBJGLSimpleMenuButton}
+ * */
+@Deprecated(since = "0.1.1.38")
 public class JBJGLClickableMenuElement extends JBJGLMenuElement {
 
     private boolean isHighlighted;

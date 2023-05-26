@@ -35,9 +35,8 @@ public class JBJGLGameManager implements
         if (index < 0 || index >= gameStates.length) {
             JBJGLError.send("Invalid index for this JBJGLGameManager -  index: " +
                             index + ", length: " + gameStates.length);
-        }
-
-        gameStates[index] = gameState;
+        } else
+            gameStates[index] = gameState;
     }
 
     public void setActiveStateIndex(int activeStateIndex) {

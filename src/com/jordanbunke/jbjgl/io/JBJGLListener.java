@@ -13,11 +13,15 @@ import java.util.stream.Collectors;
 public class JBJGLListener implements
         KeyListener, MouseListener, MouseMotionListener, WindowListener {
 
+    private static final double DEFAULT_SCALE = 1.0;
+
     private final List<JBJGLInputTask> tasks;
 
     private final List<JBJGLEvent> eventList;
     private final Map<JBJGLKey, Boolean> characterPressedStatusMap;
     private final int[] mousePosition;
+
+    private double scaleUpRatioX, scaleUpRatioY;
 
     private JBJGLListener(final JBJGLCanvas canvas) {
         canvas.addKeyListener(this);
@@ -29,6 +33,9 @@ public class JBJGLListener implements
         eventList = new ArrayList<>();
         characterPressedStatusMap = new HashMap<>();
         mousePosition = new int[2];
+
+        scaleUpRatioX = DEFAULT_SCALE;
+        scaleUpRatioY = DEFAULT_SCALE;
     }
 
     public static JBJGLListener create(final JBJGLCanvas canvas) {
@@ -101,6 +108,20 @@ public class JBJGLListener implements
     }
 
     public int[] getMousePosition() {
+        return mousePosition;
+    }
+
+    private boolean isScaledUp() {
+        return scaleUpRatioX != DEFAULT_SCALE || scaleUpRatioY != DEFAULT_SCALE;
+    }
+
+    public int[] getAdjustedMousePosition() {
+        if (isScaledUp())
+            return new int[] {
+                    (int)(mousePosition[RenderConstants.X] / scaleUpRatioX),
+                    (int)(mousePosition[RenderConstants.Y] / scaleUpRatioY)
+        };
+
         return mousePosition;
     }
 
@@ -268,5 +289,10 @@ public class JBJGLListener implements
         eventList.add(
                 JBJGLWindowEvent.generate(JBJGLWindowEvent.Action.DEACTIVATED)
         );
+    }
+
+    public void setScaleUpRatio(final double scaleUpRatioX, final double scaleUpRatioY) {
+        this.scaleUpRatioX = scaleUpRatioX;
+        this.scaleUpRatioY = scaleUpRatioY;
     }
 }

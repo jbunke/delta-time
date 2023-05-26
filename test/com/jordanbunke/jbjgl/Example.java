@@ -7,7 +7,7 @@ import com.jordanbunke.jbjgl.game.JBJGLGameManager;
 import com.jordanbunke.jbjgl.image.JBJGLImage;
 import com.jordanbunke.jbjgl.menus.JBJGLMenu;
 import com.jordanbunke.jbjgl.menus.menu_elements.JBJGLAnimationMenuElement;
-import com.jordanbunke.jbjgl.menus.menu_elements.JBJGLClickableMenuElement;
+import com.jordanbunke.jbjgl.menus.menu_elements.button.JBJGLClickableMenuElement;
 import com.jordanbunke.jbjgl.menus.menu_elements.JBJGLMenuElement;
 import com.jordanbunke.jbjgl.text.JBJGLText;
 import com.jordanbunke.jbjgl.text.JBJGLTextComponent;
