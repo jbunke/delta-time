@@ -47,34 +47,34 @@ public abstract class JBJGLSelectableMenuElement extends JBJGLMenuElement {
                 if (diffY <= 0)
                     return UNSUITABLE;
 
-                return (int)(Math.abs(diffY) * calculateDiagonalMultiplier(diffY, diffX));
+                return Math.abs(diffY) + diagonalTax(diffX);
             }
             case DOWN -> {
                 if (diffY >= 0)
                     return UNSUITABLE;
 
-                return (int)(Math.abs(diffY) * calculateDiagonalMultiplier(diffY, diffX));
+                return Math.abs(diffY) + diagonalTax(diffX);
             }
             case LEFT -> {
                 if (diffX <= 0)
                     return UNSUITABLE;
 
-                return (int)(Math.abs(diffX) * calculateDiagonalMultiplier(diffX, diffY));
+                return Math.abs(diffX) + diagonalTax(diffY);
             }
             case RIGHT -> {
                 if (diffX >= 0)
                     return UNSUITABLE;
 
-                return (int)(Math.abs(diffX) * calculateDiagonalMultiplier(diffX, diffY));
+                return Math.abs(diffX) + diagonalTax(diffY);
             }
         }
 
         return UNSUITABLE;
     }
 
-    private double calculateDiagonalMultiplier(final int dim, final int offDim) {
-        final double offDimensionExacerbate = 0.8;
-        return Math.max(1.0, Math.abs(offDim / (offDimensionExacerbate * dim)));
+    private int diagonalTax(final int offDim) {
+        final double diagonalMultiplier = 2.0;
+        return (int)(Math.abs(offDim) * diagonalMultiplier);
     }
 
     public boolean isSelected() {
