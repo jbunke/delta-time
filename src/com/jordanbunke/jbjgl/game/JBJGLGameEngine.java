@@ -221,8 +221,7 @@ public class JBJGLGameEngine implements Runnable {
         renderer.render(g, debugger);
 
         window.draw(scaleUp ? ImageProcessing.scaleUp(toDraw,
-                window.getWidth() / (double)renderWidth, false)
-                        : toDraw);
+                window.getWidth() / renderWidth) : toDraw);
     }
 
     // SETTERS

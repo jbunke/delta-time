@@ -30,15 +30,14 @@ public class ImageProcessing {
     }
 
     public static void drawOnto(
-            final JBJGLImage drawnOn, final JBJGLImage toDraw, final int xOffset, final int yOffset
+            final JBJGLImage canvas, final JBJGLImage toDraw, final int xOffset, final int yOffset
     ) {
-        Graphics g = drawnOn.getGraphics();
+        Graphics g = canvas.getGraphics();
         g.drawImage(toDraw, xOffset, yOffset, null);
+        g.dispose();
     }
 
     public static JBJGLImage scaleUp(final JBJGLImage image, final int scaleFactor) {
-        // TODO: scaleFactor >= 1
-
         JBJGLImage scaledUp = JBJGLImage.create(image.getWidth() * scaleFactor,
                 image.getHeight() * scaleFactor);
         Graphics g = scaledUp.getGraphics();

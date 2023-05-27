@@ -33,16 +33,14 @@ public class MenuSelectionExample {
                 JBJGLImage.create(1, 1), true, false,
                 REFRESH_RATE_HZ, REFRESH_RATE_HZ);
         exampleGame.getGameEngine().setRenderDimension(CANVAS_W, CANVAS_H);
-        exampleGame.getGameEngine().getDebugger().hideBoundingBoxes();
+        // exampleGame.getGameEngine().getDebugger().hideBoundingBoxes();
     }
 
     private static JBJGLMenuElementGrouping generateMenuElements() {
         return JBJGLMenuElementGrouping.generateOf(
                 generateBackground(),
-                generateButton("Play", 0.5, 0.2),
-                generateButton("Achievements", 0.5, 0.4),
-                generateButton("Collectibles", 0.5, 0.6),
-                generateButton("Settings", 0.2, 0.9),
+                generateButton("Play", 0.2, 0.9),
+                generateButton("Settings", 0.5, 0.9),
                 generateButton("Quit", 0.8, 0.9)
         );
     }
@@ -64,9 +62,9 @@ public class MenuSelectionExample {
             final String text, final double x, final double y
     ) {
         final Font font = FontsForTests.BASIC.getBold();
-        final double textSize = 0.8;
+        final double textSize = 1.0;
         final Color nhc = new Color(0, 0, 0, 255),
-                hc = new Color(255, 0, 0, 255);
+                hc = new Color(255, 255, 255, 255);
 
         final JBJGLImage nhi = JBJGLTextBuilder.initialize(textSize,
                 JBJGLText.Orientation.CENTER, nhc, font).addText(text).build().draw(),
