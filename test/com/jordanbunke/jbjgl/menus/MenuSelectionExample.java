@@ -16,7 +16,7 @@ import com.jordanbunke.jbjgl.text.JBJGLTextBuilder;
 import java.awt.*;
 
 public class MenuSelectionExample {
-    private static final int CANVAS_W = 320, CANVAS_H = 180, WINDOW_SCALE_UP = 4;
+    private static final int CANVAS_W = 320, CANVAS_H = 180, WINDOW_SCALE_UP = 6;
     private static final double REFRESH_RATE_HZ = 60.;
 
     public static void main(String[] args) {
@@ -30,7 +30,7 @@ public class MenuSelectionExample {
                                 JBJGLMenuSelectionLogic.basic()), "menu"));
         final JBJGLGame exampleGame = JBJGLGame.create("Example", gameManager,
                 CANVAS_W * WINDOW_SCALE_UP, CANVAS_H * WINDOW_SCALE_UP,
-                JBJGLImage.create(1, 1), true, false,
+                JBJGLImage.create(1, 1), true, true,
                 REFRESH_RATE_HZ, REFRESH_RATE_HZ);
         exampleGame.getGameEngine().setRenderDimension(CANVAS_W, CANVAS_H);
         // exampleGame.getGameEngine().getDebugger().hideBoundingBoxes();
@@ -39,9 +39,9 @@ public class MenuSelectionExample {
     private static JBJGLMenuElementGrouping generateMenuElements() {
         return JBJGLMenuElementGrouping.generateOf(
                 generateBackground(),
-                generateButton("Play", 0.2, 0.9),
-                generateButton("Settings", 0.5, 0.9),
-                generateButton("Quit", 0.8, 0.9)
+                generateButton("Play", 0.3, 0.2),
+                generateButton("Settings", 0.5, 0.5),
+                generateButton("Quit", 0.7, 0.8)
         );
     }
 
@@ -61,7 +61,7 @@ public class MenuSelectionExample {
     private static JBJGLSimpleMenuButton generateButton(
             final String text, final double x, final double y
     ) {
-        final Font font = FontsForTests.BASIC.getBold();
+        final Font font = FontsForTests.CLASSIC.getItalics(); // BASIC.getBold() / CLASSIC.getItalics()
         final double textSize = 1.0;
         final Color nhc = new Color(0, 0, 0, 255),
                 hc = new Color(255, 255, 255, 255);
