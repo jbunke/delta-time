@@ -155,13 +155,22 @@ public class JBJGLGameEngine implements Runnable {
 
         while (running) {
             double now = System.nanoTime();
+            long refMillis;
 
             // UPDATE BLOCK
             int updateCount = 0;
             while (((now - lastUpdateTime) > NANOSECONDS_PER_UPDATE) &&
                     (updateCount < MUST_UPDATE_BEFORE_RENDER)) {
+                // Update
+                refMillis = System.currentTimeMillis();
                 update();
+                debugger.setUpdateMillis(System.currentTimeMillis() - refMillis);
+
+                // Event Handler
+                refMillis = System.currentTimeMillis();
                 callEventHandler();
+                debugger.setEventHandlerMillis(System.currentTimeMillis() - refMillis);
+
                 lastUpdateTime += NANOSECONDS_PER_UPDATE;
                 updateCount++;
             }
@@ -216,12 +225,20 @@ public class JBJGLGameEngine implements Runnable {
     }
 
     private void render() {
+        long refMillis;
+
+        // Render
+        refMillis = System.currentTimeMillis();
         JBJGLImage toDraw = JBJGLImage.create(renderWidth, renderHeight);
         Graphics g = toDraw.getGraphics();
         renderer.render(g, debugger);
+        debugger.setRenderMillis(System.currentTimeMillis() - refMillis);
 
+        // Draw
+        refMillis = System.currentTimeMillis();
         window.draw(scaleUp ? ImageProcessing.scaleUp(toDraw,
                 window.getWidth() / renderWidth) : toDraw);
+        debugger.setDrawMillis(System.currentTimeMillis() - refMillis);
     }
 
     // SETTERS

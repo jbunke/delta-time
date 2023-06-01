@@ -42,12 +42,14 @@ public class ImageProcessing {
                 image.getHeight() * scaleFactor);
         Graphics g = scaledUp.getGraphics();
 
-        for (int x = 0; x < image.getWidth(); x++) {
-            for (int y = 0; y < image.getHeight(); y++) {
-                g.setColor(colorAtPixel(image, x, y));
-                g.fillRect(x * scaleFactor, y * scaleFactor, scaleFactor, scaleFactor);
-            }
-        }
+        g.drawImage(image, 0, 0, scaledUp.getWidth(), scaledUp.getHeight(), null);
+
+//        for (int x = 0; x < image.getWidth(); x++) {
+//            for (int y = 0; y < image.getHeight(); y++) {
+//                g.setColor(colorAtPixel(image, x, y));
+//                g.fillRect(x * scaleFactor, y * scaleFactor, scaleFactor, scaleFactor);
+//            }
+//        }
 
         g.dispose();
 

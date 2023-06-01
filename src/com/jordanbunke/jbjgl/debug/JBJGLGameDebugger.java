@@ -11,6 +11,7 @@ public class JBJGLGameDebugger extends JBJGLDebugger {
 
     private boolean showingBoundingBoxes;
     private int fps;
+    private long updateMillis, eventHandlerMillis, renderMillis, drawMillis;
 
     private JBJGLGameDebugger(final Map<String, JBJGLDebugChannel> channelMap) {
         super(channelMap);
@@ -39,6 +40,38 @@ public class JBJGLGameDebugger extends JBJGLDebugger {
 
     public int getFPS() {
         return fps;
+    }
+
+    public void setUpdateMillis(final long updateMillis) {
+        this.updateMillis = updateMillis;
+    }
+
+    public void setEventHandlerMillis(final long eventHandlerMillis) {
+        this.eventHandlerMillis = eventHandlerMillis;
+    }
+
+    public void setRenderMillis(final long renderMillis) {
+        this.renderMillis = renderMillis;
+    }
+
+    public void setDrawMillis(final long drawMillis) {
+        this.drawMillis = drawMillis;
+    }
+
+    public long getUpdateMillis() {
+        return updateMillis;
+    }
+
+    public long getEventHandlerMillis() {
+        return eventHandlerMillis;
+    }
+
+    public long getRenderMillis() {
+        return renderMillis;
+    }
+
+    public long getDrawMillis() {
+        return drawMillis;
     }
 
     public boolean isShowingBoundingBoxes() {
