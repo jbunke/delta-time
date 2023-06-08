@@ -21,7 +21,7 @@ public class TileMapTests {
         goal = new Coord2D(0, 0);
 
         final String[] names = new String[] {
-                "tilemap_1", "tilemap_2"
+                "tilemap_1", "tilemap_2", "tilemap_3", "tilemap_4"
         };
 
         for (String name : names)

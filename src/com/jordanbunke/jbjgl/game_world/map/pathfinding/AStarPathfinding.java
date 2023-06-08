@@ -2,7 +2,7 @@ package com.jordanbunke.jbjgl.game_world.map.pathfinding;
 
 import com.jordanbunke.jbjgl.game_world.Coord2D;
 import com.jordanbunke.jbjgl.game_world.Vector;
-import com.jordanbunke.jbjgl.game_world.map.TileMap;
+import com.jordanbunke.jbjgl.game_world.map.JBJGLTileMap;
 
 import java.util.*;
 
@@ -10,7 +10,7 @@ public class AStarPathfinding {
 
     public static <E extends Vector> List<Coord2D> findPath(
             final Coord2D start, final Coord2D goal,
-            final TileMap<E> environment,
+            final JBJGLTileMap<E> environment,
             final boolean canMoveDiagonally
     ) {
         // 1: initialize open and closed collections
@@ -61,9 +61,9 @@ public class AStarPathfinding {
                     if (closed.contains(neighbour))
                         continue;
 
-                    final double updatedNeighbourTotal =
-                            Coord2D.unitDistanceBetween(checking.coordinate, neighbour.coordinate) +
-                                    neighbour.getHCost() + checking.getTotalCost();
+                    final double gCost = Coord2D.unitDistanceBetween(checking.coordinate, neighbour.coordinate) *
+                            environment.calculateGCostMultiplier(neighbour.coordinate.x, neighbour.coordinate.y);
+                    final double updatedNeighbourTotal = gCost + neighbour.getHCost() + checking.getTotalCost();
 
                     if (updatedNeighbourTotal < neighbour.getTotalCost() || !open.contains(neighbour)) {
                         neighbour.setCost(updatedNeighbourTotal - neighbour.getHCost());

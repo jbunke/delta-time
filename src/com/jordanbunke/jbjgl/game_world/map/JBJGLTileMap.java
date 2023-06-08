@@ -4,7 +4,7 @@ import com.jordanbunke.jbjgl.game_world.Vector;
 import com.jordanbunke.jbjgl.game_world.Vector2D;
 import com.jordanbunke.jbjgl.game_world.Vector3D;
 
-public class TileMap<E extends Vector> {
+public abstract class JBJGLTileMap<E extends Vector> {
     // TODO
     private final int width, height;
 
@@ -13,7 +13,7 @@ public class TileMap<E extends Vector> {
     private final JBJGLTile[][] tiles;
 
     // TODO - temp
-    public TileMap(
+    public JBJGLTileMap(
             final int width, final int height,
             final E topLeftVectorAnchor,
             final double tileWorldWidth,
@@ -29,17 +29,19 @@ public class TileMap<E extends Vector> {
         tiles = new JBJGLTile[width][height];
     }
 
-    public void populateTiles(final JBJGLTile[][] tiles) {
+    public abstract double calculateGCostMultiplier(final int x, final int y);
+
+    public final void populateTiles(final JBJGLTile[][] tiles) {
         for (int x = 0; x < width; x++)
             if (height >= 0)
                 System.arraycopy(tiles[x], 0, this.tiles[x], 0, height);
     }
 
-    public boolean tileAtIsValidPathComponent(final int x, final int y) {
+    public final boolean tileAtIsValidPathComponent(final int x, final int y) {
         return tiles[x][y].isValidPathComponent();
     }
 
-    public E getWorldPosition(final int x, final int y) {
+    public final E getWorldPosition(final int x, final int y) {
         return displaceBy(topLeftVectorAnchor,
                 (tileWorldWidth / 2d) + x * tileWorldWidth,
                 (tileWorldLength / 2d) + y * tileWorldLength
@@ -55,15 +57,15 @@ public class TileMap<E extends Vector> {
         return reference;
     }
 
-    public int getWidth() {
+    public final int getWidth() {
         return width;
     }
 
-    public int getHeight() {
+    public final int getHeight() {
         return height;
     }
 
-    public JBJGLTile getTileAt(final int x, final int y) {
+    public final JBJGLTile getTileAt(final int x, final int y) {
         return tiles[x][y];
     }
 }
