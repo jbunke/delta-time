@@ -1,6 +1,7 @@
-package com.jordanbunke.jbjgl.game_world;
+package com.jordanbunke.jbjgl.game_world.entity;
 
 import com.jordanbunke.jbjgl.debug.JBJGLGameDebugger;
+import com.jordanbunke.jbjgl.game_world.Vector;
 
 import java.awt.*;
 

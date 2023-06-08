@@ -1,4 +1,6 @@
-package com.jordanbunke.jbjgl.game_world;
+package com.jordanbunke.jbjgl.game_world.entity;
+
+import com.jordanbunke.jbjgl.game_world.Vector;
 
 public abstract class Entity<E extends Vector> {
     private E position;

@@ -1,4 +1,7 @@
-package com.jordanbunke.jbjgl.game_world;
+package com.jordanbunke.jbjgl.game_world.entity;
+
+import com.jordanbunke.jbjgl.game_world.Collider;
+import com.jordanbunke.jbjgl.game_world.Vector;
 
 public abstract class CollisionEntity<E extends Vector> extends RenderEntity<E> {
     private final Collider<E> collider;
