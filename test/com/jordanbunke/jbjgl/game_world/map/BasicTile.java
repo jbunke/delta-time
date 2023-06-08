@@ -13,23 +13,26 @@ public class BasicTile extends JBJGLTile {
         this.type = type;
     }
 
-    public static BasicTile fromRead(final char c) {
-        return switch (c) {
-            case 'x' -> new BasicTile(Type.WALL);
-            case 'o' -> new BasicTile(Type.FLOOR);
-            case 's' -> new BasicTile(Type.START);
-            case 'g' -> new BasicTile(Type.GOAL);
-            default -> new BasicTile(Type.INVALID);
-        };
+    public static BasicTile fromRead(final Color c) {
+        if (c.equals(new Color(0, 255, 0, 255)))
+            return new BasicTile(Type.START);
+        else if (c.equals(new Color(255, 0, 0, 255)))
+            return new BasicTile(Type.GOAL);
+        else if (c.equals(new Color(255, 255, 255, 255)))
+            return new BasicTile(Type.FLOOR);
+        else if (c.equals(new Color(0, 0, 0, 255)))
+            return new BasicTile(Type.WALL);
+
+        return new BasicTile(Type.INVALID);
     }
 
     public Color getColor() {
         return switch (type) {
-            case WALL -> new Color(100, 100, 100, 255);
-            case FLOOR -> new Color(200, 200, 200, 255);
+            case WALL -> new Color(0, 0, 0, 255);
+            case FLOOR -> new Color(255, 255, 255, 255);
             case START -> new Color(0, 255, 0, 255);
             case GOAL -> new Color(255, 0, 0, 255);
-            default -> new Color(0, 0, 0, 255);
+            default -> new Color(100, 100, 100, 255);
         };
     }
 

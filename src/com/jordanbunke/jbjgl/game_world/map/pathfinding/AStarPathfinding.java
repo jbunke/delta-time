@@ -10,7 +10,8 @@ public class AStarPathfinding {
 
     public static <E extends Vector> List<Coord2D> findPath(
             final Coord2D start, final Coord2D goal,
-            final TileMap<E> environment
+            final TileMap<E> environment,
+            final boolean canMoveDiagonally
     ) {
         // 1: initialize open and closed collections
         final PriorityQueue<PathfindingNode> open = new PriorityQueue<>();
@@ -50,6 +51,9 @@ public class AStarPathfinding {
             for (int x = checking.coordinate.x - 1; x < checking.coordinate.x + 2; x++) {
                 for (int y = checking.coordinate.y - 1; y < checking.coordinate.y + 2; y++) {
                     if (x < 0 || x >= environment.getWidth() || y < 0 || y >= environment.getHeight())
+                        continue;
+
+                    if (!canMoveDiagonally && x != checking.coordinate.x && y != checking.coordinate.y)
                         continue;
 
                     final PathfindingNode neighbour = nodeMap[x][y];

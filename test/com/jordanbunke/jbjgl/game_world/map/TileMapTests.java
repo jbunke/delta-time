@@ -4,8 +4,8 @@ import com.jordanbunke.jbjgl.Example;
 import com.jordanbunke.jbjgl.game_world.Coord2D;
 import com.jordanbunke.jbjgl.game_world.Vector2D;
 import com.jordanbunke.jbjgl.game_world.map.pathfinding.AStarPathfinding;
+import com.jordanbunke.jbjgl.image.ImageProcessing;
 import com.jordanbunke.jbjgl.image.JBJGLImage;
-import com.jordanbunke.jbjgl.io.JBJGLFileIO;
 import com.jordanbunke.jbjgl.io.JBJGLImageIO;
 import com.jordanbunke.jbjgl.io.JBJGLResourceLoader;
 
@@ -21,7 +21,7 @@ public class TileMapTests {
         goal = new Coord2D(0, 0);
 
         final String[] names = new String[] {
-                "tilemap_1"
+                "tilemap_1", "tilemap_2"
         };
 
         for (String name : names)
@@ -29,28 +29,21 @@ public class TileMapTests {
     }
 
     private static void perform(final String name) {
-        TileMap<Vector2D> tileMap = load(name + ".txt");
+        TileMap<Vector2D> tileMap = load(name + ".png");
 
         final long startTime = System.currentTimeMillis();
-        List<Coord2D> path = AStarPathfinding.findPath(start, goal, tileMap);
+        List<Coord2D> path = AStarPathfinding.findPath(start, goal, tileMap, false);
         final long elapsed = System.currentTimeMillis() - startTime;
 
-        System.out.println("Elapsed: " + elapsed + " ms");
+        System.out.printf("Elapsed (%s) : " + elapsed + " ms\n", name);
 
         drawAndSave(tileMap, path, name);
     }
 
     private static TileMap<Vector2D> load(final String filename) {
-        String fileContents = JBJGLFileIO.readResource(
-                JBJGLResourceLoader.loadResource(Example.class, Path.of("tilemaps", filename)), ""
-        );
-        String[] lines = fileContents.split("\n");
+        final JBJGLImage tileSource = JBJGLResourceLoader.loadImageResource(Example.class, Path.of("tilemaps", filename));
 
-        final int width, height;
-
-        final String firstLine = lines[0];
-        width = Integer.parseInt(firstLine.substring(0, firstLine.indexOf(',')));
-        height = Integer.parseInt(firstLine.substring(firstLine.indexOf(',') + 1));
+        final int width = tileSource.getWidth(), height = tileSource.getHeight();
 
         final TileMap<Vector2D> tileMap = new TileMap<>(width, height, new Vector2D(), 3d, 3d);
 
@@ -58,12 +51,12 @@ public class TileMapTests {
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                final char c = lines[y + 1].charAt(x);
+                final Color c = ImageProcessing.colorAtPixel(tileSource, x, y);
                 tiles[x][y] = BasicTile.fromRead(c);
 
-                if (c == 's')
+                if (c.equals(new Color(255, 0, 0, 255)))
                     start = new Coord2D(x, y);
-                else if (c == 'g')
+                else if (c.equals(new Color(0, 255, 0, 255)))
                     goal = new Coord2D(x, y);
             }
         }
