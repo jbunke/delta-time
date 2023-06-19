@@ -9,18 +9,16 @@ import com.jordanbunke.jbjgl.window.GameWindow;
 import java.awt.*;
 
 public class GameEngine implements Runnable {
+    private static final double STANDARD_UPDATE_HZ = 100d, STANDARD_FPS = 60d;
+
     // Constants
-    private final double UPDATE_HZ;
-    private final int MUST_UPDATE_BEFORE_RENDER;
-    private final double TARGET_FPS;
+    private final double updateHz, targetFps;
 
     // Fields
     private GameWindow window;
     private final Thread updateThread;
     private int renderWidth, renderHeight;
-    private boolean scaleUp;
-
-    private boolean running;
+    private boolean scaleUp, running;
 
     // 3 interfaces ideally implemented as a single game manager
     private final EventHandler eventHandler;
@@ -32,7 +30,7 @@ public class GameEngine implements Runnable {
     private GameEngine(
             final GameWindow window, final EventHandler eventHandler,
             final Renderer renderer, final LogicHandler logicHandler,
-            final double UPDATE_HZ, final double TARGET_FPS, final int MUST_UPDATE_BEFORE_RENDER
+            final double updateHz, final double targetFps
     ) {
         this.window = window;
         updateThread = new Thread(this, "[ \"" + window.getTitle() + "\" game loop ]");
@@ -47,77 +45,19 @@ public class GameEngine implements Runnable {
 
         debugger = GameDebugger.newDefault();
 
-        this.UPDATE_HZ = UPDATE_HZ;
-        this.TARGET_FPS = TARGET_FPS;
-        this.MUST_UPDATE_BEFORE_RENDER = MUST_UPDATE_BEFORE_RENDER;
+        this.updateHz = updateHz;
+        this.targetFps = targetFps;
 
         initialize();
     }
 
-    public static GameEngine newForGame(
-            final GameWindow window, final GameManager gameManager
-    ) {
-        return new GameEngine(
-                window, gameManager, gameManager, gameManager,
-                60.0, 60.0, 5
-        );
+    public GameEngine(final GameWindow window, final GameManager gameManager) {
+        this(window, gameManager, gameManager, gameManager, STANDARD_UPDATE_HZ, STANDARD_FPS);
     }
 
-    public static GameEngine newForGame(
-            final GameWindow window, final GameManager gameManager,
-            final double UPDATE_HZ, final double TARGET_FPS
-    ) {
-        return new GameEngine(
-                window, gameManager, gameManager, gameManager,
-                UPDATE_HZ, TARGET_FPS, 5
-        );
-    }
-
-    public static GameEngine newWindowed(
-            final String title, final int width, final int height,
-            final GameImage icon,
-            final boolean exitOnClose, final boolean resizable,
-            final EventHandler eventHandler,
-            final Renderer renderer, final LogicHandler logicHandler,
-            final double UPDATE_HZ, final double TARGET_FPS, final int MUST_UPDATE_BEFORE_RENDER
-    ) {
-        final GameWindow window = new GameWindow(title, width, height,
-                icon, exitOnClose, resizable, false);
-
-        return new GameEngine(
-                window, eventHandler, renderer, logicHandler,
-                UPDATE_HZ, TARGET_FPS, MUST_UPDATE_BEFORE_RENDER
-        );
-    }
-
-    public static GameEngine newMaximized(
-            final String title, final GameImage icon,
-            final boolean exitOnClose,
-            final EventHandler eventHandler,
-            final Renderer renderer, final LogicHandler logicHandler,
-            final double UPDATE_HZ, final double TARGET_FPS, final int MUST_UPDATE_BEFORE_RENDER
-    ) {
-        final int width = Toolkit.getDefaultToolkit().getScreenSize().width;
-        final int height = Toolkit.getDefaultToolkit().getScreenSize().height;
-
-        final GameWindow window = new GameWindow(title, width, height,
-                icon, exitOnClose, false, true);
-
-        return new GameEngine(
-                window, eventHandler, renderer, logicHandler,
-                UPDATE_HZ, TARGET_FPS, MUST_UPDATE_BEFORE_RENDER
-        );
-    }
-
-    public static GameEngine fromExistingWindow(
-            final GameWindow window, final EventHandler eventHandler,
-            final Renderer renderer, final LogicHandler logicHandler,
-            final double UPDATE_HZ, final double TARGET_FPS, final int MUST_UPDATE_BEFORE_RENDER
-    ) {
-        return new GameEngine(
-                window, eventHandler, renderer, logicHandler,
-                UPDATE_HZ, TARGET_FPS, MUST_UPDATE_BEFORE_RENDER
-        );
+    public GameEngine(final GameWindow window, final GameManager gameManager,
+                      final double updateHz, final double targetFps) {
+        this(window, gameManager, gameManager, gameManager, updateHz, targetFps);
     }
 
     private void initialize() {
@@ -136,51 +76,49 @@ public class GameEngine implements Runnable {
             setRenderDimension(window.getWidth(), window.getHeight());
     }
 
-    // GAME LOOP
     @Override
     public void run() {
         final double NANOSECONDS_IN_SECOND = 1e9;
 
-        final double NANOSECONDS_PER_UPDATE = NANOSECONDS_IN_SECOND / UPDATE_HZ;
-        final double NANOSECONDS_PER_RENDER = NANOSECONDS_IN_SECOND / TARGET_FPS;
-
-        double lastUpdateTime = System.nanoTime();
-        double lastRenderTime;
+        final double NANOSECONDS_PER_UPDATE = NANOSECONDS_IN_SECOND / updateHz;
+        final double NANOSECONDS_PER_RENDER = NANOSECONDS_IN_SECOND / targetFps;
 
         int frameCount = 0;
-        int lastSecondSlice = (int) (lastUpdateTime / NANOSECONDS_IN_SECOND);
         int oldFrameCount = 0;
 
+        double now = System.nanoTime();
+        double lastUpdateTime = now;
+        double lastRenderTime = now;
+
+        int lastSecondSlice = (int) (lastUpdateTime / NANOSECONDS_IN_SECOND);
+
         while (running) {
-            double now = System.nanoTime();
-            long refMillis;
+            now = System.nanoTime();
 
             // UPDATE BLOCK
-            int updateCount = 0;
-            while (((now - lastUpdateTime) > NANOSECONDS_PER_UPDATE) &&
-                    (updateCount < MUST_UPDATE_BEFORE_RENDER)) {
-                // Update
-                refMillis = System.currentTimeMillis();
-                update();
-                debugger.setUpdateMillis(System.currentTimeMillis() - refMillis);
+            final double nanosSinceUpdate = now - lastUpdateTime;
+            final int updatesScheduled = (int)(nanosSinceUpdate / NANOSECONDS_PER_UPDATE);
 
-                // Event Handler
-                refMillis = System.currentTimeMillis();
-                callEventHandler();
-                debugger.setEventHandlerMillis(System.currentTimeMillis() - refMillis);
+            for (int i = 0; i < updatesScheduled; i++) {
+                updateAndProcess(NANOSECONDS_PER_UPDATE);
 
                 lastUpdateTime += NANOSECONDS_PER_UPDATE;
-                updateCount++;
             }
 
             if (now - lastUpdateTime > NANOSECONDS_PER_UPDATE)
                 lastUpdateTime = now - NANOSECONDS_PER_UPDATE;
 
-            // RENDER BLOCK
-            render();
+            now = System.nanoTime();
 
-            lastRenderTime = now;
-            frameCount++;
+            // RENDER BLOCK
+            final double nanosSinceRender = now - lastRenderTime;
+
+            if (nanosSinceRender > NANOSECONDS_PER_RENDER) {
+                render();
+
+                frameCount++;
+                lastRenderTime = now;
+            }
 
             // FRAME RATE CHECK BLOCK
             int thisSecondSlice = (int) (lastUpdateTime / NANOSECONDS_IN_SECOND);
@@ -189,28 +127,30 @@ public class GameEngine implements Runnable {
                 if (frameCount != oldFrameCount) {
                     debugger.updateFPS(frameCount);
                     debugger.getChannel(GameDebugger.FRAME_RATE).
-                            printMessage(frameCount + " FPS" + (Math.abs(frameCount - TARGET_FPS) > 1.0
-                                    ? " (target: " + (int)TARGET_FPS + " FPS)" : ""));
+                            printMessage(frameCount + " FPS" + (Math.abs(frameCount - targetFps) > 1.0
+                                    ? " (target: " + (int) targetFps + " FPS)" : ""));
                     oldFrameCount = frameCount;
                 }
                 frameCount = 0;
                 lastSecondSlice = thisSecondSlice;
             }
-
-            // BREATHE BLOCK
-            while ((now - lastRenderTime < NANOSECONDS_PER_RENDER) &&
-                    (now - lastUpdateTime) < NANOSECONDS_PER_UPDATE) {
-                Thread.yield();
-
-                try {
-                    Thread.sleep(1);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                now = System.nanoTime();
-            }
         }
+    }
+
+    private void updateAndProcess(final double deltaTime) {
+        // Update
+        debugger.startTimer();
+        update(deltaTime);
+        debugger.setUpdateMillis();
+
+        // Event Handler
+        debugger.startTimer();
+        callEventHandler();
+        debugger.setEventHandlerMillis();
+    }
+
+    private void update(final double deltaTime) {
+        logicHandler.update(deltaTime);
     }
 
     private void callEventHandler() {
@@ -218,26 +158,20 @@ public class GameEngine implements Runnable {
         window.getEventLogger().emptyEventList();
     }
 
-    private void update() {
-        logicHandler.update();
-    }
-
     private void render() {
-        long refMillis;
-
         // Render
-        refMillis = System.currentTimeMillis();
+        debugger.startTimer();
         GameImage toDraw = new GameImage(renderWidth, renderHeight);
         Graphics2D g = toDraw.g();
         renderer.render(g);
         renderer.debugRender(g, debugger);
-        debugger.setRenderMillis(System.currentTimeMillis() - refMillis);
+        debugger.setRenderMillis();
 
         // Draw
-        refMillis = System.currentTimeMillis();
+        debugger.startTimer();
         window.draw(scaleUp ? ImageProcessing.scaleUp(toDraw,
                 window.getWidth() / renderWidth) : toDraw);
-        debugger.setDrawMillis(System.currentTimeMillis() - refMillis);
+        debugger.setDrawMillis();
     }
 
     // SETTERS

@@ -7,6 +7,7 @@ import com.jordanbunke.jbjgl.image.GameImage;
 import com.jordanbunke.jbjgl.io.InputEventLogger;
 import com.jordanbunke.jbjgl.text.Text;
 import com.jordanbunke.jbjgl.text.TextBuilder;
+import com.jordanbunke.jbjgl.window.GameWindow;
 
 import java.awt.*;
 
@@ -14,7 +15,7 @@ public class PerformanceExample {
     private static final int ASPECT_W = 16, ASPECT_H = 9, CANVAS_SCALE_UP = 20,
             CANVAS_W = ASPECT_W * CANVAS_SCALE_UP, CANVAS_H = ASPECT_H * CANVAS_SCALE_UP,
             FULLSCREEN_H = 1080, WINDOWED_H = 720, WINDOW_SCALE_UP = WINDOWED_H / CANVAS_H;
-    private static final double REFRESH_RATE_HZ = 60.;
+    private static final double REFRESH_RATE_HZ = 30d, FPS = 60d;
 
     private static Game exampleGame;
 
@@ -23,13 +24,14 @@ public class PerformanceExample {
     }
 
     private static void launch() {
-        final GameManager gameManager = new GameManager(0, new GameContext());
-        exampleGame = Game.assemble("Example", gameManager,
-                CANVAS_W * WINDOW_SCALE_UP, CANVAS_H * WINDOW_SCALE_UP,
-                GameImage.dummy(), true, false,
-                REFRESH_RATE_HZ, REFRESH_RATE_HZ);
-        exampleGame.getGameEngine().setRenderDimension(CANVAS_W, CANVAS_H);
-        // exampleGame.getGameEngine().getDebugger().hideBoundingBoxes();
+        final GameManager manager = new GameManager(0, new GameContext());
+        final GameWindow window = new GameWindow("Example",
+                (int)((ASPECT_W / (double)(ASPECT_H)) * FULLSCREEN_H), FULLSCREEN_H,
+                GameImage.dummy(), true);
+        final GameEngine engine = new GameEngine(window, manager, REFRESH_RATE_HZ, FPS);
+
+        exampleGame = new Game("Example", manager, engine);
+        engine.setRenderDimension(CANVAS_W, CANVAS_H);
     }
 
     private static class GameContext extends ProgramContext {
@@ -42,7 +44,7 @@ public class PerformanceExample {
         }
 
         @Override
-        public void update() {
+        public void update(final double deltaTime) {
             c++;
 
             if (c >= CUTOFF) {

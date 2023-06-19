@@ -28,7 +28,7 @@ public class StaticMenuElement extends MenuElement {
     }
 
     @Override
-    public void update() {
+    public void update(final double deltaTime) {
 
     }
 

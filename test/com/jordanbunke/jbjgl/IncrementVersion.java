@@ -8,6 +8,8 @@ public class IncrementVersion {
     public static void main(String[] args) {
         Constants.VERSION.incrementBuild();
 
+        System.out.println(Constants.VERSION);
+
         final String[] infoFileContents = new String[] {
                 "title:{" + Constants.TITLE + "}",
                 "version:{" + Constants.VERSION + "}",

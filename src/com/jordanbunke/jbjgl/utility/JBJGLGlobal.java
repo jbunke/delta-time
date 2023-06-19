@@ -19,7 +19,7 @@ public class JBJGLGlobal {
         return channelMap;
     }
 
-    public static void printMessageToJBJGLChannel(final String message) {
+    public static void print(final String message) {
         DEBUGGER.getChannel(JBJGL_CHANNEL).printMessage(message);
     }
 }

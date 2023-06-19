@@ -3,6 +3,7 @@ package com.jordanbunke.jbjgl.error;
 import com.jordanbunke.jbjgl.utility.JBJGLGlobal;
 
 public class GameError extends Exception {
+    private static final int FATAL_GAME_ERROR_EXIT_CODE = 42;
 
     private static final String ANSI_RESET = "\033[0m", ANSI_RED_BOLD = "\033[1;31m";
 
@@ -10,8 +11,6 @@ public class GameError extends Exception {
     private final Runnable consequence;
     private final boolean printToGlobal;
     private final boolean fatal;
-
-    // TODO: Refactor remaining uses of JBJGLGlobal.printErrorToJBJGLChannel
 
     private GameError(
             final String message, final Runnable consequence,
@@ -38,11 +37,11 @@ public class GameError extends Exception {
 
     public void process() {
         if (printToGlobal)
-            JBJGLGlobal.printMessageToJBJGLChannel(ANSI_RED_BOLD + "ERROR: " + message + ANSI_RESET);
+            JBJGLGlobal.print(ANSI_RED_BOLD + "ERROR: " + message + ANSI_RESET);
 
         consequence.run();
 
         if (fatal)
-            System.exit(0);
+            System.exit(FATAL_GAME_ERROR_EXIT_CODE);
     }
 }

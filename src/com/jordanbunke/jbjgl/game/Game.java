@@ -25,7 +25,7 @@ public class Game {
     ) {
         final GameWindow window = new GameWindow(title, width,
                 height, icon, exitOnClose, false, maximized);
-        final GameEngine gameEngine = GameEngine.newForGame(window,
+        final GameEngine gameEngine = new GameEngine(window,
                 gameManager, UPDATE_HZ, TARGET_FPS);
         return new Game(title, gameManager, gameEngine);
     }

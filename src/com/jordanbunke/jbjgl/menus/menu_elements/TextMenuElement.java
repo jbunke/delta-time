@@ -26,7 +26,7 @@ public class TextMenuElement extends MenuElement {
     }
 
     @Override
-    public void update() {
+    public void update(final double deltaTime) {
 
     }
 

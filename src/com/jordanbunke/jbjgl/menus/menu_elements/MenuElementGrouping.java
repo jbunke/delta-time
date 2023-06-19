@@ -25,9 +25,9 @@ public class MenuElementGrouping extends MenuElementContainer {
     }
 
     @Override
-    public void update() {
+    public void update(final double deltaTime) {
         for (MenuElement menuElement : menuElements)
-            menuElement.update();
+            menuElement.update(deltaTime);
     }
 
     @Override

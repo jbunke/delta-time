@@ -1,9 +1,9 @@
 package com.jordanbunke.jbjgl.menus.menu_elements;
 
 import com.jordanbunke.jbjgl.debug.GameDebugger;
+import com.jordanbunke.jbjgl.error.GameError;
 import com.jordanbunke.jbjgl.image.GameImage;
 import com.jordanbunke.jbjgl.io.InputEventLogger;
-import com.jordanbunke.jbjgl.utility.JBJGLGlobal;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -43,12 +43,10 @@ public class AnimationMenuElement extends MenuElement {
     }
 
     @Override
-    public void update() {
+    public void update(final double deltaTime) {
         if (frames.length != frameTimings.length) {
-            JBJGLGlobal.printMessageToJBJGLChannel(
-                    "Animation menu element does not have the same number" +
-                            " of frames as it does timings, and thus could not be displayed"
-            );
+            GameError.send("Animation menu element does not have the same number" +
+                    " of frames as it does timings, and thus could not be displayed");
             return;
         }
 

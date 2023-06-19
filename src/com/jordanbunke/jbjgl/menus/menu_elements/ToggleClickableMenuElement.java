@@ -65,7 +65,7 @@ public class ToggleClickableMenuElement extends MenuElement {
     }
 
     @Override
-    public void update() {
+    public void update(final double deltaTime) {
         try {
             index = updateIndexLogic.call();
         } catch (Exception e) {

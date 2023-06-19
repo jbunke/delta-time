@@ -35,9 +35,9 @@ public class Menu extends ProgramContext {
         this(null, menuElements);
     }
 
-    public void update() {
+    public void update(final double deltaTime) {
         for (MenuElement element : menuElements)
-            element.update();
+            element.update(deltaTime);
     }
 
     @Override

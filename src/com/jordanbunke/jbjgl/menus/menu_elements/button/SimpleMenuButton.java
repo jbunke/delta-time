@@ -22,7 +22,7 @@ public class SimpleMenuButton extends MenuButton {
     }
 
     @Override
-    public void update() {
+    public void update(final double deltaTime) {
 
     }
 

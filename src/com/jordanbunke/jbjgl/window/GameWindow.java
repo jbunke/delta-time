@@ -13,6 +13,11 @@ public class GameWindow {
     private final String title;
     private int width, height;
 
+    public GameWindow(final String title, final int width, final int height,
+                      final GameImage icon, final boolean maximized) {
+        this(title, width, height, icon, true, false, maximized);
+    }
+
     public GameWindow(
             final String title, final int width, final int height, final GameImage icon,
             final boolean exitOnClose, final boolean resizable, final boolean maximized

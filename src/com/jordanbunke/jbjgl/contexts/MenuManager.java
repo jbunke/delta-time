@@ -38,9 +38,9 @@ public class MenuManager extends ProgramContext {
     }
 
     @Override
-    public void update() {
+    public void update(final double deltaTime) {
         if (menuMap.containsKey(activeMenuID))
-            menuMap.get(activeMenuID).update();
+            menuMap.get(activeMenuID).update(deltaTime);
     }
 
     @Override

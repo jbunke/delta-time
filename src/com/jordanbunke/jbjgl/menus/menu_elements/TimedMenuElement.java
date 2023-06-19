@@ -29,7 +29,7 @@ public class TimedMenuElement extends MenuElement {
     }
 
     @Override
-    public void update() {
+    public void update(final double deltaTime) {
         count++;
 
         if (count >= timeOut) {

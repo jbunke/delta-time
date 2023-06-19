@@ -45,8 +45,8 @@ public class GameManager extends ProgramContext {
     }
 
     @Override
-    public void update() {
-        gameStates[activeStateIndex].update();
+    public void update(final double deltaTime) {
+        gameStates[activeStateIndex].update(deltaTime);
     }
 
     @Override

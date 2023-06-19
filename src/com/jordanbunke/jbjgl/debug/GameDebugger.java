@@ -12,6 +12,7 @@ public class GameDebugger extends Debugger {
     private boolean showingBoundingBoxes;
     private int fps;
     private long updateMillis, eventHandlerMillis, renderMillis, drawMillis;
+    private long refMillis;
 
     protected GameDebugger(final Map<String, DebugChannel> channelMap) {
         super(channelMap);
@@ -42,20 +43,28 @@ public class GameDebugger extends Debugger {
         return fps;
     }
 
-    public void setUpdateMillis(final long updateMillis) {
-        this.updateMillis = updateMillis;
+    public void startTimer() {
+        refMillis = System.currentTimeMillis();
     }
 
-    public void setEventHandlerMillis(final long eventHandlerMillis) {
-        this.eventHandlerMillis = eventHandlerMillis;
+    private long elapsedTime() {
+        return System.currentTimeMillis() - refMillis;
     }
 
-    public void setRenderMillis(final long renderMillis) {
-        this.renderMillis = renderMillis;
+    public void setUpdateMillis() {
+        this.updateMillis = elapsedTime();
     }
 
-    public void setDrawMillis(final long drawMillis) {
-        this.drawMillis = drawMillis;
+    public void setEventHandlerMillis() {
+        this.eventHandlerMillis = elapsedTime();
+    }
+
+    public void setRenderMillis() {
+        this.renderMillis = elapsedTime();
+    }
+
+    public void setDrawMillis() {
+        this.drawMillis = elapsedTime();
     }
 
     public long getUpdateMillis() {

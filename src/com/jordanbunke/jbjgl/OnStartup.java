@@ -13,7 +13,7 @@ public class OnStartup {
     }
 
     private static void startUpMessages() {
-        JBJGLGlobal.printMessageToJBJGLChannel(Constants.TITLE + " v" + Constants.VERSION +
+        JBJGLGlobal.print(Constants.TITLE + " v" + Constants.VERSION +
                 " | running from directory: " + Paths.get("").toAbsolutePath());
     }
 
