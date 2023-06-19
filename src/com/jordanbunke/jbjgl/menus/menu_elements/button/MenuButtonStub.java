@@ -35,7 +35,6 @@ public abstract class MenuButtonStub extends SelectableMenuElement {
                     mouseEvent.matchesAction(GameMouseEvent.Action.CLICK)) {
                 mouseEvent.markAsProcessed();
                 execute();
-                setHighlighted(false);
                 return;
             }
         }
