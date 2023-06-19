@@ -1,8 +1,7 @@
 package com.jordanbunke.jbjgl.menus.menu_elements;
 
-import com.jordanbunke.jbjgl.contexts.JBJGLMenuManager;
-import com.jordanbunke.jbjgl.debug.JBJGLGameDebugger;
-import com.jordanbunke.jbjgl.io.JBJGLListener;
+import com.jordanbunke.jbjgl.debug.GameDebugger;
+import com.jordanbunke.jbjgl.io.InputEventLogger;
 
 import java.awt.*;
 
@@ -32,15 +31,21 @@ public class MenuElementGrouping extends MenuElementContainer {
     }
 
     @Override
-    public void render(final Graphics g, final JBJGLGameDebugger debugger) {
+    public void render(final Graphics2D g) {
         for (MenuElement menuElement : menuElements)
-            menuElement.render(g, debugger);
+            menuElement.render(g);
     }
 
     @Override
-    public void process(final JBJGLListener listener, final JBJGLMenuManager menuManager) {
+    public void debugRender(final Graphics2D g, final GameDebugger debugger) {
         for (MenuElement menuElement : menuElements)
-            menuElement.process(listener, menuManager);
+            menuElement.debugRender(g, debugger);
+    }
+
+    @Override
+    public void process(final InputEventLogger eventLogger) {
+        for (MenuElement menuElement : menuElements)
+            menuElement.process(eventLogger);
     }
 
     @Override

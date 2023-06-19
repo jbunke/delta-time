@@ -7,6 +7,10 @@ public class GameImage extends BufferedImage {
 
     private Graphics2D g;
 
+    public static GameImage dummy() {
+        return new GameImage(1, 1);
+    }
+
     public GameImage(final int width, final int height) {
         super(width, height, TYPE_INT_ARGB);
 
@@ -49,6 +53,11 @@ public class GameImage extends BufferedImage {
     private void initializeGraphics() {
         if (g == null)
             g = createGraphics();
+    }
+
+    public Graphics2D g() {
+        initializeGraphics();
+        return g;
     }
 
     public void free() {

@@ -2,7 +2,7 @@ package com.jordanbunke.jbjgl.error;
 
 import com.jordanbunke.jbjgl.utility.JBJGLGlobal;
 
-public class JBJGLError extends Exception {
+public class GameError extends Exception {
 
     private static final String ANSI_RESET = "\033[0m", ANSI_RED_BOLD = "\033[1;31m";
 
@@ -13,7 +13,7 @@ public class JBJGLError extends Exception {
 
     // TODO: Refactor remaining uses of JBJGLGlobal.printErrorToJBJGLChannel
 
-    private JBJGLError(
+    private GameError(
             final String message, final Runnable consequence,
             final boolean printToGlobal, final boolean fatal
     ) {
@@ -27,12 +27,12 @@ public class JBJGLError extends Exception {
             final String message, final Runnable consequence,
             final boolean printToGlobal, final boolean fatal
     ) {
-        final JBJGLError error = new JBJGLError(message, consequence, printToGlobal, fatal);
+        final GameError error = new GameError(message, consequence, printToGlobal, fatal);
         error.process();
     }
 
     public static void send(final String message) {
-        final JBJGLError error = new JBJGLError(message, () -> {}, true, false);
+        final GameError error = new GameError(message, () -> {}, true, false);
         error.process();
     }
 

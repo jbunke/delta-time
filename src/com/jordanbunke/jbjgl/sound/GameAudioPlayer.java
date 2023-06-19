@@ -1,7 +1,7 @@
 package com.jordanbunke.jbjgl.sound;
 
 import com.jordanbunke.jbjgl.Constants;
-import com.jordanbunke.jbjgl.error.JBJGLError;
+import com.jordanbunke.jbjgl.error.GameError;
 
 import javax.sound.sampled.*;
 import java.io.IOException;
@@ -19,11 +19,11 @@ public class GameAudioPlayer {
             clip.setFramePosition(BEGINNING);
             clip.start();
         } catch (UnsupportedAudioFileException e) {
-            JBJGLError.send("This is not a supported audio file: " + filepath);
+            GameError.send("This is not a supported audio file: " + filepath);
         } catch (LineUnavailableException e) {
-            JBJGLError.send("The line is not available.");
+            GameError.send("The line is not available.");
         } catch (IOException e) {
-            JBJGLError.send("Could not get the input stream for file: " + filepath);
+            GameError.send("Could not get the input stream for file: " + filepath);
         }
     }
 
@@ -57,7 +57,7 @@ public class GameAudioPlayer {
 
             return clip;
         } catch (LineUnavailableException e) {
-            JBJGLError.send("Line unavailable for sound");
+            GameError.send("Line unavailable for sound");
         }
 
         return null;

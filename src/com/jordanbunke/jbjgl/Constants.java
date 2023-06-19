@@ -1,7 +1,7 @@
 package com.jordanbunke.jbjgl;
 
-import com.jordanbunke.jbjgl.io.JBJGLFileIO;
-import com.jordanbunke.jbjgl.io.JBJGLResourceLoader;
+import com.jordanbunke.jbjgl.io.FileIO;
+import com.jordanbunke.jbjgl.io.ResourceLoader;
 import com.jordanbunke.jbjgl.utility.Version;
 import com.jordanbunke.jbjgl.utility.StringProcessing;
 
@@ -18,8 +18,8 @@ public class Constants {
         final int HAS_BUILD_LENGTH = 4, MAJOR = 0, MINOR = 1, PATCH = 2, BUILD = 3;
 
         final Path INFO_FILE = Path.of(INFO_FILENAME);
-        final String contents = JBJGLFileIO.readResource(
-                JBJGLResourceLoader.loadResource(Constants.class, INFO_FILE), INFO_FILE.toString());
+        final String contents = FileIO.readResource(
+                ResourceLoader.loadResource(INFO_FILE), INFO_FILE.toString());
 
         TITLE = StringProcessing.getContentsFromTag(contents,
                 TITLE_TAG, SEPARATOR, OPEN, CLOSE, "failed");

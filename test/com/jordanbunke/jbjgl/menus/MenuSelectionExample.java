@@ -1,10 +1,10 @@
 package com.jordanbunke.jbjgl.menus;
 
-import com.jordanbunke.jbjgl.contexts.JBJGLMenuManager;
+import com.jordanbunke.jbjgl.contexts.MenuManager;
 import com.jordanbunke.jbjgl.fonts.Font;
 import com.jordanbunke.jbjgl.fonts.FontsForTests;
-import com.jordanbunke.jbjgl.game.JBJGLGame;
-import com.jordanbunke.jbjgl.game.JBJGLGameManager;
+import com.jordanbunke.jbjgl.game.Game;
+import com.jordanbunke.jbjgl.game.GameManager;
 import com.jordanbunke.jbjgl.image.GameImage;
 import com.jordanbunke.jbjgl.menus.menu_elements.MenuElement;
 import com.jordanbunke.jbjgl.menus.menu_elements.MenuElementGrouping;
@@ -24,13 +24,12 @@ public class MenuSelectionExample {
     }
 
     private static void launch() {
-        final JBJGLGameManager gameManager = JBJGLGameManager.createOf(0,
-                JBJGLMenuManager.initialize(
-                        new MenuBuilder(generateMenuElements())
+        final GameManager gameManager = new GameManager(0,
+                new MenuManager(new MenuBuilder(generateMenuElements())
                         .build(MenuSelectionLogic.basic()), "menu"));
-        final JBJGLGame exampleGame = JBJGLGame.create("Example", gameManager,
+        final Game exampleGame = Game.assemble("Example", gameManager,
                 CANVAS_W * WINDOW_SCALE_UP, CANVAS_H * WINDOW_SCALE_UP,
-                new GameImage(1, 1), true, true,
+                GameImage.dummy(), true, true,
                 REFRESH_RATE_HZ, REFRESH_RATE_HZ);
         exampleGame.getGameEngine().setRenderDimension(CANVAS_W, CANVAS_H);
         // exampleGame.getGameEngine().getDebugger().hideBoundingBoxes();

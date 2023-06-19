@@ -1,33 +1,33 @@
 package com.jordanbunke.jbjgl.menus;
 
-import com.jordanbunke.jbjgl.error.JBJGLError;
-import com.jordanbunke.jbjgl.events.JBJGLEvent;
-import com.jordanbunke.jbjgl.events.JBJGLKey;
-import com.jordanbunke.jbjgl.events.JBJGLKeyEvent;
-import com.jordanbunke.jbjgl.events.JBJGLMoveEvent;
-import com.jordanbunke.jbjgl.io.JBJGLListener;
+import com.jordanbunke.jbjgl.error.GameError;
+import com.jordanbunke.jbjgl.events.GameEvent;
+import com.jordanbunke.jbjgl.events.Key;
+import com.jordanbunke.jbjgl.events.GameKeyEvent;
+import com.jordanbunke.jbjgl.events.GameMouseMoveEvent;
+import com.jordanbunke.jbjgl.io.InputEventLogger;
 
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.function.BiConsumer;
 
 public class MenuSelectionLogic {
-    private final Callable<List<JBJGLKey>> fChoose, fLeft, fUp, fDown, fRight;
+    private final Callable<List<Key>> fChoose, fLeft, fUp, fDown, fRight;
 
     private MenuSelectionLogic() {
-        fChoose = () -> List.of(JBJGLKey.ENTER, JBJGLKey.SPACE);
-        fLeft = () -> List.of(JBJGLKey.A, JBJGLKey.LEFT_ARROW);
-        fRight = () -> List.of(JBJGLKey.D, JBJGLKey.RIGHT_ARROW);
-        fUp = () -> List.of(JBJGLKey.W, JBJGLKey.UP_ARROW);
-        fDown = () -> List.of(JBJGLKey.S, JBJGLKey.DOWN_ARROW);
+        fChoose = () -> List.of(Key.ENTER, Key.SPACE);
+        fLeft = () -> List.of(Key.A, Key.LEFT_ARROW);
+        fRight = () -> List.of(Key.D, Key.RIGHT_ARROW);
+        fUp = () -> List.of(Key.W, Key.UP_ARROW);
+        fDown = () -> List.of(Key.S, Key.DOWN_ARROW);
     }
 
     private MenuSelectionLogic(
-            final Callable<List<JBJGLKey>> fChoose,
-            final Callable<List<JBJGLKey>> fLeft,
-            final Callable<List<JBJGLKey>> fRight,
-            final Callable<List<JBJGLKey>> fUp,
-            final Callable<List<JBJGLKey>> fDown
+            final Callable<List<Key>> fChoose,
+            final Callable<List<Key>> fLeft,
+            final Callable<List<Key>> fRight,
+            final Callable<List<Key>> fUp,
+            final Callable<List<Key>> fDown
     ) {
         this.fChoose = fChoose;
         this.fLeft = fLeft;
@@ -36,27 +36,27 @@ public class MenuSelectionLogic {
         this.fDown = fDown;
     }
 
-    public static BiConsumer<JBJGLListener, Menu> basic() {
+    public static BiConsumer<InputEventLogger, Menu> basic() {
         return new MenuSelectionLogic().get();
     }
 
-    public static BiConsumer<JBJGLListener, Menu> generate(
-            final Callable<List<JBJGLKey>> fChoose,
-            final Callable<List<JBJGLKey>> fLeft,
-            final Callable<List<JBJGLKey>> fRight,
-            final Callable<List<JBJGLKey>> fUp,
-            final Callable<List<JBJGLKey>> fDown
+    public static BiConsumer<InputEventLogger, Menu> generate(
+            final Callable<List<Key>> fChoose,
+            final Callable<List<Key>> fLeft,
+            final Callable<List<Key>> fRight,
+            final Callable<List<Key>> fUp,
+            final Callable<List<Key>> fDown
     ) {
         return new MenuSelectionLogic(fChoose, fLeft, fRight, fUp, fDown).get();
     }
 
-    private BiConsumer<JBJGLListener, Menu> get() {
+    private BiConsumer<InputEventLogger, Menu> get() {
         return (listener, menu) -> {
             // mouse move deselection
-            List<JBJGLEvent> unprocessed = listener.getUnprocessedEvents();
-            for (JBJGLEvent e : unprocessed) {
-                if (e instanceof JBJGLMoveEvent moveEvent &&
-                        moveEvent.matchesAction(JBJGLMoveEvent.Action.MOVE)) {
+            List<GameEvent> unprocessed = listener.getUnprocessedEvents();
+            for (GameEvent e : unprocessed) {
+                if (e instanceof GameMouseMoveEvent moveEvent &&
+                        moveEvent.matchesAction(GameMouseMoveEvent.Action.MOVE)) {
                     menu.deselect();
                     moveEvent.markAsProcessed();
                 }
@@ -64,10 +64,10 @@ public class MenuSelectionLogic {
 
             // direction selection change & keyboard selection
             unprocessed = listener.getUnprocessedEvents();
-            for (JBJGLEvent e : unprocessed) {
-                if (e instanceof JBJGLKeyEvent keyEvent &&
-                        keyEvent.matchesAction(JBJGLKeyEvent.Action.PRESS)) {
-                    final JBJGLKey key = keyEvent.getKey();
+            for (GameEvent e : unprocessed) {
+                if (e instanceof GameKeyEvent keyEvent &&
+                        keyEvent.matchesAction(GameKeyEvent.Action.PRESS)) {
+                    final Key key = keyEvent.getKey();
 
                     try {
                         if (fLeft.call().contains(key)) {
@@ -96,7 +96,7 @@ public class MenuSelectionLogic {
                             return;
                         }
                     } catch (Exception ex) {
-                        JBJGLError.send("Selection logic function call to resolve keystroke resulted in an error");
+                        GameError.send("Selection logic function call to resolve keystroke resulted in an error");
                     }
                 }
             }

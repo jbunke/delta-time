@@ -1,7 +1,7 @@
 package com.jordanbunke.jbjgl.sound;
 
-import com.jordanbunke.jbjgl.error.JBJGLError;
-import com.jordanbunke.jbjgl.io.JBJGLResourceLoader;
+import com.jordanbunke.jbjgl.error.GameError;
+import com.jordanbunke.jbjgl.io.ResourceLoader;
 
 import javax.sound.sampled.*;
 import java.io.IOException;
@@ -27,7 +27,7 @@ public final class Sound {
         try {
             this.data = stream.readAllBytes();
         } catch (IOException e) {
-            JBJGLError.send("Couldn't read audio data from input stream");
+            GameError.send("Couldn't read audio data from input stream");
             throw new Error(e);
         }
 
@@ -36,31 +36,30 @@ public final class Sound {
             playbackClip.open(format, data, 0, data.length);
             playbackClip.setFramePosition(0);
         } catch (LineUnavailableException e) {
-            JBJGLError.send("The line is not available.");
+            GameError.send("The line is not available.");
             playbackClip = null;
         }
 
         frame = NOT_SET;
     }
 
-    public static Sound fromResource(final String id, final InputStream in) {
+    public static Sound fromInputStream(final String id, final InputStream in) {
         try {
             return new Sound(id, AudioSystem.getAudioInputStream(in));
         } catch (IOException | UnsupportedAudioFileException e) {
-            JBJGLError.send("Couldn't load sound from input stream");
+            GameError.send("Couldn't load sound from input stream");
         }
         return null;
     }
 
-    public static <T> Sound fromResource(
-            final String id, final Path path, final Class<T> loaderClass
+    public static Sound fromResource(
+            final String id, final Path path
     ) {
         try {
             return new Sound(id, AudioSystem.getAudioInputStream(
-                    JBJGLResourceLoader.loadResourceAsURL(loaderClass, path)
-            ));
+                    ResourceLoader.loadResourceAsURL(path)));
         } catch (IOException | UnsupportedAudioFileException e) {
-            JBJGLError.send("Couldn't load sound from resource: " + path);
+            GameError.send("Couldn't load sound from resource: " + path);
         }
         return null;
     }
@@ -69,7 +68,7 @@ public final class Sound {
         try {
             return new Sound(id, AudioSystem.getAudioInputStream(filepath.toFile()));
         } catch (IOException | UnsupportedAudioFileException e) {
-            JBJGLError.send("Couldn't load sound from file: " + filepath);
+            GameError.send("Couldn't load sound from file: " + filepath);
         }
         return null;
     }

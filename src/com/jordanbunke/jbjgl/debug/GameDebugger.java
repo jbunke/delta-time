@@ -3,7 +3,7 @@ package com.jordanbunke.jbjgl.debug;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JBJGLGameDebugger extends JBJGLDebugger {
+public class GameDebugger extends Debugger {
 
     public static final String FRAME_RATE = "FRAME RATE";
     public static final String LOGIC_CHANNEL = "GAME LOGIC";
@@ -13,24 +13,24 @@ public class JBJGLGameDebugger extends JBJGLDebugger {
     private int fps;
     private long updateMillis, eventHandlerMillis, renderMillis, drawMillis;
 
-    private JBJGLGameDebugger(final Map<String, JBJGLDebugChannel> channelMap) {
+    protected GameDebugger(final Map<String, DebugChannel> channelMap) {
         super(channelMap);
 
         this.fps = 0;
         this.showingBoundingBoxes = true;
     }
 
-    public static JBJGLGameDebugger create() {
-        return new JBJGLGameDebugger(
+    public static GameDebugger newDefault() {
+        return new GameDebugger(
                 createBasicGameChannelMap()
         );
     }
 
-    private static Map<String, JBJGLDebugChannel> createBasicGameChannelMap() {
-        Map<String, JBJGLDebugChannel> channelMap = new HashMap<>();
-        JBJGLDebugger.standardChannelAddition(channelMap, FRAME_RATE, true);
-        JBJGLDebugger.standardChannelAddition(channelMap, LOGIC_CHANNEL, true);
-        JBJGLDebugger.standardChannelAddition(channelMap, PERFORMANCE, true);
+    private static Map<String, DebugChannel> createBasicGameChannelMap() {
+        Map<String, DebugChannel> channelMap = new HashMap<>();
+        Debugger.standardChannelAddition(channelMap, FRAME_RATE, true);
+        Debugger.standardChannelAddition(channelMap, LOGIC_CHANNEL, true);
+        Debugger.standardChannelAddition(channelMap, PERFORMANCE, true);
         return channelMap;
     }
 

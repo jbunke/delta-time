@@ -1,38 +1,26 @@
 package com.jordanbunke.jbjgl.contexts;
 
-import com.jordanbunke.jbjgl.debug.JBJGLGameDebugger;
-import com.jordanbunke.jbjgl.io.JBJGLListener;
+import com.jordanbunke.jbjgl.debug.GameDebugger;
+import com.jordanbunke.jbjgl.io.InputEventLogger;
 import com.jordanbunke.jbjgl.menus.Menu;
 
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JBJGLMenuManager extends ProgramContext {
+public class MenuManager extends ProgramContext {
     private String activeMenuID;
     private final Map<String, Menu> menuMap;
 
-    private JBJGLMenuManager(final Map<String, Menu> menuMap, final String initialMenuID) {
+    public MenuManager(final Map<String, Menu> menuMap, final String initialMenuID) {
         this.menuMap = menuMap;
         activeMenuID = initialMenuID;
     }
 
-    private JBJGLMenuManager(final Menu firstMenu, final String firstMenuID) {
+    public MenuManager(final Menu firstMenu, final String firstMenuID) {
         this.menuMap = new HashMap<>();
         menuMap.put(firstMenuID, firstMenu);
         activeMenuID = firstMenuID;
-    }
-
-    public static JBJGLMenuManager create(
-            final Map<String, Menu> menuMap, final String initialMenuID
-    ) {
-        return new JBJGLMenuManager(menuMap, initialMenuID);
-    }
-
-    public static JBJGLMenuManager initialize(
-            final Menu firstMenu, final String firstMenuID
-    ) {
-        return new JBJGLMenuManager(firstMenu, firstMenuID);
     }
 
     public void addMenu(final String menuID, final Menu menu, final boolean setActive) {
@@ -56,15 +44,21 @@ public class JBJGLMenuManager extends ProgramContext {
     }
 
     @Override
-    public void render(final Graphics g, final JBJGLGameDebugger debugger) {
+    public void render(final Graphics2D g) {
         if (menuMap.containsKey(activeMenuID))
-            menuMap.get(activeMenuID).render(g, debugger);
+            menuMap.get(activeMenuID).render(g);
     }
 
     @Override
-    public void process(final JBJGLListener listener) {
+    public void debugRender(final Graphics2D g, final GameDebugger debugger) {
         if (menuMap.containsKey(activeMenuID))
-            menuMap.get(activeMenuID).process(listener, this);
+            menuMap.get(activeMenuID).debugRender(g, debugger);
+    }
+
+    @Override
+    public void process(final InputEventLogger eventLogger) {
+        if (menuMap.containsKey(activeMenuID))
+            menuMap.get(activeMenuID).process(eventLogger);
     }
 
     @Override

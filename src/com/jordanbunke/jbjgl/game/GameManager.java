@@ -1,39 +1,27 @@
 package com.jordanbunke.jbjgl.game;
 
 import com.jordanbunke.jbjgl.contexts.ProgramContext;
-import com.jordanbunke.jbjgl.debug.JBJGLGameDebugger;
-import com.jordanbunke.jbjgl.error.JBJGLError;
-import com.jordanbunke.jbjgl.events.JBJGLEventHandler;
-import com.jordanbunke.jbjgl.io.JBJGLListener;
+import com.jordanbunke.jbjgl.debug.GameDebugger;
+import com.jordanbunke.jbjgl.error.GameError;
+import com.jordanbunke.jbjgl.io.InputEventLogger;
 
 import java.awt.*;
 
-public class JBJGLGameManager implements
-        JBJGLGameLogicHandler, JBJGLGameRenderer, JBJGLEventHandler {
+public class GameManager extends ProgramContext {
     // Useful preset constants for game programming
     public static final int PLAY = 0, PAUSE = 1, MENU = 2, SPLASH_SCREEN = 3;
 
     private final ProgramContext[] gameStates;
     private int activeStateIndex;
 
-    private JBJGLGameManager(final ProgramContext[] gameStates, final int initialStateIndex) {
+    public GameManager(final int initialStateIndex, final ProgramContext... gameStates) {
         this.gameStates = gameStates;
         activeStateIndex = initialStateIndex;
     }
 
-    public static JBJGLGameManager create(final ProgramContext[] gameStates, final int initialStateIndex) {
-        return new JBJGLGameManager(gameStates, initialStateIndex);
-    }
-
-    public static JBJGLGameManager createOf(
-            final int initialStateIndex, final ProgramContext... gameStates
-    ) {
-        return new JBJGLGameManager(gameStates, initialStateIndex);
-    }
-
     public void setGameStateAtIndex(final int index, final ProgramContext gameState) {
         if (index < 0 || index >= gameStates.length) {
-            JBJGLError.send("Invalid index for this JBJGLGameManager -  index: " +
+            GameError.send("Invalid index for this JBJGLGameManager -  index: " +
                             index + ", length: " + gameStates.length);
         } else
             gameStates[index] = gameState;
@@ -52,8 +40,8 @@ public class JBJGLGameManager implements
     }
 
     @Override
-    public void process(final JBJGLListener listener) {
-        gameStates[activeStateIndex].process(listener);
+    public void process(final InputEventLogger eventLogger) {
+        gameStates[activeStateIndex].process(eventLogger);
     }
 
     @Override
@@ -62,8 +50,13 @@ public class JBJGLGameManager implements
     }
 
     @Override
-    public void render(final Graphics g, final JBJGLGameDebugger debugger) {
-        gameStates[activeStateIndex].render(g, debugger);
+    public void render(final Graphics2D g) {
+        gameStates[activeStateIndex].render(g);
+    }
+
+    @Override
+    public void debugRender(final Graphics2D g, final GameDebugger debugger) {
+        gameStates[activeStateIndex].debugRender(g, debugger);
     }
 
     @Override

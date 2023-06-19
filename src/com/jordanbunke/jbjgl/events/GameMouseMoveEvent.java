@@ -2,7 +2,7 @@ package com.jordanbunke.jbjgl.events;
 
 import static com.jordanbunke.jbjgl.utility.RenderConstants.*;
 
-public class JBJGLMoveEvent extends JBJGLEvent {
+public class GameMouseMoveEvent extends GameEvent {
     private final int[] mousePosition;
     private final Action action;
 
@@ -10,14 +10,10 @@ public class JBJGLMoveEvent extends JBJGLEvent {
         MOVE, DRAG, ENTER, EXIT
     }
 
-    private JBJGLMoveEvent(final int[] mousePosition, final Action action) {
+    public GameMouseMoveEvent(final int[] mousePosition, final Action action) {
         super();
         this.mousePosition = mousePosition;
         this.action = action;
-    }
-
-    public static JBJGLMoveEvent generate(final int[] mouseLocation, final Action action) {
-        return new JBJGLMoveEvent(mouseLocation, action);
     }
 
     public boolean matchesAction(final Action action) {
@@ -26,7 +22,7 @@ public class JBJGLMoveEvent extends JBJGLEvent {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof JBJGLMoveEvent ome))
+        if (!(o instanceof GameMouseMoveEvent ome))
             return false;
         return this.mousePosition[X] == ome.mousePosition[X] &&
                 this.mousePosition[Y] == ome.mousePosition[Y] && this.action == ome.action;

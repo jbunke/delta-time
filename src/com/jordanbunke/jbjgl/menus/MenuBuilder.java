@@ -1,6 +1,6 @@
 package com.jordanbunke.jbjgl.menus;
 
-import com.jordanbunke.jbjgl.io.JBJGLListener;
+import com.jordanbunke.jbjgl.io.InputEventLogger;
 import com.jordanbunke.jbjgl.menus.menu_elements.MenuElement;
 import com.jordanbunke.jbjgl.menus.menu_elements.MenuElementContainer;
 
@@ -21,7 +21,7 @@ public class MenuBuilder {
         add(initial);
     }
 
-    public Menu build(final BiConsumer<JBJGLListener, Menu> selectionLogic) {
+    public Menu build(final BiConsumer<InputEventLogger, Menu> selectionLogic) {
         return new Menu(selectionLogic, menuElements.toArray(new MenuElement[0]));
     }
 

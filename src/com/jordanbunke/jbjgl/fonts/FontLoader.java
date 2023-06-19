@@ -1,10 +1,10 @@
 package com.jordanbunke.jbjgl.fonts;
 
-import com.jordanbunke.jbjgl.error.JBJGLError;
+import com.jordanbunke.jbjgl.error.GameError;
 import com.jordanbunke.jbjgl.image.ImageProcessing;
 import com.jordanbunke.jbjgl.image.GameImage;
-import com.jordanbunke.jbjgl.io.JBJGLImageIO;
-import com.jordanbunke.jbjgl.io.JBJGLResourceLoader;
+import com.jordanbunke.jbjgl.io.GameImageIO;
+import com.jordanbunke.jbjgl.io.ResourceLoader;
 
 import java.awt.*;
 import java.nio.file.Path;
@@ -22,13 +22,13 @@ public class FontLoader {
     private static final int CHARS_ON_ROW = 16;
     private static final int BASE_WHITESPACE_BREADTH = 8;
 
-    public static <T> Map<Character, Grapheme> loadASCIIFromSource(
-            final Path source, final Class<T> loaderClass,
+    public static Map<Character, Grapheme> loadASCIIFromSource(
+            final Path source, final boolean isResource,
             final double whitespaceBreadthMultiplier
     ) {
-        GameImage image = loaderClass == null
-                ? JBJGLImageIO.readImage(source)
-                : JBJGLResourceLoader.loadImageResource(loaderClass, source);
+        GameImage image = isResource
+                ? ResourceLoader.loadImageResource(source)
+                : GameImageIO.readImage(source);
         Map<Character, Grapheme> map = new HashMap<>();
 
         final int scaleMultiplier = sourceToScaleMultiplier(image);
@@ -54,12 +54,11 @@ public class FontLoader {
         return map;
     }
 
-    public static <T> Map<Character, Grapheme> loadLatinExtendedFromSource(
-            final Path source, final Class<T> loaderClass
-    ) {
-        GameImage image = loaderClass == null
-                ? JBJGLImageIO.readImage(source)
-                : JBJGLResourceLoader.loadImageResource(loaderClass, source);
+    public static Map<Character, Grapheme> loadLatinExtendedFromSource(
+            final Path source, final boolean isResource) {
+        GameImage image = isResource
+                ? ResourceLoader.loadImageResource(source)
+                : GameImageIO.readImage(source);
         Map<Character, Grapheme> map = new HashMap<>();
 
         final int scaleMultiplier = sourceToScaleMultiplier(image);
@@ -98,7 +97,7 @@ public class FontLoader {
         // COPY
         GameImage grapheme = retrieveGrapheme(image, start, size, firstXWith, firstXWithout);
 
-        return Grapheme.create(grapheme, c, firstXWithout - firstXWith, size[Y_INDEX]);
+        return new Grapheme(grapheme, c, firstXWithout - firstXWith, size[Y_INDEX]);
     }
 
     private static GameImage retrieveGrapheme(
@@ -123,8 +122,7 @@ public class FontLoader {
             final int scaleMultiplier, final double whitespaceBreadthMultiplier
     ) {
         final int width = (int)(BASE_WHITESPACE_BREADTH * whitespaceBreadthMultiplier * scaleMultiplier);
-        return Grapheme.create(
-                new GameImage(width, LINE_HEIGHT * scaleMultiplier),
+        return new Grapheme(new GameImage(width, LINE_HEIGHT * scaleMultiplier),
                 ' ', width, LINE_HEIGHT * scaleMultiplier);
     }
 
@@ -221,7 +219,7 @@ public class FontLoader {
                         height / (double) FONT_SOURCE_BASE_HEIGHT;
 
         if (!(isMultiple && isProportional))
-            JBJGLError.send(
+            GameError.send(
                     "Source image file is not sized correctly, must be multiple of " +
                             FONT_SOURCE_BASE_WIDTH + "x" + FONT_SOURCE_BASE_HEIGHT);
 

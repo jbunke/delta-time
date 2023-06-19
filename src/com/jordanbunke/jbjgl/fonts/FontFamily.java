@@ -1,6 +1,6 @@
 package com.jordanbunke.jbjgl.fonts;
 
-import com.jordanbunke.jbjgl.error.JBJGLError;
+import com.jordanbunke.jbjgl.error.GameError;
 
 import java.nio.file.Path;
 
@@ -12,7 +12,7 @@ public class FontFamily {
     private final Font[] types = new Font[LENGTH];
     private final String name;
 
-    private FontFamily(final String name, final Font standard, final Font bold, final Font italics) {
+    public FontFamily(final String name, final Font standard, final Font bold, final Font italics) {
         this.name = name;
 
         types[STANDARD] = standard;
@@ -20,13 +20,8 @@ public class FontFamily {
         types[ITALICS] = italics;
     }
 
-    public static FontFamily fromPreLoaded(final String name, final Font standard,
-                                           final Font bold, final Font italics) {
-        return new FontFamily(name, standard, bold, italics);
-    }
-
-    public static <T> FontFamily loadFromSources(
-            final String name, final Path folder, final Class<T> loaderClass,
+    public static FontFamily loadFromSources(
+            final String name, final Path folder, final boolean isResource,
             final String standardBaseName,
             final String boldBaseName,
             final String italicsBaseName,
@@ -36,13 +31,13 @@ public class FontFamily {
             final boolean hasLatinExtended
     ) {
         Font standard = standardBaseName.equals(NOT_AVAILABLE)
-                ? null : Font.loadFromSource(folder, loaderClass,
+                ? null : Font.loadFromSource(folder, isResource,
                 standardBaseName, hasLatinExtended, standardSpacing);
         Font bold = boldBaseName.equals(NOT_AVAILABLE)
-                ? null : Font.loadFromSource(folder, loaderClass,
+                ? null : Font.loadFromSource(folder, isResource,
                 boldBaseName, hasLatinExtended, boldSpacing);
         Font italics = italicsBaseName.equals(NOT_AVAILABLE)
-                ? null : Font.loadFromSource(folder, loaderClass,
+                ? null : Font.loadFromSource(folder, isResource,
                 italicsBaseName, hasLatinExtended, italicsSpacing);
 
         return new FontFamily(name, standard, bold, italics);
@@ -54,7 +49,7 @@ public class FontFamily {
 
     public Font getStandard() {
         if (!hasType(STANDARD)) {
-            JBJGLError.send(
+            GameError.send(
                     "Font family \"" + name +
                             "\" does not have a standard font.", () -> {},
                     true, true);
@@ -65,7 +60,7 @@ public class FontFamily {
 
     public Font getBold() {
         if (!hasType(BOLD)) {
-            JBJGLError.send(
+            GameError.send(
                     "Font family \"" + name +
                             "\" does not have a bold font... " +
                             "Attempting to retrieve standard font instead");
@@ -78,7 +73,7 @@ public class FontFamily {
 
     public Font getItalics() {
         if (!hasType(ITALICS)) {
-            JBJGLError.send(
+            GameError.send(
                     "Font family \"" + name +
                             "\" does not have an italic font... " +
                             "Attempting to retrieve standard font instead");

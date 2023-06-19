@@ -1,12 +1,11 @@
 package com.jordanbunke.jbjgl.menus.menu_elements;
 
-import com.jordanbunke.jbjgl.contexts.JBJGLMenuManager;
-import com.jordanbunke.jbjgl.debug.JBJGLGameDebugger;
-import com.jordanbunke.jbjgl.error.JBJGLError;
-import com.jordanbunke.jbjgl.events.JBJGLEvent;
-import com.jordanbunke.jbjgl.events.JBJGLMouseEvent;
+import com.jordanbunke.jbjgl.debug.GameDebugger;
+import com.jordanbunke.jbjgl.error.GameError;
+import com.jordanbunke.jbjgl.events.GameEvent;
+import com.jordanbunke.jbjgl.events.GameMouseEvent;
 import com.jordanbunke.jbjgl.image.GameImage;
-import com.jordanbunke.jbjgl.io.JBJGLListener;
+import com.jordanbunke.jbjgl.io.InputEventLogger;
 
 import java.awt.*;
 import java.util.List;
@@ -70,30 +69,32 @@ public class ToggleClickableMenuElement extends MenuElement {
         try {
             index = updateIndexLogic.call();
         } catch (Exception e) {
-            JBJGLError.send("Could not perform index update in JBJGLToggleClickableMenuElement " +
+            GameError.send("Could not perform index update in " +
                     this + ".");
         }
     }
 
     @Override
-    public void render(final Graphics g, final JBJGLGameDebugger debugger) {
+    public void render(final Graphics2D g) {
         draw(isHighlighted ? highlightedImages[index] : nonHighlightedImages[index], g);
+    }
 
-        // Debug
+    @Override
+    public void debugRender(final Graphics2D g, final GameDebugger debugger) {
         renderBoundingBox(g, debugger);
     }
 
     @Override
-    public void process(final JBJGLListener listener, final JBJGLMenuManager menuManager) {
-        isHighlighted = mouseIsWithinBounds(listener.getMousePosition());
+    public void process(final InputEventLogger eventLogger) {
+        isHighlighted = mouseIsWithinBounds(eventLogger.getMousePosition());
 
         if (!isHighlighted)
             return;
 
-        final List<JBJGLEvent> unprocessed = listener.getUnprocessedEvents();
-        for (JBJGLEvent e : unprocessed) {
-            if (e instanceof JBJGLMouseEvent mouseEvent &&
-                    mouseEvent.matchesAction(JBJGLMouseEvent.Action.CLICK)) {
+        final List<GameEvent> unprocessed = eventLogger.getUnprocessedEvents();
+        for (GameEvent e : unprocessed) {
+            if (e instanceof GameMouseEvent mouseEvent &&
+                    mouseEvent.matchesAction(GameMouseEvent.Action.CLICK)) {
                 mouseEvent.markAsProcessed();
 
                 onClickBehaviours[index].run();

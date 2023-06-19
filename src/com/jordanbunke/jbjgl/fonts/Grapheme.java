@@ -13,16 +13,11 @@ public class Grapheme {
     private final int width;
     private final int height;
 
-    private Grapheme(final GameImage image, final char c, final int width, final int height) {
+    public Grapheme(final GameImage image, final char c, final int width, final int height) {
         this.c = c;
         this.image = image;
         this.width = width;
         this.height = height;
-    }
-
-    public static Grapheme create(final GameImage image, final char c,
-                                  final int width, final int height) {
-        return new Grapheme(image, c, width, height);
     }
 
     public int getWidth() {

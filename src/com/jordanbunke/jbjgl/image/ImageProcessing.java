@@ -39,7 +39,6 @@ public class ImageProcessing {
         };
 
         final GameImage scaledUp = new GameImage(dims[RenderConstants.X], dims[RenderConstants.Y]);
-        Graphics g = scaledUp.getGraphics();
 
         if (smooth) {
             for (int x = 0; x < scaledUp.getWidth(); x++) {
@@ -81,17 +80,18 @@ public class ImageProcessing {
                             cumulativeB / totalColors,
                             totalOpacity == 0 ? 0 : cumulativeA / totalOpacity);
 
-                    g.setColor(pixel);
-                    g.fillRect(x, y, 1, 1);
+                    scaledUp.setColor(pixel);
+                    scaledUp.dot(x, y);
                 }
             }
         } else {
             for (int x = 0; x < image.getWidth(); x++) {
                 for (int y = 0; y < image.getHeight(); y++) {
+                    final int FULL_OPACITY = 255;
                     final Color color = colorAtPixel(image, x, y);
-                    g.setColor(color);
+                    scaledUp.setColor(color);
 
-                    if (color.getAlpha() < 255) {
+                    if (color.getAlpha() < FULL_OPACITY) {
                         final int xInit = (int)(x * scaleFactor),
                                 yInit = (int)(y * scaleFactor),
                                 xBound = Math.min(scaledUp.getWidth(), xInit + (int)Math.ceil(scaleFactor)),
@@ -99,17 +99,15 @@ public class ImageProcessing {
                         for (int xp = xInit; xp < xBound; xp++)
                             for (int yp = yInit; yp < yBound; yp++)
                                 if (!colorAtPixel(scaledUp, xp, yp).equals(color))
-                                    g.fillRect(xp, yp, 1, 1);
+                                    scaledUp.dot(xp, yp);
 
                     } else
-                        g.fillRect((int)(x * scaleFactor), (int)(y * scaleFactor),
+                        scaledUp.fillRectangle((int)(x * scaleFactor), (int)(y * scaleFactor),
                                 (int)Math.ceil(scaleFactor), (int)Math.ceil(scaleFactor));
                 }
             }
         }
 
-        g.dispose();
-
-        return scaledUp;
+        return scaledUp.submit();
     }
 }

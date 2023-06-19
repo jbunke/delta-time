@@ -1,9 +1,8 @@
 package com.jordanbunke.jbjgl.menus.menu_elements;
 
-import com.jordanbunke.jbjgl.contexts.JBJGLMenuManager;
-import com.jordanbunke.jbjgl.debug.JBJGLGameDebugger;
+import com.jordanbunke.jbjgl.debug.GameDebugger;
 import com.jordanbunke.jbjgl.image.GameImage;
-import com.jordanbunke.jbjgl.io.JBJGLListener;
+import com.jordanbunke.jbjgl.io.InputEventLogger;
 
 import java.awt.*;
 
@@ -34,15 +33,17 @@ public class StaticMenuElement extends MenuElement {
     }
 
     @Override
-    public void render(final Graphics g, final JBJGLGameDebugger debugger) {
+    public void render(final Graphics2D g) {
         draw(image, g);
+    }
 
-        // Debug
+    @Override
+    public void debugRender(final Graphics2D g, final GameDebugger debugger) {
         renderBoundingBox(g, debugger);
     }
 
     @Override
-    public void process(final JBJGLListener listener, final JBJGLMenuManager menuManager) {
+    public void process(final InputEventLogger eventLogger) {
 
     }
 }

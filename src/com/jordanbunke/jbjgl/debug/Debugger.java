@@ -4,43 +4,42 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class JBJGLDebugger {
+public class Debugger {
     public static final String DEFAULT_CHANNEL = "DEFAULT";
 
-    private final Map<String, JBJGLDebugChannel> channelMap;
+    private final Map<String, DebugChannel> channelMap;
     private final Map<String, Boolean> customFields;
 
-    JBJGLDebugger(final Map<String, JBJGLDebugChannel> channelMap) {
-        JBJGLDebugger.addDefaultChannel(channelMap);
+    Debugger(final Map<String, DebugChannel> channelMap) {
+        Debugger.addDefaultChannel(channelMap);
 
         this.channelMap = channelMap;
         this.customFields = new HashMap<>();
     }
 
-    public static void standardChannelAddition(
-            final Map<String, JBJGLDebugChannel> channelMap,
-            final String newChannelID, final boolean printsChannelID
-    ) {
-        channelMap.put(newChannelID, JBJGLDebugChannel.initialize(newChannelID,
-                new DefaultOutputFunction(), false, printsChannelID));
-    }
-
-    public static JBJGLDebugger createWithNoChannels() {
-        Map<String, JBJGLDebugChannel> channelMap = new HashMap<>();
+    public static Debugger createWithNoChannels() {
+        Map<String, DebugChannel> channelMap = new HashMap<>();
         return createWithExistingChannels(channelMap);
     }
 
-    public static JBJGLDebugger createWithExistingChannels(
-            final Map<String, JBJGLDebugChannel> channelMap
+    public static Debugger createWithExistingChannels(
+            final Map<String, DebugChannel> channelMap
     ) {
-        return new JBJGLDebugger(channelMap);
+        return new Debugger(channelMap);
+    }
+
+    public static void standardChannelAddition(
+            final Map<String, DebugChannel> channelMap,
+            final String newChannelID, final boolean printsChannelID
+    ) {
+        channelMap.put(newChannelID, new DebugChannel(newChannelID,
+                System.out::println, false, printsChannelID));
     }
 
     // CHANNELS
-    private static void addDefaultChannel(final Map<String, JBJGLDebugChannel> channelMap) {
+    private static void addDefaultChannel(final Map<String, DebugChannel> channelMap) {
         if (!channelMap.containsKey(DEFAULT_CHANNEL))
-            channelMap.put(DEFAULT_CHANNEL, JBJGLDebugChannel.initialize(DEFAULT_CHANNEL,
-                    new DefaultOutputFunction(), false, false));
+            standardChannelAddition(channelMap, DEFAULT_CHANNEL, false);
     }
 
     public void muteChannel(final String id) {
@@ -53,7 +52,7 @@ public class JBJGLDebugger {
             channelMap.get(id).unmute();
     }
 
-    public void addChannel(final JBJGLDebugChannel channel) {
+    public void addChannel(final DebugChannel channel) {
         channelMap.put(channel.getID(), channel);
     }
 
@@ -61,12 +60,12 @@ public class JBJGLDebugger {
             final String id, final Consumer<String> outputFunction,
             final boolean initiallyMuted, final boolean printsChannelID
     ) {
-        JBJGLDebugChannel channel = JBJGLDebugChannel.initialize(id,
+        DebugChannel channel = new DebugChannel(id,
                 outputFunction, initiallyMuted, printsChannelID);
         channelMap.put(id, channel);
     }
 
-    public JBJGLDebugChannel getChannel(final String id) {
+    public DebugChannel getChannel(final String id) {
         if (channelMap.containsKey(id))
             return channelMap.get(id);
         else

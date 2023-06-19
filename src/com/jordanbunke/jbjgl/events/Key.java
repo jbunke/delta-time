@@ -2,7 +2,7 @@ package com.jordanbunke.jbjgl.events;
 
 import java.awt.event.KeyEvent;
 
-public enum JBJGLKey {
+public enum Key {
     DOWN_ARROW, UP_ARROW, LEFT_ARROW, RIGHT_ARROW,
 
     ENTER, BACKSPACE, DELETE, TAB, SHIFT, ESCAPE, SPACE,
@@ -25,7 +25,7 @@ public enum JBJGLKey {
         } + " ]";
     }
 
-    public static JBJGLKey fromKeyEvent(final KeyEvent keyEvent) {
+    public static Key fromKeyEvent(final KeyEvent keyEvent) {
         final char character = keyEvent.getKeyChar();
         final int code = keyEvent.getKeyCode();
 
@@ -33,16 +33,16 @@ public enum JBJGLKey {
             case 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
                     'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w',
                     'x', 'y', 'z' ->
-                    JBJGLKey.valueOf(String.valueOf(character).toUpperCase());
+                    Key.valueOf(String.valueOf(character).toUpperCase());
             case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ->
-                    JBJGLKey.valueOf("_" + character);
+                    Key.valueOf("_" + character);
             case '\n' -> ENTER;
             case ' ' -> SPACE;
             default -> getFromCode(code);
         };
     }
     
-    private static JBJGLKey getFromCode(final int code) {
+    private static Key getFromCode(final int code) {
         return switch (code) {
             case 8 -> BACKSPACE;
             case 9 -> TAB;

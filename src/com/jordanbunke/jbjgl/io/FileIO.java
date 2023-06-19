@@ -1,6 +1,6 @@
 package com.jordanbunke.jbjgl.io;
 
-import com.jordanbunke.jbjgl.error.JBJGLError;
+import com.jordanbunke.jbjgl.error.GameError;
 import com.jordanbunke.jbjgl.utility.StringProcessing;
 
 import javax.swing.*;
@@ -10,21 +10,21 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
 
-public class JBJGLFileIO {
+public class FileIO {
     public static void safeMakeDirectory(final Path dirPath) {
         File dir = dirPath.toFile();
 
         if (dir.exists())
-            JBJGLError.send("Filepath already exists: " + dirPath);
+            GameError.send("Filepath already exists: " + dirPath);
         else if (!dir.mkdirs())
-            JBJGLError.send("Couldn't create directory at specified filepath: " + dirPath);
+            GameError.send("Couldn't create directory at specified filepath: " + dirPath);
     }
 
     public static String readFile(final Path filepath) {
         try {
             return read(new FileReader(filepath.toFile()), filepath.toString());
         } catch (FileNotFoundException e) {
-            JBJGLError.send("File not found: " + filepath);
+            GameError.send("File not found: " + filepath);
         }
 
         return null;
@@ -45,7 +45,7 @@ public class JBJGLFileIO {
             if (contents.toString().length() > 0)
                 contents.deleteCharAt(contents.toString().length() - 1);
         } catch (IOException e) {
-            JBJGLError.send("Couldn't read: " + name);
+            GameError.send("Couldn't read: " + name);
         }
 
         return contents.toString();
@@ -57,7 +57,7 @@ public class JBJGLFileIO {
             bw.write(contents);
             bw.close();
         } catch (IOException e) {
-            JBJGLError.send("Couldn't write to file: " + filepath);
+            GameError.send("Couldn't write to file: " + filepath);
         }
     }
 
@@ -87,7 +87,7 @@ public class JBJGLFileIO {
         try {
             Files.delete(filepath);
         } catch (IOException e) {
-            JBJGLError.send("Couldn't delete file: " + filepath);
+            GameError.send("Couldn't delete file: " + filepath);
         }
     }
 
@@ -99,7 +99,7 @@ public class JBJGLFileIO {
         final JFileChooser fc = new JFileChooser();
 
         if (filterNames.length != extensionFilters.length) {
-            JBJGLError.send("Number of filter names does not match number of extensions in file chooser");
+            GameError.send("Number of filter names does not match number of extensions in file chooser");
             return Optional.empty();
         }
 

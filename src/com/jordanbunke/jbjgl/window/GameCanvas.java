@@ -5,18 +5,14 @@ import com.jordanbunke.jbjgl.image.GameImage;
 import javax.swing.*;
 import java.awt.*;
 
-public class JBJGLCanvas extends JPanel {
+public class GameCanvas extends JPanel {
     private GameImage image;
 
-    private JBJGLCanvas(final int width, final int height) {
+    GameCanvas(final int width, final int height) {
         setSize(width, height);
         setPreferredSize(new Dimension(width, height));
 
         image = new GameImage(width, height);
-    }
-
-    static JBJGLCanvas create(final int width, final int height) {
-        return new JBJGLCanvas(width, height);
     }
 
     void draw(final GameImage image) {

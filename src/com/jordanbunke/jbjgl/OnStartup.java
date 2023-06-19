@@ -1,6 +1,6 @@
 package com.jordanbunke.jbjgl;
 
-import com.jordanbunke.jbjgl.error.JBJGLError;
+import com.jordanbunke.jbjgl.error.GameError;
 import com.jordanbunke.jbjgl.utility.JBJGLGlobal;
 
 import javax.swing.*;
@@ -21,7 +21,7 @@ public class OnStartup {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
-            JBJGLError.send("Something went wrong setting the look and feel");
+            GameError.send("Something went wrong setting the look and feel");
         }
     }
 }

@@ -2,14 +2,14 @@ package com.jordanbunke.jbjgl.debug;
 
 import java.util.function.Consumer;
 
-public class JBJGLDebugChannel {
+public class DebugChannel {
 
     private boolean muted;
     private final boolean printsChannelID;
     private final String id;
     private Consumer<String> outputFunction;
 
-    private JBJGLDebugChannel(
+    public DebugChannel(
             final String id, final Consumer<String> outputFunction,
             final boolean initiallyMuted, final boolean printsChannelID
     ) {
@@ -17,13 +17,6 @@ public class JBJGLDebugChannel {
         this.outputFunction = outputFunction;
         muted = initiallyMuted;
         this.printsChannelID = printsChannelID;
-    }
-
-    public static JBJGLDebugChannel initialize(
-            final String id, final Consumer<String> outputFunction,
-            final boolean initiallyMuted, final boolean printsChannelID
-    ) {
-        return new JBJGLDebugChannel(id, outputFunction, initiallyMuted, printsChannelID);
     }
 
     public void unmute() {

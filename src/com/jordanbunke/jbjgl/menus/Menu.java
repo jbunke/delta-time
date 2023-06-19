@@ -1,15 +1,15 @@
 package com.jordanbunke.jbjgl.menus;
 
-import com.jordanbunke.jbjgl.contexts.JBJGLMenuManager;
-import com.jordanbunke.jbjgl.debug.JBJGLGameDebugger;
-import com.jordanbunke.jbjgl.io.JBJGLListener;
+import com.jordanbunke.jbjgl.contexts.ProgramContext;
+import com.jordanbunke.jbjgl.debug.GameDebugger;
+import com.jordanbunke.jbjgl.io.InputEventLogger;
 import com.jordanbunke.jbjgl.menus.menu_elements.MenuElement;
 import com.jordanbunke.jbjgl.menus.menu_elements.SelectableMenuElement;
 
 import java.awt.*;
 import java.util.function.BiConsumer;
 
-public class Menu {
+public class Menu extends ProgramContext {
     public enum Direction {
         LEFT, RIGHT, DOWN, UP
     }
@@ -17,12 +17,12 @@ public class Menu {
     private static final int NO_SELECTION = -1;
 
     private final MenuElement[] menuElements;
-    private final BiConsumer<JBJGLListener, Menu> selectionLogic;
+    private final BiConsumer<InputEventLogger, Menu> selectionLogic;
 
     private int selection = NO_SELECTION;
 
     public Menu(
-            final BiConsumer<JBJGLListener, Menu> selectionLogic,
+            final BiConsumer<InputEventLogger, Menu> selectionLogic,
             final MenuElement... menuElements
     ) {
         this.menuElements = menuElements;
@@ -40,17 +40,24 @@ public class Menu {
             element.update();
     }
 
-    public void render(final Graphics g, final JBJGLGameDebugger debugger) {
+    @Override
+    public void render(final Graphics2D g) {
         for (MenuElement element : menuElements)
-            element.render(g, debugger);
+            element.render(g);
     }
 
-    public void process(final JBJGLListener listener, final JBJGLMenuManager menuManager) {
+    @Override
+    public void debugRender(final Graphics2D g, final GameDebugger debugger) {
+        for (MenuElement element : menuElements)
+            element.debugRender(g, debugger);
+    }
+
+    public void process(final InputEventLogger eventLogger) {
         if (selectionLogic != null)
-            selectionLogic.accept(listener, this);
+            selectionLogic.accept(eventLogger, this);
 
         for (MenuElement element : menuElements)
-            element.process(listener, menuManager);
+            element.process(eventLogger);
     }
 
     public boolean attemptChoose() {

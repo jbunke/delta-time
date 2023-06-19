@@ -1,14 +1,14 @@
 package com.jordanbunke.jbjgl;
 
-import com.jordanbunke.jbjgl.contexts.JBJGLMenuManager;
+import com.jordanbunke.jbjgl.contexts.MenuManager;
 import com.jordanbunke.jbjgl.fonts.FontsForTests;
-import com.jordanbunke.jbjgl.game.JBJGLGame;
-import com.jordanbunke.jbjgl.game.JBJGLGameManager;
+import com.jordanbunke.jbjgl.game.Game;
+import com.jordanbunke.jbjgl.game.GameManager;
 import com.jordanbunke.jbjgl.image.GameImage;
 import com.jordanbunke.jbjgl.menus.Menu;
 import com.jordanbunke.jbjgl.menus.menu_elements.AnimationMenuElement;
-import com.jordanbunke.jbjgl.menus.menu_elements.button.ClickableMenuElement;
 import com.jordanbunke.jbjgl.menus.menu_elements.MenuElement;
+import com.jordanbunke.jbjgl.menus.menu_elements.button.SimpleMenuButton;
 import com.jordanbunke.jbjgl.text.Text;
 import com.jordanbunke.jbjgl.text.TextComponent;
 
@@ -56,24 +56,15 @@ public class Example {
                 }
         );
         GameImage button = button(false), highlightedButton = button(true);
-        ClickableMenuElement clickableMenuElement = ClickableMenuElement.generate(
+        SimpleMenuButton menuButton = new SimpleMenuButton(
                 new int[]{ width / 2, height / 2 },
                 new int[]{ button.getWidth() + 100, button.getHeight() - 20 },
-                MenuElement.Anchor.CENTRAL, button, highlightedButton,
-                () -> System.exit(0)
-        );
-        Menu menu = new Menu(
-                animationMenuElement, clickableMenuElement
-        );
-        JBJGLGameManager manager = JBJGLGameManager.createOf(
-                0, JBJGLMenuManager.initialize(menu, "instant quit")
-        );
-        JBJGLGame game = JBJGLGame.create(
-                "Example 1", manager, width, height,
-                new GameImage(20, 20),
-                true, true,
-                30.0, 60.0
-        );
+                MenuElement.Anchor.CENTRAL, true, () -> System.exit(0),
+                button, highlightedButton);
+        Menu menu = new Menu(animationMenuElement, menuButton);
+        GameManager manager = new GameManager(0, new MenuManager(menu, "instant quit"));
+        Game game = Game.assemble("Example 1", manager, width, height,
+                new GameImage(20, 20), true, true, 30.0, 60.0);
         // game.getGameEngine().getDebugger().hideBoundingBoxes();
     }
 }

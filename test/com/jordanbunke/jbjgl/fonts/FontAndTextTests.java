@@ -1,6 +1,6 @@
 package com.jordanbunke.jbjgl.fonts;
 
-import com.jordanbunke.jbjgl.io.JBJGLImageIO;
+import com.jordanbunke.jbjgl.io.GameImageIO;
 import com.jordanbunke.jbjgl.text.Text;
 import com.jordanbunke.jbjgl.text.TextBuilder;
 import org.junit.Test;
@@ -37,7 +37,7 @@ public class FontAndTextTests {
 
         final Path filepath = FONT_TEST_OUTPUT_PATH.resolve(saveCode + FILE_SUFFIX);
 
-        JBJGLImageIO.writeImage(filepath, textBuilder.build().draw());
+        GameImageIO.writeImage(filepath, textBuilder.build().draw());
     }
 
     @Test

@@ -1,7 +1,7 @@
 package com.jordanbunke.jbjgl.events;
 
-public class JBJGLKeyEvent extends JBJGLEvent {
-    private final JBJGLKey key;
+public class GameKeyEvent extends GameEvent {
+    private final Key key;
     private final char character;
     private final Action action;
 
@@ -9,26 +9,26 @@ public class JBJGLKeyEvent extends JBJGLEvent {
         PRESS, RELEASE, TYPE
     }
 
-    private JBJGLKeyEvent(final JBJGLKey key, final char character, final Action action) {
+    private GameKeyEvent(final Key key, final char character, final Action action) {
         super();
         this.key = key;
         this.character = character;
         this.action = action;
     }
 
-    public static JBJGLKeyEvent generate(final JBJGLKey key, final Action action) {
-        return new JBJGLKeyEvent(key, (char)0, action);
+    public static GameKeyEvent newKeyStroke(final Key key, final Action action) {
+        return new GameKeyEvent(key, (char)0, action);
     }
 
-    public static JBJGLKeyEvent generateTyped(final char character) {
-        return new JBJGLKeyEvent(JBJGLKey.UNSUPPORTED, character, Action.TYPE);
+    public static GameKeyEvent newTypedKey(final char character) {
+        return new GameKeyEvent(Key.UNSUPPORTED, character, Action.TYPE);
     }
 
     public boolean matchesAction(final Action action) {
         return this.action == action;
     }
 
-    public JBJGLKey getKey() {
+    public Key getKey() {
         return key;
     }
 
@@ -42,7 +42,7 @@ public class JBJGLKeyEvent extends JBJGLEvent {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof JBJGLKeyEvent oke))
+        if (!(o instanceof GameKeyEvent oke))
             return false;
         return this.key == oke.key && this.action == oke.action && this.character == oke.character;
     }

@@ -6,8 +6,8 @@ import com.jordanbunke.jbjgl.game_world.Vector2D;
 import com.jordanbunke.jbjgl.game_world.map.pathfinding.AStarPathfinding;
 import com.jordanbunke.jbjgl.image.ImageProcessing;
 import com.jordanbunke.jbjgl.image.GameImage;
-import com.jordanbunke.jbjgl.io.JBJGLImageIO;
-import com.jordanbunke.jbjgl.io.JBJGLResourceLoader;
+import com.jordanbunke.jbjgl.io.GameImageIO;
+import com.jordanbunke.jbjgl.io.ResourceLoader;
 
 import java.awt.*;
 import java.nio.file.Path;
@@ -41,7 +41,7 @@ public class TileMapTests {
     }
 
     private static TileMap<Vector2D> load(final String filename) {
-        final GameImage tileSource = JBJGLResourceLoader.loadImageResource(Example.class, Path.of("tilemaps", filename));
+        final GameImage tileSource = ResourceLoader.loadImageResource(Path.of("tilemaps", filename));
 
         final int width = tileSource.getWidth(), height = tileSource.getHeight();
 
@@ -85,6 +85,6 @@ public class TileMapTests {
             g.fillRect(step.x * UNIT_DIM, step.y * UNIT_DIM, UNIT_DIM, UNIT_DIM);
 
         g.dispose();
-        JBJGLImageIO.writeImage(Path.of("test_out", "tilemaps", name  + " result.png"), image);
+        GameImageIO.writeImage(Path.of("test_out", "tilemaps", name  + " result.png"), image);
     }
 }

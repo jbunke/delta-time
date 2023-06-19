@@ -1,14 +1,13 @@
 package com.jordanbunke.jbjgl.menus.menu_elements;
 
-import com.jordanbunke.jbjgl.contexts.JBJGLMenuManager;
-import com.jordanbunke.jbjgl.debug.JBJGLGameDebugger;
+import com.jordanbunke.jbjgl.contexts.ProgramContext;
+import com.jordanbunke.jbjgl.debug.GameDebugger;
 import com.jordanbunke.jbjgl.image.GameImage;
-import com.jordanbunke.jbjgl.io.JBJGLListener;
 import com.jordanbunke.jbjgl.utility.RenderConstants;
 
 import java.awt.*;
 
-public abstract class MenuElement {
+public abstract class MenuElement extends ProgramContext {
     private final int[] position;
     private final int[] dimensions;
     private final Anchor anchor;
@@ -44,10 +43,6 @@ public abstract class MenuElement {
         this.anchor = anchor;
         this.isVisible = isVisible;
     }
-
-    public abstract void update();
-    public abstract void render(final Graphics g, final JBJGLGameDebugger debugger);
-    public abstract void process(final JBJGLListener listener, final JBJGLMenuManager menuManager);
 
     public void draw(final GameImage image, final Graphics g) {
         if (!isVisible)
@@ -158,7 +153,7 @@ public abstract class MenuElement {
                 mousePosition[RenderConstants.Y] < max[RenderConstants.Y];
     }
 
-    public void renderBoundingBox(final Graphics g, final JBJGLGameDebugger debugger) {
+    public void renderBoundingBox(final Graphics g, final GameDebugger debugger) {
         if (debugger == null || !debugger.isShowingBoundingBoxes() || !isVisible)
             return;
 

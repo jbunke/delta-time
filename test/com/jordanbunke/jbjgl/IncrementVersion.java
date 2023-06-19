@@ -1,6 +1,6 @@
 package com.jordanbunke.jbjgl;
 
-import com.jordanbunke.jbjgl.io.JBJGLFileIO;
+import com.jordanbunke.jbjgl.io.FileIO;
 
 import java.nio.file.Path;
 
@@ -14,6 +14,6 @@ public class IncrementVersion {
                 ""
         };
 
-        JBJGLFileIO.writeFile(Path.of("res", Constants.INFO_FILENAME), infoFileContents);
+        FileIO.writeFile(Path.of("res", Constants.INFO_FILENAME), infoFileContents);
     }
 }

@@ -1,19 +1,19 @@
 package com.jordanbunke.jbjgl.window;
 
 import com.jordanbunke.jbjgl.image.GameImage;
-import com.jordanbunke.jbjgl.io.JBJGLListener;
+import com.jordanbunke.jbjgl.io.InputEventLogger;
 
 import javax.swing.*;
 
-public class JBJGLWindow {
+public class GameWindow {
     private final JFrame frame;
-    private final JBJGLCanvas canvas;
-    private final JBJGLListener listener;
+    private final GameCanvas canvas;
+    private final InputEventLogger eventLogger;
 
     private final String title;
     private int width, height;
 
-    private JBJGLWindow(
+    public GameWindow(
             final String title, final int width, final int height, final GameImage icon,
             final boolean exitOnClose, final boolean resizable, final boolean maximized
     ) {
@@ -22,8 +22,8 @@ public class JBJGLWindow {
         this.height = height;
 
         frame = new JFrame(title);
-        canvas = JBJGLCanvas.create(width, height);
-        listener = JBJGLListener.create(canvas);
+        canvas = new GameCanvas(width, height);
+        eventLogger = InputEventLogger.create(canvas);
 
         if (maximized) {
             frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -53,22 +53,6 @@ public class JBJGLWindow {
         clearCanvas();
     }
 
-    public static JBJGLWindow createWithoutIcon(
-            final String title, final int width, final int height,
-            final boolean exitOnClose, final boolean resizable, final boolean maximized
-    ) {
-        return new JBJGLWindow(title, width, height,
-                new GameImage(20, 20),
-                exitOnClose, resizable, maximized);
-    }
-
-    public static JBJGLWindow create(
-            final String title, final int width, final int height, final GameImage icon,
-            final boolean exitOnClose, final boolean resizable, final boolean maximized
-    ) {
-        return new JBJGLWindow(title, width, height, icon, exitOnClose, resizable, maximized);
-    }
-
     public void setSize(final int width, final int height) {
         this.width = width;
         this.height = height;
@@ -89,8 +73,8 @@ public class JBJGLWindow {
         canvas.clear();
     }
 
-    public JBJGLListener getListener() {
-        return listener;
+    public InputEventLogger getEventLogger() {
+        return eventLogger;
     }
 
     public String getTitle() {

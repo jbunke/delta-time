@@ -1,21 +1,21 @@
 package com.jordanbunke.jbjgl.game;
 
-import com.jordanbunke.jbjgl.debug.JBJGLGameDebugger;
-import com.jordanbunke.jbjgl.events.JBJGLEventHandler;
+import com.jordanbunke.jbjgl.debug.GameDebugger;
+import com.jordanbunke.jbjgl.events.EventHandler;
 import com.jordanbunke.jbjgl.image.ImageProcessing;
 import com.jordanbunke.jbjgl.image.GameImage;
-import com.jordanbunke.jbjgl.window.JBJGLWindow;
+import com.jordanbunke.jbjgl.window.GameWindow;
 
 import java.awt.*;
 
-public class JBJGLGameEngine implements Runnable {
+public class GameEngine implements Runnable {
     // Constants
     private final double UPDATE_HZ;
     private final int MUST_UPDATE_BEFORE_RENDER;
     private final double TARGET_FPS;
 
     // Fields
-    private JBJGLWindow window;
+    private GameWindow window;
     private final Thread updateThread;
     private int renderWidth, renderHeight;
     private boolean scaleUp;
@@ -23,19 +23,19 @@ public class JBJGLGameEngine implements Runnable {
     private boolean running;
 
     // 3 interfaces ideally implemented as a single game manager
-    private final JBJGLEventHandler eventHandler;
-    private final JBJGLGameRenderer renderer;
-    private final JBJGLGameLogicHandler logicHandler;
+    private final EventHandler eventHandler;
+    private final Renderer renderer;
+    private final LogicHandler logicHandler;
 
-    private JBJGLGameDebugger debugger;
+    private GameDebugger debugger;
 
-    private JBJGLGameEngine(
-            final JBJGLWindow window, final JBJGLEventHandler eventHandler,
-            final JBJGLGameRenderer renderer, final JBJGLGameLogicHandler logicHandler,
+    private GameEngine(
+            final GameWindow window, final EventHandler eventHandler,
+            final Renderer renderer, final LogicHandler logicHandler,
             final double UPDATE_HZ, final double TARGET_FPS, final int MUST_UPDATE_BEFORE_RENDER
     ) {
         this.window = window;
-        updateThread = new Thread(this, "[ " + window.getTitle() + " execution thread ]");
+        updateThread = new Thread(this, "[ \"" + window.getTitle() + "\" game loop ]");
 
         renderWidth = window.getWidth();
         renderHeight = window.getHeight();
@@ -45,7 +45,7 @@ public class JBJGLGameEngine implements Runnable {
         this.renderer = renderer;
         this.logicHandler = logicHandler;
 
-        debugger = JBJGLGameDebugger.create();
+        debugger = GameDebugger.newDefault();
 
         this.UPDATE_HZ = UPDATE_HZ;
         this.TARGET_FPS = TARGET_FPS;
@@ -54,69 +54,67 @@ public class JBJGLGameEngine implements Runnable {
         initialize();
     }
 
-    public static JBJGLGameEngine newForGame(
-            final JBJGLWindow window, final JBJGLGameManager gameManager
+    public static GameEngine newForGame(
+            final GameWindow window, final GameManager gameManager
     ) {
-        return new JBJGLGameEngine(
+        return new GameEngine(
                 window, gameManager, gameManager, gameManager,
                 60.0, 60.0, 5
         );
     }
 
-    public static JBJGLGameEngine newForGame(
-            final JBJGLWindow window, final JBJGLGameManager gameManager,
+    public static GameEngine newForGame(
+            final GameWindow window, final GameManager gameManager,
             final double UPDATE_HZ, final double TARGET_FPS
     ) {
-        return new JBJGLGameEngine(
+        return new GameEngine(
                 window, gameManager, gameManager, gameManager,
                 UPDATE_HZ, TARGET_FPS, 5
         );
     }
 
-    public static JBJGLGameEngine newWindowed(
+    public static GameEngine newWindowed(
             final String title, final int width, final int height,
             final GameImage icon,
             final boolean exitOnClose, final boolean resizable,
-            final JBJGLEventHandler eventHandler,
-            final JBJGLGameRenderer renderer, final JBJGLGameLogicHandler logicHandler,
+            final EventHandler eventHandler,
+            final Renderer renderer, final LogicHandler logicHandler,
             final double UPDATE_HZ, final double TARGET_FPS, final int MUST_UPDATE_BEFORE_RENDER
     ) {
-        JBJGLWindow window = JBJGLWindow.create(
-                title, width, height, icon, exitOnClose, resizable, false
-        );
+        final GameWindow window = new GameWindow(title, width, height,
+                icon, exitOnClose, resizable, false);
 
-        return new JBJGLGameEngine(
+        return new GameEngine(
                 window, eventHandler, renderer, logicHandler,
                 UPDATE_HZ, TARGET_FPS, MUST_UPDATE_BEFORE_RENDER
         );
     }
 
-    public static JBJGLGameEngine newMaximized(
+    public static GameEngine newMaximized(
             final String title, final GameImage icon,
             final boolean exitOnClose,
-            final JBJGLEventHandler eventHandler,
-            final JBJGLGameRenderer renderer, final JBJGLGameLogicHandler logicHandler,
+            final EventHandler eventHandler,
+            final Renderer renderer, final LogicHandler logicHandler,
             final double UPDATE_HZ, final double TARGET_FPS, final int MUST_UPDATE_BEFORE_RENDER
     ) {
         final int width = Toolkit.getDefaultToolkit().getScreenSize().width;
         final int height = Toolkit.getDefaultToolkit().getScreenSize().height;
 
-        JBJGLWindow window = JBJGLWindow.create(
-                title, width, height, icon, exitOnClose, false, true
-        );
+        final GameWindow window = new GameWindow(title, width, height,
+                icon, exitOnClose, false, true);
 
-        return new JBJGLGameEngine(
+        return new GameEngine(
                 window, eventHandler, renderer, logicHandler,
                 UPDATE_HZ, TARGET_FPS, MUST_UPDATE_BEFORE_RENDER
         );
     }
 
-    public static JBJGLGameEngine fromExistingWindow(
-            final JBJGLWindow window, final JBJGLEventHandler eventHandler,
-            final JBJGLGameRenderer renderer, final JBJGLGameLogicHandler logicHandler,
+    public static GameEngine fromExistingWindow(
+            final GameWindow window, final EventHandler eventHandler,
+            final Renderer renderer, final LogicHandler logicHandler,
             final double UPDATE_HZ, final double TARGET_FPS, final int MUST_UPDATE_BEFORE_RENDER
     ) {
-        return new JBJGLGameEngine(
+        return new GameEngine(
                 window, eventHandler, renderer, logicHandler,
                 UPDATE_HZ, TARGET_FPS, MUST_UPDATE_BEFORE_RENDER
         );
@@ -127,7 +125,7 @@ public class JBJGLGameEngine implements Runnable {
         updateThread.start();
     }
 
-    public void replaceWindow(final JBJGLWindow replacement) {
+    public void replaceWindow(final GameWindow replacement) {
         final boolean adjustSize = window.getWidth() == renderWidth &&
                 window.getHeight() == renderHeight;
 
@@ -190,7 +188,7 @@ public class JBJGLGameEngine implements Runnable {
             if (thisSecondSlice != lastSecondSlice) {
                 if (frameCount != oldFrameCount) {
                     debugger.updateFPS(frameCount);
-                    debugger.getChannel(JBJGLGameDebugger.FRAME_RATE).
+                    debugger.getChannel(GameDebugger.FRAME_RATE).
                             printMessage(frameCount + " FPS" + (Math.abs(frameCount - TARGET_FPS) > 1.0
                                     ? " (target: " + (int)TARGET_FPS + " FPS)" : ""));
                     oldFrameCount = frameCount;
@@ -216,8 +214,8 @@ public class JBJGLGameEngine implements Runnable {
     }
 
     private void callEventHandler() {
-        eventHandler.process(window.getListener());
-        window.getListener().emptyEventList();
+        eventHandler.process(window.getEventLogger());
+        window.getEventLogger().emptyEventList();
     }
 
     private void update() {
@@ -230,8 +228,9 @@ public class JBJGLGameEngine implements Runnable {
         // Render
         refMillis = System.currentTimeMillis();
         GameImage toDraw = new GameImage(renderWidth, renderHeight);
-        Graphics g = toDraw.getGraphics();
-        renderer.render(g, debugger);
+        Graphics2D g = toDraw.g();
+        renderer.render(g);
+        renderer.debugRender(g, debugger);
         debugger.setRenderMillis(System.currentTimeMillis() - refMillis);
 
         // Draw
@@ -242,7 +241,7 @@ public class JBJGLGameEngine implements Runnable {
     }
 
     // SETTERS
-    public void overrideDebugger(final JBJGLGameDebugger debugger) {
+    public void overrideDebugger(final GameDebugger debugger) {
         this.debugger = debugger;
     }
 
@@ -254,18 +253,18 @@ public class JBJGLGameEngine implements Runnable {
                 window.getHeight() != renderHeight;
 
         if (scaleUp)
-            window.getListener().setScaleUpRatio(
+            window.getEventLogger().setScaleUpRatio(
                     window.getWidth() / (double)renderWidth,
                     window.getHeight() / (double)renderHeight
             );
     }
 
     // GETTERS
-    public JBJGLGameDebugger getDebugger() {
+    public GameDebugger getDebugger() {
         return debugger;
     }
 
-    public JBJGLWindow getWindow() {
+    public GameWindow getWindow() {
         return window;
     }
 }

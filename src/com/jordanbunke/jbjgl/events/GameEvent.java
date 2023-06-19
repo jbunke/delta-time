@@ -1,9 +1,9 @@
 package com.jordanbunke.jbjgl.events;
 
-public abstract class JBJGLEvent {
+public abstract class GameEvent {
     private boolean processed;
 
-    JBJGLEvent() {
+    GameEvent() {
         processed = false;
     }
 

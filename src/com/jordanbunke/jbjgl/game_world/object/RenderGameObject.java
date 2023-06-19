@@ -1,6 +1,6 @@
 package com.jordanbunke.jbjgl.game_world.object;
 
-import com.jordanbunke.jbjgl.debug.JBJGLGameDebugger;
+import com.jordanbunke.jbjgl.debug.GameDebugger;
 import com.jordanbunke.jbjgl.game_world.Vector;
 
 import java.awt.*;
@@ -12,5 +12,5 @@ public abstract class RenderGameObject<E extends Vector<E>> extends GameObject<E
 
     public abstract void render(final Camera<E> camera, final Graphics g);
 
-    public abstract void debugRender(final Camera<E> camera, final Graphics g, final JBJGLGameDebugger debugger);
+    public abstract void debugRender(final Camera<E> camera, final Graphics g, final GameDebugger debugger);
 }

@@ -1,29 +1,30 @@
 package com.jordanbunke.jbjgl.io;
 
-import com.jordanbunke.jbjgl.error.JBJGLError;
+import com.jordanbunke.jbjgl.error.GameError;
 import com.jordanbunke.jbjgl.events.*;
+import com.jordanbunke.jbjgl.events.GameWindowEvent;
 import com.jordanbunke.jbjgl.utility.CollectionProcessing;
 import com.jordanbunke.jbjgl.utility.RenderConstants;
-import com.jordanbunke.jbjgl.window.JBJGLCanvas;
+import com.jordanbunke.jbjgl.window.GameCanvas;
 
 import java.awt.event.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class JBJGLListener implements
+public class InputEventLogger implements
         KeyListener, MouseListener, MouseMotionListener, WindowListener {
 
     private static final double DEFAULT_SCALE = 1.0;
 
-    private final List<JBJGLInputTask> tasks;
+    private final List<InputTask> tasks;
 
-    private final List<JBJGLEvent> eventList;
-    private final Map<JBJGLKey, Boolean> characterPressedStatusMap;
+    private final List<GameEvent> eventList;
+    private final Map<Key, Boolean> characterPressedStatusMap;
     private final int[] mousePosition;
 
     private double scaleUpRatioX, scaleUpRatioY;
 
-    private JBJGLListener(final JBJGLCanvas canvas) {
+    private InputEventLogger(final GameCanvas canvas) {
         canvas.addKeyListener(this);
         canvas.addMouseListener(this);
         canvas.addMouseMotionListener(this);
@@ -38,16 +39,16 @@ public class JBJGLListener implements
         scaleUpRatioY = DEFAULT_SCALE;
     }
 
-    public static JBJGLListener create(final JBJGLCanvas canvas) {
-        return new JBJGLListener(canvas);
+    public static InputEventLogger create(final GameCanvas canvas) {
+        return new InputEventLogger(canvas);
     }
 
     public void checkForMatchingKeyStroke(
-            final JBJGLKeyEvent toMatch, final Runnable behaviour
+            final GameKeyEvent toMatch, final Runnable behaviour
     ) {
-        List<JBJGLEvent> eventList = getUnprocessedEvents();
+        List<GameEvent> eventList = getUnprocessedEvents();
 
-        for (JBJGLEvent event : eventList) {
+        for (GameEvent event : eventList) {
             if (event.isProcessed())
                 continue;
 
@@ -59,26 +60,26 @@ public class JBJGLListener implements
     }
 
     public void checkForMatchingKeyStroke(
-            final JBJGLKey key, final JBJGLKeyEvent.Action action,
+            final Key key, final GameKeyEvent.Action action,
             final Runnable behaviour
     ) {
-        JBJGLKeyEvent toMatch = JBJGLKeyEvent.generate(key, action);
+        GameKeyEvent toMatch = GameKeyEvent.newKeyStroke(key, action);
         checkForMatchingKeyStroke(toMatch, behaviour);
     }
 
-    public List<JBJGLEvent> getUnprocessedEvents() {
+    public List<GameEvent> getUnprocessedEvents() {
         try {
             return List.copyOf(eventList).stream()
                     .filter(x -> !x.isProcessed()).collect(Collectors.toList());
         } catch (ConcurrentModificationException e) {
-            JBJGLError.send(
+            GameError.send(
                     "Attempted to fetch unprocessed input events as one occurred. Events were not returned."
             );
             return new ArrayList<>();
         }
     }
 
-    public List<JBJGLEvent> getAllEvents() {
+    public List<GameEvent> getAllEvents() {
         return List.copyOf(eventList);
     }
 
@@ -86,15 +87,15 @@ public class JBJGLListener implements
         CollectionProcessing.emptyList(eventList);
     }
 
-    public void addTask(final JBJGLInputTask task) {
+    public void addTask(final InputTask task) {
         tasks.add(task);
     }
 
-    public void addTasks(final Collection<JBJGLInputTask> tasks) {
+    public void addTasks(final Collection<InputTask> tasks) {
         this.tasks.addAll(tasks);
     }
 
-    public void removeTask(final JBJGLInputTask task) {
+    public void removeTask(final InputTask task) {
         tasks.remove(task);
     }
 
@@ -125,13 +126,13 @@ public class JBJGLListener implements
         return mousePosition;
     }
 
-    public boolean isPressed(final JBJGLKey key) {
+    public boolean isPressed(final Key key) {
         return characterPressedStatusMap.getOrDefault(key, false);
     }
 
-    private void handleKeyEvent(final JBJGLKeyEvent event) {
+    private void handleKeyEvent(final GameKeyEvent event) {
         // check in tasks
-        for (JBJGLInputTask task : tasks)
+        for (InputTask task : tasks)
             if (task.getEvent().equals(event)) {
                 task.execute();
                 return;
@@ -146,59 +147,59 @@ public class JBJGLListener implements
     public void keyTyped(KeyEvent e) {
         char character = e.getKeyChar();
 
-        handleKeyEvent(JBJGLKeyEvent.generateTyped(character));
+        handleKeyEvent(GameKeyEvent.newTypedKey(character));
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        JBJGLKey key = JBJGLKey.fromKeyEvent(e);
+        Key key = Key.fromKeyEvent(e);
 
         if (characterPressedStatusMap.containsKey(key) && characterPressedStatusMap.get(key))
             return;
 
         characterPressedStatusMap.put(key, true);
         handleKeyEvent(
-                JBJGLKeyEvent.generate(key, JBJGLKeyEvent.Action.PRESS)
+                GameKeyEvent.newKeyStroke(key, GameKeyEvent.Action.PRESS)
         );
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        JBJGLKey key = JBJGLKey.fromKeyEvent(e);
+        Key key = Key.fromKeyEvent(e);
 
         if (characterPressedStatusMap.containsKey(key) && !characterPressedStatusMap.get(key))
             return;
 
         characterPressedStatusMap.put(key, false);
         handleKeyEvent(
-                JBJGLKeyEvent.generate(key, JBJGLKeyEvent.Action.RELEASE)
+                GameKeyEvent.newKeyStroke(key, GameKeyEvent.Action.RELEASE)
         );
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
         eventList.add(
-                JBJGLMouseEvent.generate(new int[] {
+                new GameMouseEvent(new int[] {
                         e.getX(), e.getY()
-                }, JBJGLMouseEvent.Action.CLICK)
+                }, GameMouseEvent.Action.CLICK)
         );
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
         eventList.add(
-                JBJGLMouseEvent.generate(new int[] {
+                new GameMouseEvent(new int[] {
                         e.getX(), e.getY()
-                }, JBJGLMouseEvent.Action.DOWN)
+                }, GameMouseEvent.Action.DOWN)
         );
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
         eventList.add(
-                JBJGLMouseEvent.generate(new int[] {
+                new GameMouseEvent(new int[] {
                         e.getX(), e.getY()
-                }, JBJGLMouseEvent.Action.UP)
+                }, GameMouseEvent.Action.UP)
         );
     }
 
@@ -206,9 +207,9 @@ public class JBJGLListener implements
     public void mouseEntered(MouseEvent e) {
         updateMousePosition(e);
         eventList.add(
-                JBJGLMoveEvent.generate(new int[] {
+                new GameMouseMoveEvent(new int[] {
                         e.getX(), e.getY()
-                }, JBJGLMoveEvent.Action.ENTER)
+                }, GameMouseMoveEvent.Action.ENTER)
         );
     }
 
@@ -216,9 +217,9 @@ public class JBJGLListener implements
     public void mouseExited(MouseEvent e) {
         updateMousePosition(e);
         eventList.add(
-                JBJGLMoveEvent.generate(new int[] {
+                new GameMouseMoveEvent(new int[] {
                         e.getX(), e.getY()
-                }, JBJGLMoveEvent.Action.EXIT)
+                }, GameMouseMoveEvent.Action.EXIT)
         );
     }
 
@@ -226,9 +227,9 @@ public class JBJGLListener implements
     public void mouseDragged(MouseEvent e) {
         updateMousePosition(e);
         eventList.add(
-                JBJGLMoveEvent.generate(new int[] {
+                new GameMouseMoveEvent(new int[] {
                         e.getX(), e.getY()
-                }, JBJGLMoveEvent.Action.DRAG)
+                }, GameMouseMoveEvent.Action.DRAG)
         );
     }
 
@@ -236,59 +237,45 @@ public class JBJGLListener implements
     public void mouseMoved(MouseEvent e) {
         updateMousePosition(e);
         eventList.add(
-                JBJGLMoveEvent.generate(new int[] {
+                new GameMouseMoveEvent(new int[] {
                         e.getX(), e.getY()
-                }, JBJGLMoveEvent.Action.MOVE)
+                }, GameMouseMoveEvent.Action.MOVE)
         );
     }
 
     @Override
-    public void windowOpened(WindowEvent e) {
-        eventList.add(
-                JBJGLWindowEvent.generate(JBJGLWindowEvent.Action.OPENED)
-        );
+    public void windowOpened(java.awt.event.WindowEvent e) {
+        eventList.add(new GameWindowEvent(GameWindowEvent.Action.OPENED));
     }
 
     @Override
-    public void windowClosing(WindowEvent e) {
-        eventList.add(
-                JBJGLWindowEvent.generate(JBJGLWindowEvent.Action.CLOSING)
-        );
+    public void windowClosing(java.awt.event.WindowEvent e) {
+        eventList.add(new GameWindowEvent(GameWindowEvent.Action.CLOSING));
     }
 
     @Override
-    public void windowClosed(WindowEvent e) {
-        eventList.add(
-                JBJGLWindowEvent.generate(JBJGLWindowEvent.Action.CLOSED)
-        );
+    public void windowClosed(java.awt.event.WindowEvent e) {
+        eventList.add(new GameWindowEvent(GameWindowEvent.Action.CLOSED));
     }
 
     @Override
-    public void windowIconified(WindowEvent e) {
-        eventList.add(
-                JBJGLWindowEvent.generate(JBJGLWindowEvent.Action.ICONIFIED)
-        );
+    public void windowIconified(java.awt.event.WindowEvent e) {
+        eventList.add(new GameWindowEvent(GameWindowEvent.Action.ICONIFIED));
     }
 
     @Override
-    public void windowDeiconified(WindowEvent e) {
-        eventList.add(
-                JBJGLWindowEvent.generate(JBJGLWindowEvent.Action.DEICONIFIED)
-        );
+    public void windowDeiconified(java.awt.event.WindowEvent e) {
+        eventList.add(new GameWindowEvent(GameWindowEvent.Action.DEICONIFIED));
     }
 
     @Override
-    public void windowActivated(WindowEvent e) {
-        eventList.add(
-                JBJGLWindowEvent.generate(JBJGLWindowEvent.Action.ACTIVATED)
-        );
+    public void windowActivated(java.awt.event.WindowEvent e) {
+        eventList.add(new GameWindowEvent(GameWindowEvent.Action.ACTIVATED));
     }
 
     @Override
-    public void windowDeactivated(WindowEvent e) {
-        eventList.add(
-                JBJGLWindowEvent.generate(JBJGLWindowEvent.Action.DEACTIVATED)
-        );
+    public void windowDeactivated(java.awt.event.WindowEvent e) {
+        eventList.add(new GameWindowEvent(GameWindowEvent.Action.DEACTIVATED));
     }
 
     public void setScaleUpRatio(final double scaleUpRatioX, final double scaleUpRatioY) {
