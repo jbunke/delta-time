@@ -1,19 +1,17 @@
 package com.jordanbunke.jbjgl.game_world.map;
 
 import com.jordanbunke.jbjgl.game_world.Vector;
-import com.jordanbunke.jbjgl.game_world.Vector2D;
-import com.jordanbunke.jbjgl.game_world.Vector3D;
 
-public abstract class JBJGLTileMap<E extends Vector> {
+public abstract class AbstractTileMap<E extends Vector<E>> {
     // TODO
     private final int width, height;
 
     private final E topLeftVectorAnchor;
     private final double tileWorldWidth, tileWorldLength;
-    private final JBJGLTile[][] tiles;
+    private final AbstractTile[][] tiles;
 
     // TODO - temp
-    public JBJGLTileMap(
+    public AbstractTileMap(
             final int width, final int height,
             final E topLeftVectorAnchor,
             final double tileWorldWidth,
@@ -26,12 +24,12 @@ public abstract class JBJGLTileMap<E extends Vector> {
         this.tileWorldWidth = tileWorldWidth;
         this.tileWorldLength = tileWorldLength;
 
-        tiles = new JBJGLTile[width][height];
+        tiles = new AbstractTile[width][height];
     }
 
     public abstract double calculateGCostMultiplier(final int x, final int y);
 
-    public final void populateTiles(final JBJGLTile[][] tiles) {
+    public final void populateTiles(final AbstractTile[][] tiles) {
         for (int x = 0; x < width; x++)
             if (height >= 0)
                 System.arraycopy(tiles[x], 0, this.tiles[x], 0, height);
@@ -49,12 +47,7 @@ public abstract class JBJGLTileMap<E extends Vector> {
     }
 
     private E displaceBy(final E reference, final double deltaX, final double deltaY) {
-        if (reference instanceof Vector2D _2d)
-            return (E) _2d.displace(deltaX, deltaY);
-        else if (reference instanceof Vector3D _3d)
-            return (E) _3d.displace(deltaX, deltaY, 0d);
-
-        return reference;
+        return reference.displace(deltaX, deltaY);
     }
 
     public final int getWidth() {
@@ -65,7 +58,7 @@ public abstract class JBJGLTileMap<E extends Vector> {
         return height;
     }
 
-    public final JBJGLTile getTileAt(final int x, final int y) {
+    public final AbstractTile getTileAt(final int x, final int y) {
         return tiles[x][y];
     }
 }

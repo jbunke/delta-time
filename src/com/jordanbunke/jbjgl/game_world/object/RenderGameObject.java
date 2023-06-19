@@ -1,12 +1,12 @@
-package com.jordanbunke.jbjgl.game_world.entity;
+package com.jordanbunke.jbjgl.game_world.object;
 
 import com.jordanbunke.jbjgl.debug.JBJGLGameDebugger;
 import com.jordanbunke.jbjgl.game_world.Vector;
 
 import java.awt.*;
 
-public abstract class RenderEntity<E extends Vector> extends Entity<E> {
-    public RenderEntity(final E position) {
+public abstract class RenderGameObject<E extends Vector<E>> extends GameObject<E> {
+    public RenderGameObject(final E position) {
         super(position);
     }
 
