@@ -1,28 +1,23 @@
 package com.jordanbunke.jbjgl.fonts;
 
 import com.jordanbunke.jbjgl.image.ImageProcessing;
-import com.jordanbunke.jbjgl.image.JBJGLImage;
+import com.jordanbunke.jbjgl.image.GameImage;
 
 import java.awt.*;
 
 import static com.jordanbunke.jbjgl.fonts.FontConstants.MATCH_COLOR;
 
 public class Grapheme {
-    private final JBJGLImage image;
+    private final GameImage image;
     private final char c;
     private final int width;
     private final int height;
 
-    private Grapheme(final JBJGLImage image, final char c, final int width, final int height) {
+    public Grapheme(final GameImage image, final char c, final int width, final int height) {
         this.c = c;
         this.image = image;
         this.width = width;
         this.height = height;
-    }
-
-    public static Grapheme create(final JBJGLImage image, final char c,
-                                  final int width, final int height) {
-        return new Grapheme(image, c, width, height);
     }
 
     public int getWidth() {
@@ -33,7 +28,7 @@ public class Grapheme {
         return height;
     }
 
-    public JBJGLImage getImage(final Color color) {
+    public GameImage getImage(final Color color) {
         return ImageProcessing.replaceColor(image, MATCH_COLOR, color);
     }
 

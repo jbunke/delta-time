@@ -1,12 +1,12 @@
 package com.jordanbunke.jbjgl.game;
 
 import com.jordanbunke.jbjgl.contexts.ProgramContext;
-import com.jordanbunke.jbjgl.debug.JBJGLGameDebugger;
+import com.jordanbunke.jbjgl.debug.GameDebugger;
 import com.jordanbunke.jbjgl.fonts.FontsForTests;
-import com.jordanbunke.jbjgl.image.JBJGLImage;
-import com.jordanbunke.jbjgl.io.JBJGLListener;
-import com.jordanbunke.jbjgl.text.JBJGLText;
-import com.jordanbunke.jbjgl.text.JBJGLTextBuilder;
+import com.jordanbunke.jbjgl.image.GameImage;
+import com.jordanbunke.jbjgl.io.InputEventLogger;
+import com.jordanbunke.jbjgl.text.Text;
+import com.jordanbunke.jbjgl.text.TextBuilder;
 
 import java.awt.*;
 
@@ -16,24 +16,24 @@ public class PerformanceExample {
             FULLSCREEN_H = 1080, WINDOWED_H = 720, WINDOW_SCALE_UP = WINDOWED_H / CANVAS_H;
     private static final double REFRESH_RATE_HZ = 60.;
 
-    private static JBJGLGame exampleGame;
+    private static Game exampleGame;
 
     public static void main(String[] args) {
         launch();
     }
 
     private static void launch() {
-        final JBJGLGameManager gameManager = JBJGLGameManager.createOf(0, new GameContext());
-        exampleGame = JBJGLGame.create("Example", gameManager,
+        final GameManager gameManager = new GameManager(0, new GameContext());
+        exampleGame = Game.assemble("Example", gameManager,
                 CANVAS_W * WINDOW_SCALE_UP, CANVAS_H * WINDOW_SCALE_UP,
-                JBJGLImage.create(1, 1), true, false,
+                GameImage.dummy(), true, false,
                 REFRESH_RATE_HZ, REFRESH_RATE_HZ);
         exampleGame.getGameEngine().setRenderDimension(CANVAS_W, CANVAS_H);
         // exampleGame.getGameEngine().getDebugger().hideBoundingBoxes();
     }
 
     private static class GameContext extends ProgramContext {
-        private final JBJGLImage canvas = JBJGLImage.create(CANVAS_W, CANVAS_H);
+        private final GameImage canvas = new GameImage(CANVAS_W, CANVAS_H);
         private static final int CUTOFF = 20;
         private int c = CUTOFF;
 
@@ -57,9 +57,9 @@ public class PerformanceExample {
             g.setColor(new Color(100, 0, 0, 255));
             g.fillRect(0, 0, CANVAS_W, CANVAS_H);
 
-            final JBJGLGameDebugger debugger = exampleGame.getGameEngine().getDebugger();
+            final GameDebugger debugger = exampleGame.getGameEngine().getDebugger();
 
-            final JBJGLImage u = generateText("update: " + debugger.getUpdateMillis() + " ms"),
+            final GameImage u = generateText("update: " + debugger.getUpdateMillis() + " ms"),
                     eh = generateText("event handler: " + debugger.getEventHandlerMillis() + " ms"),
                     r = generateText("render: " + debugger.getRenderMillis() + " ms"),
                     d = generateText("draw: " + debugger.getDrawMillis() + " ms"),
@@ -79,19 +79,24 @@ public class PerformanceExample {
         }
 
         @Override
-        public void render(final Graphics g, final JBJGLGameDebugger debugger) {
+        public void render(final Graphics2D g) {
             g.drawImage(canvas, 0, 0, null);
         }
 
         @Override
-        public void process(final JBJGLListener listener) {
+        public void debugRender(Graphics2D g, GameDebugger debugger) {
+
+        }
+
+        @Override
+        public void process(final InputEventLogger eventLogger) {
 
         }
     }
 
-    private static JBJGLImage generateText(final String string) {
-        return JBJGLTextBuilder.initialize(
-                CANVAS_SCALE_UP / 20., JBJGLText.Orientation.LEFT,
+    private static GameImage generateText(final String string) {
+        return new TextBuilder(
+                CANVAS_SCALE_UP / 20., Text.Orientation.LEFT,
                 new Color(0, 0, 0, 255),
                 FontsForTests.CLASSIC.getStandard()
         ).addText(string).build().draw();

@@ -1,19 +1,19 @@
 package com.jordanbunke.jbjgl.game_world;
 
-public class Collider<E extends Vector> {
-    private final boolean centered;
+public class Collider<E extends Vector<E>> {
     private boolean active;
-    private E dimensions;
+    private E dimensions, offset;
 
-    public Collider(final E dimensions, final boolean centered, final boolean active) {
+    public Collider(final E dimensions, final E offset, final boolean active) {
         this.dimensions = dimensions;
-        this.centered = centered;
+        this.offset = offset;
         this.active = active;
     }
 
     public Collider(final E dimensions) {
         this.dimensions = dimensions;
-        this.centered = true;
+        /* Initialization that centers the collider on its owner's position */
+        this.offset = dimensions.scale(-0.5);
         this.active = true;
     }
 
@@ -33,8 +33,8 @@ public class Collider<E extends Vector> {
         return dimensions;
     }
 
-    public boolean isCentered() {
-        return centered;
+    public E getOffset() {
+        return offset;
     }
 
     public boolean isActive() {

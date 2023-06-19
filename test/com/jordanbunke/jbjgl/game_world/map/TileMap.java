@@ -2,7 +2,7 @@ package com.jordanbunke.jbjgl.game_world.map;
 
 import com.jordanbunke.jbjgl.game_world.Vector;
 
-public class TileMap<E extends Vector> extends JBJGLTileMap<E> {
+public class TileMap<E extends Vector<E>> extends AbstractTileMap<E> {
     public TileMap(
             final int width, final int height,
             final E topLeftVectorAnchor,

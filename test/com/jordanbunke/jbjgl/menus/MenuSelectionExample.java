@@ -1,17 +1,17 @@
 package com.jordanbunke.jbjgl.menus;
 
-import com.jordanbunke.jbjgl.contexts.JBJGLMenuManager;
+import com.jordanbunke.jbjgl.contexts.MenuManager;
 import com.jordanbunke.jbjgl.fonts.Font;
 import com.jordanbunke.jbjgl.fonts.FontsForTests;
-import com.jordanbunke.jbjgl.game.JBJGLGame;
-import com.jordanbunke.jbjgl.game.JBJGLGameManager;
-import com.jordanbunke.jbjgl.image.JBJGLImage;
-import com.jordanbunke.jbjgl.menus.menu_elements.JBJGLMenuElement;
-import com.jordanbunke.jbjgl.menus.menu_elements.JBJGLMenuElementGrouping;
-import com.jordanbunke.jbjgl.menus.menu_elements.JBJGLStaticMenuElement;
-import com.jordanbunke.jbjgl.menus.menu_elements.button.JBJGLSimpleMenuButton;
-import com.jordanbunke.jbjgl.text.JBJGLText;
-import com.jordanbunke.jbjgl.text.JBJGLTextBuilder;
+import com.jordanbunke.jbjgl.game.Game;
+import com.jordanbunke.jbjgl.game.GameManager;
+import com.jordanbunke.jbjgl.image.GameImage;
+import com.jordanbunke.jbjgl.menus.menu_elements.MenuElement;
+import com.jordanbunke.jbjgl.menus.menu_elements.MenuElementGrouping;
+import com.jordanbunke.jbjgl.menus.menu_elements.StaticMenuElement;
+import com.jordanbunke.jbjgl.menus.menu_elements.button.SimpleMenuButton;
+import com.jordanbunke.jbjgl.text.Text;
+import com.jordanbunke.jbjgl.text.TextBuilder;
 
 import java.awt.*;
 
@@ -24,20 +24,19 @@ public class MenuSelectionExample {
     }
 
     private static void launch() {
-        final JBJGLGameManager gameManager = JBJGLGameManager.createOf(
-                0, JBJGLMenuManager.initialize(
-                        JBJGLMenuBuilder.build(generateMenuElements(),
-                                JBJGLMenuSelectionLogic.basic()), "menu"));
-        final JBJGLGame exampleGame = JBJGLGame.create("Example", gameManager,
+        final GameManager gameManager = new GameManager(0,
+                new MenuManager(new MenuBuilder(generateMenuElements())
+                        .build(MenuSelectionLogic.basic()), "menu"));
+        final Game exampleGame = Game.assemble("Example", gameManager,
                 CANVAS_W * WINDOW_SCALE_UP, CANVAS_H * WINDOW_SCALE_UP,
-                JBJGLImage.create(1, 1), true, true,
+                GameImage.dummy(), true, true,
                 REFRESH_RATE_HZ, REFRESH_RATE_HZ);
         exampleGame.getGameEngine().setRenderDimension(CANVAS_W, CANVAS_H);
         // exampleGame.getGameEngine().getDebugger().hideBoundingBoxes();
     }
 
-    private static JBJGLMenuElementGrouping generateMenuElements() {
-        return JBJGLMenuElementGrouping.generateOf(
+    private static MenuElementGrouping generateMenuElements() {
+        return MenuElementGrouping.generateOf(
                 generateBackground(),
                 generateButton("Play", 0.3, 0.2),
                 generateButton("Settings", 0.5, 0.5),
@@ -45,8 +44,8 @@ public class MenuSelectionExample {
         );
     }
 
-    private static JBJGLStaticMenuElement generateBackground() {
-        final JBJGLImage background = JBJGLImage.create(CANVAS_W, CANVAS_H);
+    private static StaticMenuElement generateBackground() {
+        final GameImage background = new GameImage(CANVAS_W, CANVAS_H);
         final Graphics g = background.getGraphics();
 
         g.setColor(new Color(100, 0, 0, 255));
@@ -54,11 +53,11 @@ public class MenuSelectionExample {
 
         g.dispose();
 
-        return JBJGLStaticMenuElement.generate(new int[] { 0, 0 },
-                JBJGLMenuElement.Anchor.LEFT_TOP, background);
+        return StaticMenuElement.generate(new int[] { 0, 0 },
+                MenuElement.Anchor.LEFT_TOP, background);
     }
 
-    private static JBJGLSimpleMenuButton generateButton(
+    private static SimpleMenuButton generateButton(
             final String text, final double x, final double y
     ) {
         final Font font = FontsForTests.CLASSIC.getItalics(); // BASIC.getBold() / CLASSIC.getItalics()
@@ -66,16 +65,16 @@ public class MenuSelectionExample {
         final Color nhc = new Color(0, 0, 0, 255),
                 hc = new Color(255, 255, 255, 255);
 
-        final JBJGLImage nhi = JBJGLTextBuilder.initialize(textSize,
-                JBJGLText.Orientation.CENTER, nhc, font).addText(text).build().draw(),
-                hi = JBJGLTextBuilder.initialize(textSize,
-                        JBJGLText.Orientation.CENTER, hc, font).addText(text).build().draw();
+        final GameImage nhi = new TextBuilder(textSize,
+                Text.Orientation.CENTER, nhc, font).addText(text).build().draw(),
+                hi = new TextBuilder(textSize,
+                        Text.Orientation.CENTER, hc, font).addText(text).build().draw();
 
-        return JBJGLSimpleMenuButton.generate(
+        return new SimpleMenuButton(
                 new int[] {
                         (int)(CANVAS_W * x), (int)(CANVAS_H * y)
                 }, new int[] { nhi.getWidth() + 2, hi.getHeight() + 2 },
-                JBJGLMenuElement.Anchor.CENTRAL,
+                MenuElement.Anchor.CENTRAL,
                 true, () -> System.exit(0),
                 nhi, hi);
     }

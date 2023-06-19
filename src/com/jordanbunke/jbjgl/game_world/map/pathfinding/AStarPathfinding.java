@@ -2,15 +2,15 @@ package com.jordanbunke.jbjgl.game_world.map.pathfinding;
 
 import com.jordanbunke.jbjgl.game_world.Coord2D;
 import com.jordanbunke.jbjgl.game_world.Vector;
-import com.jordanbunke.jbjgl.game_world.map.JBJGLTileMap;
+import com.jordanbunke.jbjgl.game_world.map.AbstractTileMap;
 
 import java.util.*;
 
 public class AStarPathfinding {
 
-    public static <E extends Vector> List<Coord2D> findPath(
+    public static <E extends Vector<E>> List<Coord2D> findPath(
             final Coord2D start, final Coord2D goal,
-            final JBJGLTileMap<E> environment,
+            final AbstractTileMap<E> environment,
             final boolean canMoveDiagonally
     ) {
         // 1: initialize open and closed collections
