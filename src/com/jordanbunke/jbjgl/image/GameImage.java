@@ -25,6 +25,10 @@ public class GameImage extends BufferedImage {
         g.dispose();
     }
 
+    public void draw(final GameImage toDraw) {
+        draw(toDraw, 0, 0);
+    }
+
     public void draw(final GameImage toDraw, final int x, final int y) {
         initializeGraphics();
         g.drawImage(toDraw, x, y, null);
@@ -45,9 +49,18 @@ public class GameImage extends BufferedImage {
         g.fillRect(x, y, width, height);
     }
 
+    public void fillRectangle(final Color color, final int x, final int y, final int width, final int height) {
+        setColor(color);
+        fillRectangle(x, y, width, height);
+    }
+
     public void dot(final int x, final int y) {
-        initializeGraphics();
-        g.fillRect(x, y, 1, 1);
+        fillRectangle(x, y, 1, 1);
+    }
+
+    public void dot(final Color color, final int x, final int y) {
+        setColor(color);
+        dot(x, y);
     }
 
     private void initializeGraphics() {
