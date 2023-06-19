@@ -1,6 +1,6 @@
 package com.jordanbunke.jbjgl.game;
 
-import com.jordanbunke.jbjgl.image.JBJGLImage;
+import com.jordanbunke.jbjgl.image.GameImage;
 import com.jordanbunke.jbjgl.window.JBJGLWindow;
 
 public class JBJGLGame {
@@ -21,7 +21,7 @@ public class JBJGLGame {
     public static JBJGLGame create(
             final String title, final JBJGLGameManager gameManager,
             final int width, final int height,
-            final JBJGLImage icon,
+            final GameImage icon,
             final boolean exitOnClose, final boolean maximized,
             final double UPDATE_HZ, final double TARGET_FPS
     ) {

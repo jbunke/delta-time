@@ -2,21 +2,21 @@ package com.jordanbunke.jbjgl.menus.menu_elements;
 
 import com.jordanbunke.jbjgl.contexts.JBJGLMenuManager;
 import com.jordanbunke.jbjgl.debug.JBJGLGameDebugger;
-import com.jordanbunke.jbjgl.image.JBJGLImage;
+import com.jordanbunke.jbjgl.image.GameImage;
 import com.jordanbunke.jbjgl.io.JBJGLListener;
 import com.jordanbunke.jbjgl.utility.JBJGLGlobal;
 
 import java.awt.*;
 import java.util.Arrays;
 
-public class JBJGLAnimationMenuElement extends JBJGLMenuElement {
+public class AnimationMenuElement extends MenuElement {
     private final int[] frameTimings;
-    private final JBJGLImage[] frames;
+    private final GameImage[] frames;
     private int frameIndex, count;
 
-    private JBJGLAnimationMenuElement(
+    private AnimationMenuElement(
             final int[] position, final int[] dimensions, final Anchor anchor,
-            final int[] frameTimings, final JBJGLImage[] frames
+            final int[] frameTimings, final GameImage[] frames
     ) {
         super(position, dimensions, anchor, true);
 
@@ -26,21 +26,21 @@ public class JBJGLAnimationMenuElement extends JBJGLMenuElement {
         this.count = 0;
     }
 
-    public static JBJGLAnimationMenuElement generate(
+    public static AnimationMenuElement generate(
             final int[] position, final int[] dimensions, final Anchor anchor,
-            final int[] frameTimings, final JBJGLImage[] frames
+            final int[] frameTimings, final GameImage[] frames
     ) {
-        return new JBJGLAnimationMenuElement(position, dimensions, anchor, frameTimings, frames);
+        return new AnimationMenuElement(position, dimensions, anchor, frameTimings, frames);
     }
 
-    public static JBJGLAnimationMenuElement generate(
+    public static AnimationMenuElement generate(
             final int[] position, final int[] dimensions, final Anchor anchor,
-            final int ticksPerFrame, final JBJGLImage[] frames
+            final int ticksPerFrame, final GameImage[] frames
     ) {
         final int[] frameTimings = new int[frames.length];
         Arrays.fill(frameTimings, ticksPerFrame);
 
-        return new JBJGLAnimationMenuElement(position, dimensions, anchor, frameTimings, frames);
+        return new AnimationMenuElement(position, dimensions, anchor, frameTimings, frames);
     }
 
     @Override

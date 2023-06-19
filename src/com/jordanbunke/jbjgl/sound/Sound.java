@@ -8,9 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 
-public final class JBJGLSound {
+public final class Sound {
     private static final int NOT_SET = -1;
-
 
     private final String id;
     private final AudioFormat format;
@@ -22,7 +21,7 @@ public final class JBJGLSound {
 
     // TODO: add last played in millis buffer so that sound cannot be played repeatedly in too short a span of time
 
-    private JBJGLSound(final String id, final AudioInputStream stream) {
+    private Sound(final String id, final AudioInputStream stream) {
         this.id = id;
         this.format = stream.getFormat();
         try {
@@ -44,20 +43,20 @@ public final class JBJGLSound {
         frame = NOT_SET;
     }
 
-    public static JBJGLSound fromResource(final String id, final InputStream in) {
+    public static Sound fromResource(final String id, final InputStream in) {
         try {
-            return new JBJGLSound(id, AudioSystem.getAudioInputStream(in));
+            return new Sound(id, AudioSystem.getAudioInputStream(in));
         } catch (IOException | UnsupportedAudioFileException e) {
             JBJGLError.send("Couldn't load sound from input stream");
         }
         return null;
     }
 
-    public static <T> JBJGLSound fromResource(
+    public static <T> Sound fromResource(
             final String id, final Path path, final Class<T> loaderClass
     ) {
         try {
-            return new JBJGLSound(id, AudioSystem.getAudioInputStream(
+            return new Sound(id, AudioSystem.getAudioInputStream(
                     JBJGLResourceLoader.loadResourceAsURL(loaderClass, path)
             ));
         } catch (IOException | UnsupportedAudioFileException e) {
@@ -66,9 +65,9 @@ public final class JBJGLSound {
         return null;
     }
 
-    public static JBJGLSound fromFile(final String id, final Path filepath) {
+    public static Sound fromFile(final String id, final Path filepath) {
         try {
-            return new JBJGLSound(id, AudioSystem.getAudioInputStream(filepath.toFile()));
+            return new Sound(id, AudioSystem.getAudioInputStream(filepath.toFile()));
         } catch (IOException | UnsupportedAudioFileException e) {
             JBJGLError.send("Couldn't load sound from file: " + filepath);
         }

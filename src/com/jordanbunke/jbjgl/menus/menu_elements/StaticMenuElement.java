@@ -2,27 +2,27 @@ package com.jordanbunke.jbjgl.menus.menu_elements;
 
 import com.jordanbunke.jbjgl.contexts.JBJGLMenuManager;
 import com.jordanbunke.jbjgl.debug.JBJGLGameDebugger;
-import com.jordanbunke.jbjgl.image.JBJGLImage;
+import com.jordanbunke.jbjgl.image.GameImage;
 import com.jordanbunke.jbjgl.io.JBJGLListener;
 
 import java.awt.*;
 
-public class JBJGLStaticMenuElement extends JBJGLMenuElement {
-    private final JBJGLImage image;
+public class StaticMenuElement extends MenuElement {
+    private final GameImage image;
 
-    private JBJGLStaticMenuElement(
+    private StaticMenuElement(
             final int[] position, final int[] dimensions, final Anchor anchor,
-            final JBJGLImage image
+            final GameImage image
     ) {
         super(position, dimensions, anchor, true);
 
         this.image = image;
     }
 
-    public static JBJGLStaticMenuElement generate(
-            final int[] position, final Anchor anchor, final JBJGLImage image
+    public static StaticMenuElement generate(
+            final int[] position, final Anchor anchor, final GameImage image
     ) {
-        return new JBJGLStaticMenuElement(
+        return new StaticMenuElement(
                 position, new int[] { image.getWidth(), image.getHeight() },
                 anchor, image
         );

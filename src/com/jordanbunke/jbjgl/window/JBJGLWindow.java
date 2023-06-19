@@ -1,6 +1,6 @@
 package com.jordanbunke.jbjgl.window;
 
-import com.jordanbunke.jbjgl.image.JBJGLImage;
+import com.jordanbunke.jbjgl.image.GameImage;
 import com.jordanbunke.jbjgl.io.JBJGLListener;
 
 import javax.swing.*;
@@ -14,7 +14,7 @@ public class JBJGLWindow {
     private int width, height;
 
     private JBJGLWindow(
-            final String title, final int width, final int height, final JBJGLImage icon,
+            final String title, final int width, final int height, final GameImage icon,
             final boolean exitOnClose, final boolean resizable, final boolean maximized
     ) {
         this.title = title;
@@ -58,12 +58,12 @@ public class JBJGLWindow {
             final boolean exitOnClose, final boolean resizable, final boolean maximized
     ) {
         return new JBJGLWindow(title, width, height,
-                JBJGLImage.create(20, 20),
+                new GameImage(20, 20),
                 exitOnClose, resizable, maximized);
     }
 
     public static JBJGLWindow create(
-            final String title, final int width, final int height, final JBJGLImage icon,
+            final String title, final int width, final int height, final GameImage icon,
             final boolean exitOnClose, final boolean resizable, final boolean maximized
     ) {
         return new JBJGLWindow(title, width, height, icon, exitOnClose, resizable, maximized);
@@ -81,7 +81,7 @@ public class JBJGLWindow {
         frame.dispose();
     }
 
-    public void draw(final JBJGLImage image) {
+    public void draw(final GameImage image) {
         canvas.draw(image);
     }
 

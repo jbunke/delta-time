@@ -6,45 +6,45 @@ import com.jordanbunke.jbjgl.io.JBJGLListener;
 
 import java.awt.*;
 
-public class JBJGLMenuElementGrouping extends JBJGLMenuElementContainer {
-    private final JBJGLMenuElement[] menuElements;
+public class MenuElementGrouping extends MenuElementContainer {
+    private final MenuElement[] menuElements;
 
-    private JBJGLMenuElementGrouping(
-            final JBJGLMenuElement[] menuElements
+    private MenuElementGrouping(
+            final MenuElement[] menuElements
     ) {
         super(new int[] { 0, 0 }, new int[] { 1, 1 }, Anchor.LEFT_TOP, false);
 
         this.menuElements = menuElements;
     }
 
-    public static JBJGLMenuElementGrouping generateOf(final JBJGLMenuElement... menuElements) {
-        return new JBJGLMenuElementGrouping(menuElements);
+    public static MenuElementGrouping generateOf(final MenuElement... menuElements) {
+        return new MenuElementGrouping(menuElements);
     }
 
-    public static JBJGLMenuElementGrouping generate(final JBJGLMenuElement[] menuElements) {
-        return new JBJGLMenuElementGrouping(menuElements);
+    public static MenuElementGrouping generate(final MenuElement[] menuElements) {
+        return new MenuElementGrouping(menuElements);
     }
 
     @Override
     public void update() {
-        for (JBJGLMenuElement menuElement : menuElements)
+        for (MenuElement menuElement : menuElements)
             menuElement.update();
     }
 
     @Override
     public void render(final Graphics g, final JBJGLGameDebugger debugger) {
-        for (JBJGLMenuElement menuElement : menuElements)
+        for (MenuElement menuElement : menuElements)
             menuElement.render(g, debugger);
     }
 
     @Override
     public void process(final JBJGLListener listener, final JBJGLMenuManager menuManager) {
-        for (JBJGLMenuElement menuElement : menuElements)
+        for (MenuElement menuElement : menuElements)
             menuElement.process(listener, menuManager);
     }
 
     @Override
-    public JBJGLMenuElement[] getMenuElements() {
+    public MenuElement[] getMenuElements() {
         return menuElements;
     }
 

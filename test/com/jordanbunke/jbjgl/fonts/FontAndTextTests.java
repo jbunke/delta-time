@@ -1,8 +1,8 @@
 package com.jordanbunke.jbjgl.fonts;
 
 import com.jordanbunke.jbjgl.io.JBJGLImageIO;
-import com.jordanbunke.jbjgl.text.JBJGLText;
-import com.jordanbunke.jbjgl.text.JBJGLTextBuilder;
+import com.jordanbunke.jbjgl.text.Text;
+import com.jordanbunke.jbjgl.text.TextBuilder;
 import org.junit.Test;
 
 import java.awt.*;
@@ -28,8 +28,8 @@ public class FontAndTextTests {
 
     private void renderTextForInFonts(final String text, final String saveCode) {
         final Color textColor = new Color(0, 0, 0);
-        final JBJGLTextBuilder textBuilder = JBJGLTextBuilder.initialize(
-                4.0, JBJGLText.Orientation.LEFT,
+        final TextBuilder textBuilder = new TextBuilder(
+                4.0, Text.Orientation.LEFT,
                 textColor, FONTS[0]);
 
         for (final Font font : FONTS)

@@ -6,13 +6,13 @@ import com.jordanbunke.jbjgl.io.JBJGLListener;
 
 import java.awt.*;
 
-public class JBJGLPlaceholderMenuElement extends JBJGLMenuElement {
-    private JBJGLPlaceholderMenuElement() {
+public class PlaceholderMenuElement extends MenuElement {
+    private PlaceholderMenuElement() {
         super(new int[] { 0, 0 }, new int[] { 1, 1 }, Anchor.LEFT_TOP, false);
     }
 
-    public static JBJGLPlaceholderMenuElement generate() {
-        return new JBJGLPlaceholderMenuElement();
+    public static PlaceholderMenuElement generate() {
+        return new PlaceholderMenuElement();
     }
 
     @Override

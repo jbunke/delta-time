@@ -3,7 +3,7 @@ package com.jordanbunke.jbjgl.game;
 import com.jordanbunke.jbjgl.debug.JBJGLGameDebugger;
 import com.jordanbunke.jbjgl.events.JBJGLEventHandler;
 import com.jordanbunke.jbjgl.image.ImageProcessing;
-import com.jordanbunke.jbjgl.image.JBJGLImage;
+import com.jordanbunke.jbjgl.image.GameImage;
 import com.jordanbunke.jbjgl.window.JBJGLWindow;
 
 import java.awt.*;
@@ -75,7 +75,7 @@ public class JBJGLGameEngine implements Runnable {
 
     public static JBJGLGameEngine newWindowed(
             final String title, final int width, final int height,
-            final JBJGLImage icon,
+            final GameImage icon,
             final boolean exitOnClose, final boolean resizable,
             final JBJGLEventHandler eventHandler,
             final JBJGLGameRenderer renderer, final JBJGLGameLogicHandler logicHandler,
@@ -92,7 +92,7 @@ public class JBJGLGameEngine implements Runnable {
     }
 
     public static JBJGLGameEngine newMaximized(
-            final String title, final JBJGLImage icon,
+            final String title, final GameImage icon,
             final boolean exitOnClose,
             final JBJGLEventHandler eventHandler,
             final JBJGLGameRenderer renderer, final JBJGLGameLogicHandler logicHandler,
@@ -229,7 +229,7 @@ public class JBJGLGameEngine implements Runnable {
 
         // Render
         refMillis = System.currentTimeMillis();
-        JBJGLImage toDraw = JBJGLImage.create(renderWidth, renderHeight);
+        GameImage toDraw = new GameImage(renderWidth, renderHeight);
         Graphics g = toDraw.getGraphics();
         renderer.render(g, debugger);
         debugger.setRenderMillis(System.currentTimeMillis() - refMillis);

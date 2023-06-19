@@ -1,10 +1,10 @@
 package com.jordanbunke.jbjgl.utility;
 
-public final class JBJGLVersion {
+public final class Version {
     private int major, minor, patch, build;
     private final boolean hasBuild;
 
-    private JBJGLVersion(
+    private Version(
             final int major, final int minor, final int patch,
             final int build, final boolean hasBuild
     ) {
@@ -16,16 +16,16 @@ public final class JBJGLVersion {
         this.build = hasBuild ? build : 0;
     }
 
-    public static JBJGLVersion generate(
+    public Version(
             final int major, final int minor, final int patch
     ) {
-        return new JBJGLVersion(major, minor, patch, 0, false);
+        this(major, minor, patch, 0, false);
     }
 
-    public static JBJGLVersion generate(
+    public Version(
             final int major, final int minor, final int patch, final int build
     ) {
-        return new JBJGLVersion(major, minor, patch, build, true);
+        this(major, minor, patch, build, true);
     }
 
     public void incrementMajor() {

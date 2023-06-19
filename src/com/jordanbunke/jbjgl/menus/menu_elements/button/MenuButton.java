@@ -4,15 +4,15 @@ import com.jordanbunke.jbjgl.contexts.JBJGLMenuManager;
 import com.jordanbunke.jbjgl.events.JBJGLEvent;
 import com.jordanbunke.jbjgl.events.JBJGLMouseEvent;
 import com.jordanbunke.jbjgl.io.JBJGLListener;
-import com.jordanbunke.jbjgl.menus.menu_elements.JBJGLSelectableMenuElement;
+import com.jordanbunke.jbjgl.menus.menu_elements.SelectableMenuElement;
 
 import java.util.List;
 
-public abstract class JBJGLMenuButton extends JBJGLSelectableMenuElement {
+public abstract class MenuButton extends SelectableMenuElement {
     private final Runnable chosenBehaviour;
     private boolean highlighted;
 
-    public JBJGLMenuButton(
+    public MenuButton(
             final int[] position, final int[] dimensions,
             final Anchor anchor, final boolean isVisible,
             final Runnable chosenBehaviour

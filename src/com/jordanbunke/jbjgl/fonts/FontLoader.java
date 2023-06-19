@@ -2,7 +2,7 @@ package com.jordanbunke.jbjgl.fonts;
 
 import com.jordanbunke.jbjgl.error.JBJGLError;
 import com.jordanbunke.jbjgl.image.ImageProcessing;
-import com.jordanbunke.jbjgl.image.JBJGLImage;
+import com.jordanbunke.jbjgl.image.GameImage;
 import com.jordanbunke.jbjgl.io.JBJGLImageIO;
 import com.jordanbunke.jbjgl.io.JBJGLResourceLoader;
 
@@ -26,7 +26,7 @@ public class FontLoader {
             final Path source, final Class<T> loaderClass,
             final double whitespaceBreadthMultiplier
     ) {
-        JBJGLImage image = loaderClass == null
+        GameImage image = loaderClass == null
                 ? JBJGLImageIO.readImage(source)
                 : JBJGLResourceLoader.loadImageResource(loaderClass, source);
         Map<Character, Grapheme> map = new HashMap<>();
@@ -57,7 +57,7 @@ public class FontLoader {
     public static <T> Map<Character, Grapheme> loadLatinExtendedFromSource(
             final Path source, final Class<T> loaderClass
     ) {
-        JBJGLImage image = loaderClass == null
+        GameImage image = loaderClass == null
                 ? JBJGLImageIO.readImage(source)
                 : JBJGLResourceLoader.loadImageResource(loaderClass, source);
         Map<Character, Grapheme> map = new HashMap<>();
@@ -79,7 +79,7 @@ public class FontLoader {
 
     // HELPER FUNCTIONS:
     private static Grapheme graphemeFromCoordinates(
-            final JBJGLImage image, final char c, final int[] coordinates,
+            final GameImage image, final char c, final int[] coordinates,
             final int scaleMultiplier
     ) {
         final int[] start = new int[] {
@@ -96,16 +96,16 @@ public class FontLoader {
         int firstXWithout = firstXWithout(image, start, size);
 
         // COPY
-        JBJGLImage grapheme = retrieveGrapheme(image, start, size, firstXWith, firstXWithout);
+        GameImage grapheme = retrieveGrapheme(image, start, size, firstXWith, firstXWithout);
 
         return Grapheme.create(grapheme, c, firstXWithout - firstXWith, size[Y_INDEX]);
     }
 
-    private static JBJGLImage retrieveGrapheme(
-            final JBJGLImage image, final int[] start, final int[] size,
+    private static GameImage retrieveGrapheme(
+            final GameImage image, final int[] start, final int[] size,
             final int firstXWith, final int firstXWithout
     ) {
-        JBJGLImage grapheme = JBJGLImage.create(firstXWithout - firstXWith, size[Y_INDEX]);
+        GameImage grapheme = new GameImage(firstXWithout - firstXWith, size[Y_INDEX]);
         Graphics g = grapheme.getGraphics();
         g.setColor(MATCH_COLOR);
 
@@ -124,11 +124,11 @@ public class FontLoader {
     ) {
         final int width = (int)(BASE_WHITESPACE_BREADTH * whitespaceBreadthMultiplier * scaleMultiplier);
         return Grapheme.create(
-                JBJGLImage.create(width, LINE_HEIGHT * scaleMultiplier),
+                new GameImage(width, LINE_HEIGHT * scaleMultiplier),
                 ' ', width, LINE_HEIGHT * scaleMultiplier);
     }
 
-    private static int firstXWithout(final JBJGLImage image, final int[] start, final int[] size) {
+    private static int firstXWithout(final GameImage image, final int[] start, final int[] size) {
         for (int x = (start[X_INDEX] + size[X_INDEX]) - 1; x >= start[X_INDEX]; x--)
             for (int y = start[Y_INDEX]; y < start[Y_INDEX] + size[Y_INDEX]; y++)
                 if (ImageProcessing.colorAtPixel(image, x, y).equals(MATCH_COLOR))
@@ -137,7 +137,7 @@ public class FontLoader {
         return start[X_INDEX] + size[X_INDEX];
     }
 
-    private static int firstXWith(final JBJGLImage image, final int[] start, final int[] size) {
+    private static int firstXWith(final GameImage image, final int[] start, final int[] size) {
         for (int x = start[X_INDEX]; x < start[X_INDEX] + size[X_INDEX]; x++)
             for (int y = start[Y_INDEX]; y < start[Y_INDEX] + size[Y_INDEX]; y++)
                 if (ImageProcessing.colorAtPixel(image, x, y).equals(MATCH_COLOR))
@@ -213,7 +213,7 @@ public class FontLoader {
         return new int[] { x, y };
     }
 
-    private static int sourceToScaleMultiplier(final JBJGLImage source) {
+    private static int sourceToScaleMultiplier(final GameImage source) {
         final int width = source.getWidth(), height = source.getHeight();
 
         final boolean isMultiple = width % FONT_SOURCE_BASE_WIDTH == 0,

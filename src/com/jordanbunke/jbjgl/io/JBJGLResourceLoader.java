@@ -1,7 +1,7 @@
 package com.jordanbunke.jbjgl.io;
 
 import com.jordanbunke.jbjgl.error.JBJGLError;
-import com.jordanbunke.jbjgl.image.JBJGLImage;
+import com.jordanbunke.jbjgl.image.GameImage;
 
 import javax.imageio.ImageIO;
 import java.io.IOException;
@@ -25,14 +25,14 @@ public class JBJGLResourceLoader {
         return loaderClass.getResource(resourcePath);
     }
 
-    public static <T> JBJGLImage loadImageResource(final Class<T> loaderClass, final Path resource) {
+    public static <T> GameImage loadImageResource(final Class<T> loaderClass, final Path resource) {
         try (final InputStream inputStream = loadResource(loaderClass, resource)) {
             if (inputStream != null)
-                return JBJGLImage.create(ImageIO.read(inputStream));
+                return new GameImage(ImageIO.read(inputStream));
         } catch (IOException e) {
             JBJGLError.send("Could not load image resource: " + resource);
         }
 
-        return JBJGLImage.create(1, 1);
+        return new GameImage(1, 1);
     }
 }

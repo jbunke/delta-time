@@ -5,59 +5,32 @@ import com.jordanbunke.jbjgl.utility.RenderConstants;
 import java.awt.*;
 
 public class ImageProcessing {
-    public static Color colorAtPixel(final JBJGLImage image, final int x, final int y) {
+    public static Color colorAtPixel(final GameImage image, final int x, final int y) {
         return new Color(image.getRGB(x, y), true);
     }
 
-    public static JBJGLImage replaceColor(final JBJGLImage original,
-                                             final Color toReplace, final Color replaceWith) {
-        final JBJGLImage replacement = JBJGLImage.create(original.getWidth(), original.getHeight());
-        final Graphics g = replacement.getGraphics();
-        g.setColor(replaceWith);
+    public static GameImage replaceColor(final GameImage original,
+                                         final Color toReplace, final Color replaceWith) {
+        final GameImage replacement = new GameImage(original.getWidth(), original.getHeight());
+        replacement.setColor(replaceWith);
 
-        // g.drawImage(original, 0, 0, null);
-
-        for (int x = 0; x < replacement.getWidth(); x++) {
-            for (int y = 0; y < replacement.getHeight(); y++) {
+        for (int x = 0; x < replacement.getWidth(); x++)
+            for (int y = 0; y < replacement.getHeight(); y++)
                 if (colorAtPixel(original, x, y).equals(toReplace))
-                    g.fillRect(x, y, 1, 1);
-            }
-        }
+                    replacement.dot(x, y);
 
-        g.dispose();
-
-        return replacement;
+        return replacement.submit();
     }
 
-    public static void drawOnto(
-            final JBJGLImage canvas, final JBJGLImage toDraw, final int xOffset, final int yOffset
-    ) {
-        Graphics g = canvas.getGraphics();
-        g.drawImage(toDraw, xOffset, yOffset, null);
-        g.dispose();
+    public static GameImage scaleUp(final GameImage image, final int scaleFactor) {
+        final int width = image.getWidth() * scaleFactor, height = image.getHeight() * scaleFactor;
+        final GameImage scaledUp = new GameImage(width, height);
+        scaledUp.draw(image, 0, 0, scaledUp.getWidth(), scaledUp.getHeight());
+        return scaledUp.submit();
     }
 
-    public static JBJGLImage scaleUp(final JBJGLImage image, final int scaleFactor) {
-        JBJGLImage scaledUp = JBJGLImage.create(image.getWidth() * scaleFactor,
-                image.getHeight() * scaleFactor);
-        Graphics g = scaledUp.getGraphics();
-
-        g.drawImage(image, 0, 0, scaledUp.getWidth(), scaledUp.getHeight(), null);
-
-//        for (int x = 0; x < image.getWidth(); x++) {
-//            for (int y = 0; y < image.getHeight(); y++) {
-//                g.setColor(colorAtPixel(image, x, y));
-//                g.fillRect(x * scaleFactor, y * scaleFactor, scaleFactor, scaleFactor);
-//            }
-//        }
-
-        g.dispose();
-
-        return scaledUp;
-    }
-
-    public static JBJGLImage scaleUp(
-            final JBJGLImage image, final double scaleFactor,
+    public static GameImage scaleUp(
+            final GameImage image, final double scaleFactor,
             final boolean smooth
     ) {
         final int[] dims = new int[] {
@@ -65,7 +38,7 @@ public class ImageProcessing {
                 Math.max(1, (int)(image.getHeight() * scaleFactor))
         };
 
-        final JBJGLImage scaledUp = JBJGLImage.create(dims[RenderConstants.X], dims[RenderConstants.Y]);
+        final GameImage scaledUp = new GameImage(dims[RenderConstants.X], dims[RenderConstants.Y]);
         Graphics g = scaledUp.getGraphics();
 
         if (smooth) {

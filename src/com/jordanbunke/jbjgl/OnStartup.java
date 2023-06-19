@@ -6,7 +6,7 @@ import com.jordanbunke.jbjgl.utility.JBJGLGlobal;
 import javax.swing.*;
 import java.nio.file.Paths;
 
-public class JBJGLOnStartup {
+public class OnStartup {
     public static void run() {
         startUpMessages();
         setLookAndFeel();

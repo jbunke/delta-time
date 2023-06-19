@@ -6,13 +6,13 @@ import com.jordanbunke.jbjgl.io.JBJGLListener;
 
 import java.awt.*;
 
-public class JBJGLTimedMenuElement extends JBJGLMenuElement {
+public class TimedMenuElement extends MenuElement {
     private final int timeOut;
     private final Runnable behaviour;
 
     private int count;
 
-    private JBJGLTimedMenuElement(
+    private TimedMenuElement(
             final int timeOut, final Runnable behaviour
     ) {
         super(new int[] { 0, 0 }, new int[] { 1, 1 }, Anchor.CENTRAL, false);
@@ -23,10 +23,10 @@ public class JBJGLTimedMenuElement extends JBJGLMenuElement {
         count = 0;
     }
 
-    public static JBJGLTimedMenuElement generate(
+    public static TimedMenuElement generate(
             final int timeOut, final Runnable behaviour
     ) {
-        return new JBJGLTimedMenuElement(timeOut, behaviour);
+        return new TimedMenuElement(timeOut, behaviour);
     }
 
     @Override

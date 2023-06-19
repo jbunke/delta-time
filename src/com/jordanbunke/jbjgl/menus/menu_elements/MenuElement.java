@@ -2,13 +2,13 @@ package com.jordanbunke.jbjgl.menus.menu_elements;
 
 import com.jordanbunke.jbjgl.contexts.JBJGLMenuManager;
 import com.jordanbunke.jbjgl.debug.JBJGLGameDebugger;
-import com.jordanbunke.jbjgl.image.JBJGLImage;
+import com.jordanbunke.jbjgl.image.GameImage;
 import com.jordanbunke.jbjgl.io.JBJGLListener;
 import com.jordanbunke.jbjgl.utility.RenderConstants;
 
 import java.awt.*;
 
-public abstract class JBJGLMenuElement {
+public abstract class MenuElement {
     private final int[] position;
     private final int[] dimensions;
     private final Anchor anchor;
@@ -35,7 +35,7 @@ public abstract class JBJGLMenuElement {
         }
     }
 
-    public JBJGLMenuElement(
+    public MenuElement(
             final int[] position, final int[] dimensions,
             final Anchor anchor, final boolean isVisible
     ) {
@@ -49,7 +49,7 @@ public abstract class JBJGLMenuElement {
     public abstract void render(final Graphics g, final JBJGLGameDebugger debugger);
     public abstract void process(final JBJGLListener listener, final JBJGLMenuManager menuManager);
 
-    public void draw(final JBJGLImage image, final Graphics g) {
+    public void draw(final GameImage image, final Graphics g) {
         if (!isVisible)
             return;
 

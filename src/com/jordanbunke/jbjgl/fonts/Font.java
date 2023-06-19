@@ -1,7 +1,7 @@
 package com.jordanbunke.jbjgl.fonts;
 
 import com.jordanbunke.jbjgl.error.JBJGLError;
-import com.jordanbunke.jbjgl.image.JBJGLImage;
+import com.jordanbunke.jbjgl.image.GameImage;
 
 import java.awt.*;
 import java.nio.file.Path;
@@ -63,7 +63,7 @@ public class Font {
         return new Font(characterMap, pixelSpacing, height, smoothResizing);
     }
 
-    public JBJGLImage drawChar(final char c, final Color color) {
+    public GameImage drawChar(final char c, final Color color) {
         return getGrapheme(c).getImage(color);
     }
 

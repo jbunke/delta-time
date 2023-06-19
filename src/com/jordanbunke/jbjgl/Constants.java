@@ -2,7 +2,7 @@ package com.jordanbunke.jbjgl;
 
 import com.jordanbunke.jbjgl.io.JBJGLFileIO;
 import com.jordanbunke.jbjgl.io.JBJGLResourceLoader;
-import com.jordanbunke.jbjgl.utility.JBJGLVersion;
+import com.jordanbunke.jbjgl.utility.Version;
 import com.jordanbunke.jbjgl.utility.StringProcessing;
 
 import java.nio.file.Path;
@@ -11,7 +11,7 @@ public class Constants {
     public static final String INFO_FILENAME = "jbjgl_info.txt";
 
     public static final String TITLE;
-    public static final JBJGLVersion VERSION;
+    public static final Version VERSION;
 
     static {
         final String TITLE_TAG = "title", VERSION_TAG = "version", SEPARATOR = ":", OPEN = "{", CLOSE = "}";
@@ -28,11 +28,11 @@ public class Constants {
                 VERSION_TAG, SEPARATOR, OPEN, CLOSE, "1.0.0").split("\\.");
 
         if (versionInfo.length == HAS_BUILD_LENGTH)
-            VERSION = JBJGLVersion.generate(Integer.parseInt(versionInfo[MAJOR]),
+            VERSION = new Version(Integer.parseInt(versionInfo[MAJOR]),
                     Integer.parseInt(versionInfo[MINOR]), Integer.parseInt(versionInfo[PATCH]),
                     Integer.parseInt(versionInfo[BUILD]));
         else
-            VERSION = JBJGLVersion.generate(Integer.parseInt(versionInfo[MAJOR]),
+            VERSION = new Version(Integer.parseInt(versionInfo[MAJOR]),
                     Integer.parseInt(versionInfo[MINOR]), Integer.parseInt(versionInfo[PATCH]));
     }
 }

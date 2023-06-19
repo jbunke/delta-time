@@ -11,10 +11,10 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.function.BiConsumer;
 
-public class JBJGLMenuSelectionLogic {
+public class MenuSelectionLogic {
     private final Callable<List<JBJGLKey>> fChoose, fLeft, fUp, fDown, fRight;
 
-    private JBJGLMenuSelectionLogic() {
+    private MenuSelectionLogic() {
         fChoose = () -> List.of(JBJGLKey.ENTER, JBJGLKey.SPACE);
         fLeft = () -> List.of(JBJGLKey.A, JBJGLKey.LEFT_ARROW);
         fRight = () -> List.of(JBJGLKey.D, JBJGLKey.RIGHT_ARROW);
@@ -22,7 +22,7 @@ public class JBJGLMenuSelectionLogic {
         fDown = () -> List.of(JBJGLKey.S, JBJGLKey.DOWN_ARROW);
     }
 
-    private JBJGLMenuSelectionLogic(
+    private MenuSelectionLogic(
             final Callable<List<JBJGLKey>> fChoose,
             final Callable<List<JBJGLKey>> fLeft,
             final Callable<List<JBJGLKey>> fRight,
@@ -36,21 +36,21 @@ public class JBJGLMenuSelectionLogic {
         this.fDown = fDown;
     }
 
-    public static BiConsumer<JBJGLListener, JBJGLMenu> basic() {
-        return new JBJGLMenuSelectionLogic().get();
+    public static BiConsumer<JBJGLListener, Menu> basic() {
+        return new MenuSelectionLogic().get();
     }
 
-    public static BiConsumer<JBJGLListener, JBJGLMenu> generate(
+    public static BiConsumer<JBJGLListener, Menu> generate(
             final Callable<List<JBJGLKey>> fChoose,
             final Callable<List<JBJGLKey>> fLeft,
             final Callable<List<JBJGLKey>> fRight,
             final Callable<List<JBJGLKey>> fUp,
             final Callable<List<JBJGLKey>> fDown
     ) {
-        return new JBJGLMenuSelectionLogic(fChoose, fLeft, fRight, fUp, fDown).get();
+        return new MenuSelectionLogic(fChoose, fLeft, fRight, fUp, fDown).get();
     }
 
-    private BiConsumer<JBJGLListener, JBJGLMenu> get() {
+    private BiConsumer<JBJGLListener, Menu> get() {
         return (listener, menu) -> {
             // mouse move deselection
             List<JBJGLEvent> unprocessed = listener.getUnprocessedEvents();
@@ -71,22 +71,22 @@ public class JBJGLMenuSelectionLogic {
 
                     try {
                         if (fLeft.call().contains(key)) {
-                            menu.select(JBJGLMenu.Direction.LEFT);
+                            menu.select(Menu.Direction.LEFT);
                             keyEvent.markAsProcessed();
                             return;
                         }
                         else if (fRight.call().contains(key)) {
-                            menu.select(JBJGLMenu.Direction.RIGHT);
+                            menu.select(Menu.Direction.RIGHT);
                             keyEvent.markAsProcessed();
                             return;
                         }
                         else if (fUp.call().contains(key)) {
-                            menu.select(JBJGLMenu.Direction.UP);
+                            menu.select(Menu.Direction.UP);
                             keyEvent.markAsProcessed();
                             return;
                         }
                         else if (fDown.call().contains(key)) {
-                            menu.select(JBJGLMenu.Direction.DOWN);
+                            menu.select(Menu.Direction.DOWN);
                             keyEvent.markAsProcessed();
                             return;
                         }

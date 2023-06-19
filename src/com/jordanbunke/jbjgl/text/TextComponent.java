@@ -1,23 +1,19 @@
 package com.jordanbunke.jbjgl.text;
 
 import com.jordanbunke.jbjgl.fonts.Font;
-import com.jordanbunke.jbjgl.image.JBJGLImage;
+import com.jordanbunke.jbjgl.image.GameImage;
 
 import java.awt.*;
 
-public class JBJGLTextComponent extends JBJGLTextBlock {
+public class TextComponent extends TextConstituent {
     private final String contents;
     private final Font font;
     private final Color color;
 
-    private JBJGLTextComponent(final String contents, final Font font, final Color color) {
+    public TextComponent(final String contents, final Font font, final Color color) {
         this.contents = contents;
         this.font = font;
         this.color = color;
-    }
-
-    public static JBJGLTextComponent add(final String contents, final Font font, final Color color) {
-        return new JBJGLTextComponent(contents, font, color);
     }
 
     public int calculateProspectiveWidth() {
@@ -37,8 +33,8 @@ public class JBJGLTextComponent extends JBJGLTextBlock {
         return Math.max(1, width);
     }
 
-    public JBJGLImage draw() {
-        JBJGLImage image = JBJGLImage.create(
+    public GameImage draw() {
+        GameImage image = new GameImage(
                 calculateProspectiveWidth(), font.getHeight());
         Graphics g = image.getGraphics();
 

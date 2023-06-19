@@ -1,7 +1,7 @@
 package com.jordanbunke.jbjgl.text;
 
 import com.jordanbunke.jbjgl.image.ImageProcessing;
-import com.jordanbunke.jbjgl.image.JBJGLImage;
+import com.jordanbunke.jbjgl.image.GameImage;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -9,8 +9,8 @@ import java.util.List;
 
 import static com.jordanbunke.jbjgl.fonts.FontConstants.LINE_HEIGHT;
 
-public class JBJGLText {
-    private final JBJGLTextComponent[][] lines;
+public class Text {
+    private final TextComponent[][] lines;
     private final double textSize;
     private final int widthAllowance;
     private final boolean componentsSplittable;
@@ -20,9 +20,9 @@ public class JBJGLText {
         LEFT, CENTER, RIGHT
     }
 
-    private JBJGLText(final JBJGLTextBlock[] blocks, final double textSize,
-                      final int widthAllowance, boolean componentsSplittable,
-                      Orientation orientation) {
+    private Text(final TextConstituent[] blocks, final double textSize,
+                 final int widthAllowance, boolean componentsSplittable,
+                 Orientation orientation) {
         this.textSize = textSize;
         this.widthAllowance = widthAllowance;
         this.componentsSplittable = componentsSplittable;
@@ -31,22 +31,15 @@ public class JBJGLText {
         this.lines = setLines(blocks);
     }
 
-    public static JBJGLText createOf(
+    public Text(
             final double textSize, final Orientation orientation,
-            final JBJGLTextBlock... blocks
+            final TextConstituent... blocks
     ) {
-        return new JBJGLText(blocks, textSize, -1, false, orientation);
+        this(blocks, textSize, -1, false, orientation);
     }
 
-    public static JBJGLText create(
-            final JBJGLTextBlock[] blocks,
-            final double textSize, final Orientation orientation
-    ) {
-        return new JBJGLText(blocks, textSize, -1, false, orientation);
-    }
-
-    private JBJGLTextComponent[][] setLines(final JBJGLTextBlock[] blocks) {
-        List<JBJGLTextComponent[]> flexLines = new ArrayList<>();
+    private TextComponent[][] setLines(final TextConstituent[] blocks) {
+        List<TextComponent[]> flexLines = new ArrayList<>();
 
         boolean widthMatters = widthAllowance > 0;
 
@@ -56,11 +49,11 @@ public class JBJGLText {
             int processed = 0;
             for (int i = 0; i <= blocks.length; i++) {
                 if ((i == blocks.length && i - processed > 0) ||
-                        (i < blocks.length && blocks[i] instanceof JBJGLLineBreak)) {
-                    JBJGLTextComponent[] line = new JBJGLTextComponent[i - processed];
+                        (i < blocks.length && blocks[i] instanceof LineBreak)) {
+                    TextComponent[] line = new TextComponent[i - processed];
 
                     for (int j = processed; j < i; j++)
-                        line[j - processed] = (JBJGLTextComponent) blocks[j];
+                        line[j - processed] = (TextComponent) blocks[j];
 
                     flexLines.add(line);
                     processed = i + 1;
@@ -69,7 +62,7 @@ public class JBJGLText {
         }
 
         // Convert array list used for mutability and scalability to array
-        JBJGLTextComponent[][] lines = new JBJGLTextComponent[flexLines.size()][];
+        TextComponent[][] lines = new TextComponent[flexLines.size()][];
         for (int i = 0; i < lines.length; i++) {
             lines[i] = flexLines.get(i);
         }
@@ -77,8 +70,8 @@ public class JBJGLText {
         return lines;
     }
 
-    public JBJGLImage draw() {
-        JBJGLImage[] drawnLines = new JBJGLImage[lines.length];
+    public GameImage draw() {
+        GameImage[] drawnLines = new GameImage[lines.length];
         int maxWidth = 1;
 
         for (int i = 0; i < lines.length; i++) {
@@ -90,7 +83,7 @@ public class JBJGLText {
 
             width = Math.max(width, 1);
 
-            JBJGLImage drawnLine = JBJGLImage.create(width, (int)(textSize * LINE_HEIGHT));
+            GameImage drawnLine = new GameImage(width, (int)(textSize * LINE_HEIGHT));
 
             maxWidth = Math.max(maxWidth, width);
 
@@ -99,7 +92,7 @@ public class JBJGLText {
 
             for (int j = 0; j < lines[i].length; j++) {
                 final double scaleFactor = textSize * (LINE_HEIGHT / (double)lines[i][j].getFont().getHeight());
-                final JBJGLImage drawnComponent = lines[i][j].draw();
+                final GameImage drawnComponent = lines[i][j].draw();
 
                 g.drawImage(scaleFactor == 1.
                                 ? drawnComponent
@@ -115,12 +108,12 @@ public class JBJGLText {
             drawnLines[i] = drawnLine;
         }
 
-        JBJGLImage image = JBJGLImage.create(maxWidth, lines.length * (int)(textSize * LINE_HEIGHT));
+        GameImage image = new GameImage(maxWidth, lines.length * (int)(textSize * LINE_HEIGHT));
         Graphics g = image.getGraphics();
 
         int drawnHeight = 0;
 
-        for (JBJGLImage drawnLine : drawnLines) {
+        for (GameImage drawnLine : drawnLines) {
             switch (orientation) {
                 case LEFT -> g.drawImage(drawnLine, 0, drawnHeight, null);
                 case RIGHT -> g.drawImage(drawnLine, maxWidth - drawnLine.getWidth(),
@@ -149,8 +142,8 @@ public class JBJGLText {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        for (JBJGLTextComponent[] line : lines) {
-            for (JBJGLTextComponent component : line) {
+        for (TextComponent[] line : lines) {
+            for (TextComponent component : line) {
                 sb.append(component);
             }
             sb.append("\n");

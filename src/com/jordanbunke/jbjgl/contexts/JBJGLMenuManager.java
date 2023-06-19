@@ -2,7 +2,7 @@ package com.jordanbunke.jbjgl.contexts;
 
 import com.jordanbunke.jbjgl.debug.JBJGLGameDebugger;
 import com.jordanbunke.jbjgl.io.JBJGLListener;
-import com.jordanbunke.jbjgl.menus.JBJGLMenu;
+import com.jordanbunke.jbjgl.menus.Menu;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -10,32 +10,32 @@ import java.util.Map;
 
 public class JBJGLMenuManager extends ProgramContext {
     private String activeMenuID;
-    private final Map<String, JBJGLMenu> menuMap;
+    private final Map<String, Menu> menuMap;
 
-    private JBJGLMenuManager(final Map<String, JBJGLMenu> menuMap, final String initialMenuID) {
+    private JBJGLMenuManager(final Map<String, Menu> menuMap, final String initialMenuID) {
         this.menuMap = menuMap;
         activeMenuID = initialMenuID;
     }
 
-    private JBJGLMenuManager(final JBJGLMenu firstMenu, final String firstMenuID) {
+    private JBJGLMenuManager(final Menu firstMenu, final String firstMenuID) {
         this.menuMap = new HashMap<>();
         menuMap.put(firstMenuID, firstMenu);
         activeMenuID = firstMenuID;
     }
 
     public static JBJGLMenuManager create(
-            final Map<String, JBJGLMenu> menuMap, final String initialMenuID
+            final Map<String, Menu> menuMap, final String initialMenuID
     ) {
         return new JBJGLMenuManager(menuMap, initialMenuID);
     }
 
     public static JBJGLMenuManager initialize(
-            final JBJGLMenu firstMenu, final String firstMenuID
+            final Menu firstMenu, final String firstMenuID
     ) {
         return new JBJGLMenuManager(firstMenu, firstMenuID);
     }
 
-    public void addMenu(final String menuID, final JBJGLMenu menu, final boolean setActive) {
+    public void addMenu(final String menuID, final Menu menu, final boolean setActive) {
         menuMap.put(menuID, menu);
         if (setActive)
             activeMenuID = menuID;

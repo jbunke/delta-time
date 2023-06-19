@@ -1,13 +1,13 @@
 package com.jordanbunke.jbjgl.menus.menu_elements;
 
-import com.jordanbunke.jbjgl.menus.JBJGLMenu;
+import com.jordanbunke.jbjgl.menus.Menu;
 
-public abstract class JBJGLSelectableMenuElement extends JBJGLMenuElement {
+public abstract class SelectableMenuElement extends MenuElement {
     public static final int UNSUITABLE = Integer.MAX_VALUE;
 
     private boolean selected;
 
-    public JBJGLSelectableMenuElement(
+    public SelectableMenuElement(
             final int[] position, final int[] dimensions,
             final Anchor anchor, final boolean isVisible
     ) {
@@ -34,7 +34,7 @@ public abstract class JBJGLSelectableMenuElement extends JBJGLMenuElement {
     public abstract void choose();
 
     public int selectionSuitability(
-            final JBJGLSelectableMenuElement selected, final JBJGLMenu.Direction direction
+            final SelectableMenuElement selected, final Menu.Direction direction
     ) {
         final int diffX = selected.getX() - getX(), // > 0 means THIS is left of SELECTED
                 diffY = selected.getY() - getY();   // > 0 means THIS is above SELECTED

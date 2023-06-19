@@ -5,7 +5,7 @@ import com.jordanbunke.jbjgl.game_world.Coord2D;
 import com.jordanbunke.jbjgl.game_world.Vector2D;
 import com.jordanbunke.jbjgl.game_world.map.pathfinding.AStarPathfinding;
 import com.jordanbunke.jbjgl.image.ImageProcessing;
-import com.jordanbunke.jbjgl.image.JBJGLImage;
+import com.jordanbunke.jbjgl.image.GameImage;
 import com.jordanbunke.jbjgl.io.JBJGLImageIO;
 import com.jordanbunke.jbjgl.io.JBJGLResourceLoader;
 
@@ -41,7 +41,7 @@ public class TileMapTests {
     }
 
     private static TileMap<Vector2D> load(final String filename) {
-        final JBJGLImage tileSource = JBJGLResourceLoader.loadImageResource(Example.class, Path.of("tilemaps", filename));
+        final GameImage tileSource = JBJGLResourceLoader.loadImageResource(Example.class, Path.of("tilemaps", filename));
 
         final int width = tileSource.getWidth(), height = tileSource.getHeight();
 
@@ -68,7 +68,7 @@ public class TileMapTests {
     private static void drawAndSave(final TileMap<Vector2D> tileMap, final List<Coord2D> path, final String name) {
         final int UNIT_DIM = 20;
 
-        final JBJGLImage image = JBJGLImage.create(
+        final GameImage image = new GameImage(
                 tileMap.getWidth() * UNIT_DIM, tileMap.getHeight() * UNIT_DIM
         );
         final Graphics g = image.getGraphics();

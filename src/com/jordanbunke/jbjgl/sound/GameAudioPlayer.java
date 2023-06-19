@@ -7,7 +7,7 @@ import javax.sound.sampled.*;
 import java.io.IOException;
 import java.nio.file.Path;
 
-public class JBJGLAudioPlayer {
+public class GameAudioPlayer {
 
     public static final int BEGINNING = 0, END = -1;
 
@@ -27,29 +27,29 @@ public class JBJGLAudioPlayer {
         }
     }
 
-    public static void loopSoundInNewThread(final JBJGLSound sound) {
+    public static void loopSoundInNewThread(final Sound sound) {
         final Thread newSoundThread = getLoopSoundThread(sound);
 
         newSoundThread.start();
     }
 
-    public static Thread getLoopSoundThread(final JBJGLSound sound) {
+    public static Thread getLoopSoundThread(final Sound sound) {
         return new Thread(() -> loopSound(sound),
                 Constants.TITLE + " loop sound thread: " + sound.getId());
     }
 
-    public static void playSoundInNewThread(final JBJGLSound sound) {
+    public static void playSoundInNewThread(final Sound sound) {
         final Thread newSoundThread = getPlaySoundThread(sound);
 
         newSoundThread.start();
     }
 
-    public static Thread getPlaySoundThread(final JBJGLSound sound) {
+    public static Thread getPlaySoundThread(final Sound sound) {
         return new Thread(() -> playSound(sound),
                 Constants.TITLE + " loop sound thread: " + sound.getId());
     }
 
-    public static Clip getSoundClip(final JBJGLSound sound) {
+    public static Clip getSoundClip(final Sound sound) {
         try {
             final Clip clip = AudioSystem.getClip();
             clip.open(sound.getFormat(), sound.getData(), 0, sound.getData().length);
@@ -63,13 +63,13 @@ public class JBJGLAudioPlayer {
         return null;
     }
 
-    public static void playSound(final JBJGLSound sound) {
+    public static void playSound(final Sound sound) {
         final Clip clip = getSoundClip(sound);
 
         if (clip != null) clip.start();
     }
 
-    public static void loopSound(final JBJGLSound sound) {
+    public static void loopSound(final Sound sound) {
         final Clip clip = getSoundClip(sound);
 
         if (clip != null) {

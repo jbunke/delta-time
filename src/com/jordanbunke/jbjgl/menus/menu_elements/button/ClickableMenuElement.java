@@ -4,26 +4,26 @@ import com.jordanbunke.jbjgl.contexts.JBJGLMenuManager;
 import com.jordanbunke.jbjgl.debug.JBJGLGameDebugger;
 import com.jordanbunke.jbjgl.events.JBJGLEvent;
 import com.jordanbunke.jbjgl.events.JBJGLMouseEvent;
-import com.jordanbunke.jbjgl.image.JBJGLImage;
+import com.jordanbunke.jbjgl.image.GameImage;
 import com.jordanbunke.jbjgl.io.JBJGLListener;
-import com.jordanbunke.jbjgl.menus.menu_elements.JBJGLMenuElement;
+import com.jordanbunke.jbjgl.menus.menu_elements.MenuElement;
 
 import java.awt.*;
 import java.util.List;
 
 /**
- * Behaviour essentially replaced by {@link JBJGLSimpleMenuButton}
+ * Behaviour essentially replaced by {@link SimpleMenuButton}
  * */
 @Deprecated(since = "0.1.1.38")
-public class JBJGLClickableMenuElement extends JBJGLMenuElement {
+public class ClickableMenuElement extends MenuElement {
 
     private boolean isHighlighted;
-    private final JBJGLImage nonHighlightedImage, highlightedImage;
+    private final GameImage nonHighlightedImage, highlightedImage;
     private final Runnable onClickBehaviour;
 
-    private JBJGLClickableMenuElement(
+    private ClickableMenuElement(
             final int[] position, final int[] dimensions, final Anchor anchor,
-            final JBJGLImage nonHighlightedImage, final JBJGLImage highlightedImage,
+            final GameImage nonHighlightedImage, final GameImage highlightedImage,
             final Runnable onClickBehaviour
     ) {
         super(position, dimensions, anchor, true);
@@ -33,12 +33,12 @@ public class JBJGLClickableMenuElement extends JBJGLMenuElement {
         this.onClickBehaviour = onClickBehaviour;
     }
 
-    public static JBJGLClickableMenuElement generate(
+    public static ClickableMenuElement generate(
             final int[] position, final int[] dimensions, final Anchor anchor,
-            final JBJGLImage nonHighlightedImage, final JBJGLImage highlightedImage,
+            final GameImage nonHighlightedImage, final GameImage highlightedImage,
             final Runnable onClickBehaviour
     ) {
-        return new JBJGLClickableMenuElement(position, dimensions, anchor,
+        return new ClickableMenuElement(position, dimensions, anchor,
                 nonHighlightedImage, highlightedImage,
                 onClickBehaviour);
     }
