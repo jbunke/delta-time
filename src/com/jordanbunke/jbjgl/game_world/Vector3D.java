@@ -32,6 +32,11 @@ public final class Vector3D extends Vector<Vector3D> {
     }
 
     @Override
+    public boolean equals(final Vector3D that) {
+        return that != null && this.x == that.x && this.y == that.y && this.z == that.z;
+    }
+
+    @Override
     public String toString() {
         return "x: " + x + ", y: " + y + ", z: " + z;
     }

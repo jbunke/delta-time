@@ -26,8 +26,8 @@ public class PerformanceExample {
     private static void launch() {
         final GameManager manager = new GameManager(0, new GameContext());
         final GameWindow window = new GameWindow("Example",
-                (int)((ASPECT_W / (double)(ASPECT_H)) * FULLSCREEN_H), FULLSCREEN_H,
-                GameImage.dummy(), true);
+                CANVAS_W * WINDOW_SCALE_UP, CANVAS_H * WINDOW_SCALE_UP,
+                GameImage.dummy(), false);
         final GameEngine engine = new GameEngine(window, manager, REFRESH_RATE_HZ, FPS);
 
         exampleGame = new Game("Example", manager, engine);
@@ -54,10 +54,7 @@ public class PerformanceExample {
         }
 
         private void drawCanvas() {
-            final Graphics g = canvas.getGraphics();
-
-            g.setColor(new Color(100, 0, 0, 255));
-            g.fillRect(0, 0, CANVAS_W, CANVAS_H);
+            canvas.fillRectangle(new Color(100, 0, 0, 255), 0, 0, CANVAS_W, CANVAS_H);
 
             final GameDebugger debugger = exampleGame.getGameEngine().getDebugger();
 
@@ -70,14 +67,14 @@ public class PerformanceExample {
                             debugger.getDrawMillis()) + " ms"),
                     fps = generateText(debugger.getFPS() + " fps");
 
-            g.drawImage(fps, CANVAS_W - (fps.getWidth() + 2), 2, null);
-            g.drawImage(u, 2, 2 + (int)(CANVAS_H * 0.2), null);
-            g.drawImage(eh, 2, 2 + (int)(CANVAS_H * 0.4), null);
-            g.drawImage(r, 2, 2 + (int)(CANVAS_H * 0.6), null);
-            g.drawImage(d, 2, 2 + (int)(CANVAS_H * 0.8), null);
-            g.drawImage(c, 2, 2, null);
+            canvas.draw(fps, CANVAS_W - (fps.getWidth() + 2), 2);
+            canvas.draw(u, 2, 2 + (int)(CANVAS_H * 0.2));
+            canvas.draw(eh, 2, 2 + (int)(CANVAS_H * 0.4));
+            canvas.draw(r, 2, 2 + (int)(CANVAS_H * 0.6));
+            canvas.draw(d, 2, 2 + (int)(CANVAS_H * 0.8));
+            canvas.draw(c, 2, 2);
 
-            g.dispose();
+            canvas.free();
         }
 
         @Override

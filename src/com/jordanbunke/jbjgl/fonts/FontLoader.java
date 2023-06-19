@@ -1,12 +1,11 @@
 package com.jordanbunke.jbjgl.fonts;
 
 import com.jordanbunke.jbjgl.error.GameError;
-import com.jordanbunke.jbjgl.image.ImageProcessing;
 import com.jordanbunke.jbjgl.image.GameImage;
+import com.jordanbunke.jbjgl.image.ImageProcessing;
 import com.jordanbunke.jbjgl.io.GameImageIO;
 import com.jordanbunke.jbjgl.io.ResourceLoader;
 
-import java.awt.*;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
@@ -105,17 +104,14 @@ public class FontLoader {
             final int firstXWith, final int firstXWithout
     ) {
         GameImage grapheme = new GameImage(firstXWithout - firstXWith, size[Y_INDEX]);
-        Graphics g = grapheme.getGraphics();
-        g.setColor(MATCH_COLOR);
+        grapheme.setColor(MATCH_COLOR);
 
         for (int x = firstXWith; x < firstXWithout; x++)
             for (int y = start[Y_INDEX]; y < start[Y_INDEX] + size[Y_INDEX]; y++)
                 if (ImageProcessing.colorAtPixel(image, x, y).equals(MATCH_COLOR))
-                    g.fillRect(x - firstXWith, y - start[Y_INDEX], 1, 1);
+                    grapheme.fillRectangle(x - firstXWith, y - start[Y_INDEX], 1, 1);
 
-        g.dispose();
-
-        return grapheme;
+        return grapheme.submit();
     }
 
     private static Grapheme whitespace(

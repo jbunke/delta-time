@@ -1,6 +1,7 @@
 package com.jordanbunke.jbjgl.menus.menu_elements;
 
 import com.jordanbunke.jbjgl.menus.Menu;
+import com.jordanbunke.jbjgl.utility.Coord2D;
 
 public abstract class SelectableMenuElement extends MenuElement {
     public static final int UNSUITABLE = Integer.MAX_VALUE;
@@ -8,10 +9,10 @@ public abstract class SelectableMenuElement extends MenuElement {
     private boolean selected;
 
     public SelectableMenuElement(
-            final int[] position, final int[] dimensions,
-            final Anchor anchor, final boolean isVisible
+            final Coord2D position, final Coord2D dimensions,
+            final Anchor anchor, final boolean visible
     ) {
-        super(position, dimensions, anchor, isVisible);
+        super(position, dimensions, anchor, visible);
 
         selected = false;
     }

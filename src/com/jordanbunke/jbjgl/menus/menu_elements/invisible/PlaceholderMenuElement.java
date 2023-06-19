@@ -1,17 +1,13 @@
-package com.jordanbunke.jbjgl.menus.menu_elements;
+package com.jordanbunke.jbjgl.menus.menu_elements.invisible;
 
 import com.jordanbunke.jbjgl.debug.GameDebugger;
 import com.jordanbunke.jbjgl.io.InputEventLogger;
 
 import java.awt.*;
 
-public class PlaceholderMenuElement extends MenuElement {
-    private PlaceholderMenuElement() {
-        super(new int[] { 0, 0 }, new int[] { 1, 1 }, Anchor.LEFT_TOP, false);
-    }
-
-    public static PlaceholderMenuElement generate() {
-        return new PlaceholderMenuElement();
+public final class PlaceholderMenuElement extends InvisibleMenuElement {
+    public PlaceholderMenuElement() {
+        super();
     }
 
     @Override

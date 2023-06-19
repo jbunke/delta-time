@@ -58,7 +58,7 @@ public class Font {
                 characterMap.put(c, latinExtendedMap.get(c));
         }
 
-        final int height = characterMap.get(' ').getHeight();
+        final int height = characterMap.get(' ').height;
 
         return new Font(characterMap, pixelSpacing, height, smoothResizing);
     }
@@ -68,7 +68,7 @@ public class Font {
     }
 
     public int getCharWidth(final char c) {
-        return getGrapheme(c).getWidth();
+        return getGrapheme(c).width;
     }
 
     public int getPixelSpacing() {

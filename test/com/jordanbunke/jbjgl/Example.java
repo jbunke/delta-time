@@ -6,11 +6,12 @@ import com.jordanbunke.jbjgl.game.Game;
 import com.jordanbunke.jbjgl.game.GameManager;
 import com.jordanbunke.jbjgl.image.GameImage;
 import com.jordanbunke.jbjgl.menus.Menu;
-import com.jordanbunke.jbjgl.menus.menu_elements.AnimationMenuElement;
+import com.jordanbunke.jbjgl.menus.menu_elements.visual.AnimationMenuElement;
 import com.jordanbunke.jbjgl.menus.menu_elements.MenuElement;
 import com.jordanbunke.jbjgl.menus.menu_elements.button.SimpleMenuButton;
 import com.jordanbunke.jbjgl.text.Text;
 import com.jordanbunke.jbjgl.text.TextComponent;
+import com.jordanbunke.jbjgl.utility.Coord2D;
 
 import java.awt.*;
 
@@ -35,17 +36,14 @@ public class Example {
     }
 
     private static GameImage drawBackground(final int index) {
-        GameImage image = new GameImage(width, height);
-        Graphics g = image.getGraphics();
-        g.setColor(new Color(index * 17, 0, 255 - (index * 17), 255));
-        g.fillRect(0, 0, width, height);
-        g.dispose();
-        return image;
+        final GameImage image = new GameImage(width, height);
+        image.fillRectangle(new Color(index * 17, 0, 255 - (index * 17), 255), 0, 0, width, height);
+        return image.submit();
     }
 
     private static void example1() {
-        AnimationMenuElement animationMenuElement = AnimationMenuElement.generate(
-                new int[] { 0, 0 }, new int[] { width, height }, MenuElement.Anchor.LEFT_TOP,
+        AnimationMenuElement animationMenuElement = new AnimationMenuElement(
+                new Coord2D(), new Coord2D(width, height), MenuElement.Anchor.LEFT_TOP,
                 5, new GameImage[] {
                         drawBackground(0), drawBackground(1), drawBackground(2),
                         drawBackground(3), drawBackground(4), drawBackground(5),
@@ -57,13 +55,13 @@ public class Example {
         );
         GameImage button = button(false), highlightedButton = button(true);
         SimpleMenuButton menuButton = new SimpleMenuButton(
-                new int[]{ width / 2, height / 2 },
-                new int[]{ button.getWidth() + 100, button.getHeight() - 20 },
+                new Coord2D(width / 2, height / 2),
+                new Coord2D(button.getWidth() + 100, button.getHeight() - 20),
                 MenuElement.Anchor.CENTRAL, true, () -> System.exit(0),
                 button, highlightedButton);
         Menu menu = new Menu(animationMenuElement, menuButton);
         GameManager manager = new GameManager(0, new MenuManager(menu, "instant quit"));
-        Game game = Game.assemble("Example 1", manager, width, height,
+        Game.assemble("Example 1", manager, width, height,
                 new GameImage(20, 20), true, true, 30.0, 60.0);
         // game.getGameEngine().getDebugger().hideBoundingBoxes();
     }

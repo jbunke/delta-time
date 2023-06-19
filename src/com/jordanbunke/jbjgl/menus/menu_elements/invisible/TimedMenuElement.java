@@ -1,31 +1,25 @@
-package com.jordanbunke.jbjgl.menus.menu_elements;
+package com.jordanbunke.jbjgl.menus.menu_elements.invisible;
 
 import com.jordanbunke.jbjgl.debug.GameDebugger;
 import com.jordanbunke.jbjgl.io.InputEventLogger;
 
 import java.awt.*;
 
-public class TimedMenuElement extends MenuElement {
+public final class TimedMenuElement extends InvisibleMenuElement {
     private final int timeOut;
     private final Runnable behaviour;
 
     private int count;
 
-    private TimedMenuElement(
+    public TimedMenuElement(
             final int timeOut, final Runnable behaviour
     ) {
-        super(new int[] { 0, 0 }, new int[] { 1, 1 }, Anchor.CENTRAL, false);
+        super();
 
         this.timeOut = timeOut;
         this.behaviour = behaviour;
 
         count = 0;
-    }
-
-    public static TimedMenuElement generate(
-            final int timeOut, final Runnable behaviour
-    ) {
-        return new TimedMenuElement(timeOut, behaviour);
     }
 
     @Override

@@ -67,7 +67,7 @@ public class MenuSelectionLogic {
             for (GameEvent e : unprocessed) {
                 if (e instanceof GameKeyEvent keyEvent &&
                         keyEvent.matchesAction(GameKeyEvent.Action.PRESS)) {
-                    final Key key = keyEvent.getKey();
+                    final Key key = keyEvent.key;
 
                     try {
                         if (fLeft.call().contains(key)) {

@@ -1,6 +1,6 @@
 package com.jordanbunke.jbjgl.utility;
 
-public class StringProcessing {
+public final class StringProcessing {
     public static String linesToString(final String[] lines) {
         StringBuilder s = new StringBuilder();
 

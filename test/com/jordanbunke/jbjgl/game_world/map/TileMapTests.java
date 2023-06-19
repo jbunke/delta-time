@@ -1,9 +1,8 @@
 package com.jordanbunke.jbjgl.game_world.map;
 
-import com.jordanbunke.jbjgl.Example;
-import com.jordanbunke.jbjgl.game_world.Coord2D;
+import com.jordanbunke.jbjgl.utility.Coord2D;
 import com.jordanbunke.jbjgl.game_world.Vector2D;
-import com.jordanbunke.jbjgl.game_world.map.pathfinding.AStarPathfinding;
+import com.jordanbunke.jbjgl.ai.pathfinding.AStarPathfinding;
 import com.jordanbunke.jbjgl.image.ImageProcessing;
 import com.jordanbunke.jbjgl.image.GameImage;
 import com.jordanbunke.jbjgl.io.GameImageIO;
@@ -68,23 +67,18 @@ public class TileMapTests {
     private static void drawAndSave(final TileMap<Vector2D> tileMap, final List<Coord2D> path, final String name) {
         final int UNIT_DIM = 20;
 
-        final GameImage image = new GameImage(
-                tileMap.getWidth() * UNIT_DIM, tileMap.getHeight() * UNIT_DIM
-        );
-        final Graphics g = image.getGraphics();
+        final GameImage image = new GameImage(tileMap.getWidth() * UNIT_DIM,
+                tileMap.getHeight() * UNIT_DIM);
 
-        for (int x = 0; x < tileMap.getWidth(); x++) {
-            for (int y = 0; y < tileMap.getHeight(); y++) {
-                g.setColor(((BasicTile)tileMap.getTileAt(x, y)).getColor());
-                g.fillRect(x * UNIT_DIM, y * UNIT_DIM, UNIT_DIM, UNIT_DIM);
-            }
-        }
+        for (int x = 0; x < tileMap.getWidth(); x++)
+            for (int y = 0; y < tileMap.getHeight(); y++)
+                image.fillRectangle(((BasicTile)tileMap.getTileAt(x, y)).getColor(),
+                        x * UNIT_DIM, y * UNIT_DIM, UNIT_DIM, UNIT_DIM);
 
-        g.setColor(new Color(150, 150, 255, 150));
+        image.setColor(new Color(150, 150, 255, 150));
         for (Coord2D step : path)
-            g.fillRect(step.x * UNIT_DIM, step.y * UNIT_DIM, UNIT_DIM, UNIT_DIM);
+            image.fillRectangle(step.x * UNIT_DIM, step.y * UNIT_DIM, UNIT_DIM, UNIT_DIM);
 
-        g.dispose();
-        GameImageIO.writeImage(Path.of("test_out", "tilemaps", name  + " result.png"), image);
+        GameImageIO.writeImage(Path.of("test_out", "tilemaps", name  + " result.png"), image.submit());
     }
 }

@@ -7,7 +7,7 @@ import com.jordanbunke.jbjgl.debug.Debugger;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JBJGLGlobal {
+public final class JBJGLGlobal {
     private static final String JBJGL_CHANNEL = Constants.TITLE;
 
     private static final Debugger DEBUGGER = Debugger.createWithExistingChannels(

@@ -1,27 +1,19 @@
-package com.jordanbunke.jbjgl.menus.menu_elements;
+package com.jordanbunke.jbjgl.menus.menu_elements.container;
 
 import com.jordanbunke.jbjgl.debug.GameDebugger;
 import com.jordanbunke.jbjgl.io.InputEventLogger;
+import com.jordanbunke.jbjgl.menus.menu_elements.MenuElement;
+import com.jordanbunke.jbjgl.utility.Coord2D;
 
 import java.awt.*;
 
 public class MenuElementGrouping extends MenuElementContainer {
     private final MenuElement[] menuElements;
 
-    private MenuElementGrouping(
-            final MenuElement[] menuElements
-    ) {
-        super(new int[] { 0, 0 }, new int[] { 1, 1 }, Anchor.LEFT_TOP, false);
+    public MenuElementGrouping(final MenuElement... menuElements) {
+        super(new Coord2D(), new Coord2D(1, 1), Anchor.LEFT_TOP, false);
 
         this.menuElements = menuElements;
-    }
-
-    public static MenuElementGrouping generateOf(final MenuElement... menuElements) {
-        return new MenuElementGrouping(menuElements);
-    }
-
-    public static MenuElementGrouping generate(final MenuElement[] menuElements) {
-        return new MenuElementGrouping(menuElements);
     }
 
     @Override

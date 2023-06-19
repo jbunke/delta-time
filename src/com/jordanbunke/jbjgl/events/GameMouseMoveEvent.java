@@ -1,16 +1,16 @@
 package com.jordanbunke.jbjgl.events;
 
-import static com.jordanbunke.jbjgl.utility.RenderConstants.*;
+import com.jordanbunke.jbjgl.utility.Coord2D;
 
-public class GameMouseMoveEvent extends GameEvent {
-    private final int[] mousePosition;
-    private final Action action;
+public final class GameMouseMoveEvent extends GameEvent {
+    public final Coord2D mousePosition;
+    public final Action action;
 
     public enum Action {
         MOVE, DRAG, ENTER, EXIT
     }
 
-    public GameMouseMoveEvent(final int[] mousePosition, final Action action) {
+    public GameMouseMoveEvent(final Coord2D mousePosition, final Action action) {
         super();
         this.mousePosition = mousePosition;
         this.action = action;
@@ -22,15 +22,14 @@ public class GameMouseMoveEvent extends GameEvent {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof GameMouseMoveEvent ome))
-            return false;
-        return this.mousePosition[X] == ome.mousePosition[X] &&
-                this.mousePosition[Y] == ome.mousePosition[Y] && this.action == ome.action;
+        if (o instanceof GameMouseMoveEvent that)
+            return this.mousePosition == that.mousePosition && this.action == that.action;
+        return false;
     }
 
     @Override
     public int hashCode() {
-        return (1000 * mousePosition[X]) + mousePosition[Y];
+        return (1000 * mousePosition.x) + mousePosition.y;
     }
 
 }

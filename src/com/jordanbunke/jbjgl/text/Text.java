@@ -1,9 +1,8 @@
 package com.jordanbunke.jbjgl.text;
 
-import com.jordanbunke.jbjgl.image.ImageProcessing;
 import com.jordanbunke.jbjgl.image.GameImage;
+import com.jordanbunke.jbjgl.image.ImageProcessing;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,47 +86,39 @@ public class Text {
 
             maxWidth = Math.max(maxWidth, width);
 
-            Graphics g = drawnLine.getGraphics();
             int processed = 0;
 
             for (int j = 0; j < lines[i].length; j++) {
                 final double scaleFactor = textSize * (LINE_HEIGHT / (double)lines[i][j].getFont().getHeight());
                 final GameImage drawnComponent = lines[i][j].draw();
 
-                g.drawImage(scaleFactor == 1.
+                drawnLine.draw(scaleFactor == 1.
                                 ? drawnComponent
                                 : ImageProcessing.scaleUp(
                                     drawnComponent, scaleFactor,
                                     lines[i][j].getFont().hasSmoothResizing()),
-                        processed, 0, null);
+                        processed, 0);
                 processed += lines[i][j].calculateProspectiveWidth() * scaleFactor;
             }
 
-            g.dispose();
-
-            drawnLines[i] = drawnLine;
+            drawnLines[i] = drawnLine.submit();
         }
 
-        GameImage image = new GameImage(maxWidth, lines.length * (int)(textSize * LINE_HEIGHT));
-        Graphics g = image.getGraphics();
+        final GameImage image = new GameImage(maxWidth, lines.length * (int)(textSize * LINE_HEIGHT));
 
         int drawnHeight = 0;
 
         for (GameImage drawnLine : drawnLines) {
             switch (orientation) {
-                case LEFT -> g.drawImage(drawnLine, 0, drawnHeight, null);
-                case RIGHT -> g.drawImage(drawnLine, maxWidth - drawnLine.getWidth(),
-                        drawnHeight, null);
-                case CENTER -> g.drawImage(drawnLine, (maxWidth - drawnLine.getWidth()) / 2,
-                        drawnHeight, null);
+                case LEFT -> image.draw(drawnLine, 0, drawnHeight);
+                case RIGHT -> image.draw(drawnLine, maxWidth - drawnLine.getWidth(), drawnHeight);
+                case CENTER -> image.draw(drawnLine, (maxWidth - drawnLine.getWidth()) / 2, drawnHeight);
             }
 
             drawnHeight += drawnLine.getHeight();
         }
 
-        g.dispose();
-
-        return image;
+        return image.submit();
     }
 
     public int getWidthAllowance() {

@@ -3,15 +3,15 @@ package com.jordanbunke.jbjgl.menus.menu_elements;
 import com.jordanbunke.jbjgl.contexts.ProgramContext;
 import com.jordanbunke.jbjgl.debug.GameDebugger;
 import com.jordanbunke.jbjgl.image.GameImage;
-import com.jordanbunke.jbjgl.utility.RenderConstants;
+import com.jordanbunke.jbjgl.utility.Coord2D;
 
 import java.awt.*;
 
 public abstract class MenuElement extends ProgramContext {
-    private final int[] position;
-    private final int[] dimensions;
+    private Coord2D position;
+    private final Coord2D dimensions;
     private final Anchor anchor;
-    private final boolean isVisible;
+    private final boolean visible;
 
     public enum Anchor {
         LEFT_TOP, CENTRAL_TOP, RIGHT_TOP,
@@ -35,168 +35,93 @@ public abstract class MenuElement extends ProgramContext {
     }
 
     public MenuElement(
-            final int[] position, final int[] dimensions,
-            final Anchor anchor, final boolean isVisible
+            final Coord2D position, final Coord2D dimensions,
+            final Anchor anchor, final boolean visible
     ) {
         this.position = position;
         this.dimensions = dimensions;
         this.anchor = anchor;
-        this.isVisible = isVisible;
+        this.visible = visible;
     }
 
-    public void draw(final GameImage image, final Graphics g) {
-        if (!isVisible)
+    public void draw(final GameImage image, final Graphics2D g) {
+        if (!visible)
             return;
 
-        final int[] offset = new int[] {
-                (dimensions[RenderConstants.WIDTH] - image.getWidth()) / 2,
-                (dimensions[RenderConstants.HEIGHT] - image.getHeight()) / 2
+        final Coord2D offset = new Coord2D((dimensions.x - image.getWidth()) / 2,
+                (dimensions.y - image.getHeight()) / 2);
+        final Coord2D renderPosition = getRenderPosition(offset);
+        g.drawImage(image, renderPosition.x, renderPosition.y, null);
+    }
+
+    public Coord2D getRenderPosition(final Coord2D offset) {
+        final Coord2D bounds = switch (anchor) {
+            case LEFT_TOP -> new Coord2D(position.x, position.y);
+            case CENTRAL_TOP -> new Coord2D(position.x - (dimensions.x / 2), position.y);
+            case RIGHT_TOP -> new Coord2D(position.x - dimensions.x, position.y);
+            case LEFT_CENTRAL -> new Coord2D(position.x, position.y - (dimensions.y / 2));
+            case CENTRAL -> new Coord2D(position.x - (dimensions.x / 2), position.y - (dimensions.y / 2));
+            case RIGHT_CENTRAL -> new Coord2D(position.x - dimensions.x, position.y - (dimensions.y / 2));
+            case LEFT_BOTTOM -> new Coord2D(position.x, position.y - dimensions.y);
+            case CENTRAL_BOTTOM -> new Coord2D(position.x - (dimensions.x / 2), position.y - dimensions.y);
+            case RIGHT_BOTTOM -> new Coord2D(position.x - dimensions.x, position.y - dimensions.y);
         };
-        final int[] renderPosition = getRenderPosition(offset);
-        g.drawImage(
-                image, renderPosition[RenderConstants.X],
-                renderPosition[RenderConstants.Y], null
-        );
+
+        return bounds.displace(offset);
     }
 
-    public int[] getRenderPosition(final int[] offset) {
-        final int[] bounds = new int[2];
-
-        switch (anchor) {
-            case LEFT_TOP -> {
-                bounds[RenderConstants.X] =
-                        position[RenderConstants.X];
-                bounds[RenderConstants.Y] =
-                        position[RenderConstants.Y];
-            }
-            case CENTRAL_TOP -> {
-                bounds[RenderConstants.X] =
-                        position[RenderConstants.X] -
-                                (dimensions[RenderConstants.WIDTH] / 2);
-                bounds[RenderConstants.Y] =
-                        position[RenderConstants.Y];
-            }
-            case RIGHT_TOP -> {
-                bounds[RenderConstants.X] =
-                        position[RenderConstants.X] -
-                                dimensions[RenderConstants.WIDTH];
-                bounds[RenderConstants.Y] =
-                        position[RenderConstants.Y];
-            }
-            case LEFT_CENTRAL -> {
-                bounds[RenderConstants.X] =
-                        position[RenderConstants.X];
-                bounds[RenderConstants.Y] =
-                        position[RenderConstants.Y] -
-                                (dimensions[RenderConstants.HEIGHT] / 2);
-            }
-            case CENTRAL -> {
-                bounds[RenderConstants.X] =
-                        position[RenderConstants.X] -
-                                (dimensions[RenderConstants.WIDTH] / 2);
-                bounds[RenderConstants.Y] =
-                        position[RenderConstants.Y] -
-                                (dimensions[RenderConstants.HEIGHT] / 2);
-            }
-            case RIGHT_CENTRAL -> {
-                bounds[RenderConstants.X] =
-                        position[RenderConstants.X] -
-                                dimensions[RenderConstants.WIDTH];
-                bounds[RenderConstants.Y] =
-                        position[RenderConstants.Y] -
-                                (dimensions[RenderConstants.HEIGHT] / 2);
-            }
-            case LEFT_BOTTOM -> {
-                bounds[RenderConstants.X] =
-                        position[RenderConstants.X];
-                bounds[RenderConstants.Y] =
-                        position[RenderConstants.Y] -
-                                dimensions[RenderConstants.HEIGHT];
-            }
-            case CENTRAL_BOTTOM -> {
-                bounds[RenderConstants.X] =
-                        position[RenderConstants.X] -
-                                (dimensions[RenderConstants.WIDTH] / 2);
-                bounds[RenderConstants.Y] =
-                        position[RenderConstants.Y] -
-                                dimensions[RenderConstants.HEIGHT];
-            }
-            case RIGHT_BOTTOM -> {
-                bounds[RenderConstants.X] =
-                        position[RenderConstants.X] -
-                                dimensions[RenderConstants.WIDTH];
-                bounds[RenderConstants.Y] =
-                        position[RenderConstants.Y] -
-                                dimensions[RenderConstants.HEIGHT];
-            }
-        }
-
-        bounds[RenderConstants.X] += offset[RenderConstants.X];
-        bounds[RenderConstants.Y] += offset[RenderConstants.Y];
-
-        return bounds;
-    }
-
-    public boolean mouseIsWithinBounds(final int[] mousePosition) {
-        if (!isVisible)
+    public boolean mouseIsWithinBounds(final Coord2D mousePosition) {
+        if (!visible)
             return false;
 
-        final int[] min = getRenderPosition(new int[] { 0, 0 });
-        final int[] max = new int[] {
-                min[RenderConstants.X] + dimensions[RenderConstants.WIDTH],
-                min[RenderConstants.Y] + dimensions[RenderConstants.HEIGHT]
-        };
-        return
-                mousePosition[RenderConstants.X] >= min[RenderConstants.X] &&
-                mousePosition[RenderConstants.X] < max[RenderConstants.X] &&
-                mousePosition[RenderConstants.Y] >= min[RenderConstants.Y] &&
-                mousePosition[RenderConstants.Y] < max[RenderConstants.Y];
+        final Coord2D min = getRenderPosition(new Coord2D());
+        final Coord2D max = new Coord2D(min.x + dimensions.x, min.y + dimensions.y);
+
+        return mousePosition.x >= min.x && mousePosition.x < max.x &&
+                mousePosition.y >= min.y && mousePosition.y < max.y;
     }
 
-    public void renderBoundingBox(final Graphics g, final GameDebugger debugger) {
-        if (debugger == null || !debugger.isShowingBoundingBoxes() || !isVisible)
+    public void renderBoundingBox(final Graphics2D g, final GameDebugger debugger) {
+        if (debugger == null || !debugger.isShowingBoundingBoxes() || !visible)
             return;
 
-        Graphics2D g2D = (Graphics2D) g;
-        final int[] renderPosition = getRenderPosition(new int[] { 0, 0 });
-        g2D.setColor(new Color(0, 255, 0, 255));
-        g2D.setStroke(new BasicStroke(1));
-        g.drawRect(
-                renderPosition[RenderConstants.X], renderPosition[RenderConstants.Y],
-                dimensions[RenderConstants.WIDTH] - 1, dimensions[RenderConstants.HEIGHT] - 1
-        );
+        final Coord2D renderPosition = getRenderPosition(new Coord2D());
+        g.setColor(new Color(0, 255, 0, 255));
+        g.setStroke(new BasicStroke(1));
+        g.drawRect(renderPosition.x, renderPosition.y,
+                dimensions.x - 1, dimensions.y - 1);
     }
 
     public void setX(final int x) {
-        position[RenderConstants.X] = x;
+        position = new Coord2D(x, position.y);
     }
 
     public void setY(final int y) {
-        position[RenderConstants.Y] = y;
+        position = new Coord2D(position.x, y);
     }
 
     public void incrementX(final int deltaX) {
-        position[RenderConstants.X] += deltaX;
+        position = position.displace(deltaX, 0);
     }
 
     public void incrementY(final int deltaY) {
-        position[RenderConstants.X] += deltaY;
+        position = position.displace(0, deltaY);
     }
 
     public int getX() {
-        return position[RenderConstants.X];
+        return position.x;
     }
 
     public int getY() {
-        return position[RenderConstants.Y];
+        return position.y;
     }
 
     public int getWidth() {
-        return dimensions[RenderConstants.WIDTH];
+        return dimensions.x;
     }
 
     public int getHeight() {
-        return dimensions[RenderConstants.HEIGHT];
+        return dimensions.y;
     }
 
     public Anchor getAnchor() {
@@ -204,13 +129,13 @@ public abstract class MenuElement extends ProgramContext {
     }
 
     public boolean isVisible() {
-        return isVisible;
+        return visible;
     }
 
     @Override
     public String toString() {
-        return "at (" + position[RenderConstants.X] +
-                ", " + position[RenderConstants.Y] +
+        return "at (" + position.x +
+                ", " + position.y +
                 ") [ " + anchor.toString() + " ]";
     }
 }

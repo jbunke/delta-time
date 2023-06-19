@@ -1,9 +1,11 @@
-package com.jordanbunke.jbjgl.menus.menu_elements;
+package com.jordanbunke.jbjgl.menus.menu_elements.visual;
 
 import com.jordanbunke.jbjgl.debug.GameDebugger;
 import com.jordanbunke.jbjgl.error.GameError;
 import com.jordanbunke.jbjgl.image.GameImage;
 import com.jordanbunke.jbjgl.io.InputEventLogger;
+import com.jordanbunke.jbjgl.menus.menu_elements.MenuElement;
+import com.jordanbunke.jbjgl.utility.Coord2D;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -13,8 +15,8 @@ public class AnimationMenuElement extends MenuElement {
     private final GameImage[] frames;
     private int frameIndex, count;
 
-    private AnimationMenuElement(
-            final int[] position, final int[] dimensions, final Anchor anchor,
+    public AnimationMenuElement(
+            final Coord2D position, final Coord2D dimensions, final Anchor anchor,
             final int[] frameTimings, final GameImage[] frames
     ) {
         super(position, dimensions, anchor, true);
@@ -25,21 +27,18 @@ public class AnimationMenuElement extends MenuElement {
         this.count = 0;
     }
 
-    public static AnimationMenuElement generate(
-            final int[] position, final int[] dimensions, final Anchor anchor,
-            final int[] frameTimings, final GameImage[] frames
-    ) {
-        return new AnimationMenuElement(position, dimensions, anchor, frameTimings, frames);
-    }
-
-    public static AnimationMenuElement generate(
-            final int[] position, final int[] dimensions, final Anchor anchor,
+    public AnimationMenuElement(
+            final Coord2D position, final Coord2D dimensions, final Anchor anchor,
             final int ticksPerFrame, final GameImage[] frames
     ) {
-        final int[] frameTimings = new int[frames.length];
+        this(position, dimensions, anchor, consistentFrameTimings(ticksPerFrame, frames.length), frames);
+    }
+
+    private static int[] consistentFrameTimings(final int ticksPerFrame, final int numFrames) {
+        final int[] frameTimings = new int[numFrames];
         Arrays.fill(frameTimings, ticksPerFrame);
 
-        return new AnimationMenuElement(position, dimensions, anchor, frameTimings, frames);
+        return frameTimings;
     }
 
     @Override

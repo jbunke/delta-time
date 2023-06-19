@@ -1,6 +1,6 @@
 package com.jordanbunke.jbjgl.image;
 
-import com.jordanbunke.jbjgl.utility.RenderConstants;
+import com.jordanbunke.jbjgl.utility.Coord2D;
 
 import java.awt.*;
 
@@ -33,23 +33,23 @@ public class ImageProcessing {
             final GameImage image, final double scaleFactor,
             final boolean smooth
     ) {
-        final int[] dims = new int[] {
+        final Coord2D dims = new Coord2D(
                 Math.max(1, (int)(image.getWidth() * scaleFactor)),
                 Math.max(1, (int)(image.getHeight() * scaleFactor))
-        };
+        );
 
-        final GameImage scaledUp = new GameImage(dims[RenderConstants.X], dims[RenderConstants.Y]);
+        final GameImage scaledUp = new GameImage(dims.x, dims.y);
 
         if (smooth) {
-            for (int x = 0; x < scaledUp.getWidth(); x++) {
-                for (int y = 0; y < scaledUp.getHeight(); y++) {
-                    final int initialOriginX = (int)((x / (double) scaledUp.getWidth()) * image.getWidth());
+            for (int x = 0; x < dims.x; x++) {
+                for (int y = 0; y < dims.y; y++) {
+                    final int initialOriginX = (int)((x / (double) dims.x) * image.getWidth());
                     final int finalOriginX = Math.min(
-                            (int)(((x + 1) / (double) scaledUp.getWidth()) * image.getWidth()),
+                            (int)(((x + 1) / (double) dims.x) * image.getWidth()),
                             image.getWidth() - 1);
-                    final int initialOriginY = (int)((y / (double) scaledUp.getHeight()) * image.getHeight());
+                    final int initialOriginY = (int)((y / (double) dims.y) * image.getHeight());
                     final int finalOriginY = Math.min(
-                            (int)(((y + 1) / (double) scaledUp.getHeight()) * image.getHeight()),
+                            (int)(((y + 1) / (double) dims.y) * image.getHeight()),
                             image.getHeight() - 1);
 
                     int cumulativeR = 0, cumulativeG = 0, cumulativeB = 0, cumulativeA = 0;
@@ -94,8 +94,8 @@ public class ImageProcessing {
                     if (color.getAlpha() < FULL_OPACITY) {
                         final int xInit = (int)(x * scaleFactor),
                                 yInit = (int)(y * scaleFactor),
-                                xBound = Math.min(scaledUp.getWidth(), xInit + (int)Math.ceil(scaleFactor)),
-                                yBound = Math.min(scaledUp.getHeight(), yInit + (int)Math.ceil(scaleFactor));
+                                xBound = Math.min(dims.x, xInit + (int)Math.ceil(scaleFactor)),
+                                yBound = Math.min(dims.y, yInit + (int)Math.ceil(scaleFactor));
                         for (int xp = xInit; xp < xBound; xp++)
                             for (int yp = yInit; yp < yBound; yp++)
                                 if (!colorAtPixel(scaledUp, xp, yp).equals(color))

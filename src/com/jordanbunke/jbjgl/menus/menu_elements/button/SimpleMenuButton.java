@@ -2,6 +2,7 @@ package com.jordanbunke.jbjgl.menus.menu_elements.button;
 
 import com.jordanbunke.jbjgl.debug.GameDebugger;
 import com.jordanbunke.jbjgl.image.GameImage;
+import com.jordanbunke.jbjgl.utility.Coord2D;
 
 import java.awt.*;
 
@@ -9,7 +10,7 @@ public class SimpleMenuButton extends MenuButton {
     private final GameImage nonHighlightedImage, highlightedImage;
 
     public SimpleMenuButton(
-            final int[] position, final int[] dimensions,
+            final Coord2D position, final Coord2D dimensions,
             final Anchor anchor, final boolean isVisible,
             final Runnable chosenBehaviour,
             final GameImage nonHighlightedImage,

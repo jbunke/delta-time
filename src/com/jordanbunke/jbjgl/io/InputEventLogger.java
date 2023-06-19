@@ -2,9 +2,8 @@ package com.jordanbunke.jbjgl.io;
 
 import com.jordanbunke.jbjgl.error.GameError;
 import com.jordanbunke.jbjgl.events.*;
-import com.jordanbunke.jbjgl.events.GameWindowEvent;
 import com.jordanbunke.jbjgl.utility.CollectionProcessing;
-import com.jordanbunke.jbjgl.utility.RenderConstants;
+import com.jordanbunke.jbjgl.utility.Coord2D;
 import com.jordanbunke.jbjgl.window.GameCanvas;
 
 import java.awt.event.*;
@@ -20,7 +19,7 @@ public class InputEventLogger implements
 
     private final List<GameEvent> eventList;
     private final Map<Key, Boolean> characterPressedStatusMap;
-    private final int[] mousePosition;
+    private Coord2D mousePosition;
 
     private double scaleUpRatioX, scaleUpRatioY;
 
@@ -33,7 +32,7 @@ public class InputEventLogger implements
 
         eventList = new ArrayList<>();
         characterPressedStatusMap = new HashMap<>();
-        mousePosition = new int[2];
+        mousePosition = new Coord2D();
 
         scaleUpRatioX = DEFAULT_SCALE;
         scaleUpRatioY = DEFAULT_SCALE;
@@ -104,24 +103,17 @@ public class InputEventLogger implements
     }
 
     private void updateMousePosition(final MouseEvent e) {
-        mousePosition[RenderConstants.X] = e.getX();
-        mousePosition[RenderConstants.Y] = e.getY();
-    }
-
-    public int[] getMousePosition() {
-        return mousePosition;
+        mousePosition = new Coord2D(e.getX(), e.getY());
     }
 
     private boolean isScaledUp() {
         return scaleUpRatioX != DEFAULT_SCALE || scaleUpRatioY != DEFAULT_SCALE;
     }
 
-    public int[] getAdjustedMousePosition() {
+    public Coord2D getAdjustedMousePosition() {
         if (isScaledUp())
-            return new int[] {
-                    (int)(mousePosition[RenderConstants.X] / scaleUpRatioX),
-                    (int)(mousePosition[RenderConstants.Y] / scaleUpRatioY)
-        };
+            return new Coord2D((int)(mousePosition.x / scaleUpRatioX),
+                    (int)(mousePosition.y / scaleUpRatioY));
 
         return mousePosition;
     }
@@ -171,76 +163,53 @@ public class InputEventLogger implements
             return;
 
         characterPressedStatusMap.put(key, false);
-        handleKeyEvent(
-                GameKeyEvent.newKeyStroke(key, GameKeyEvent.Action.RELEASE)
-        );
+        handleKeyEvent(GameKeyEvent.newKeyStroke(key, GameKeyEvent.Action.RELEASE));
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        eventList.add(
-                new GameMouseEvent(new int[] {
-                        e.getX(), e.getY()
-                }, GameMouseEvent.Action.CLICK)
-        );
+        eventList.add(new GameMouseEvent(new Coord2D(e.getX(), e.getY()),
+                GameMouseEvent.Action.CLICK));
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        eventList.add(
-                new GameMouseEvent(new int[] {
-                        e.getX(), e.getY()
-                }, GameMouseEvent.Action.DOWN)
-        );
+        eventList.add(new GameMouseEvent(new Coord2D(e.getX(), e.getY()),
+                GameMouseEvent.Action.DOWN));
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        eventList.add(
-                new GameMouseEvent(new int[] {
-                        e.getX(), e.getY()
-                }, GameMouseEvent.Action.UP)
-        );
+        eventList.add(new GameMouseEvent(new Coord2D(e.getX(), e.getY()),
+                GameMouseEvent.Action.UP));
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
         updateMousePosition(e);
-        eventList.add(
-                new GameMouseMoveEvent(new int[] {
-                        e.getX(), e.getY()
-                }, GameMouseMoveEvent.Action.ENTER)
-        );
+        eventList.add(new GameMouseMoveEvent(new Coord2D(e.getX(), e.getY()),
+                GameMouseMoveEvent.Action.ENTER));
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
         updateMousePosition(e);
-        eventList.add(
-                new GameMouseMoveEvent(new int[] {
-                        e.getX(), e.getY()
-                }, GameMouseMoveEvent.Action.EXIT)
-        );
+        eventList.add(new GameMouseMoveEvent(new Coord2D(e.getX(), e.getY()),
+                GameMouseMoveEvent.Action.EXIT));
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
         updateMousePosition(e);
-        eventList.add(
-                new GameMouseMoveEvent(new int[] {
-                        e.getX(), e.getY()
-                }, GameMouseMoveEvent.Action.DRAG)
-        );
+        eventList.add(new GameMouseMoveEvent(new Coord2D(e.getX(), e.getY()),
+                GameMouseMoveEvent.Action.DRAG));
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
         updateMousePosition(e);
-        eventList.add(
-                new GameMouseMoveEvent(new int[] {
-                        e.getX(), e.getY()
-                }, GameMouseMoveEvent.Action.MOVE)
-        );
+        eventList.add(new GameMouseMoveEvent(new Coord2D(e.getX(), e.getY()),
+                GameMouseMoveEvent.Action.MOVE));
     }
 
     @Override

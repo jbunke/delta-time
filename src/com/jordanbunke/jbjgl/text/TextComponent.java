@@ -34,21 +34,16 @@ public class TextComponent extends TextConstituent {
     }
 
     public GameImage draw() {
-        GameImage image = new GameImage(
-                calculateProspectiveWidth(), font.getHeight());
-        Graphics g = image.getGraphics();
+        final GameImage image = new GameImage(calculateProspectiveWidth(), font.getHeight());
 
         int processed = 0;
 
         for (char c : contents.toCharArray()) {
-            g.drawImage(font.drawChar(c, color), processed, 0, null);
-            processed += font.getCharWidth(c);
-            processed += font.getPixelSpacing();
+            image.draw(font.drawChar(c, color), processed, 0);
+            processed += font.getCharWidth(c) + font.getPixelSpacing();
         }
 
-        g.dispose();
-
-        return image;
+        return image.submit();
     }
 
     public Font getFont() {

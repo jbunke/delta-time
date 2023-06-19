@@ -1,9 +1,9 @@
 package com.jordanbunke.jbjgl.events;
 
-public class GameKeyEvent extends GameEvent {
-    private final Key key;
-    private final char character;
-    private final Action action;
+public final class GameKeyEvent extends GameEvent {
+    public final Key key;
+    public final char character;
+    public final Action action;
 
     public enum Action {
         PRESS, RELEASE, TYPE
@@ -28,23 +28,11 @@ public class GameKeyEvent extends GameEvent {
         return this.action == action;
     }
 
-    public Key getKey() {
-        return key;
-    }
-
-    public Action getAction() {
-        return action;
-    }
-
-    public char getCharacter() {
-        return character;
-    }
-
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof GameKeyEvent oke))
-            return false;
-        return this.key == oke.key && this.action == oke.action && this.character == oke.character;
+        if (o instanceof GameKeyEvent that)
+            return this.key == that.key && this.action == that.action && this.character == that.character;
+        return false;
     }
 
     @Override

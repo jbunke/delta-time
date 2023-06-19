@@ -1,6 +1,6 @@
-package com.jordanbunke.jbjgl.game_world.map.pathfinding;
+package com.jordanbunke.jbjgl.ai.pathfinding;
 
-import com.jordanbunke.jbjgl.game_world.Coord2D;
+import com.jordanbunke.jbjgl.utility.Coord2D;
 
 public class PathfindingNode implements Comparable<PathfindingNode> {
     public final Coord2D coordinate;

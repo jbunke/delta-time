@@ -2,7 +2,7 @@ package com.jordanbunke.jbjgl.menus;
 
 import com.jordanbunke.jbjgl.io.InputEventLogger;
 import com.jordanbunke.jbjgl.menus.menu_elements.MenuElement;
-import com.jordanbunke.jbjgl.menus.menu_elements.MenuElementContainer;
+import com.jordanbunke.jbjgl.menus.menu_elements.container.MenuElementContainer;
 
 import java.util.ArrayList;
 import java.util.List;

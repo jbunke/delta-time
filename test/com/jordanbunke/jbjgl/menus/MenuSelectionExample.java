@@ -7,11 +7,12 @@ import com.jordanbunke.jbjgl.game.Game;
 import com.jordanbunke.jbjgl.game.GameManager;
 import com.jordanbunke.jbjgl.image.GameImage;
 import com.jordanbunke.jbjgl.menus.menu_elements.MenuElement;
-import com.jordanbunke.jbjgl.menus.menu_elements.MenuElementGrouping;
-import com.jordanbunke.jbjgl.menus.menu_elements.StaticMenuElement;
+import com.jordanbunke.jbjgl.menus.menu_elements.container.MenuElementGrouping;
+import com.jordanbunke.jbjgl.menus.menu_elements.visual.StaticMenuElement;
 import com.jordanbunke.jbjgl.menus.menu_elements.button.SimpleMenuButton;
 import com.jordanbunke.jbjgl.text.Text;
 import com.jordanbunke.jbjgl.text.TextBuilder;
+import com.jordanbunke.jbjgl.utility.Coord2D;
 
 import java.awt.*;
 
@@ -36,7 +37,7 @@ public class MenuSelectionExample {
     }
 
     private static MenuElementGrouping generateMenuElements() {
-        return MenuElementGrouping.generateOf(
+        return new MenuElementGrouping(
                 generateBackground(),
                 generateButton("Play", 0.3, 0.2),
                 generateButton("Settings", 0.5, 0.5),
@@ -46,15 +47,11 @@ public class MenuSelectionExample {
 
     private static StaticMenuElement generateBackground() {
         final GameImage background = new GameImage(CANVAS_W, CANVAS_H);
-        final Graphics g = background.getGraphics();
 
-        g.setColor(new Color(100, 0, 0, 255));
-        g.fillRect(0, 0, CANVAS_W, CANVAS_H);
+        background.fillRectangle(new Color(100, 0, 0, 255),
+                0, 0, CANVAS_W, CANVAS_H);
 
-        g.dispose();
-
-        return StaticMenuElement.generate(new int[] { 0, 0 },
-                MenuElement.Anchor.LEFT_TOP, background);
+        return new StaticMenuElement(new Coord2D(), MenuElement.Anchor.LEFT_TOP, background.submit());
     }
 
     private static SimpleMenuButton generateButton(
@@ -71,11 +68,9 @@ public class MenuSelectionExample {
                         Text.Orientation.CENTER, hc, font).addText(text).build().draw();
 
         return new SimpleMenuButton(
-                new int[] {
-                        (int)(CANVAS_W * x), (int)(CANVAS_H * y)
-                }, new int[] { nhi.getWidth() + 2, hi.getHeight() + 2 },
-                MenuElement.Anchor.CENTRAL,
-                true, () -> System.exit(0),
+                new Coord2D((int)(CANVAS_W * x), (int)(CANVAS_H * y)),
+                new Coord2D(nhi.getWidth() + 2, hi.getHeight() + 2),
+                MenuElement.Anchor.CENTRAL, true, () -> System.exit(0),
                 nhi, hi);
     }
 }

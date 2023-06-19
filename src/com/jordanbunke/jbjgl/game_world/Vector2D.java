@@ -29,6 +29,11 @@ public final class Vector2D extends Vector<Vector2D> {
     }
 
     @Override
+    public boolean equals(final Vector2D that) {
+        return that != null && this.x == that.x && this.y == that.y;
+    }
+
+    @Override
     public String toString() {
         return "x: " + x + ", y: " + y;
     }
