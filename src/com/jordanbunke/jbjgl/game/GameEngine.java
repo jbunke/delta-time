@@ -192,7 +192,7 @@ public class GameEngine implements Runnable {
         if (scaleUp) {
             final InputEventLogger eventLogger = window.getEventLogger();
             eventLogger.setScaleUpRatioX(window.getWidth() / (double)renderWidth);
-            eventLogger.setScaleUpRatioX(window.getHeight() / (double)renderHeight);
+            eventLogger.setScaleUpRatioY(window.getHeight() / (double)renderHeight);
         }
     }
 
