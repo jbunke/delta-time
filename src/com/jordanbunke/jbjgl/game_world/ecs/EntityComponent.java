@@ -11,7 +11,7 @@ public abstract class EntityComponent<E extends Vector<E>> {
 
     public void start() {}
 
-    public abstract void update();
+    public abstract void update(final double deltaTime);
 
     public GameEntity<E> getEntity() {
         return entity;

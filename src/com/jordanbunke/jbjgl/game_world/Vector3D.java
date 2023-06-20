@@ -23,7 +23,7 @@ public final class Vector3D extends Vector<Vector3D> {
     }
 
     public Vector3D displace(final Vector3D displacement) {
-        return displace(displacement.x, displacement.y, displacement.z);
+        return new Vector3D(x + displacement.x, y + displacement.y, z + displacement.z);
     }
 
     @Override

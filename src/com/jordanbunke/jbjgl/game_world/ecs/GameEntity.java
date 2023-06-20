@@ -69,7 +69,7 @@ public class GameEntity<E extends Vector<E>> {
         started = true;
     }
 
-    public void update() {
-        components.forEach(EntityComponent::update);
+    public void update(final double deltaTime) {
+        components.forEach(x -> x.update(deltaTime));
     }
 }

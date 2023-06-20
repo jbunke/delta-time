@@ -21,7 +21,7 @@ public final class Vector2D extends Vector<Vector2D> {
     }
 
     public Vector2D displace(final Vector2D displacement) {
-        return displace(displacement.x, displacement.y);
+        return new Vector2D(x + displacement.x, y + displacement.y);
     }
 
     public Vector2D scale(final double factor) {

@@ -4,6 +4,7 @@ import com.jordanbunke.jbjgl.image.GameImage;
 import com.jordanbunke.jbjgl.io.InputEventLogger;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class GameWindow {
     private final JFrame frame;
@@ -12,6 +13,12 @@ public class GameWindow {
 
     private final String title;
     private int width, height;
+
+    public GameWindow(final String title, final GameImage icon) {
+        this(title, Toolkit.getDefaultToolkit().getScreenSize().width,
+                Toolkit.getDefaultToolkit().getScreenSize().height,
+                icon, true);
+    }
 
     public GameWindow(final String title, final int width, final int height,
                       final GameImage icon, final boolean maximized) {
