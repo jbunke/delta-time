@@ -4,6 +4,7 @@ import com.jordanbunke.jbjgl.debug.GameDebugger;
 import com.jordanbunke.jbjgl.events.EventHandler;
 import com.jordanbunke.jbjgl.image.ImageProcessing;
 import com.jordanbunke.jbjgl.image.GameImage;
+import com.jordanbunke.jbjgl.io.InputEventLogger;
 import com.jordanbunke.jbjgl.window.GameWindow;
 
 import java.awt.*;
@@ -169,8 +170,10 @@ public class GameEngine implements Runnable {
 
         // Draw
         debugger.startTimer();
-        window.draw(scaleUp ? ImageProcessing.scaleUp(toDraw,
-                window.getWidth() / renderWidth) : toDraw);
+        final GameImage scaledToDraw = scaleUp
+                ? ImageProcessing.scale(toDraw, window.getWidth(), window.getHeight())
+                : toDraw;
+        window.draw(scaledToDraw);
         debugger.setDrawMillis();
     }
 
@@ -186,11 +189,11 @@ public class GameEngine implements Runnable {
         this.scaleUp = window.getWidth() != renderWidth ||
                 window.getHeight() != renderHeight;
 
-        if (scaleUp)
-            window.getEventLogger().setScaleUpRatio(
-                    window.getWidth() / (double)renderWidth,
-                    window.getHeight() / (double)renderHeight
-            );
+        if (scaleUp) {
+            final InputEventLogger eventLogger = window.getEventLogger();
+            eventLogger.setScaleUpRatioX(window.getWidth() / (double)renderWidth);
+            eventLogger.setScaleUpRatioX(window.getHeight() / (double)renderHeight);
+        }
     }
 
     // GETTERS

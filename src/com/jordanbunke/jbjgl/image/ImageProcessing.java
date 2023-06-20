@@ -22,14 +22,18 @@ public class ImageProcessing {
         return replacement.submit();
     }
 
-    public static GameImage scaleUp(final GameImage image, final int scaleFactor) {
+    public static GameImage scale(final GameImage image, final int scaleFactor) {
         final int width = image.getWidth() * scaleFactor, height = image.getHeight() * scaleFactor;
+        return scale(image, width, height);
+    }
+
+    public static GameImage scale(final GameImage image, final int width, final int height) {
         final GameImage scaledUp = new GameImage(width, height);
         scaledUp.draw(image, 0, 0, scaledUp.getWidth(), scaledUp.getHeight());
         return scaledUp.submit();
     }
 
-    public static GameImage scaleUp(
+    public static GameImage scale(
             final GameImage image, final double scaleFactor,
             final boolean smooth
     ) {

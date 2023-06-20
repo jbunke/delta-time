@@ -94,7 +94,7 @@ public class Text {
 
                 drawnLine.draw(scaleFactor == 1.
                                 ? drawnComponent
-                                : ImageProcessing.scaleUp(
+                                : ImageProcessing.scale(
                                     drawnComponent, scaleFactor,
                                     lines[i][j].getFont().hasSmoothResizing()),
                         processed, 0);

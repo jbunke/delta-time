@@ -247,8 +247,11 @@ public class InputEventLogger implements
         eventList.add(new GameWindowEvent(GameWindowEvent.Action.DEACTIVATED));
     }
 
-    public void setScaleUpRatio(final double scaleUpRatioX, final double scaleUpRatioY) {
+    public void setScaleUpRatioX(final double scaleUpRatioX) {
         this.scaleUpRatioX = scaleUpRatioX;
+    }
+
+    public void setScaleUpRatioY(final double scaleUpRatioY) {
         this.scaleUpRatioY = scaleUpRatioY;
     }
 }
