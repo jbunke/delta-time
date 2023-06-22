@@ -1,5 +1,6 @@
 package com.jordanbunke.jbjgl.image.sprite;
 
+import com.jordanbunke.jbjgl.debug.GameDebugger;
 import com.jordanbunke.jbjgl.fonts.FontsForTests;
 import com.jordanbunke.jbjgl.game.Game;
 import com.jordanbunke.jbjgl.game.GameEngine;
@@ -29,12 +30,13 @@ public class SpriteCompositionExample {
     private static final int WIDTH = 40, HEIGHT = 40, SCALE_UP = 15;
 
     private enum Layer {
-        BODY, HEAD
+        BODY, HEAD, HAIR_MASK, HELMET
     }
 
     public static void main(String[] args) {
         test("ff");
         test("kobold");
+        test("afro");
         test("greyscale");
     }
 
@@ -63,10 +65,11 @@ public class SpriteCompositionExample {
         );
         ge.setRenderDimension(WIDTH, HEIGHT);
         ge.getDebugger().hideBoundingBoxes();
+        ge.getDebugger().muteChannel(GameDebugger.FRAME_RATE);
         new Game(title, gm, ge);
 
-        spriteMap.assembler.disableLayer(Layer.HEAD);
-        spriteMap.spriteStates.removeMutuallyExclusiveContributors("back", "3");
+        spriteMap.assembler.disableLayer(Layer.HELMET);
+        spriteMap.assembler.disableLayer(Layer.HAIR_MASK);
         spriteMap.redraw();
         saveSpriteSheet(spriteMap, validSpriteIDs, prefix + "-redraw");
     }
@@ -79,31 +82,43 @@ public class SpriteCompositionExample {
                 colorNet = ResourceLoader.loadImageResource(Path.of("sprite", "spritemaps", "ff-color-net.png")),
                 palette = ResourceLoader.loadImageResource(Path.of("sprite", "spritemaps", prefix + "-palette.png")),
                 headFront = ResourceLoader.loadImageResource(Path.of("sprite", "single_sprites", prefix + "-head-front.png")),
-                headBack = ResourceLoader.loadImageResource(Path.of("sprite", "single_sprites", prefix + "-head-back.png"));
+                headBack = ResourceLoader.loadImageResource(Path.of("sprite", "single_sprites", prefix + "-head-back.png")),
+                hairMaskFront = ResourceLoader.loadImageResource(Path.of("sprite", "single_sprites", "hair-mask-front.png")),
+                hairMaskBack = ResourceLoader.loadImageResource(Path.of("sprite", "single_sprites", "hair-mask-back.png")),
+                butterHelmSource = ResourceLoader.loadImageResource(Path.of("sprite", "spritesheets", "butter-helm.png"));
 
         final GameImage composedRunningFrames = SpriteComposer.compose(spriteSheet, colorNet, palette);
 
         final SpriteSheet runningSpriteSheet = new SpriteSheet(composedRunningFrames, WIDTH, HEIGHT);
         final InterpretedSpriteSheet<String> body = new InterpretedSpriteSheet<>(
                 runningSpriteSheet, id -> {
-            final int x = Integer.parseInt(SpriteStates.extractContributor(FRAME, id)) - 1;
-            return new Coord2D(x, SpriteStates.extractContributor(DIRECTION, id).equals("front") ? 0 : 1);
-        }
-        );
+                    final int x = Integer.parseInt(SpriteStates.extractContributor(FRAME, id)) - 1;
+                    return new Coord2D(x, SpriteStates.extractContributor(DIRECTION, id).equals("front") ? 0 : 1);
+        });
 
         final Function<String, Coord2D> headBobbing =
-                x -> SpriteStates.extractContributor(STATE, x).equals("running") &&
-                        SpriteStates.extractContributor(FRAME, x).equals("3")
-                        ? new Coord2D(0, 1)
-                        : new Coord2D();
+                x -> SpriteStates.matchesAllContributors(new String[] { "running", "3" },
+                        new int[] { STATE, FRAME }, x) ? new Coord2D(0, 1) : new Coord2D();
         final DecisionSpriteConstituent<String> head = new DecisionSpriteConstituent<>(
                 x -> SpriteStates.extractContributor(DIRECTION, x).equals("front") ? 0 : 1,
                 new OffsetSingleSpriteConstituent<>(headFront, headBobbing),
                 new OffsetSingleSpriteConstituent<>(headBack, headBobbing));
+        final DecisionSpriteConstituent<String> hairMask = new DecisionSpriteConstituent<>(
+                x -> SpriteStates.extractContributor(DIRECTION, x).equals("front") ? 0 : 1,
+                new OffsetSingleSpriteConstituent<>(hairMaskFront, headBobbing),
+                new OffsetSingleSpriteConstituent<>(hairMaskBack, headBobbing));
+        final InterpretedSpriteSheet<String> helmet = new InterpretedSpriteSheet<>(
+                new SpriteSheet(butterHelmSource, WIDTH, HEIGHT),
+                id -> new Coord2D(
+                        SpriteStates.extractContributor(DIRECTION, id).equals("front") ? 0 : 1,
+                        SpriteStates.extractContributor(FRAME, id).equals("3") ? 1 : 0
+                ));
 
         final SpriteAssembler<Layer, String> assembler = new SpriteAssembler<>(WIDTH, HEIGHT);
         assembler.addLayer(Layer.BODY, body);
         assembler.addLayer(Layer.HEAD, head);
+        assembler.addMask(Layer.HAIR_MASK, x -> x.getAlpha() > 0, hairMask, Layer.HEAD);
+        assembler.addLayer(Layer.HELMET, helmet);
 
         return assembler;
     }
@@ -129,7 +144,7 @@ public class SpriteCompositionExample {
     private static GameImage drawText(final String text) {
         return new TextBuilder(
                 1.0, Text.Orientation.LEFT, new Color(0, 0, 0),
-                FontsForTests.MY_HANDWRITING.getStandard()
+                FontsForTests.CLASSIC.getStandard()
         ).addText(text).build().draw();
     }
 }

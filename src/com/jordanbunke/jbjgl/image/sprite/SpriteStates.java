@@ -156,4 +156,26 @@ public class SpriteStates<R> {
     ) {
         return extractContributor(STANDARD_SEPARATOR, i, spriteID);
     }
+
+    public static boolean matchesAllContributors(
+            final String separator, final String[] matchValues,
+            final int[] contributorIndices, final String spriteID
+    ) {
+        if (contributorIndices.length != matchValues.length)
+            return false;
+
+        for (int i = 0; i < matchValues.length; i++)
+            if (!matchValues[i].equals(extractContributor(
+                    separator, contributorIndices[i], spriteID)))
+                return false;
+
+        return true;
+    }
+
+    public static boolean matchesAllContributors(
+            final String[] matchValues, final int[] contributorIndices,
+            final String spriteID
+    ) {
+        return matchesAllContributors(STANDARD_SEPARATOR, matchValues, contributorIndices, spriteID);
+    }
 }
