@@ -1,5 +1,7 @@
 package com.jordanbunke.jbjgl.image;
 
+import com.jordanbunke.jbjgl.utility.Coord2D;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -83,5 +85,13 @@ public class GameImage extends BufferedImage {
     public GameImage submit() {
         free();
         return this;
+    }
+
+    public GameImage section(final Coord2D topLeft, final Coord2D bottomRight) {
+        return section(topLeft.x, topLeft.y, bottomRight.x, bottomRight.y);
+    }
+
+    public GameImage section(final int left, final int top, final int right, final int bottom) {
+        return new GameImage(this.getSubimage(left, top, right - left, bottom - top));
     }
 }

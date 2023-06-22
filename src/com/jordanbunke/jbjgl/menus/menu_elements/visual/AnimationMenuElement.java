@@ -17,7 +17,7 @@ public class AnimationMenuElement extends MenuElement {
 
     public AnimationMenuElement(
             final Coord2D position, final Coord2D dimensions, final Anchor anchor,
-            final int[] frameTimings, final GameImage[] frames
+            final int[] frameTimings, final GameImage... frames
     ) {
         super(position, dimensions, anchor, true);
 
@@ -29,7 +29,7 @@ public class AnimationMenuElement extends MenuElement {
 
     public AnimationMenuElement(
             final Coord2D position, final Coord2D dimensions, final Anchor anchor,
-            final int ticksPerFrame, final GameImage[] frames
+            final int ticksPerFrame, final GameImage... frames
     ) {
         this(position, dimensions, anchor, consistentFrameTimings(ticksPerFrame, frames.length), frames);
     }
