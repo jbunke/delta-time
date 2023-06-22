@@ -11,13 +11,15 @@ import java.util.List;
 import java.util.function.Function;
 
 public class SpriteAssembler<T, R> {
-    private static final Function<Color, Boolean> IDENTITY_MASK = x -> false;
+    private static final Function<Color, Boolean> TRIVIAL_FILTER = x -> false;
+    private static final Function<Color, Color> IDENTITY_FILTER = x -> x;
 
     private final Map<T, SpriteConstituent<R>> layerMap;
     private final Map<T, Boolean> layerIsEnabledMap;
     private final Map<T, Function<Color, Boolean>> maskFunctionMap;
+    private final Map<T, Function<Color, Color>> filterFunctionMap;
     private final List<T> layerIDs;
-    private final Map<T, T> layerMaskMap;
+    private final Map<T, T> layerMaskMap, layerFilterMap;
 
     private final int singleSpriteWidth, singleSpriteHeight;
 
@@ -38,8 +40,12 @@ public class SpriteAssembler<T, R> {
         this.layerIDs = new ArrayList<>();
         this.layerMap = new HashMap<>();
         this.layerIsEnabledMap = new HashMap<>();
+
         this.maskFunctionMap = new HashMap<>();
         this.layerMaskMap = new HashMap<>();
+
+        this.filterFunctionMap = new HashMap<>();
+        this.layerFilterMap = new HashMap<>();
 
         for (int i = 0; i < size; i++) {
             final T layerID = layerIDs.get(i);
@@ -50,7 +56,6 @@ public class SpriteAssembler<T, R> {
             this.layerIDs.add(layerID);
             this.layerIsEnabledMap.put(layerID, true);
             this.layerMap.put(layerID, layers[i]);
-            this.maskFunctionMap.put(layerID, IDENTITY_MASK);
         }
     }
 
@@ -59,19 +64,48 @@ public class SpriteAssembler<T, R> {
 
         for (T layerID : layerIDs)
             if (layerIsEnabledMap.containsKey(layerID) && layerIsEnabledMap.get(layerID)) {
+                // gets sprite from constituent
                 GameImage layer = layerMap.get(layerID).getSprite(spriteID);
 
+                // filter application
+                if (layerFilterMap.containsKey(layerID)) {
+                    final T filterID = layerFilterMap.get(layerID);
+
+                    final boolean filterIsEnabled = layerIsEnabledMap.containsKey(filterID) &&
+                                    layerIsEnabledMap.get(filterID),
+                            notCalledOnItself = !filterID.equals(layerID),
+                            notTrivial = filterFunctionMap.containsKey(filterID) &&
+                                    !filterFunctionMap.get(filterID).equals(IDENTITY_FILTER);
+
+                    if (filterIsEnabled && notCalledOnItself && notTrivial) {
+                        final Function<Color, Color> filterFunction = filterFunctionMap.get(filterID);
+
+                        final int width = layer.getWidth(), height = layer.getHeight();
+                        final GameImage filteredLayer = new GameImage(width, height);
+
+                        for (int x = 0; x < width; x++) {
+                            for (int y = 0; y < height; y++) {
+                                final Color sample = ImageProcessing.colorAtPixel(layer, x, y);
+                                filteredLayer.dot(filterFunction.apply(sample), x, y);
+                            }
+                        }
+
+                        layer = filteredLayer.submit();
+                    }
+                }
+
+                // mask application
                 if (layerMaskMap.containsKey(layerID)) {
                     final T maskID = layerMaskMap.get(layerID);
 
-                    final boolean maskIsLayer = layerMap.containsKey(maskID),
+                    final boolean maskIsALayer = layerMap.containsKey(maskID),
                             maskIsEnabled = layerIsEnabledMap.containsKey(maskID) &&
                                     layerIsEnabledMap.get(maskID),
                             notCalledOnItself = !maskID.equals(layerID),
                             notTrivial = maskFunctionMap.containsKey(maskID) &&
-                                    !maskFunctionMap.get(maskID).equals(IDENTITY_MASK);
+                                    !maskFunctionMap.get(maskID).equals(TRIVIAL_FILTER);
 
-                    if (maskIsLayer && maskIsEnabled && notCalledOnItself && notTrivial) {
+                    if (maskIsALayer && maskIsEnabled && notCalledOnItself && notTrivial) {
                         final Function<Color, Boolean> maskFunction = maskFunctionMap.get(maskID);
                         final GameImage maskImage = layerMap.get(maskID).getSprite(spriteID);
 
@@ -120,6 +154,42 @@ public class SpriteAssembler<T, R> {
             return true;
         }
 
+        return removeMask(layerID) || removeFilter(layerID);
+    }
+
+    public boolean removeMask(final T maskID) {
+        if (maskFunctionMap.containsKey(maskID)) {
+            layerIsEnabledMap.remove(maskID);
+            layerMap.remove(maskID);
+            maskFunctionMap.remove(maskID);
+
+            final Set<T> layerIDs = new HashSet<>(layerMaskMap.keySet());
+
+            for (T layerID : layerIDs)
+                if (layerMaskMap.containsKey(layerID) && layerMaskMap.get(layerID).equals(maskID))
+                    layerMaskMap.remove(layerID);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean removeFilter(final T filterID) {
+        if (filterFunctionMap.containsKey(filterID)) {
+            layerIsEnabledMap.remove(filterID);
+            layerMap.remove(filterID);
+            filterFunctionMap.remove(filterID);
+
+            final Set<T> layerIDs = new HashSet<>(layerFilterMap.keySet());
+
+            for (T layerID : layerIDs)
+                if (layerFilterMap.containsKey(layerID) && layerFilterMap.get(layerID).equals(filterID))
+                    layerFilterMap.remove(layerID);
+
+            return true;
+        }
+
         return false;
     }
 
@@ -150,7 +220,7 @@ public class SpriteAssembler<T, R> {
     ) {
         if (!layerIDs.contains(appliedToLayerID)) {
             GameError.send(
-                    "(caution) The layer this mask filter is trying to apply itself to (\"" +
+                    "(caution) The layer this mask is trying to apply itself to (\"" +
                             appliedToLayerID + "\") is not in the assembler yet."
             );
         }
@@ -161,21 +231,25 @@ public class SpriteAssembler<T, R> {
         layerIsEnabledMap.put(maskID, true);
     }
 
-    public boolean removeMask(final T maskID) {
-        if (maskFunctionMap.containsKey(maskID)) {
-            layerIsEnabledMap.remove(maskID);
-            layerMap.remove(maskID);
-            maskFunctionMap.remove(maskID);
+    public void addMask(
+            final T maskID, final SpriteConstituent<R> mask, final T appliedToLayerID
+    ) {
+        addMask(maskID, x -> x.getAlpha() > 0, mask, appliedToLayerID);
+    }
 
-            final Set<T> layerIDs = new HashSet<>(layerMaskMap.keySet());
-
-            for (T layerID : layerIDs)
-                if (layerMaskMap.containsKey(layerID) && layerMaskMap.get(layerID).equals(maskID))
-                    layerMaskMap.remove(layerID);
-
-            return true;
+    public void addFilter(
+            final T filterID, final Function<Color, Color> filterFunction,
+            final T appliedToLayerID
+    ) {
+        if (!layerIDs.contains(appliedToLayerID)) {
+            GameError.send(
+                    "(caution) The layer this filter is trying to apply itself to (\"" +
+                            appliedToLayerID + "\") is not in the assembler yet."
+            );
         }
 
-        return false;
+        filterFunctionMap.put(filterID, filterFunction);
+        layerFilterMap.put(appliedToLayerID, filterID);
+        layerIsEnabledMap.put(filterID, true);
     }
 }
