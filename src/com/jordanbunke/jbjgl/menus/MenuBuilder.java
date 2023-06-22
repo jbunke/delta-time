@@ -25,6 +25,10 @@ public class MenuBuilder {
         return new Menu(selectionLogic, menuElements.toArray(new MenuElement[0]));
     }
 
+    public Menu build() {
+        return new Menu(menuElements.toArray(new MenuElement[0]));
+    }
+
     public MenuBuilder add(final MenuElement toAdd) {
         if (toAdd instanceof MenuElementContainer container) {
             final MenuElement[] contained = container.getMenuElements();

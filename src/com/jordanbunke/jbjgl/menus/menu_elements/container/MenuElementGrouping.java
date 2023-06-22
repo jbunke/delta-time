@@ -11,7 +11,7 @@ public class MenuElementGrouping extends MenuElementContainer {
     private final MenuElement[] menuElements;
 
     public MenuElementGrouping(final MenuElement... menuElements) {
-        super(new Coord2D(), new Coord2D(1, 1), Anchor.LEFT_TOP, false);
+        super(new Coord2D(), new Coord2D(), Anchor.LEFT_TOP, false);
 
         this.menuElements = menuElements;
     }
