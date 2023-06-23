@@ -121,7 +121,7 @@ public class SpriteStatesTests {
         final GameEngine ge = new GameEngine(new GameWindow(
                 title, 2 * s * scaleUp, 2 * s * scaleUp,
                 GameImage.dummy(), false), gm, 10d, 60d);
-        ge.setRenderDimension(2 * s, 2 * s);
+        ge.setCanvasSize(2 * s, 2 * s);
         ge.getDebugger().hideBoundingBoxes();
         new Game(title, gm, ge);
     }

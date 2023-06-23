@@ -39,10 +39,9 @@ public class SpriteCompositionExample {
     }
 
     public static void main(String[] args) {
-        test("ff", RNG.prob(0.7), RNG.flipCoin());
-        test("kobold", RNG.prob(0.4), RNG.flipCoin());
-        test("afro", false, false);
-        test("greyscale", RNG.flipCoin(), RNG.flipCoin());
+        test("ff", false, false);
+        test("kobold", RNG.prob(0.7), true);
+        test("afro", true, false);
     }
 
     private static void test(
@@ -71,9 +70,9 @@ public class SpriteCompositionExample {
         final GameManager gm = new GameManager(0, menu);
         final GameEngine ge = new GameEngine(
                 new GameWindow(title, WIDTH * SCALE_UP, HEIGHT * SCALE_UP,
-                GameImage.dummy(), false, true, false), gm, 10d, 60d
+                GameImage.dummy(), false), gm, 10d, 60d
         );
-        ge.setRenderDimension(WIDTH, HEIGHT);
+        ge.setCanvasSize(WIDTH, HEIGHT);
         ge.getDebugger().hideBoundingBoxes();
         ge.getDebugger().muteChannel(GameDebugger.FRAME_RATE);
         new Game(title, gm, ge);

@@ -31,7 +31,7 @@ public class PerformanceExample {
         final GameEngine engine = new GameEngine(window, manager, REFRESH_RATE_HZ, FPS);
 
         exampleGame = new Game("Example", manager, engine);
-        engine.setRenderDimension(CANVAS_W, CANVAS_H);
+        engine.setCanvasSize(CANVAS_W, CANVAS_H);
     }
 
     private static class GameContext extends ProgramContext {

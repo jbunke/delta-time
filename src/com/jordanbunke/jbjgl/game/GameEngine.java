@@ -18,7 +18,7 @@ public class GameEngine implements Runnable {
     // Fields
     private GameWindow window;
     private final Thread updateThread;
-    private int renderWidth, renderHeight;
+    private int canvasWidth, canvasHeight;
     private boolean scaleUp, running;
 
     // 3 interfaces ideally implemented as a single game manager
@@ -36,8 +36,8 @@ public class GameEngine implements Runnable {
         this.window = window;
         updateThread = new Thread(this, "[ \"" + window.getTitle() + "\" game loop ]");
 
-        renderWidth = window.getWidth();
-        renderHeight = window.getHeight();
+        canvasWidth = window.getWidth();
+        canvasHeight = window.getHeight();
         scaleUp = false;
 
         this.eventHandler = eventHandler;
@@ -67,14 +67,14 @@ public class GameEngine implements Runnable {
     }
 
     public void replaceWindow(final GameWindow replacement) {
-        final boolean adjustSize = window.getWidth() == renderWidth &&
-                window.getHeight() == renderHeight;
+        final boolean adjustSize = window.getWidth() == canvasWidth &&
+                window.getHeight() == canvasHeight;
 
         window.closeInstance();
         window = replacement;
 
         if (adjustSize)
-            setRenderDimension(window.getWidth(), window.getHeight());
+            setCanvasSize(window.getWidth(), window.getHeight());
     }
 
     @Override
@@ -162,18 +162,17 @@ public class GameEngine implements Runnable {
     private void render() {
         // Render
         debugger.startTimer();
-        GameImage toDraw = new GameImage(renderWidth, renderHeight);
-        Graphics2D g = toDraw.g();
+        final GameImage canvas = new GameImage(canvasWidth, canvasHeight);
+        Graphics2D g = canvas.g();
         renderer.render(g);
         renderer.debugRender(g, debugger);
         debugger.setRenderMillis();
 
         // Draw
         debugger.startTimer();
-        final GameImage scaledToDraw = scaleUp
-                ? ImageProcessing.scale(toDraw, window.getWidth(), window.getHeight())
-                : toDraw;
-        window.draw(scaledToDraw);
+        window.draw(scaleUp
+                ? ImageProcessing.scale(canvas, window.getWidth(), window.getHeight())
+                : canvas);
         debugger.setDrawMillis();
     }
 
@@ -182,17 +181,17 @@ public class GameEngine implements Runnable {
         this.debugger = debugger;
     }
 
-    public void setRenderDimension(final int renderWidth, final int renderHeight) {
-        this.renderWidth = renderWidth;
-        this.renderHeight = renderHeight;
+    public void setCanvasSize(final int canvasWidth, final int canvasHeight) {
+        this.canvasWidth = canvasWidth;
+        this.canvasHeight = canvasHeight;
 
-        this.scaleUp = window.getWidth() != renderWidth ||
-                window.getHeight() != renderHeight;
+        this.scaleUp = window.getWidth() != canvasWidth ||
+                window.getHeight() != canvasHeight;
 
         if (scaleUp) {
             final InputEventLogger eventLogger = window.getEventLogger();
-            eventLogger.setScaleUpRatioX(window.getWidth() / (double)renderWidth);
-            eventLogger.setScaleUpRatioY(window.getHeight() / (double)renderHeight);
+            eventLogger.setScaleUpRatioX(window.getWidth() / (double)canvasWidth);
+            eventLogger.setScaleUpRatioY(window.getHeight() / (double)canvasHeight);
         }
     }
 
