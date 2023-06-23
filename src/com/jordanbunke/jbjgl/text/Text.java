@@ -9,8 +9,10 @@ import java.util.List;
 import static com.jordanbunke.jbjgl.fonts.FontConstants.LINE_HEIGHT;
 
 public class Text {
+    static final double DEFAULT_LINE_SPACING = 1d;
+
     private final TextComponent[][] lines;
-    private final double textSize;
+    private final double textSize, lineSpacing;
     private final int widthAllowance;
     private final boolean componentsSplittable;
     private final Orientation orientation;
@@ -19,10 +21,14 @@ public class Text {
         LEFT, CENTER, RIGHT
     }
 
-    private Text(final TextConstituent[] blocks, final double textSize,
-                 final int widthAllowance, boolean componentsSplittable,
-                 Orientation orientation) {
+    private Text(
+            final TextConstituent[] blocks,
+            final double textSize, final double lineSpacing,
+            final int widthAllowance, boolean componentsSplittable,
+            final Orientation orientation
+    ) {
         this.textSize = textSize;
+        this.lineSpacing = lineSpacing;
         this.widthAllowance = widthAllowance;
         this.componentsSplittable = componentsSplittable;
         this.orientation = orientation;
@@ -31,10 +37,17 @@ public class Text {
     }
 
     public Text(
+            final double textSize, final double lineSpacing, final Orientation orientation,
+            final TextConstituent... blocks
+    ) {
+        this(blocks, textSize, lineSpacing, -1, false, orientation);
+    }
+
+    public Text(
             final double textSize, final Orientation orientation,
             final TextConstituent... blocks
     ) {
-        this(blocks, textSize, -1, false, orientation);
+        this(blocks, textSize, DEFAULT_LINE_SPACING, -1, false, orientation);
     }
 
     private TextComponent[][] setLines(final TextConstituent[] blocks) {
@@ -70,7 +83,7 @@ public class Text {
     }
 
     public GameImage draw() {
-        GameImage[] drawnLines = new GameImage[lines.length];
+        final GameImage[] drawnLines = new GameImage[lines.length];
         int maxWidth = 1;
 
         for (int i = 0; i < lines.length; i++) {
@@ -82,7 +95,7 @@ public class Text {
 
             width = Math.max(width, 1);
 
-            GameImage drawnLine = new GameImage(width, (int)(textSize * LINE_HEIGHT));
+            final GameImage drawnLine = new GameImage(width, (int)(textSize * LINE_HEIGHT));
 
             maxWidth = Math.max(maxWidth, width);
 
@@ -104,7 +117,7 @@ public class Text {
             drawnLines[i] = drawnLine.submit();
         }
 
-        final GameImage image = new GameImage(maxWidth, lines.length * (int)(textSize * LINE_HEIGHT));
+        final GameImage image = new GameImage(maxWidth, lines.length * (int)(textSize * LINE_HEIGHT * lineSpacing));
 
         int drawnHeight = 0;
 
@@ -115,7 +128,7 @@ public class Text {
                 case CENTER -> image.draw(drawnLine, (maxWidth - drawnLine.getWidth()) / 2, drawnHeight);
             }
 
-            drawnHeight += drawnLine.getHeight();
+            drawnHeight += (int)(drawnLine.getHeight() * lineSpacing);
         }
 
         return image.submit();

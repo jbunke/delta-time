@@ -8,7 +8,7 @@ import java.util.List;
 
 public class TextBuilder {
     private final List<TextConstituent> textBlocks;
-    private final double textSize;
+    private final double textSize, lineSpacing;
     private final Text.Orientation orientation;
     private Color currentColor;
     private Font currentFont;
@@ -17,7 +17,17 @@ public class TextBuilder {
             final double textSize, final Text.Orientation orientation,
             final Color initialColor, final Font initialFont
     ) {
+        this(textSize, Text.DEFAULT_LINE_SPACING, orientation,
+                initialColor, initialFont);
+    }
+
+    public TextBuilder(
+            final double textSize, final double lineSpacing,
+            final Text.Orientation orientation,
+            final Color initialColor, final Font initialFont
+    ) {
         this.textSize = textSize;
+        this.lineSpacing = lineSpacing;
         this.orientation = orientation;
         currentColor = initialColor;
         currentFont = initialFont;
@@ -26,8 +36,7 @@ public class TextBuilder {
     }
 
     public Text build() {
-        TextConstituent[] textBlockArray = new TextConstituent[textBlocks.size()];
-        return new Text(textSize, orientation, textBlocks.toArray(textBlockArray));
+        return new Text(textSize, lineSpacing, orientation, textBlocks.toArray(TextConstituent[]::new));
     }
 
     public TextBuilder setColor(final Color currentColor) {
