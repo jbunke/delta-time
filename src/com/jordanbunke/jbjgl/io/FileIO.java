@@ -77,12 +77,6 @@ public class FileIO {
         writeFile(filepath, lines, false);
     }
 
-    public static void makeDirectory(final Path filepath) {
-        final File directory = filepath.toFile();
-
-        if (!directory.exists()) directory.mkdirs();
-    }
-
     public static void deleteFile(final Path filepath) {
         try {
             Files.delete(filepath);

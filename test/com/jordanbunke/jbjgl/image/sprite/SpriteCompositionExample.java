@@ -39,13 +39,16 @@ public class SpriteCompositionExample {
     }
 
     public static void main(String[] args) {
-        test("ff");
-        test("kobold");
-        test("afro");
-        test("greyscale");
+        test("ff", RNG.prob(0.7), RNG.flipCoin());
+        test("kobold", RNG.prob(0.4), RNG.flipCoin());
+        test("afro", false, false);
+        test("greyscale", RNG.flipCoin(), RNG.flipCoin());
     }
 
-    private static void test(final String prefix) {
+    private static void test(
+            final String prefix,
+            final boolean hasHelmet, final boolean hasHelmetDamage
+    ) {
         final String title = "Sprite Generation Test: " + prefix;
 
         final SpriteStates<String> states = new SpriteStates<>(
@@ -55,7 +58,9 @@ public class SpriteCompositionExample {
         );
         final List<String> validSpriteIDs = states.getValidSpriteIDs();
 
-        final SpriteMap<Layer> spriteMap = new SpriteMap<>(buildAssembler(prefix), states);
+        final SpriteMap<Layer> spriteMap = new SpriteMap<>(
+                buildAssembler(prefix, hasHelmet, hasHelmetDamage), states
+        );
         saveSpriteSheet(spriteMap, validSpriteIDs, prefix);
 
         final Menu menu = new MenuBuilder().add(new AnimationMenuElement(
@@ -79,7 +84,9 @@ public class SpriteCompositionExample {
         saveSpriteSheet(spriteMap, validSpriteIDs, prefix + "-redraw");
     }
 
-    private static SpriteAssembler<Layer, String> buildAssembler(final String prefix) {
+    private static SpriteAssembler<Layer, String> buildAssembler(
+            final String prefix, final boolean hasHelmet, final boolean hasHelmetDamage
+    ) {
         final int DIRECTION = 0, STATE = 1, FRAME = 2;
 
         final GameImage
@@ -129,10 +136,15 @@ public class SpriteCompositionExample {
         final SpriteAssembler<Layer, String> assembler = new SpriteAssembler<>(WIDTH, HEIGHT);
         assembler.addLayer(Layer.BODY, body);
         assembler.addLayer(Layer.HEAD, head);
-        assembler.addMask(Layer.HAIR_MASK, hairMask, Layer.HEAD);
-        assembler.addLayer(Layer.HELMET, helmet);
-        assembler.addMask(Layer.HELMET_MASK, helmetDamage, Layer.HELMET);
-        assembler.addFilter(Layer.HELMET_FILTER, RNG.flipCoin() ? ODDBALL : NONE, Layer.HELMET);
+
+        if (hasHelmet) {
+            assembler.addMask(Layer.HAIR_MASK, hairMask, Layer.HEAD);
+            assembler.addLayer(Layer.HELMET, helmet);
+            assembler.addFilter(Layer.HELMET_FILTER, RNG.flipCoin() ? ODDBALL : NONE, Layer.HELMET);
+
+            if (hasHelmetDamage)
+                assembler.addMask(Layer.HELMET_MASK, helmetDamage, Layer.HELMET);
+        }
 
         return assembler;
     }
