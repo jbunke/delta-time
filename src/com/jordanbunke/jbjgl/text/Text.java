@@ -119,7 +119,7 @@ public class Text {
 
         final GameImage image = new GameImage(maxWidth, lines.length * (int)(textSize * LINE_HEIGHT * lineSpacing));
 
-        int drawnHeight = 0;
+        int drawnHeight = (int)((lineSpacing - DEFAULT_LINE_SPACING) * 0.5 * textSize * LINE_HEIGHT);
 
         for (GameImage drawnLine : drawnLines) {
             switch (orientation) {
