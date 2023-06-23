@@ -7,7 +7,6 @@ import com.jordanbunke.jbjgl.io.InputEventLogger;
 import com.jordanbunke.jbjgl.menus.menu_elements.MenuElement;
 import com.jordanbunke.jbjgl.utility.Coord2D;
 
-import java.awt.*;
 import java.util.Arrays;
 
 public class AnimationMenuElement extends MenuElement {
@@ -60,13 +59,13 @@ public class AnimationMenuElement extends MenuElement {
     }
 
     @Override
-    public void render(final Graphics2D g) {
-        draw(frames[frameIndex], g);
+    public void render(final GameImage canvas) {
+        draw(frames[frameIndex], canvas);
     }
 
     @Override
-    public void debugRender(final Graphics2D g, final GameDebugger debugger) {
-        renderBoundingBox(g, debugger);
+    public void debugRender(final GameImage canvas, final GameDebugger debugger) {
+        renderBoundingBox(canvas, debugger);
     }
 
     @Override

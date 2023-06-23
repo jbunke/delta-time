@@ -2,12 +2,10 @@ package com.jordanbunke.jbjgl.game;
 
 import com.jordanbunke.jbjgl.debug.GameDebugger;
 import com.jordanbunke.jbjgl.events.EventHandler;
-import com.jordanbunke.jbjgl.image.ImageProcessing;
 import com.jordanbunke.jbjgl.image.GameImage;
+import com.jordanbunke.jbjgl.image.ImageProcessing;
 import com.jordanbunke.jbjgl.io.InputEventLogger;
 import com.jordanbunke.jbjgl.window.GameWindow;
-
-import java.awt.*;
 
 public class GameEngine implements Runnable {
     private static final double STANDARD_UPDATE_HZ = 100d, STANDARD_FPS = 60d;
@@ -163,16 +161,15 @@ public class GameEngine implements Runnable {
         // Render
         debugger.startTimer();
         final GameImage canvas = new GameImage(canvasWidth, canvasHeight);
-        Graphics2D g = canvas.g();
-        renderer.render(g);
-        renderer.debugRender(g, debugger);
+        renderer.render(canvas);
+        renderer.debugRender(canvas, debugger);
         debugger.setRenderMillis();
 
         // Draw
         debugger.startTimer();
         window.draw(scaleUp
                 ? ImageProcessing.scale(canvas, window.getWidth(), window.getHeight())
-                : canvas);
+                : canvas.submit());
         debugger.setDrawMillis();
     }
 

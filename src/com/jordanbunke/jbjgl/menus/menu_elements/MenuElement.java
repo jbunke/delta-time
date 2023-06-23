@@ -7,7 +7,7 @@ import com.jordanbunke.jbjgl.utility.Coord2D;
 
 import java.awt.*;
 
-public abstract class MenuElement extends ProgramContext {
+public abstract class MenuElement implements ProgramContext {
     private Coord2D position;
     private final Coord2D dimensions;
     private final Anchor anchor;
@@ -44,14 +44,14 @@ public abstract class MenuElement extends ProgramContext {
         this.visible = visible;
     }
 
-    public void draw(final GameImage image, final Graphics2D g) {
+    public void draw(final GameImage image, final GameImage canvas) {
         if (!visible)
             return;
 
         final Coord2D offset = new Coord2D((dimensions.x - image.getWidth()) / 2,
                 (dimensions.y - image.getHeight()) / 2);
         final Coord2D renderPosition = getRenderPosition(offset);
-        g.drawImage(image, renderPosition.x, renderPosition.y, null);
+        canvas.draw(image, renderPosition.x, renderPosition.y);
     }
 
     public Coord2D getRenderPosition(final Coord2D offset) {
@@ -81,12 +81,14 @@ public abstract class MenuElement extends ProgramContext {
                 mousePosition.y >= min.y && mousePosition.y < max.y;
     }
 
-    public void renderBoundingBox(final Graphics2D g, final GameDebugger debugger) {
+    public void renderBoundingBox(final GameImage canvas, final GameDebugger debugger) {
         if (debugger == null || !debugger.isShowingBoundingBoxes() || !visible)
             return;
 
         final Coord2D renderPosition = getRenderPosition(new Coord2D());
-        g.setColor(new Color(0, 255, 0, 255));
+        canvas.setColor(new Color(0, 255, 0, 255));
+
+        final Graphics2D g = canvas.g();
         g.setStroke(new BasicStroke(1));
         g.drawRect(renderPosition.x, renderPosition.y,
                 dimensions.x - 1, dimensions.y - 1);

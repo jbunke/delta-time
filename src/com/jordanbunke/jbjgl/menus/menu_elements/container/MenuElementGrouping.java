@@ -1,11 +1,10 @@
 package com.jordanbunke.jbjgl.menus.menu_elements.container;
 
 import com.jordanbunke.jbjgl.debug.GameDebugger;
+import com.jordanbunke.jbjgl.image.GameImage;
 import com.jordanbunke.jbjgl.io.InputEventLogger;
 import com.jordanbunke.jbjgl.menus.menu_elements.MenuElement;
 import com.jordanbunke.jbjgl.utility.Coord2D;
-
-import java.awt.*;
 
 public class MenuElementGrouping extends MenuElementContainer {
     private final MenuElement[] menuElements;
@@ -23,15 +22,15 @@ public class MenuElementGrouping extends MenuElementContainer {
     }
 
     @Override
-    public void render(final Graphics2D g) {
+    public void render(final GameImage canvas) {
         for (MenuElement menuElement : menuElements)
-            menuElement.render(g);
+            menuElement.render(canvas);
     }
 
     @Override
-    public void debugRender(final Graphics2D g, final GameDebugger debugger) {
+    public void debugRender(final GameImage canvas, final GameDebugger debugger) {
         for (MenuElement menuElement : menuElements)
-            menuElement.debugRender(g, debugger);
+            menuElement.debugRender(canvas, debugger);
     }
 
     @Override

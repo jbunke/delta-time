@@ -4,8 +4,6 @@ import com.jordanbunke.jbjgl.debug.GameDebugger;
 import com.jordanbunke.jbjgl.image.GameImage;
 import com.jordanbunke.jbjgl.utility.Coord2D;
 
-import java.awt.*;
-
 public class SimpleMenuButton extends MenuButton {
     private final GameImage nonHighlightedImage, highlightedImage;
 
@@ -28,12 +26,12 @@ public class SimpleMenuButton extends MenuButton {
     }
 
     @Override
-    public void render(final Graphics2D g) {
-        draw(isHighlighted() ? highlightedImage : nonHighlightedImage, g);
+    public void render(final GameImage canvas) {
+        draw(isHighlighted() ? highlightedImage : nonHighlightedImage, canvas);
     }
 
     @Override
-    public void debugRender(final Graphics2D g, final GameDebugger debugger) {
-        renderBoundingBox(g, debugger);
+    public void debugRender(final GameImage canvas, final GameDebugger debugger) {
+        renderBoundingBox(canvas, debugger);
     }
 }

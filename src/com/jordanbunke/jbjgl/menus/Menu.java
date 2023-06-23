@@ -2,14 +2,14 @@ package com.jordanbunke.jbjgl.menus;
 
 import com.jordanbunke.jbjgl.contexts.ProgramContext;
 import com.jordanbunke.jbjgl.debug.GameDebugger;
+import com.jordanbunke.jbjgl.image.GameImage;
 import com.jordanbunke.jbjgl.io.InputEventLogger;
 import com.jordanbunke.jbjgl.menus.menu_elements.MenuElement;
 import com.jordanbunke.jbjgl.menus.menu_elements.SelectableMenuElement;
 
-import java.awt.*;
 import java.util.function.BiConsumer;
 
-public class Menu extends ProgramContext {
+public class Menu implements ProgramContext {
     public enum Direction {
         LEFT, RIGHT, DOWN, UP
     }
@@ -41,15 +41,15 @@ public class Menu extends ProgramContext {
     }
 
     @Override
-    public void render(final Graphics2D g) {
+    public void render(final GameImage canvas) {
         for (MenuElement element : menuElements)
-            element.render(g);
+            element.render(canvas);
     }
 
     @Override
-    public void debugRender(final Graphics2D g, final GameDebugger debugger) {
+    public void debugRender(final GameImage canvas, final GameDebugger debugger) {
         for (MenuElement element : menuElements)
-            element.debugRender(g, debugger);
+            element.debugRender(canvas, debugger);
     }
 
     public void process(final InputEventLogger eventLogger) {

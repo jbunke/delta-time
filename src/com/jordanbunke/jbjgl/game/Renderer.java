@@ -1,10 +1,9 @@
 package com.jordanbunke.jbjgl.game;
 
 import com.jordanbunke.jbjgl.debug.GameDebugger;
-
-import java.awt.*;
+import com.jordanbunke.jbjgl.image.GameImage;
 
 public interface Renderer {
-    void render(final Graphics2D g);
-    void debugRender(final Graphics2D g, final GameDebugger debugger);
+    void render(final GameImage canvas);
+    void debugRender(final GameImage canvas, final GameDebugger debugger);
 }

@@ -1,14 +1,14 @@
 package com.jordanbunke.jbjgl.contexts;
 
 import com.jordanbunke.jbjgl.debug.GameDebugger;
+import com.jordanbunke.jbjgl.image.GameImage;
 import com.jordanbunke.jbjgl.io.InputEventLogger;
 import com.jordanbunke.jbjgl.menus.Menu;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MenuManager extends ProgramContext {
+public class MenuManager implements ProgramContext {
     private String activeMenuID;
     private final Map<String, Menu> menuMap;
 
@@ -44,15 +44,15 @@ public class MenuManager extends ProgramContext {
     }
 
     @Override
-    public void render(final Graphics2D g) {
+    public void render(final GameImage canvas) {
         if (menuMap.containsKey(activeMenuID))
-            menuMap.get(activeMenuID).render(g);
+            menuMap.get(activeMenuID).render(canvas);
     }
 
     @Override
-    public void debugRender(final Graphics2D g, final GameDebugger debugger) {
+    public void debugRender(final GameImage canvas, final GameDebugger debugger) {
         if (menuMap.containsKey(activeMenuID))
-            menuMap.get(activeMenuID).debugRender(g, debugger);
+            menuMap.get(activeMenuID).debugRender(canvas, debugger);
     }
 
     @Override

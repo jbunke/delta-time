@@ -7,8 +7,6 @@ import com.jordanbunke.jbjgl.menus.menu_elements.MenuElement;
 import com.jordanbunke.jbjgl.text.Text;
 import com.jordanbunke.jbjgl.utility.Coord2D;
 
-import java.awt.*;
-
 public class StaticMenuElement extends MenuElement {
     private final GameImage image;
 
@@ -41,13 +39,13 @@ public class StaticMenuElement extends MenuElement {
     }
 
     @Override
-    public void render(final Graphics2D g) {
-        draw(image, g);
+    public void render(final GameImage canvas) {
+        draw(image, canvas);
     }
 
     @Override
-    public void debugRender(final Graphics2D g, final GameDebugger debugger) {
-        renderBoundingBox(g, debugger);
+    public void debugRender(final GameImage canvas, final GameDebugger debugger) {
+        renderBoundingBox(canvas, debugger);
     }
 
     @Override

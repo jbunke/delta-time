@@ -48,13 +48,13 @@ public class SimpleToggleMenuButton extends MenuButtonStub {
     }
 
     @Override
-    public void render(final Graphics2D g) {
-        draw(isHighlighted() ? highlightedImages[index] : nonHighlightedImages[index], g);
+    public void render(final GameImage canvas) {
+        draw(isHighlighted() ? highlightedImages[index] : nonHighlightedImages[index], canvas);
     }
 
     @Override
-    public void debugRender(Graphics2D g, GameDebugger debugger) {
-        renderBoundingBox(g, debugger);
+    public void debugRender(final GameImage canvas, GameDebugger debugger) {
+        renderBoundingBox(canvas, debugger);
     }
 
     @Override

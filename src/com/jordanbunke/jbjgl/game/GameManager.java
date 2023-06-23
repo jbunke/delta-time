@@ -3,11 +3,10 @@ package com.jordanbunke.jbjgl.game;
 import com.jordanbunke.jbjgl.contexts.ProgramContext;
 import com.jordanbunke.jbjgl.debug.GameDebugger;
 import com.jordanbunke.jbjgl.error.GameError;
+import com.jordanbunke.jbjgl.image.GameImage;
 import com.jordanbunke.jbjgl.io.InputEventLogger;
 
-import java.awt.*;
-
-public class GameManager extends ProgramContext {
+public class GameManager implements ProgramContext {
     // Useful preset constants for game programming
     public static final int PLAY = 0, PAUSE = 1, MENU = 2, SPLASH_SCREEN = 3;
 
@@ -50,13 +49,13 @@ public class GameManager extends ProgramContext {
     }
 
     @Override
-    public void render(final Graphics2D g) {
-        gameStates[activeStateIndex].render(g);
+    public void render(final GameImage canvas) {
+        gameStates[activeStateIndex].render(canvas);
     }
 
     @Override
-    public void debugRender(final Graphics2D g, final GameDebugger debugger) {
-        gameStates[activeStateIndex].debugRender(g, debugger);
+    public void debugRender(final GameImage canvas, final GameDebugger debugger) {
+        gameStates[activeStateIndex].debugRender(canvas, debugger);
     }
 
     @Override

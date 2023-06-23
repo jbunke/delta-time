@@ -34,7 +34,7 @@ public class PerformanceExample {
         engine.setCanvasSize(CANVAS_W, CANVAS_H);
     }
 
-    private static class GameContext extends ProgramContext {
+    private static class GameContext implements ProgramContext {
         private final GameImage canvas = new GameImage(CANVAS_W, CANVAS_H);
         private static final int CUTOFF = 20;
         private int c = CUTOFF;
@@ -78,12 +78,12 @@ public class PerformanceExample {
         }
 
         @Override
-        public void render(final Graphics2D g) {
-            g.drawImage(canvas, 0, 0, null);
+        public void render(final GameImage canvas) {
+            canvas.draw(this.canvas);
         }
 
         @Override
-        public void debugRender(Graphics2D g, GameDebugger debugger) {
+        public void debugRender(final GameImage canvas, final GameDebugger debugger) {
 
         }
 
