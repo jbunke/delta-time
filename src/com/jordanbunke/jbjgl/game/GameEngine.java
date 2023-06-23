@@ -179,17 +179,17 @@ public class GameEngine implements Runnable {
         this.canvasHeight = canvasHeight;
 
         updateScaleUp();
+    }
+
+    private void updateScaleUp() {
+        this.scaleUp = window.getWidth() != canvasWidth ||
+                window.getHeight() != canvasHeight;
 
         if (scaleUp) {
             final InputEventLogger eventLogger = window.getEventLogger();
             eventLogger.setScaleUpRatioX(window.getWidth() / (double)canvasWidth);
             eventLogger.setScaleUpRatioY(window.getHeight() / (double)canvasHeight);
         }
-    }
-
-    private void updateScaleUp() {
-        this.scaleUp = window.getWidth() != canvasWidth ||
-                window.getHeight() != canvasHeight;
     }
 
     // GETTERS
