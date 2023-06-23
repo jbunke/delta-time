@@ -65,14 +65,10 @@ public class GameEngine implements Runnable {
     }
 
     public void replaceWindow(final GameWindow replacement) {
-        final boolean adjustSize = window.getWidth() == canvasWidth &&
-                window.getHeight() == canvasHeight;
-
         window.closeInstance();
         window = replacement;
 
-        if (adjustSize)
-            setCanvasSize(window.getWidth(), window.getHeight());
+        updateScaleUp();
     }
 
     @Override
@@ -182,14 +178,18 @@ public class GameEngine implements Runnable {
         this.canvasWidth = canvasWidth;
         this.canvasHeight = canvasHeight;
 
-        this.scaleUp = window.getWidth() != canvasWidth ||
-                window.getHeight() != canvasHeight;
+        updateScaleUp();
 
         if (scaleUp) {
             final InputEventLogger eventLogger = window.getEventLogger();
             eventLogger.setScaleUpRatioX(window.getWidth() / (double)canvasWidth);
             eventLogger.setScaleUpRatioY(window.getHeight() / (double)canvasHeight);
         }
+    }
+
+    private void updateScaleUp() {
+        this.scaleUp = window.getWidth() != canvasWidth ||
+                window.getHeight() != canvasHeight;
     }
 
     // GETTERS
