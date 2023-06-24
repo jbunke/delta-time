@@ -104,13 +104,15 @@ public class Text {
         for (int i = 0; i < lines.length && componentsDrawn < componentLimit; i++) {
             linesReached++;
 
-            int width = 0;
+            int width = 0, lastPixelSpacing = 0;
             for (int j = 0; j < lines[i].length; j++) {
                 final double scaleFactor = textSize * (LINE_HEIGHT / (double)lines[i][j].getFont().getHeight());
                 width += lines[i][j].calculateProspectiveWidth() * scaleFactor;
-                width += lines[i][j].getFont().getPixelSpacing() * scaleFactor;
+                lastPixelSpacing = (int)(lines[i][j].getFont().getPixelSpacing() * scaleFactor);
+                width += lastPixelSpacing;
             }
 
+            width -= lastPixelSpacing;
             width = Math.max(width, 1);
             maxWidth = Math.max(maxWidth, width);
 
