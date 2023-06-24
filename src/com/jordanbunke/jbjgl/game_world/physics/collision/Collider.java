@@ -1,8 +1,9 @@
 package com.jordanbunke.jbjgl.game_world.physics.collision;
 
+import com.jordanbunke.jbjgl.game_world.ecs.EntityComponent;
 import com.jordanbunke.jbjgl.game_world.physics.vector.Vector;
 
-public abstract class Collider<E extends Vector<E>> {
+public abstract class Collider<E extends Vector<E>> extends EntityComponent<E> {
     public final AABB<E>[] boundingBoxes;
 
     @SafeVarargs
