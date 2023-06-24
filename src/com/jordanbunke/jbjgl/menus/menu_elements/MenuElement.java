@@ -48,14 +48,12 @@ public abstract class MenuElement implements ProgramContext {
         if (!visible)
             return;
 
-        final Coord2D offset = new Coord2D((dimensions.x - image.getWidth()) / 2,
-                (dimensions.y - image.getHeight()) / 2);
-        final Coord2D renderPosition = getRenderPosition(offset);
+        final Coord2D renderPosition = getRenderPosition();
         canvas.draw(image, renderPosition.x, renderPosition.y);
     }
 
-    public Coord2D getRenderPosition(final Coord2D offset) {
-        final Coord2D bounds = switch (anchor) {
+    public Coord2D getRenderPosition() {
+        return switch (anchor) {
             case LEFT_TOP -> new Coord2D(position.x, position.y);
             case CENTRAL_TOP -> new Coord2D(position.x - (dimensions.x / 2), position.y);
             case RIGHT_TOP -> new Coord2D(position.x - dimensions.x, position.y);
@@ -66,15 +64,13 @@ public abstract class MenuElement implements ProgramContext {
             case CENTRAL_BOTTOM -> new Coord2D(position.x - (dimensions.x / 2), position.y - dimensions.y);
             case RIGHT_BOTTOM -> new Coord2D(position.x - dimensions.x, position.y - dimensions.y);
         };
-
-        return bounds.displace(offset);
     }
 
     public boolean mouseIsWithinBounds(final Coord2D mousePosition) {
         if (!visible)
             return false;
 
-        final Coord2D min = getRenderPosition(new Coord2D());
+        final Coord2D min = getRenderPosition();
         final Coord2D max = new Coord2D(min.x + dimensions.x, min.y + dimensions.y);
 
         return mousePosition.x >= min.x && mousePosition.x < max.x &&
@@ -85,7 +81,7 @@ public abstract class MenuElement implements ProgramContext {
         if (debugger == null || !debugger.isShowingBoundingBoxes() || !visible)
             return;
 
-        final Coord2D renderPosition = getRenderPosition(new Coord2D());
+        final Coord2D renderPosition = getRenderPosition();
         canvas.setColor(new Color(0, 255, 0, 255));
 
         final Graphics2D g = canvas.g();

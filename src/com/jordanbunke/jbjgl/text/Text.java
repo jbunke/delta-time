@@ -13,7 +13,7 @@ public class Text {
 
     private final TextComponent[][] lines;
     private final double textSize, lineSpacing;
-    private final int widthAllowance;
+    private final int widthAllowance, componentSize;
     private final boolean componentsSplittable;
     private final Orientation orientation;
 
@@ -34,6 +34,8 @@ public class Text {
         this.orientation = orientation;
 
         this.lines = setLines(blocks);
+
+        this.componentSize = calculateComponentSize();
     }
 
     public Text(
@@ -48,6 +50,15 @@ public class Text {
             final TextConstituent... blocks
     ) {
         this(blocks, textSize, DEFAULT_LINE_SPACING, -1, false, orientation);
+    }
+
+    private int calculateComponentSize() {
+        int components = 0;
+
+        for (TextComponent[] line : lines)
+            components += line.length;
+
+        return components;
     }
 
     private TextComponent[][] setLines(final TextConstituent[] blocks) {
@@ -83,45 +94,54 @@ public class Text {
     }
 
     public GameImage draw() {
-        final GameImage[] drawnLines = new GameImage[lines.length];
-        int maxWidth = 1;
+        return draw(componentSize);
+    }
 
-        for (int i = 0; i < lines.length; i++) {
+    public GameImage draw(final int componentLimit) {
+        final GameImage[] drawnLines = new GameImage[lines.length];
+        int maxWidth = 1, linesReached = 0, componentsDrawn = 0;
+
+        for (int i = 0; i < lines.length && componentsDrawn < componentLimit; i++) {
+            linesReached++;
+
             int width = 0;
             for (int j = 0; j < lines[i].length; j++) {
                 final double scaleFactor = textSize * (LINE_HEIGHT / (double)lines[i][j].getFont().getHeight());
                 width += lines[i][j].calculateProspectiveWidth() * scaleFactor;
+                width += lines[i][j].getFont().getPixelSpacing() * scaleFactor;
             }
 
             width = Math.max(width, 1);
-
-            final GameImage drawnLine = new GameImage(width, (int)(textSize * LINE_HEIGHT));
-
             maxWidth = Math.max(maxWidth, width);
 
+            final GameImage drawnLine = new GameImage(width, (int)(textSize * LINE_HEIGHT));
             int processed = 0;
 
-            for (int j = 0; j < lines[i].length; j++) {
+            for (int j = 0; j < lines[i].length && componentsDrawn < componentLimit; j++) {
                 final double scaleFactor = textSize * (LINE_HEIGHT / (double)lines[i][j].getFont().getHeight());
-                final GameImage drawnComponent = lines[i][j].draw();
+                final GameImage drawnComponent = lines[i][j].draw(),
+                        scaledComponent = scaleFactor == 1. ? drawnComponent
+                                : ImageProcessing.scale(drawnComponent, scaleFactor,
+                                lines[i][j].getFont().hasSmoothResizing());
 
-                drawnLine.draw(scaleFactor == 1.
-                                ? drawnComponent
-                                : ImageProcessing.scale(
-                                    drawnComponent, scaleFactor,
-                                    lines[i][j].getFont().hasSmoothResizing()),
-                        processed, 0);
-                processed += lines[i][j].calculateProspectiveWidth() * scaleFactor;
+                drawnLine.draw(scaledComponent, processed, 0);
+
+                componentsDrawn++;
+                processed += scaledComponent.getWidth();
+                processed += lines[i][j].getFont().getPixelSpacing() * scaleFactor;
             }
 
             drawnLines[i] = drawnLine.submit();
         }
 
-        final GameImage image = new GameImage(maxWidth, lines.length * (int)(textSize * LINE_HEIGHT * lineSpacing));
+        final GameImage image = new GameImage(maxWidth,
+                linesReached * (int)(textSize * LINE_HEIGHT * lineSpacing));
 
         int drawnHeight = (int)((lineSpacing - DEFAULT_LINE_SPACING) * 0.5 * textSize * LINE_HEIGHT);
 
-        for (GameImage drawnLine : drawnLines) {
+        for (int i = 0; i < linesReached; i++) {
+            final GameImage drawnLine = drawnLines[i];
+
             switch (orientation) {
                 case LEFT -> image.draw(drawnLine, 0, drawnHeight);
                 case RIGHT -> image.draw(drawnLine, maxWidth - drawnLine.getWidth(), drawnHeight);
@@ -140,6 +160,10 @@ public class Text {
 
     public boolean areComponentsSplittable() {
         return componentsSplittable;
+    }
+
+    public int getComponentSize() {
+        return componentSize;
     }
 
     @Override
