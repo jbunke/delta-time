@@ -1,6 +1,6 @@
 package com.jordanbunke.jbjgl.game_world.map;
 
-import com.jordanbunke.jbjgl.game_world.Vector;
+import com.jordanbunke.jbjgl.game_world.physics.vector.Vector;
 
 public abstract class AbstractTileMap<E extends Vector<E>> {
     // TODO

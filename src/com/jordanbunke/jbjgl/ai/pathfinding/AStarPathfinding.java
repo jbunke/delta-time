@@ -1,7 +1,7 @@
 package com.jordanbunke.jbjgl.ai.pathfinding;
 
 import com.jordanbunke.jbjgl.utility.Coord2D;
-import com.jordanbunke.jbjgl.game_world.Vector;
+import com.jordanbunke.jbjgl.game_world.physics.vector.Vector;
 import com.jordanbunke.jbjgl.game_world.map.AbstractTileMap;
 
 import java.util.*;

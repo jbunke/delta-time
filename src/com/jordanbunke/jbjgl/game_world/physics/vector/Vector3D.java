@@ -1,4 +1,4 @@
-package com.jordanbunke.jbjgl.game_world;
+package com.jordanbunke.jbjgl.game_world.physics.vector;
 
 public final class Vector3D extends Vector<Vector3D> {
     public final double x, y, z;
@@ -27,8 +27,21 @@ public final class Vector3D extends Vector<Vector3D> {
     }
 
     @Override
+    public Vector3D normalize() {
+        if (equals(new Vector3D()))
+            return this;
+
+        return scale(1 / magnitude());
+    }
+
+    @Override
     public Vector3D scale(final double factor) {
         return new Vector3D(x * factor, y * factor, z * factor);
+    }
+
+    @Override
+    public double magnitude() {
+        return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
     }
 
     @Override

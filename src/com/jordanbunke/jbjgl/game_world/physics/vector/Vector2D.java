@@ -1,4 +1,4 @@
-package com.jordanbunke.jbjgl.game_world;
+package com.jordanbunke.jbjgl.game_world.physics.vector;
 
 public final class Vector2D extends Vector<Vector2D> {
     public final double x, y;
@@ -24,8 +24,21 @@ public final class Vector2D extends Vector<Vector2D> {
         return new Vector2D(x + displacement.x, y + displacement.y);
     }
 
+    @Override
+    public Vector2D normalize() {
+        if (equals(new Vector2D()))
+            return this;
+
+        return scale(1 / magnitude());
+    }
+
     public Vector2D scale(final double factor) {
         return new Vector2D(x * factor, y * factor);
+    }
+
+    @Override
+    public double magnitude() {
+        return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
     }
 
     @Override

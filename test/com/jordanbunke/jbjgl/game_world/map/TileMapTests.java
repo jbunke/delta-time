@@ -1,7 +1,7 @@
 package com.jordanbunke.jbjgl.game_world.map;
 
 import com.jordanbunke.jbjgl.utility.Coord2D;
-import com.jordanbunke.jbjgl.game_world.Vector2D;
+import com.jordanbunke.jbjgl.game_world.physics.vector.Vector2D;
 import com.jordanbunke.jbjgl.ai.pathfinding.AStarPathfinding;
 import com.jordanbunke.jbjgl.image.ImageProcessing;
 import com.jordanbunke.jbjgl.image.GameImage;

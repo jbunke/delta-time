@@ -1,35 +1,23 @@
 package com.jordanbunke.jbjgl.game_world.ecs;
 
-import com.jordanbunke.jbjgl.game_world.Vector;
+import com.jordanbunke.jbjgl.game_world.object.GameObject;
+import com.jordanbunke.jbjgl.game_world.physics.vector.Vector;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class GameEntity<E extends Vector<E>> {
+public class GameEntity<E extends Vector<E>> extends GameObject<E> {
     private boolean started, locked;
 
-    private E position;
     private final Set<EntityComponent<E>> components;
 
     public GameEntity(final E position) {
-        this.position = position;
+        super(position);
         this.components = new HashSet<>();
 
         started = false;
         locked = false;
-    }
-
-    public E getPosition() {
-        return position;
-    }
-
-    public void setPosition(final E position) {
-        this.position = position;
-    }
-
-    public void move(final E displacement) {
-        position = position.displace(displacement);
     }
 
     public <C extends EntityComponent<E>> C getComponent(final Class<C> componentClass) {
