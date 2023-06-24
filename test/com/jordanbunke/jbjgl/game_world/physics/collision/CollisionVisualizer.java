@@ -117,6 +117,12 @@ public class CollisionVisualizer implements ProgramContext {
 
     }
 
+    @Override
+    public void debugRender(final GameImage canvas, final GameDebugger debugger) {
+        for (ExampleConcreteCollider<Vector2D> collider : colliders)
+            renderCollider(canvas, collider);
+    }
+
     private void renderCollider(
             final GameImage canvas, final ExampleConcreteCollider<Vector2D> collider
     ) {
@@ -131,11 +137,5 @@ public class CollisionVisualizer implements ProgramContext {
                     (int) x, (int) y, (int) width, (int) height
             );
         }
-    }
-
-    @Override
-    public void debugRender(final GameImage canvas, final GameDebugger debugger) {
-        for (ExampleConcreteCollider<Vector2D> collider : colliders)
-            renderCollider(canvas, collider);
     }
 }
