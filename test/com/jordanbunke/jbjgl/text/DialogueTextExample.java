@@ -3,7 +3,6 @@ package com.jordanbunke.jbjgl.text;
 import com.jordanbunke.jbjgl.fonts.Font;
 import com.jordanbunke.jbjgl.fonts.FontsForTests;
 import com.jordanbunke.jbjgl.game.Game;
-import com.jordanbunke.jbjgl.game.GameLoop;
 import com.jordanbunke.jbjgl.game.GameManager;
 import com.jordanbunke.jbjgl.image.GameImage;
 import com.jordanbunke.jbjgl.menus.Menu;
@@ -42,10 +41,9 @@ public class DialogueTextExample {
         final GameWindow gw = new GameWindow(TITLE, animation.getWidth() * SCALE_UP,
                 animation.getHeight() * SCALE_UP, GameImage.dummy(), false);
         final GameManager gm = new GameManager(0, new Menu(animation));
-        final GameLoop ge = new GameLoop(gw, gm, TICK_HZ, FPS);
+        final Game ge = new Game(gw, gm, TICK_HZ, FPS);
         ge.setCanvasSize(animation.getWidth(), animation.getHeight());
         ge.getDebugger().hideBoundingBoxes();
-        Game.launch(gm, ge);
     }
 
     private static AnimationMenuElement generateAnimationFromTextInput(

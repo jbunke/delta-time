@@ -17,7 +17,7 @@ public class PerformanceExample {
             FULLSCREEN_H = 1080, WINDOWED_H = 720, WINDOW_SCALE_UP = WINDOWED_H / CANVAS_H;
     private static final double REFRESH_RATE_HZ = 30d, FPS = 60d;
 
-    private static Game exampleGame;
+    private static Game game;
 
     public static void main(String[] args) {
         launch();
@@ -28,10 +28,8 @@ public class PerformanceExample {
         final GameWindow window = new GameWindow("Example",
                 CANVAS_W * WINDOW_SCALE_UP, CANVAS_H * WINDOW_SCALE_UP,
                 GameImage.dummy(), false);
-        final GameLoop engine = new GameLoop(window, manager, REFRESH_RATE_HZ, FPS);
-
-        exampleGame = new Game("Example", manager, engine);
-        engine.setCanvasSize(CANVAS_W, CANVAS_H);
+        game = new Game(window, manager, REFRESH_RATE_HZ, FPS);
+        game.setCanvasSize(CANVAS_W, CANVAS_H);
     }
 
     private static class GameContext implements ProgramContext {
@@ -56,7 +54,7 @@ public class PerformanceExample {
         private void drawCanvas() {
             canvas.fillRectangle(new Color(100, 0, 0, 255), 0, 0, CANVAS_W, CANVAS_H);
 
-            final GameDebugger debugger = exampleGame.getGameEngine().getDebugger();
+            final GameDebugger debugger = game.getDebugger();
 
             final GameImage u = generateText("update: " + debugger.getUpdateMillis() + " ms"),
                     eh = generateText("event handler: " + debugger.getEventHandlerMillis() + " ms"),

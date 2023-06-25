@@ -12,6 +12,7 @@ import com.jordanbunke.jbjgl.menus.menu_elements.button.SimpleMenuButton;
 import com.jordanbunke.jbjgl.text.Text;
 import com.jordanbunke.jbjgl.text.TextComponent;
 import com.jordanbunke.jbjgl.utility.Coord2D;
+import com.jordanbunke.jbjgl.window.GameWindow;
 
 import java.awt.*;
 
@@ -44,15 +45,12 @@ public class Example {
     private static void example1() {
         AnimationMenuElement animationMenuElement = new AnimationMenuElement(
                 new Coord2D(), new Coord2D(width, height), MenuElement.Anchor.LEFT_TOP,
-                5, new GameImage[] {
-                        drawBackground(0), drawBackground(1), drawBackground(2),
-                        drawBackground(3), drawBackground(4), drawBackground(5),
-                        drawBackground(6), drawBackground(7), drawBackground(8),
-                        drawBackground(9), drawBackground(10), drawBackground(11),
-                        drawBackground(12), drawBackground(13), drawBackground(14),
-                        drawBackground(15)
-                }
-        );
+                5, drawBackground(0),
+                drawBackground(1), drawBackground(2), drawBackground(3),
+                drawBackground(4), drawBackground(5), drawBackground(6),
+                drawBackground(7), drawBackground(8), drawBackground(9),
+                drawBackground(10), drawBackground(11), drawBackground(12),
+                drawBackground(13), drawBackground(14), drawBackground(15));
         GameImage button = button(false), highlightedButton = button(true);
         SimpleMenuButton menuButton = new SimpleMenuButton(
                 new Coord2D(width / 2, height / 2),
@@ -61,8 +59,8 @@ public class Example {
                 button, highlightedButton);
         Menu menu = new Menu(animationMenuElement, menuButton);
         GameManager manager = new GameManager(0, new MenuManager(menu, "instant quit"));
-        Game.assemble("Example 1", manager, width, height,
-                new GameImage(20, 20), true, true, 30.0, 60.0);
-        // game.getGameEngine().getDebugger().hideBoundingBoxes();
+        new Game(new GameWindow(
+                "Example 1", width, height, GameImage.dummy(), false),
+                manager, 30d, 60d);
     }
 }

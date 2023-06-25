@@ -3,7 +3,6 @@ package com.jordanbunke.jbjgl.image.sprite;
 import com.jordanbunke.jbjgl.debug.GameDebugger;
 import com.jordanbunke.jbjgl.fonts.FontsForTests;
 import com.jordanbunke.jbjgl.game.Game;
-import com.jordanbunke.jbjgl.game.GameLoop;
 import com.jordanbunke.jbjgl.game.GameManager;
 import com.jordanbunke.jbjgl.image.GameImage;
 import com.jordanbunke.jbjgl.image.ImageProcessing;
@@ -68,14 +67,13 @@ public class SpriteCompositionExample {
                 validSpriteIDs.stream().map(spriteMap::getSprite).toArray(GameImage[]::new)
         )).build();
         final GameManager gm = new GameManager(0, menu);
-        final GameLoop ge = new GameLoop(
+        final Game ge = new Game(
                 new GameWindow(title, WIDTH * SCALE_UP, HEIGHT * SCALE_UP,
                 GameImage.dummy(), false), gm, 10d, 60d
         );
         ge.setCanvasSize(WIDTH, HEIGHT);
         ge.getDebugger().hideBoundingBoxes();
         ge.getDebugger().muteChannel(GameDebugger.FRAME_RATE);
-        Game.launch(gm, ge);
 
         spriteMap.assembler.disableLayer(Layer.HELMET);
         spriteMap.assembler.disableLayer(Layer.HAIR_MASK);

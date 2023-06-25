@@ -6,7 +6,6 @@ import com.jordanbunke.jbjgl.events.GameEvent;
 import com.jordanbunke.jbjgl.events.GameKeyEvent;
 import com.jordanbunke.jbjgl.events.Key;
 import com.jordanbunke.jbjgl.game.Game;
-import com.jordanbunke.jbjgl.game.GameLoop;
 import com.jordanbunke.jbjgl.game.GameManager;
 import com.jordanbunke.jbjgl.game_world.physics.vector.Vector2D;
 import com.jordanbunke.jbjgl.image.GameImage;
@@ -14,8 +13,9 @@ import com.jordanbunke.jbjgl.io.InputEventLogger;
 import com.jordanbunke.jbjgl.window.GameWindow;
 
 import java.awt.*;
-import java.util.*;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class CollisionVisualizer implements ProgramContext {
     private static final String TITLE = "Collision Visualizer";
@@ -52,9 +52,8 @@ public class CollisionVisualizer implements ProgramContext {
         final GameWindow gw = new GameWindow(TITLE, CANVAS_W * SCALE_UP,
                 CANVAS_H * SCALE_UP, GameImage.dummy(), false);
         final GameManager gm = new GameManager(0, new CollisionVisualizer());
-        final GameLoop gl = new GameLoop(gw, gm, GAME_HZ, GAME_HZ);
+        final Game gl = new Game(gw, gm, GAME_HZ, GAME_HZ);
         gl.setCanvasSize(CANVAS_W, CANVAS_H);
-        Game.launch(gm, gl);
     }
 
     @Override
