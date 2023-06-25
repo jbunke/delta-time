@@ -4,7 +4,7 @@ import com.jordanbunke.jbjgl.contexts.MenuManager;
 import com.jordanbunke.jbjgl.fonts.Font;
 import com.jordanbunke.jbjgl.fonts.FontsForTests;
 import com.jordanbunke.jbjgl.game.Game;
-import com.jordanbunke.jbjgl.game.GameEngine;
+import com.jordanbunke.jbjgl.game.GameLoop;
 import com.jordanbunke.jbjgl.game.GameManager;
 import com.jordanbunke.jbjgl.image.GameImage;
 import com.jordanbunke.jbjgl.menus.menu_elements.MenuElement;
@@ -29,7 +29,7 @@ public class MenuSelectionExample {
         final GameManager gameManager = new GameManager(0,
                 new MenuManager(new MenuBuilder(generateMenuElements())
                         .build(MenuSelectionLogic.basic()), "menu"));
-        final Game exampleGame = new Game("Example", gameManager, new GameEngine(
+        final Game exampleGame = new Game("Example", gameManager, new GameLoop(
                 new GameWindow("Example", GameImage.dummy()), gameManager));
         exampleGame.getGameEngine().setCanvasSize(CANVAS_W, CANVAS_H);
         // exampleGame.getGameEngine().getDebugger().hideBoundingBoxes();

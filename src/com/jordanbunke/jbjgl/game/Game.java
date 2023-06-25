@@ -4,16 +4,20 @@ import com.jordanbunke.jbjgl.image.GameImage;
 import com.jordanbunke.jbjgl.window.GameWindow;
 
 public class Game {
-    private final GameEngine gameEngine;
+    private final GameLoop gameLoop;
     private final GameManager gameManager;
 
     private final String title;
 
     public Game(final String title, final GameManager gameManager,
-                final GameEngine gameEngine) {
+                final GameLoop gameLoop) {
         this.title = title;
         this.gameManager = gameManager;
-        this.gameEngine = gameEngine;
+        this.gameLoop = gameLoop;
+    }
+
+    public static void launch(final GameManager gameManager, final GameLoop gameLoop) {
+        new Game("", gameManager, gameLoop);
     }
 
     public static Game assemble(
@@ -25,17 +29,17 @@ public class Game {
     ) {
         final GameWindow window = new GameWindow(title, width,
                 height, icon, exitOnClose, false, maximized);
-        final GameEngine gameEngine = new GameEngine(window,
+        final GameLoop gameLoop = new GameLoop(window,
                 gameManager, UPDATE_HZ, TARGET_FPS);
-        return new Game(title, gameManager, gameEngine);
+        return new Game(title, gameManager, gameLoop);
     }
 
     public void replaceWindow(final GameWindow replacement) {
-        gameEngine.replaceWindow(replacement);
+        gameLoop.replaceWindow(replacement);
     }
 
-    public GameEngine getGameEngine() {
-        return gameEngine;
+    public GameLoop getGameEngine() {
+        return gameLoop;
     }
 
     public GameManager getGameManager() {

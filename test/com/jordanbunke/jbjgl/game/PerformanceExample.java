@@ -28,7 +28,7 @@ public class PerformanceExample {
         final GameWindow window = new GameWindow("Example",
                 CANVAS_W * WINDOW_SCALE_UP, CANVAS_H * WINDOW_SCALE_UP,
                 GameImage.dummy(), false);
-        final GameEngine engine = new GameEngine(window, manager, REFRESH_RATE_HZ, FPS);
+        final GameLoop engine = new GameLoop(window, manager, REFRESH_RATE_HZ, FPS);
 
         exampleGame = new Game("Example", manager, engine);
         engine.setCanvasSize(CANVAS_W, CANVAS_H);

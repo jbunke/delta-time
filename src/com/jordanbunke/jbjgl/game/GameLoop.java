@@ -7,7 +7,7 @@ import com.jordanbunke.jbjgl.image.ImageProcessing;
 import com.jordanbunke.jbjgl.io.InputEventLogger;
 import com.jordanbunke.jbjgl.window.GameWindow;
 
-public class GameEngine implements Runnable {
+public class GameLoop implements Runnable {
     private static final double STANDARD_UPDATE_HZ = 100d, STANDARD_FPS = 60d;
 
     // Constants
@@ -26,7 +26,7 @@ public class GameEngine implements Runnable {
 
     private GameDebugger debugger;
 
-    private GameEngine(
+    private GameLoop(
             final GameWindow window, final EventHandler eventHandler,
             final Renderer renderer, final LogicHandler logicHandler,
             final double updateHz, final double targetFps
@@ -50,12 +50,12 @@ public class GameEngine implements Runnable {
         initialize();
     }
 
-    public GameEngine(final GameWindow window, final GameManager gameManager) {
+    public GameLoop(final GameWindow window, final GameManager gameManager) {
         this(window, gameManager, gameManager, gameManager, STANDARD_UPDATE_HZ, STANDARD_FPS);
     }
 
-    public GameEngine(final GameWindow window, final GameManager gameManager,
-                      final double updateHz, final double targetFps) {
+    public GameLoop(final GameWindow window, final GameManager gameManager,
+                    final double updateHz, final double targetFps) {
         this(window, gameManager, gameManager, gameManager, updateHz, targetFps);
     }
 

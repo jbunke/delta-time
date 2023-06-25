@@ -6,7 +6,7 @@ import com.jordanbunke.jbjgl.events.GameEvent;
 import com.jordanbunke.jbjgl.events.GameKeyEvent;
 import com.jordanbunke.jbjgl.events.Key;
 import com.jordanbunke.jbjgl.game.Game;
-import com.jordanbunke.jbjgl.game.GameEngine;
+import com.jordanbunke.jbjgl.game.GameLoop;
 import com.jordanbunke.jbjgl.game.GameManager;
 import com.jordanbunke.jbjgl.game_world.physics.vector.Vector2D;
 import com.jordanbunke.jbjgl.image.GameImage;
@@ -52,9 +52,9 @@ public class CollisionVisualizer implements ProgramContext {
         final GameWindow gw = new GameWindow(TITLE, CANVAS_W * SCALE_UP,
                 CANVAS_H * SCALE_UP, GameImage.dummy(), false);
         final GameManager gm = new GameManager(0, new CollisionVisualizer());
-        final GameEngine ge = new GameEngine(gw, gm, GAME_HZ, GAME_HZ);
-        ge.setCanvasSize(CANVAS_W, CANVAS_H);
-        new Game(TITLE, gm, ge);
+        final GameLoop gl = new GameLoop(gw, gm, GAME_HZ, GAME_HZ);
+        gl.setCanvasSize(CANVAS_W, CANVAS_H);
+        Game.launch(gm, gl);
     }
 
     @Override

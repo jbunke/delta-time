@@ -1,7 +1,7 @@
 package com.jordanbunke.jbjgl.image.sprite;
 
 import com.jordanbunke.jbjgl.game.Game;
-import com.jordanbunke.jbjgl.game.GameEngine;
+import com.jordanbunke.jbjgl.game.GameLoop;
 import com.jordanbunke.jbjgl.game.GameManager;
 import com.jordanbunke.jbjgl.image.GameImage;
 import com.jordanbunke.jbjgl.image.sprite.constituents.InterpretedSpriteSheet;
@@ -118,12 +118,12 @@ public class SpriteStatesTests {
                 MenuElement.Anchor.LEFT_TOP, 2,
                 animation)).build();
         final GameManager gm = new GameManager(0, menu);
-        final GameEngine ge = new GameEngine(new GameWindow(
+        final GameLoop ge = new GameLoop(new GameWindow(
                 title, 2 * s * scaleUp, 2 * s * scaleUp,
                 GameImage.dummy(), false), gm, 10d, 60d);
         ge.setCanvasSize(2 * s, 2 * s);
         ge.getDebugger().hideBoundingBoxes();
-        new Game(title, gm, ge);
+        Game.launch(gm, ge);
     }
 
     @Test
