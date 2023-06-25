@@ -5,6 +5,7 @@ import com.jordanbunke.jbjgl.game_world.physics.vector.Vector;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -31,19 +32,23 @@ public class GameEntity<E extends Vector<E>> extends GameObject<E> {
         return componentClass.cast(matches.get(0));
     }
 
+    public <C extends EntityComponent<E>> Optional<C> getComponentIfPresent(final Class<C> componentClass) {
+        return Optional.ofNullable(getComponent(componentClass));
+    }
+
     public <C extends EntityComponent<E>> boolean hasComponent(final Class<C> componentClass) {
-        return getComponent(componentClass) != null;
+        return getComponentIfPresent(componentClass).isPresent();
     }
 
     public <C extends EntityComponent<E>> boolean executeIfComponentPresent(
             final Class<C> componentClass, final Consumer<C> componentInstruction
     ) {
-        final C component = getComponent(componentClass);
+        final Optional<C> component = getComponentIfPresent(componentClass);
 
-        if (component == null)
+        if (component.isEmpty())
             return false;
 
-        componentInstruction.accept(component);
+        componentInstruction.accept(component.get());
         return true;
     }
 
