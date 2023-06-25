@@ -6,6 +6,7 @@ import com.jordanbunke.jbjgl.game_world.physics.vector.Vector;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 
 public class GameEntity<E extends Vector<E>> extends GameObject<E> {
     private boolean started, locked;
@@ -32,6 +33,18 @@ public class GameEntity<E extends Vector<E>> extends GameObject<E> {
 
     public <C extends EntityComponent<E>> boolean hasComponent(final Class<C> componentClass) {
         return getComponent(componentClass) != null;
+    }
+
+    public <C extends EntityComponent<E>> boolean executeIfComponentPresent(
+            final Class<C> componentClass, final Consumer<C> componentInstruction
+    ) {
+        final C component = getComponent(componentClass);
+
+        if (component == null)
+            return false;
+
+        componentInstruction.accept(component);
+        return true;
     }
 
     public void addComponent(final EntityComponent<E> toAdd) {
