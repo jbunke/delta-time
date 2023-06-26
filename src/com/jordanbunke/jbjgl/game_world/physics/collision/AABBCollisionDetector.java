@@ -3,7 +3,7 @@ package com.jordanbunke.jbjgl.game_world.physics.collision;
 import com.jordanbunke.jbjgl.game_world.physics.vector.Vector;
 import com.jordanbunke.jbjgl.game_world.physics.vector.Vector2D;
 import com.jordanbunke.jbjgl.game_world.physics.vector.Vector3D;
-import com.jordanbunke.jbub.math.MathPlus;
+import com.jordanbunke.jbjgl.utility.MathPlus;
 
 import java.util.Optional;
 
@@ -84,10 +84,8 @@ public class AABBCollisionDetector {
             return Optional.empty();
 
         final double
-                minDiffX = MathPlus.minMagnitude(startA.x - startB.x,
-                        startA.x - endB.x, endA.x - startB.x, endA.x - endB.x),
-                minDiffY = MathPlus.minMagnitude(startA.y - startB.y,
-                        startA.y - endB.y, endA.y - startB.y, endA.y - endB.y);
+                minDiffX = MathPlus.minMagnitude(startA.x - endB.x, endA.x - startB.x),
+                minDiffY = MathPlus.minMagnitude(startA.y - endB.y, endA.y - startB.y);
         final int minDimension = getMinDimension(
                 new double[] { minDiffX, minDiffY }, spansX, spansY);
 
@@ -138,12 +136,9 @@ public class AABBCollisionDetector {
             return Optional.empty();
 
         final double
-                minDiffX = MathPlus.minMagnitude(startA.x - startB.x,
-                        startA.x - endB.x, endA.x - startB.x, endA.x - endB.x),
-                minDiffY = MathPlus.minMagnitude(startA.y - startB.y,
-                        startA.y - endB.y, endA.y - startB.y, endA.y - endB.y),
-                minDiffZ = MathPlus.minMagnitude(startA.z - startB.z,
-                        startA.z - endB.z, endA.z - startB.z, endA.z - endB.z);
+                minDiffX = MathPlus.minMagnitude(startA.x - endB.x, endA.x - startB.x),
+                minDiffY = MathPlus.minMagnitude(startA.y - endB.y, endA.y - startB.y),
+                minDiffZ = MathPlus.minMagnitude(startA.z - endB.z, endA.z - startB.z);
         final int minDimension = getMinDimension(
                 new double[] { minDiffX, minDiffY, minDiffZ },
                 spansX, spansY, spansZ);
