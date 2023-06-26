@@ -46,6 +46,23 @@ public class GameImage extends BufferedImage {
         g.setColor(color);
     }
 
+    public void drawRectangle(
+            final float strokeWidth, final int x, final int y,
+            final int width, final int height
+    ) {
+        initializeGraphics();
+        g.setStroke(new BasicStroke(strokeWidth));
+        g.drawRect(x, y, width, height);
+    }
+
+    public void drawRectangle(
+            final Color color, final float strokeWidth,
+            final int x, final int y, final int width, final int height
+    ) {
+        setColor(color);
+        drawRectangle(strokeWidth, x, y, width, height);
+    }
+
     public void fillRectangle(final int x, final int y, final int width, final int height) {
         initializeGraphics();
         g.fillRect(x, y, width, height);
@@ -92,6 +109,6 @@ public class GameImage extends BufferedImage {
     }
 
     public GameImage section(final int left, final int top, final int right, final int bottom) {
-        return new GameImage(this.getSubimage(left, top, right - left, bottom - top));
+        return new GameImage(getSubimage(left, top, right - left, bottom - top));
     }
 }

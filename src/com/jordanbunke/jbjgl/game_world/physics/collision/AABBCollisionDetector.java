@@ -73,10 +73,12 @@ public class AABBCollisionDetector {
                         aOverlapsB(startB.x, endB.x, startA.x),
                 overlapsY = aOverlapsB(startA.y, endA.y, startB.y) ||
                         aOverlapsB(startB.y, endB.y, startA.y),
-                spansX = aSpansB(startA.x, endA.x, startB.x, endB.x) ||
-                        aSpansB(startB.x, endB.x, startA.x, endA.x),
-                spansY = aSpansB(startA.y, endA.y, startB.y, endB.y) ||
-                        aSpansB(startB.y, endB.y, startA.y, endA.y);
+                aSpansBX = aSpansB(startA.x, endA.x, startB.x, endB.x),
+                aSpansBY = aSpansB(startA.y, endA.y, startB.y, endB.y),
+                bSpansAX = aSpansB(startB.x, endB.x, startA.x, endA.x),
+                bSpansAY = aSpansB(startB.y, endB.y, startA.y, endA.y),
+                spansX = aSpansBX || bSpansAX,
+                spansY = aSpansBY || bSpansAY;
 
         if (!overlapsX || !overlapsY)
             return Optional.empty();
@@ -102,10 +104,11 @@ public class AABBCollisionDetector {
 
         if (!bestCase.equals(new Vector2D()))
             result = bestCase;
-        else if (!naiveCase.equals(new Vector2D()))
-            result = naiveCase;
-        else
+        else if (naiveCase.equals(new Vector2D()) &&
+                ((aSpansBX && aSpansBY) || (bSpansAX && bSpansAY)))
             result = expulsionCase;
+        else
+            result = naiveCase;
 
         return Optional.of(result);
     }
@@ -121,12 +124,15 @@ public class AABBCollisionDetector {
                         aOverlapsB(startB.y, endB.y, startA.y),
                 overlapsZ = aOverlapsB(startA.z, endA.z, startB.z) ||
                         aOverlapsB(startB.z, endB.z, startA.z),
-                spansX = aSpansB(startA.x, endA.x, startB.x, endB.x) ||
-                        aSpansB(startB.x, endB.x, startA.x, endA.x),
-                spansY = aSpansB(startA.y, endA.y, startB.y, endB.y) ||
-                        aSpansB(startB.y, endB.y, startA.y, endA.y),
-                spansZ = aSpansB(startA.z, endA.z, startB.z, endB.z) ||
-                        aSpansB(startB.z, endB.z, startA.z, endA.z);
+                aSpansBX = aSpansB(startA.x, endA.x, startB.x, endB.x),
+                aSpansBY = aSpansB(startA.y, endA.y, startB.y, endB.y),
+                aSpansBZ = aSpansB(startA.z, endA.z, startB.z, endB.z),
+                bSpansAX = aSpansB(startB.x, endB.x, startA.x, endA.x),
+                bSpansAY = aSpansB(startB.y, endB.y, startA.y, endA.y),
+                bSpansAZ = aSpansB(startB.z, endB.z, startA.z, endA.z),
+                spansX = aSpansBX || bSpansAX,
+                spansY = aSpansBY || bSpansAY,
+                spansZ = aSpansBZ || bSpansAZ;
 
         if (!overlapsX || !overlapsY || !overlapsZ)
             return Optional.empty();
@@ -157,10 +163,12 @@ public class AABBCollisionDetector {
 
         if (!bestCase.equals(new Vector3D()))
             result = bestCase;
-        else if (!naiveCase.equals(new Vector3D()))
-            result = naiveCase;
-        else
+        else if (naiveCase.equals(new Vector3D()) &&
+                ((aSpansBX && aSpansBY && aSpansBZ) ||
+                        (bSpansAX && bSpansAY && bSpansAZ)))
             result = expulsionCase;
+        else
+            result = naiveCase;
 
         return Optional.of(result);
     }

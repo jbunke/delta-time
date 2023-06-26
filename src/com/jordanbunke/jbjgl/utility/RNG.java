@@ -22,6 +22,7 @@ public final class RNG {
         return randomInRange(1, 7);
     }
 
+    @SafeVarargs
     public static <T> Optional<T> randomOutcome(final double[] probabilities, final T... outcomes) {
         if (probabilities.length != outcomes.length || probabilities.length < 1)
             return Optional.empty();

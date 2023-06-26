@@ -3,7 +3,7 @@ package com.jordanbunke.jbjgl.image.sprite;
 import java.util.*;
 
 public class SpriteStates<R> {
-    private static final String STANDARD_SEPARATOR = "-";
+    public static final String STANDARD_SEPARATOR = "-";
 
     private final String separator;
     private final R[][] contributors;
@@ -71,6 +71,19 @@ public class SpriteStates<R> {
 
     public void removeSpriteIDsFromValidList(final Collection<String> spriteIDs) {
         validSpriteIDs.removeAll(spriteIDs);
+    }
+
+    public void removeMutuallyExclusiveContributors(
+            final Collection<String> anyOf, final String... contributors
+    ) {
+        anyOf.forEach(x -> {
+            final String[] withX = new String[contributors.length + 1];
+
+            System.arraycopy(contributors, 0, withX, 0, contributors.length);
+            withX[contributors.length] = x;
+
+            removeMutuallyExclusiveContributors(withX);
+        });
     }
 
     public void removeMutuallyExclusiveContributors(final String... contributors) {
