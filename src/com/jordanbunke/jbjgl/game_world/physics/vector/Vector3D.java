@@ -45,6 +45,16 @@ public final class Vector3D extends Vector<Vector3D> {
     }
 
     @Override
+    public double getAxisValue(final int index) {
+        return switch (index) {
+            case 0 -> x;
+            case 1 -> y;
+            case 2 -> z;
+            default -> Double.NaN;
+        };
+    }
+
+    @Override
     public boolean equals(final Vector3D that) {
         return that != null && this.x == that.x && this.y == that.y && this.z == that.z;
     }

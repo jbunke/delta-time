@@ -2,7 +2,7 @@ package com.jordanbunke.jbjgl.game_world.map;
 
 import java.awt.*;
 
-public class BasicTile extends AbstractTile {
+public class BasicTile implements Tile {
     private final Type type;
 
     public enum Type {

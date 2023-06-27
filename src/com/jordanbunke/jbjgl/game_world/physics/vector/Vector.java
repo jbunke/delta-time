@@ -11,5 +11,6 @@ public abstract class Vector<E extends Vector<E>> {
     public abstract E normalize();
     public abstract E scale(final double factor);
     public abstract double magnitude();
+    public abstract double getAxisValue(final int index);
     public abstract boolean equals(final E that);
 }

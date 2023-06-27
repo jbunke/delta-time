@@ -42,6 +42,15 @@ public final class Vector2D extends Vector<Vector2D> {
     }
 
     @Override
+    public double getAxisValue(final int index) {
+        return switch (index) {
+            case 0 -> x;
+            case 1 -> y;
+            default -> Double.NaN;
+        };
+    }
+
+    @Override
     public boolean equals(final Vector2D that) {
         return that != null && this.x == that.x && this.y == that.y;
     }

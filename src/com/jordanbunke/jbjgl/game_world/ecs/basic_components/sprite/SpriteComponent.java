@@ -12,5 +12,6 @@ public abstract class SpriteComponent<E extends Vector<E>> extends EntityCompone
     }
 
     public abstract GameImage getSprite();
+    public abstract GameImage getSprite(final String spriteID);
     public abstract Coord2D getSpriteOffset();
 }

@@ -67,6 +67,13 @@ public class BasicTopDownCameraComponent extends CameraComponent<Vector3D> {
 
     @Override
     public void update(final double deltaTime) {
+        followTarget();
+    }
+
+    private void followTarget() {
+        if (target == null)
+            return;
+
         final Vector2D targetXZ = new Vector2D(target.getPosition().x, target.getPosition().z),
                 cameraXZ = new Vector2D(getEntity().getPosition().x, getEntity().getPosition().z);
 

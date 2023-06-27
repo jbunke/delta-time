@@ -1,16 +1,17 @@
 package com.jordanbunke.jbjgl.ai.pathfinding;
 
+import com.jordanbunke.jbjgl.game_world.map.Tile;
 import com.jordanbunke.jbjgl.utility.Coord2D;
 import com.jordanbunke.jbjgl.game_world.physics.vector.Vector;
-import com.jordanbunke.jbjgl.game_world.map.AbstractTileMap;
+import com.jordanbunke.jbjgl.game_world.map.TileMap;
 
 import java.util.*;
 
 public class AStarPathfinding {
 
-    public static <E extends Vector<E>> List<Coord2D> findPath(
+    public static <T extends Tile, E extends Vector<E>> List<Coord2D> findPath(
             final Coord2D start, final Coord2D goal,
-            final AbstractTileMap<E> environment,
+            final TileMap<T, E> environment,
             final boolean canMoveDiagonally
     ) {
         // 1: initialize open and closed collections
@@ -24,7 +25,7 @@ public class AStarPathfinding {
             for (int y = 0; y < nodeMap[x].length; y++) {
                 final Coord2D position = new Coord2D(x, y);
                 final double fCost = Coord2D.unitDistanceBetween(position, goal);
-                PathfindingNode node = new PathfindingNode(position, fCost);
+                final PathfindingNode node = new PathfindingNode(position, fCost);
 
                 if (!environment.tileAtIsValidPathComponent(x, y))
                     closed.add(node);

@@ -10,12 +10,24 @@ public final class RNG {
         return r.nextDouble() < p;
     }
 
+    public static <T> T prob(final double p, final T a, final T aPrime) {
+        return prob(p) ? a : aPrime;
+    }
+
     public static boolean flipCoin() {
         return prob(0.5);
     }
 
+    public static <T> T flipCoin(final T heads, final T tails) {
+        return flipCoin() ? heads : tails;
+    }
+
     public static int randomInRange(final int min, final int maxEx) {
         return min + (int)(r.nextDouble() * (maxEx - min));
+    }
+
+    public static double randomInRange(final double min, final double max) {
+        return min + (r.nextDouble() * (max - min));
     }
 
     public static int rollDie() {

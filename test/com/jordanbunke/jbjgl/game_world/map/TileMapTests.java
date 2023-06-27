@@ -28,23 +28,25 @@ public class TileMapTests {
     }
 
     private static void perform(final String name) {
-        TileMap<Vector2D> tileMap = load(name + ".png");
+        ConcreteTileMap<Vector2D> concreteTileMap = load(name + ".png");
 
         final long startTime = System.currentTimeMillis();
-        List<Coord2D> path = AStarPathfinding.findPath(start, goal, tileMap, false);
+        List<Coord2D> path = AStarPathfinding.findPath(start, goal, concreteTileMap, false);
         final long elapsed = System.currentTimeMillis() - startTime;
 
         System.out.printf("Elapsed (%s) : " + elapsed + " ms\n", name);
 
-        drawAndSave(tileMap, path, name);
+        drawAndSave(concreteTileMap, path, name);
     }
 
-    private static TileMap<Vector2D> load(final String filename) {
+    private static ConcreteTileMap<Vector2D> load(final String filename) {
         final GameImage tileSource = ResourceLoader.loadImageResource(Path.of("tilemaps", filename));
 
         final int width = tileSource.getWidth(), height = tileSource.getHeight();
 
-        final TileMap<Vector2D> tileMap = new TileMap<>(width, height, new Vector2D(), 3d, 3d);
+        final ConcreteTileMap<Vector2D> concreteTileMap =
+                new ConcreteTileMap<>(width, height,
+                        new Vector2D(), 3d, 3d);
 
         final BasicTile[][] tiles = new BasicTile[width][height];
 
@@ -60,19 +62,19 @@ public class TileMapTests {
             }
         }
 
-        tileMap.populateTiles(tiles);
-        return tileMap;
+        concreteTileMap.populateTiles(tiles);
+        return concreteTileMap;
     }
 
-    private static void drawAndSave(final TileMap<Vector2D> tileMap, final List<Coord2D> path, final String name) {
+    private static void drawAndSave(final ConcreteTileMap<Vector2D> concreteTileMap, final List<Coord2D> path, final String name) {
         final int UNIT_DIM = 20;
 
-        final GameImage image = new GameImage(tileMap.getWidth() * UNIT_DIM,
-                tileMap.getHeight() * UNIT_DIM);
+        final GameImage image = new GameImage(concreteTileMap.getWidth() * UNIT_DIM,
+                concreteTileMap.getHeight() * UNIT_DIM);
 
-        for (int x = 0; x < tileMap.getWidth(); x++)
-            for (int y = 0; y < tileMap.getHeight(); y++)
-                image.fillRectangle(((BasicTile)tileMap.getTileAt(x, y)).getColor(),
+        for (int x = 0; x < concreteTileMap.getWidth(); x++)
+            for (int y = 0; y < concreteTileMap.getHeight(); y++)
+                image.fillRectangle(((BasicTile) concreteTileMap.getTileAt(x, y)).getColor(),
                         x * UNIT_DIM, y * UNIT_DIM, UNIT_DIM, UNIT_DIM);
 
         image.setColor(new Color(150, 150, 255, 150));
