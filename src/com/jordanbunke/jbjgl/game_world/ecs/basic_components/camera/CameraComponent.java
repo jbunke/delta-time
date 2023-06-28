@@ -1,7 +1,7 @@
 package com.jordanbunke.jbjgl.game_world.ecs.basic_components.camera;
 
 import com.jordanbunke.jbjgl.debug.GameDebugger;
-import com.jordanbunke.jbjgl.game_world.ecs.EntityComponent;
+import com.jordanbunke.jbjgl.game_world.ecs.basic_components.EntityComponent;
 import com.jordanbunke.jbjgl.game_world.ecs.GameEntity;
 import com.jordanbunke.jbjgl.game_world.physics.vector.Vector;
 import com.jordanbunke.jbjgl.image.GameImage;

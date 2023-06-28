@@ -1,18 +1,27 @@
 package com.jordanbunke.jbjgl.ai.pathfinding;
 
 import com.jordanbunke.jbjgl.game_world.map.Tile;
-import com.jordanbunke.jbjgl.utility.Coord2D;
-import com.jordanbunke.jbjgl.game_world.physics.vector.Vector;
 import com.jordanbunke.jbjgl.game_world.map.TileMap;
+import com.jordanbunke.jbjgl.game_world.physics.vector.Vector;
+import com.jordanbunke.jbjgl.utility.Coord2D;
 
 import java.util.*;
+import java.util.function.BiFunction;
 
 public class AStarPathfinding {
-
     public static <T extends Tile, E extends Vector<E>> List<Coord2D> findPath(
             final Coord2D start, final Coord2D goal,
-            final TileMap<T, E> environment,
-            final boolean canMoveDiagonally
+            final TileMap<T, E> environment, final boolean canMoveDiagonally
+    ) {
+        return findDynamicPath(
+                start, goal, environment, canMoveDiagonally,
+                environment::calculateGCostMultiplier);
+    }
+
+    public static <T extends Tile, E extends Vector<E>> List<Coord2D> findDynamicPath(
+            final Coord2D start, final Coord2D goal,
+            final TileMap<T, E> environment, final boolean canMoveDiagonally,
+            final BiFunction<Integer, Integer, Double> dynamicGCostFunction
     ) {
         // 1: initialize open and closed collections
         final PriorityQueue<PathfindingNode> open = new PriorityQueue<>();
@@ -63,7 +72,7 @@ public class AStarPathfinding {
                         continue;
 
                     final double gCost = Coord2D.unitDistanceBetween(checking.coordinate, neighbour.coordinate) *
-                            environment.calculateGCostMultiplier(neighbour.coordinate.x, neighbour.coordinate.y);
+                            dynamicGCostFunction.apply(neighbour.coordinate.x, neighbour.coordinate.y);
                     final double updatedNeighbourTotal = gCost + neighbour.getHCost() + checking.getTotalCost();
 
                     if (updatedNeighbourTotal < neighbour.getTotalCost() || !open.contains(neighbour)) {

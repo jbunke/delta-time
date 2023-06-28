@@ -1,5 +1,6 @@
 package com.jordanbunke.jbjgl.game_world.ecs;
 
+import com.jordanbunke.jbjgl.game_world.ecs.basic_components.EntityComponent;
 import com.jordanbunke.jbjgl.game_world.object.GameObject;
 import com.jordanbunke.jbjgl.game_world.physics.vector.Vector;
 

@@ -92,7 +92,7 @@ public class BasicTopDownCameraComponent extends CameraComponent<Vector3D> {
     ) {
         final List<GameEntity<Vector3D>> entityList = new ArrayList<>(entities);
         entityList.sort(Comparator.comparingDouble(e -> e.getPosition().z -
-                (e.getPosition().y * yPerspectiveMultiplier)));
+                e.getPosition().y));
 
         entityList.forEach(entity -> {
             final Coord2D lensPosition = getLensPosition(entity.getPosition());
@@ -100,7 +100,8 @@ public class BasicTopDownCameraComponent extends CameraComponent<Vector3D> {
                 final GameImage sprite = ss.getSprite();
                 final Coord2D offset = ss.getSpriteOffset();
 
-                canvas.draw(spriteFilter.apply(sprite), lensPosition.x + offset.x, lensPosition.y + offset.y);
+                canvas.draw(spriteFilter.apply(sprite),
+                        lensPosition.x + offset.x, lensPosition.y + offset.y);
             });
         });
     }

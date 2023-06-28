@@ -74,7 +74,7 @@ public class TileMapTests {
 
         for (int x = 0; x < concreteTileMap.getWidth(); x++)
             for (int y = 0; y < concreteTileMap.getHeight(); y++)
-                image.fillRectangle(((BasicTile) concreteTileMap.getTileAt(x, y)).getColor(),
+                image.fillRectangle(concreteTileMap.getTileAt(x, y).getColor(),
                         x * UNIT_DIM, y * UNIT_DIM, UNIT_DIM, UNIT_DIM);
 
         image.setColor(new Color(150, 150, 255, 150));

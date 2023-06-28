@@ -1,6 +1,7 @@
-package com.jordanbunke.jbjgl.game_world.physics.collision;
+package com.jordanbunke.jbjgl.game_world.ecs.basic_components.collider;
 
-import com.jordanbunke.jbjgl.game_world.ecs.EntityComponent;
+import com.jordanbunke.jbjgl.game_world.ecs.basic_components.EntityComponent;
+import com.jordanbunke.jbjgl.game_world.physics.collision.AABB;
 import com.jordanbunke.jbjgl.game_world.physics.vector.Vector;
 
 public abstract class Collider<E extends Vector<E>> extends EntityComponent<E> {

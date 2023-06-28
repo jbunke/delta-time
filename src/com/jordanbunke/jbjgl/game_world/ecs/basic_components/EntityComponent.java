@@ -1,5 +1,6 @@
-package com.jordanbunke.jbjgl.game_world.ecs;
+package com.jordanbunke.jbjgl.game_world.ecs.basic_components;
 
+import com.jordanbunke.jbjgl.game_world.ecs.GameEntity;
 import com.jordanbunke.jbjgl.game_world.physics.vector.Vector;
 
 public abstract class EntityComponent<E extends Vector<E>> {

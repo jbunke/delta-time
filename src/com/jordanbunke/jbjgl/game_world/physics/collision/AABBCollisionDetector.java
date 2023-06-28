@@ -1,5 +1,6 @@
 package com.jordanbunke.jbjgl.game_world.physics.collision;
 
+import com.jordanbunke.jbjgl.game_world.ecs.basic_components.collider.Collider;
 import com.jordanbunke.jbjgl.game_world.physics.vector.Vector;
 import com.jordanbunke.jbjgl.game_world.physics.vector.Vector2D;
 import com.jordanbunke.jbjgl.game_world.physics.vector.Vector3D;

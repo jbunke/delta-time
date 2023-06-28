@@ -6,7 +6,7 @@ import com.jordanbunke.jbjgl.utility.Coord2D;
 
 import java.util.function.Function;
 
-public final class InterpretedSpriteSheet<R> implements SpriteConstituent<R> {
+public class InterpretedSpriteSheet<R> implements SpriteConstituent<R> {
     private final Function<R, Coord2D> coordinateFunction;
     private final SpriteSheet spriteSheet;
 

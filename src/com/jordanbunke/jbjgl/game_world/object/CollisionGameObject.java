@@ -1,6 +1,6 @@
 package com.jordanbunke.jbjgl.game_world.object;
 
-import com.jordanbunke.jbjgl.game_world.physics.collision.Collider;
+import com.jordanbunke.jbjgl.game_world.ecs.basic_components.collider.Collider;
 import com.jordanbunke.jbjgl.game_world.physics.vector.Vector;
 
 public abstract class CollisionGameObject<E extends Vector<E>> extends RenderGameObject<E> {
