@@ -68,7 +68,7 @@ public class InputEventLogger implements
 
     public List<GameEvent> getUnprocessedEvents() {
         try {
-            return List.copyOf(eventList).stream()
+            return new ArrayList<>(eventList).stream()
                     .filter(x -> !x.isProcessed()).collect(Collectors.toList());
         } catch (ConcurrentModificationException e) {
             GameError.send(
