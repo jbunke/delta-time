@@ -2,11 +2,13 @@ package com.jordanbunke.delta_time.game_world.ecs.basic_components.camera;
 
 import com.jordanbunke.delta_time.debug.GameDebugger;
 import com.jordanbunke.delta_time.game_world.ecs.GameEntity;
+import com.jordanbunke.delta_time.game_world.ecs.basic_components.collider.WeightedCollider3D;
 import com.jordanbunke.delta_time.game_world.ecs.basic_components.sprite.SpriteComponent3D;
 import com.jordanbunke.delta_time.game_world.physics.vector.Vector2D;
 import com.jordanbunke.delta_time.game_world.physics.vector.Vector3D;
 import com.jordanbunke.delta_time.image.GameImage;
 import com.jordanbunke.delta_time.utility.Coord2D;
+import com.jordanbunke.delta_time.utility.MathPlus;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,12 +18,13 @@ import java.util.function.Function;
 
 public class BasicTopDownCameraComponent extends CameraComponent<Vector3D> {
     private static final Function<GameImage, GameImage> IDENTITY = x -> x;
+    private static final double NAIVE_Y = 10000d;
 
     // rendering math
     private final int canvasWidth, canvasHeight;
 
     private boolean xIsAcross;
-    private double xRange, zRange, yPerspectiveMultiplier;
+    private double acrossRange, alongRange, yPerspectiveMultiplier;
     private Function<GameImage, GameImage> spriteFilter;
 
     // follow math
@@ -31,7 +34,7 @@ public class BasicTopDownCameraComponent extends CameraComponent<Vector3D> {
 
     public BasicTopDownCameraComponent(
             final int canvasWidth, final int canvasHeight,
-            final boolean xIsAcross, final double xRange, final double zRange,
+            final boolean xIsAcross, final double acrossRange, final double alongRange,
             final double yPerspectiveMultiplier,
             final double snapDistanceThreshold, final double catchUpRatePerTick,
             final GameEntity<Vector3D> target,
@@ -43,8 +46,8 @@ public class BasicTopDownCameraComponent extends CameraComponent<Vector3D> {
         this.canvasHeight = canvasHeight;
 
         this.xIsAcross = xIsAcross;
-        this.xRange = xRange;
-        this.zRange = zRange;
+        this.acrossRange = acrossRange;
+        this.alongRange = alongRange;
         this.yPerspectiveMultiplier = yPerspectiveMultiplier;
 
         this.spriteFilter = spriteFilter;
@@ -53,14 +56,20 @@ public class BasicTopDownCameraComponent extends CameraComponent<Vector3D> {
         this.catchUpRatePerTick = catchUpRatePerTick;
     }
 
+    @Override
+    public void start() {
+        final Vector3D pos = getEntity().getPosition();
+        getEntity().setPosition(new Vector3D(pos.x, NAIVE_Y, pos.z));
+    }
+
     public BasicTopDownCameraComponent(
             final int canvasWidth, final int canvasHeight,
-            final boolean xIsAcross, final double xRange, final double zRange,
+            final boolean xIsAcross, final double acrossRange, final double alongRange,
             final double yPerspectiveMultiplier,
             final double snapDistanceThreshold, final double catchUpRatePerTick,
             final GameEntity<Vector3D> target
     ) {
-        this(canvasWidth, canvasHeight, xIsAcross, xRange, zRange,
+        this(canvasWidth, canvasHeight, xIsAcross, acrossRange, alongRange,
                 yPerspectiveMultiplier, snapDistanceThreshold,
                 catchUpRatePerTick, target, IDENTITY);
     }
@@ -81,7 +90,7 @@ public class BasicTopDownCameraComponent extends CameraComponent<Vector3D> {
         final Vector3D separation = new Vector3D(xzSeparation.x, 0d, xzSeparation.y);
 
         if (separation.magnitude() < snapDistanceThreshold)
-            getEntity().setPosition(target.getPosition());
+            getEntity().move(separation);
         else
             getEntity().move(separation.scale(catchUpRatePerTick));
     }
@@ -90,9 +99,10 @@ public class BasicTopDownCameraComponent extends CameraComponent<Vector3D> {
     public void draw(
             final GameImage canvas, final Collection<GameEntity<Vector3D>> entities
     ) {
-        final List<GameEntity<Vector3D>> entityList = new ArrayList<>(entities);
-        entityList.sort(Comparator.comparingDouble(e -> e.getPosition().z -
-                e.getPosition().y));
+        final List<GameEntity<Vector3D>> entityList = new ArrayList<>();
+        entities.stream().filter(e -> e.hasComponent(SpriteComponent3D.class) &&
+                e.hasComponent(WeightedCollider3D.class)).forEach(entityList::add);
+        entityList.sort(new DefaultComparator());
 
         entityList.forEach(entity -> {
             final Coord2D lensPosition = getLensPosition(entity.getPosition());
@@ -106,18 +116,20 @@ public class BasicTopDownCameraComponent extends CameraComponent<Vector3D> {
         });
     }
 
-    protected Coord2D getLensPosition(final Vector3D worldPosition) {
+    public Coord2D getLensPosition(final Vector3D worldPosition) {
         final double diffX = getEntity().getPosition().x - worldPosition.x,
                 diffZ = getEntity().getPosition().z - worldPosition.z;
 
-        final int x = (int)(canvasWidth * ((xRange / 2d) - diffX) / xRange),
-                z = (int)(canvasHeight * ((zRange / 2d) - diffZ) / zRange),
-                y = (int)(yPerspectiveMultiplier * worldPosition.y);
+        final int y = (int)(yPerspectiveMultiplier * worldPosition.y);
+        final double diffAcross = xIsAcross ? diffX : diffZ,
+                diffAlong = xIsAcross ? diffZ : diffX;
 
-        if (xIsAcross)
-            return new Coord2D(x, z + y);
-        else
-            return new Coord2D(z, x + y);
+        final int across = (int)(canvasWidth * ((acrossRange / 2d) -
+                        diffAcross) / acrossRange),
+                along = (int)(canvasHeight * ((alongRange / 2d) -
+                        diffAlong) / alongRange);
+
+        return new Coord2D(across, along + y);
     }
 
     @Override
@@ -140,20 +152,20 @@ public class BasicTopDownCameraComponent extends CameraComponent<Vector3D> {
         xIsAcross = !xIsAcross;
     }
 
-    public double getXRange() {
-        return xRange;
+    public double getAcrossRange() {
+        return acrossRange;
     }
 
-    public void setXRange(final double xRange) {
-        this.xRange = xRange;
+    public void setAcrossRange(final double xRange) {
+        this.acrossRange = xRange;
     }
 
-    public double getZRange() {
-        return zRange;
+    public double getAlongRange() {
+        return alongRange;
     }
 
-    public void setZRange(final double xRange) {
-        this.zRange = xRange;
+    public void setAlongRange(final double xRange) {
+        this.alongRange = xRange;
     }
 
     public double getYPerspectiveMultiplier() {
@@ -178,5 +190,34 @@ public class BasicTopDownCameraComponent extends CameraComponent<Vector3D> {
 
     public void setTarget(GameEntity<Vector3D> target) {
         this.target = target;
+    }
+
+    private static class DefaultComparator implements Comparator<GameEntity<Vector3D>> {
+        @Override
+        public int compare(final GameEntity<Vector3D> e1, final GameEntity<Vector3D> e2) {
+            final WeightedCollider3D wc1 = e1.getComponent(WeightedCollider3D.class);
+            final WeightedCollider3D wc2 = e2.getComponent(WeightedCollider3D.class);
+
+            if (wc1 == null || wc2 == null) {
+                return 0;
+//            return Double.compare(
+//                        e1.getPosition().z - (e1.getPosition().y * yPerspectiveMultiplier),
+//                        e2.getPosition().z - (e2.getPosition().y * yPerspectiveMultiplier));
+            }
+
+            final Vector3D beg1 = wc1.beginning(), beg2 = wc2.beginning(),
+                    end1 = wc1.end(), end2 = wc2.end();
+
+            if (beg1.y < beg2.y && (end1.y < beg2.y || (end1.y < end2.y &&
+                    MathPlus.minMagnitude(end1.y - end2.y, end1.y - beg2.y) ==
+                            end1.y - beg2.y)))
+                return Double.compare(end1.z, beg2.z);
+            else if (beg2.y < beg1.y && (end2.y < beg1.y || (end2.y < end1.y &&
+                    MathPlus.minMagnitude(end2.y - end1.y, end2.y - beg1.y) ==
+                            end2.y - beg1.y)))
+                return Double.compare(beg1.z, end2.z);
+            else
+                return Double.compare(end1.z, end2.z);
+        }
     }
 }

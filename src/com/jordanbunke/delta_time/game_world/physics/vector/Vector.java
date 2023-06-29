@@ -8,6 +8,8 @@ public abstract class Vector<E extends Vector<E>> {
     }
     public abstract E displace(final double... dimVectors);
     public abstract E displace(final E displacement);
+    public abstract E maxOfAxes(final E that);
+    public abstract E minOfAxes(final E that);
     public abstract E normalize();
     public abstract E scale(final double factor);
     public abstract double magnitude();

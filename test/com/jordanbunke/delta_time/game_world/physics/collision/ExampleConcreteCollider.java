@@ -1,20 +1,21 @@
 package com.jordanbunke.delta_time.game_world.physics.collision;
 
-import com.jordanbunke.delta_time.game_world.ecs.basic_components.collider.Collider;
+import com.jordanbunke.delta_time.game_world.ecs.basic_components.collider.WeightedCollider;
 import com.jordanbunke.delta_time.game_world.physics.vector.Vector;
 
-public class ExampleConcreteCollider<E extends Vector<E>> extends Collider<E> {
+public class ExampleConcreteCollider<E extends Vector<E>> extends WeightedCollider<E> {
     public final String name;
-    public final double weight;
     private E position;
     private boolean colliding;
 
     @SafeVarargs
-    public ExampleConcreteCollider(final String name, final double weight, final E position, final AABB<E>... boundingBoxes) {
-        super(boundingBoxes);
+    public ExampleConcreteCollider(
+            final String name, final double weight, final E position,
+            final AABB<E>... boundingBoxes
+    ) {
+        super(weight, boundingBoxes);
 
         this.name = name;
-        this.weight = weight;
         this.position = position;
         this.colliding = false;
     }
@@ -35,19 +36,20 @@ public class ExampleConcreteCollider<E extends Vector<E>> extends Collider<E> {
         this.position = position;
     }
 
-    public void handleCollisionMovement(final double otherWeight, final E overlap, final double collisionFactor) {
-        final double totalWeight = weight + otherWeight;
-        final double proportion = weight <= 0d ? 0d
+    @Override
+    public void handleCollision(
+            final double otherWeight, final E overlap,
+            final double collisionFactor
+    ) {
+        final double totalWeight = getWeight() + otherWeight;
+        final double proportion = getWeight() <= 0d ? 0d
                 : (otherWeight <= 0d ? 1d : otherWeight / totalWeight);
         move(overlap.scale(-proportion * collisionFactor));
     }
 
-    public boolean isColliding() {
-        return colliding;
-    }
+    @Override
+    public void checkCollision(WeightedCollider<E> that, double collisionFactor) {
 
-    public void setColliding(final boolean colliding) {
-        this.colliding = colliding;
     }
 
     @Override

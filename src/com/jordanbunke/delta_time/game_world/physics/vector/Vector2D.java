@@ -25,6 +25,22 @@ public final class Vector2D extends Vector<Vector2D> {
     }
 
     @Override
+    public Vector2D maxOfAxes(final Vector2D that) {
+        return new Vector2D(
+                Math.max(this.x, that.x),
+                Math.max(this.y, that.y)
+        );
+    }
+
+    @Override
+    public Vector2D minOfAxes(final Vector2D that) {
+        return new Vector2D(
+                Math.min(this.x, that.x),
+                Math.min(this.y, that.y)
+        );
+    }
+
+    @Override
     public Vector2D normalize() {
         if (equals(new Vector2D()))
             return this;

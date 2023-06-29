@@ -104,8 +104,8 @@ public class CollisionVisualizer implements ProgramContext {
                 reference.setColliding(reference.isColliding() || colliding);
 
                 if (colliding) {
-                    reference.handleCollisionMovement(collider.weight, overlap, COLLISION_FACTOR);
-                    collider.handleCollisionMovement(reference.weight, overlap.scale(-1), COLLISION_FACTOR);
+                    reference.handleCollision(collider.getWeight(), overlap, COLLISION_FACTOR);
+                    collider.handleCollision(reference.getWeight(), overlap.scale(-1), COLLISION_FACTOR);
                 }
             }
         }
@@ -126,13 +126,13 @@ public class CollisionVisualizer implements ProgramContext {
             final GameImage canvas, final ExampleConcreteCollider<Vector2D> collider
     ) {
         for (AABB<Vector2D> boundingBox : collider.boundingBoxes) {
-            final Vector2D start = boundingBox.start(collider.getPosition()),
+            final Vector2D start = boundingBox.beginning(collider.getPosition()),
                     end = boundingBox.end(collider.getPosition());
             final double x = start.x, y = start.y, width = end.x - x, height = end.y - y;
             canvas.fillRectangle(
                     collider.equals(player)
                             ? (collider.isColliding() ? COLLIDING_COLOR : NOT_COLLIDING_COLOR)
-                            : new Color(0, 0, (int)(collider.weight * 100), TRANSPARENCY),
+                            : new Color(0, 0, (int)(collider.getWeight() * 100), TRANSPARENCY),
                     (int) x, (int) y, (int) width, (int) height
             );
         }

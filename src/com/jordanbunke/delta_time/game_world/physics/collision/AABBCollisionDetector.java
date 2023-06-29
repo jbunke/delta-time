@@ -51,8 +51,8 @@ public class AABBCollisionDetector {
         for (AABB<T> boxA : a.boundingBoxes) {
             for (AABB<T> boxB : b.boundingBoxes) {
                 final Optional<T> candidate =
-                        candidateLogic.apply(boxA.start(posA), boxA.end(posA),
-                                boxB.start(posB), boxB.end(posB));
+                        candidateLogic.apply(boxA.beginning(posA), boxA.end(posA),
+                                boxB.beginning(posB), boxB.end(posB));
 
                 if (candidate.isEmpty())
                     continue;

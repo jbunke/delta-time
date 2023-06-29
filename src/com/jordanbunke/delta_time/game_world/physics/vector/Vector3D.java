@@ -27,6 +27,24 @@ public final class Vector3D extends Vector<Vector3D> {
     }
 
     @Override
+    public Vector3D maxOfAxes(final Vector3D that) {
+        return new Vector3D(
+                Math.max(this.x, that.x),
+                Math.max(this.y, that.y),
+                Math.max(this.z, that.z)
+        );
+    }
+
+    @Override
+    public Vector3D minOfAxes(final Vector3D that) {
+        return new Vector3D(
+                Math.min(this.x, that.x),
+                Math.min(this.y, that.y),
+                Math.min(this.z, that.z)
+        );
+    }
+
+    @Override
     public Vector3D normalize() {
         if (equals(new Vector3D()))
             return this;

@@ -17,11 +17,11 @@ public class AABB<E extends Vector<E>> {
         this(dimensions, dimensions.scale(-0.5));
     }
 
-    public E start(final E position) {
+    public E beginning(final E position) {
         return position.displace(offset);
     }
 
     public E end(final E position) {
-        return start(position).displace(dimensions);
+        return beginning(position).displace(dimensions);
     }
 }

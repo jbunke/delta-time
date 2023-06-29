@@ -13,4 +13,22 @@ public abstract class Collider<E extends Vector<E>> extends EntityComponent<E> {
     }
 
     public abstract E getPosition();
+
+    public E beginning() {
+        E beginning = getPosition();
+
+        for (AABB<E> boundingBox : boundingBoxes)
+            beginning = beginning.minOfAxes(boundingBox.beginning(getPosition()));
+
+        return beginning;
+    }
+
+    public E end() {
+        E end = getPosition();
+
+        for (AABB<E> boundingBox : boundingBoxes)
+            end = end.maxOfAxes(boundingBox.end(getPosition()));
+
+        return end;
+    }
 }

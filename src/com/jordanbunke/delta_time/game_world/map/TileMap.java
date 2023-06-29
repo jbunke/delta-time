@@ -6,6 +6,8 @@ import com.jordanbunke.delta_time.utility.Coord2D;
 import java.lang.reflect.Array;
 
 public abstract class TileMap<T extends Tile, E extends Vector<E>> {
+    public static final Coord2D INVALID = new Coord2D(-1, -1);
+
     private final int width, height;
 
     private final E topLeftVectorAnchor;
@@ -76,6 +78,9 @@ public abstract class TileMap<T extends Tile, E extends Vector<E>> {
 
         final int x = (int)(offset.getAxisValue(xEquivalentAxisIndex) / tileWorldWidth);
         final int y = (int)(offset.getAxisValue(yEquivalentAxisIndex) / tileWorldLength);
+
+        if (!areCoordinatesValid(x, y))
+            return INVALID;
 
         return new Coord2D(x, y);
     }
