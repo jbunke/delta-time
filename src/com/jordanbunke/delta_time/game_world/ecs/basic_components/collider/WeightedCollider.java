@@ -1,10 +1,10 @@
 package com.jordanbunke.delta_time.game_world.ecs.basic_components.collider;
 
 import com.jordanbunke.delta_time.game_world.physics.collision.AABB;
+import com.jordanbunke.delta_time.game_world.physics.collision.AABBCollisionDetector;
 import com.jordanbunke.delta_time.game_world.physics.vector.Vector;
 
-public abstract class WeightedCollider<E extends Vector<E>> extends Collider<E> {
-    private boolean colliding;
+public class WeightedCollider<E extends Vector<E>> extends Collider<E> {
     private double weight;
 
     @SafeVarargs
@@ -12,10 +12,35 @@ public abstract class WeightedCollider<E extends Vector<E>> extends Collider<E> 
         super(boundingBoxes);
 
         this.weight = weight;
-        this.colliding = false;
     }
 
-    public abstract void checkCollision(final WeightedCollider<E> that, final double collisionFactor);
+    @Override
+    public E getPosition() {
+        return getEntity().getPosition();
+    }
+
+    @Override
+    public void checkCollision(final Collider<E> that, final double collisionFactor) {
+        final E overlap = AABBCollisionDetector.collisionOverlap(this, that);
+        final boolean colliding = !overlap.equals(Vector.origin(overlap));
+
+        this.setColliding(isColliding() || colliding);
+        that.setColliding(that.isColliding() || colliding);
+
+        if (colliding) {
+            if (that instanceof WeightedCollider<E> w) {
+                this.handleCollision(w.getWeight(), overlap, collisionFactor);
+                w.handleCollision(this.getWeight(),
+                        overlap.scale(-1), collisionFactor);
+            } else if (that instanceof TriggerCollider<E> t)
+                t.handleCollision(this);
+        }
+    }
+
+    @Override
+    public void update(double deltaTime) {
+
+    }
 
     public void handleCollision(
             final double otherWeight, final E overlap,
@@ -27,16 +52,8 @@ public abstract class WeightedCollider<E extends Vector<E>> extends Collider<E> 
         getEntity().move(overlap.scale(-proportion * collisionFactor));
     }
 
-    public boolean isColliding() {
-        return colliding;
-    }
-
     public double getWeight() {
         return weight;
-    }
-
-    public void setColliding(final boolean colliding) {
-        this.colliding = colliding;
     }
 
     public void setWeight(double weight) {

@@ -7,6 +7,8 @@ import com.jordanbunke.delta_time.events.GameKeyEvent;
 import com.jordanbunke.delta_time.events.Key;
 import com.jordanbunke.delta_time.game.Game;
 import com.jordanbunke.delta_time.game.GameManager;
+import com.jordanbunke.delta_time.game_world.ecs.basic_components.collider.Collider;
+import com.jordanbunke.delta_time.game_world.ecs.basic_components.collider.TriggerCollider;
 import com.jordanbunke.delta_time.game_world.physics.vector.Vector2D;
 import com.jordanbunke.delta_time.image.GameImage;
 import com.jordanbunke.delta_time.io.InputEventLogger;
@@ -89,13 +91,13 @@ public class CollisionVisualizer implements ProgramContext {
         player.move(movement);
 
         // Update collision
-        final Set<ExampleConcreteCollider<Vector2D>> processedColliders = new HashSet<>();
+        final Set<Collider<Vector2D>> processedColliders = new HashSet<>();
 
-        for (ExampleConcreteCollider<Vector2D> reference : colliders) {
+        for (Collider<Vector2D> reference : colliders) {
             reference.setColliding(false);
             processedColliders.add(reference);
 
-            for (ExampleConcreteCollider<Vector2D> collider : colliders) {
+            for (Collider<Vector2D> collider : colliders) {
                 if (collider.equals(reference) || (processedColliders.contains(collider)))
                     continue;
 
@@ -104,8 +106,15 @@ public class CollisionVisualizer implements ProgramContext {
                 reference.setColliding(reference.isColliding() || colliding);
 
                 if (colliding) {
-                    reference.handleCollision(collider.getWeight(), overlap, COLLISION_FACTOR);
-                    collider.handleCollision(reference.getWeight(), overlap.scale(-1), COLLISION_FACTOR);
+                    if (reference instanceof ExampleConcreteCollider<Vector2D> rcc &&
+                            collider instanceof ExampleConcreteCollider<Vector2D> ccc) {
+                        rcc.handleCollision(ccc.getWeight(), overlap, COLLISION_FACTOR);
+                        ccc.handleCollision(rcc.getWeight(), overlap.scale(-1), COLLISION_FACTOR);
+                    } else if (reference instanceof TriggerCollider<Vector2D> rtc) {
+                        rtc.handleCollision(collider);
+                    } else if (collider instanceof TriggerCollider<Vector2D> ctc) {
+                        ctc.handleCollision(reference);
+                    }
                 }
             }
         }

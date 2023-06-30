@@ -1,7 +1,7 @@
 package com.jordanbunke.delta_time.game_world.ecs.basic_systems;
 
 import com.jordanbunke.delta_time.game_world.ecs.GameEntity;
-import com.jordanbunke.delta_time.game_world.ecs.basic_components.collider.WeightedCollider;
+import com.jordanbunke.delta_time.game_world.ecs.basic_components.collider.Collider;
 import com.jordanbunke.delta_time.game_world.physics.vector.Vector;
 
 import java.util.Collection;
@@ -18,17 +18,17 @@ public abstract class AABBCollision<E extends Vector<E>> implements GameSystem<E
         final double collisionFactor = args.getOrDefault(
                 COLLISION_FACTOR, DEFAULT_COLLISION_FACTOR);
 
-        final Set<WeightedCollider<E>> colliders = new HashSet<>();
-        entities.forEach(e -> e.executeIfComponentPresent(WeightedCollider.class, colliders::add));
-        final Set<WeightedCollider<E>> processedColliders = new HashSet<>();
+        final Set<Collider<E>> colliders = new HashSet<>();
+        entities.forEach(e -> e.executeIfComponentPresent(Collider.class, colliders::add));
+        final Set<Collider<E>> processedColliders = new HashSet<>();
 
-        for (WeightedCollider<E> c : colliders)
+        for (Collider<E> c : colliders)
             c.setColliding(false);
 
-        for (WeightedCollider<E> reference : colliders) {
+        for (Collider<E> reference : colliders) {
             processedColliders.add(reference);
 
-            for (WeightedCollider<E> collider : colliders) {
+            for (Collider<E> collider : colliders) {
                 if (collider.equals(reference) || (processedColliders.contains(collider)))
                     continue;
 

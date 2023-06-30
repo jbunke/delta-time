@@ -16,16 +16,29 @@ public class AABBCollisionDetector {
         R apply(A a, A b, A c, A d);
     }
 
-    public static boolean doCollide2D(
-            final Collider<Vector2D> a, final Collider<Vector2D> b
+    public static <T extends Vector<T>> boolean doCollide(
+            final Collider<T> a, final Collider<T> b
     ) {
-        return !collisionOverlap2D(a, b).equals(new Vector2D());
+        final T reference = a.getPosition();
+
+        return !collisionOverlap(a, b).equals(Vector.origin(reference));
     }
 
-    public static boolean doCollide3D(
-            final Collider<Vector3D> a, final Collider<Vector3D> b
+    public static <T extends Vector<T>> T collisionOverlap(
+            final Collider<T> a, final Collider<T> b
     ) {
-        return !collisionOverlap3D(a, b).equals(new Vector3D());
+        final T reference = a.getPosition();
+
+        if (reference instanceof Vector2D)
+            return (T) collisionOverlap2D(
+                    (Collider<Vector2D>) a,
+                    (Collider<Vector2D>) b
+            );
+        else
+            return (T) collisionOverlap3D(
+                    (Collider<Vector3D>) a,
+                    (Collider<Vector3D>) b
+            );
     }
 
     public static Vector2D collisionOverlap2D(
