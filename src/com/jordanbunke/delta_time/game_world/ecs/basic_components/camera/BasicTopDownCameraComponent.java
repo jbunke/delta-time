@@ -2,8 +2,8 @@ package com.jordanbunke.delta_time.game_world.ecs.basic_components.camera;
 
 import com.jordanbunke.delta_time.debug.GameDebugger;
 import com.jordanbunke.delta_time.game_world.ecs.GameEntity;
-import com.jordanbunke.delta_time.game_world.ecs.basic_components.collider.WeightedCollider;
-import com.jordanbunke.delta_time.game_world.ecs.basic_components.sprite.SpriteComponent3D;
+import com.jordanbunke.delta_time.game_world.ecs.basic_components.collider.Collider;
+import com.jordanbunke.delta_time.game_world.ecs.basic_components.sprite.SpriteComponent;
 import com.jordanbunke.delta_time.game_world.physics.vector.Vector2D;
 import com.jordanbunke.delta_time.game_world.physics.vector.Vector3D;
 import com.jordanbunke.delta_time.image.GameImage;
@@ -100,13 +100,13 @@ public class BasicTopDownCameraComponent extends CameraComponent<Vector3D> {
             final GameImage canvas, final Collection<GameEntity<Vector3D>> entities
     ) {
         final List<GameEntity<Vector3D>> entityList = new ArrayList<>();
-        entities.stream().filter(e -> e.hasComponent(SpriteComponent3D.class))
+        entities.stream().filter(e -> e.hasComponent(SpriteComponent.class))
                 .forEach(entityList::add);
         entityList.sort(new DefaultComparator());
 
         entityList.forEach(entity -> {
             final Coord2D lensPosition = getLensPosition(entity.getPosition());
-            entity.executeIfComponentPresent(SpriteComponent3D.class, ss -> {
+            entity.executeIfComponentPresent(SpriteComponent.class, ss -> {
                 final GameImage sprite = ss.getSprite();
                 final Coord2D offset = ss.getSpriteOffset();
 
@@ -192,17 +192,21 @@ public class BasicTopDownCameraComponent extends CameraComponent<Vector3D> {
         this.target = target;
     }
 
-    private static class DefaultComparator implements Comparator<GameEntity<Vector3D>> {
+    private class DefaultComparator implements Comparator<GameEntity<Vector3D>> {
         @Override
         public int compare(final GameEntity<Vector3D> e1, final GameEntity<Vector3D> e2) {
-            final WeightedCollider<Vector3D> wc1 = e1.getComponent(WeightedCollider.class);
-            final WeightedCollider<Vector3D> wc2 = e2.getComponent(WeightedCollider.class);
+            final Collider<Vector3D> c1 = e1.getComponent(Collider.class);
+            final Collider<Vector3D> c2 = e2.getComponent(Collider.class);
 
-            if (wc1 == null || wc2 == null)
+            if (c1 == null && c2 == null) {
+                return Double.compare(
+                        e1.getPosition().z - (e1.getPosition().y * yPerspectiveMultiplier),
+                        e2.getPosition().z - (e2.getPosition().y * yPerspectiveMultiplier));
+            } else if (c1 == null || c2 == null)
                 return 0;
 
-            final Vector3D beg1 = wc1.beginning(), beg2 = wc2.beginning(),
-                    end1 = wc1.end(), end2 = wc2.end();
+            final Vector3D beg1 = c1.beginning(), beg2 = c2.beginning(),
+                    end1 = c1.end(), end2 = c2.end();
 
             if (beg1.y < beg2.y && (end1.y < beg2.y || (end1.y < end2.y &&
                     MathPlus.minMagnitude(end1.y - end2.y, end1.y - beg2.y) ==
