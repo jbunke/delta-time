@@ -19,12 +19,12 @@ public class FontsForTests {
                     "Vigilant", FONT_PATH, true, "font-vigilant",
                     FontFamily.NOT_AVAILABLE, "font-vigilant-italics",
                     2, 2, 2, true, CSS),
-            MY_HANDWRITING = new FontFamily(
-                    "My Handwriting", Font.loadFromSource(FONT_PATH, true,
+            MY_HANDWRITING = new FontFamily("My Handwriting",
+                    Font.loadFromSource(FONT_PATH, true,
                             "font-my-handwriting", false, 1.0, 8, true, CSS),
-                    null, Font.loadFromSource(FONT_PATH, true,
-                            "font-my-handwriting-italics", false, 1.0, 0, true, CSS)
-            );
+                    null,
+                    Font.loadFromSource(FONT_PATH, true,
+                            "font-my-handwriting-italics", false, 1.0, 0, true, CSS));
 
     public static final Font ARIAL = Font.loadFromSource(
             FONT_PATH, true, "font-precise-arial", false, 0.75, 15, true, CSS);

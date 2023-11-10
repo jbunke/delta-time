@@ -43,7 +43,7 @@ public class FontAndTextTests {
     @Test
     public void renderASCIITextForInFonts() {
         renderTextForInFonts(
-                "Font test: XOWALY <- Check if letters wrap properly",
+                "Font test: XOVALY P. X O V p. <- Check it out! Do the letters wrap properly?",
                 "ascii-test");
     }
 

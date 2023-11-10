@@ -1,6 +1,7 @@
 package com.jordanbunke.delta_time.text;
 
 import com.jordanbunke.delta_time.fonts.Font;
+import com.jordanbunke.delta_time.fonts.FontFamily;
 import com.jordanbunke.delta_time.fonts.FontsForTests;
 import com.jordanbunke.delta_time.game.Game;
 import com.jordanbunke.delta_time.game.GameManager;
@@ -15,24 +16,25 @@ import java.awt.*;
 
 public class DialogueTextExample {
     private static final Color DEFAULT_COLOR = new Color(0, 0, 0);
-    private static final Font DEFAULT_FONT = FontsForTests.CLASSIC.getStandard();
-    private static final int SCALE_UP = 5, PADDING = 10;
+    private static final FontFamily DEFAULT_FONT = FontsForTests.MY_HANDWRITING;
+    private static final int SCALE_UP = 1, PADDING = 10, EXTRA_FRAMES = 50;
+    private static final double TEXT_SIZE = 4d;
     private static final double TICK_HZ = 15d, FPS = 60d;
 
     public static void main(String[] args) {
         final String TITLE = "Dialogue text example";
 
         final String[] sections = {
-                "Different colours and fonts can\nbe used to convey ",
-                "EMPHASIS", "\nand tone... ", "Isn't that something?"
+                "This should end up looking like my ", "\"natural\"",
+                "\nhandwriting, more or less. To what extent it\nactually will remains to be seen."
         };
         final Color[] colorsPerSection = {
-                DEFAULT_COLOR, new Color(255, 0, 0),
-                DEFAULT_COLOR, new Color(255, 200, 0)
+                DEFAULT_COLOR, new Color(255, 0, 0), DEFAULT_COLOR
         };
         final Font[] fontsPerSection = {
-                DEFAULT_FONT, FontsForTests.CLASSIC.getItalics(),
-                DEFAULT_FONT, FontsForTests.BASIC.getBold()
+                DEFAULT_FONT.getStandard(),
+                DEFAULT_FONT.getItalics(),
+                DEFAULT_FONT.getStandard()
         };
 
         final AnimationMenuElement animation = generateAnimationFromTextInput(sections,
@@ -51,17 +53,17 @@ public class DialogueTextExample {
             final Font[] fontsPerSection
     ) {
         final Text text = DialogueUtils.generateSingleLetterDialogue(
-                1d, 0.6, sections, colorsPerSection, fontsPerSection);
+                TEXT_SIZE, 0.6, sections, colorsPerSection, fontsPerSection);
 
-        final int length = text.getComponentSize(), extraFrames = 50;
-        final GameImage[] frames = new GameImage[length + extraFrames];
+        final int length = text.getComponentSize();
+        final GameImage[] frames = new GameImage[length + EXTRA_FRAMES];
 
         for (int i = 0; i < length; i++)
             frames[i] = text.draw(i + 1);
 
         final GameImage last = frames[length - 1];
 
-        for (int i = 0; i < extraFrames; i++)
+        for (int i = 0; i < EXTRA_FRAMES; i++)
             frames[i + length] = last;
 
         return new AnimationMenuElement(new Coord2D(PADDING, PADDING),

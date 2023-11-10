@@ -72,33 +72,38 @@ public class Font {
     }
 
     public int getCharWidthRespectiveToNext(final char a, final char b) {
+        final int DEFAULT_WIDTH_A = getCharWidth(a);
+
         if (!(getGrapheme(a).supportsCharSpecificSpacing() &&
                 getGrapheme(b).supportsCharSpecificSpacing()))
-            return getCharWidth(a);
+            return DEFAULT_WIDTH_A;
 
         final int LEFT = 0, RIGHT = 1;
-        int minimum = getCharWidth(a), width = getCharWidth(a);
+        int minimum = DEFAULT_WIDTH_A, width = DEFAULT_WIDTH_A;
 
         final int[][] aWidthComponents = getGrapheme(a).getCharWidthComponents(),
                 bWidthComponents = getGrapheme(b).getCharWidthComponents();
 
         if (aWidthComponents.length != bWidthComponents.length)
-            return getCharWidth(a);
+            return DEFAULT_WIDTH_A;
 
         for (int y = 0; y < aWidthComponents.length; y++) {
             if (aWidthComponents[y][RIGHT] == Grapheme.SLICE_CONTAINS_NO_STROKE ||
                     bWidthComponents[y][LEFT] == Grapheme.SLICE_CONTAINS_NO_STROKE)
                 continue;
 
-            final int diff = (getCharWidth(a) + bWidthComponents[y][LEFT]) - aWidthComponents[y][RIGHT];
+            final int diff = (DEFAULT_WIDTH_A + bWidthComponents[y][LEFT]) - aWidthComponents[y][RIGHT];
 
             if (diff < minimum && diff >= 0) {
                 minimum = diff;
                 width = aWidthComponents[y][RIGHT] - bWidthComponents[y][LEFT];
+
+                if (width < DEFAULT_WIDTH_A - (getCharWidth(b) + pixelSpacing))
+                    width = DEFAULT_WIDTH_A - (getCharWidth(b) + pixelSpacing);
             }
         }
 
-        return Math.min(width, getCharWidth(a));
+        return Math.min(width, DEFAULT_WIDTH_A);
     }
 
     public int getCharWidth(final char c) {
