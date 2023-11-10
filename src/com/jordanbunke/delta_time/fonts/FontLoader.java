@@ -23,7 +23,7 @@ public class FontLoader {
 
     public static Map<Character, Grapheme> loadASCIIFromSource(
             final Path source, final boolean isResource,
-            final double whitespaceBreadthMultiplier
+            final double whitespaceBreadthMultiplier, final boolean charSpecificSpacing
     ) {
         GameImage image = isResource
                 ? ResourceLoader.loadImageResource(source)
@@ -37,8 +37,8 @@ public class FontLoader {
 
         // manual insertion of replacement character
         final Grapheme replacementGrapheme = graphemeFromCoordinates(
-                image, REPLACEMENT,
-                asciiToCoordinates((char)127), scaleMultiplier);
+                image, REPLACEMENT, asciiToCoordinates((char)127),
+                scaleMultiplier, charSpecificSpacing);
         map.put(REPLACEMENT, replacementGrapheme);
 
         for (char c = STARTING_ASCII; c <= FINAL_ASCII; c++) {
@@ -46,7 +46,8 @@ public class FontLoader {
 
             if (coordinates.length != 2) continue;
 
-            final Grapheme grapheme = graphemeFromCoordinates(image, c, coordinates, scaleMultiplier);
+            final Grapheme grapheme = graphemeFromCoordinates(image, c, coordinates,
+                    scaleMultiplier, charSpecificSpacing);
             map.put(c, grapheme);
         }
 
@@ -54,7 +55,8 @@ public class FontLoader {
     }
 
     public static Map<Character, Grapheme> loadLatinExtendedFromSource(
-            final Path source, final boolean isResource) {
+            final Path source, final boolean isResource,
+            final boolean charSpecificSpacing) {
         GameImage image = isResource
                 ? ResourceLoader.loadImageResource(source)
                 : GameImageIO.readImage(source);
@@ -68,7 +70,8 @@ public class FontLoader {
 
             if (coordinates.length != 2 || c == REPLACEMENT) continue;
 
-            Grapheme grapheme = graphemeFromCoordinates(image, c, coordinates, scaleMultiplier);
+            Grapheme grapheme = graphemeFromCoordinates(image, c, coordinates,
+                    scaleMultiplier, charSpecificSpacing);
             map.put(c, grapheme);
         }
 
@@ -78,7 +81,7 @@ public class FontLoader {
     // HELPER FUNCTIONS:
     private static Grapheme graphemeFromCoordinates(
             final GameImage image, final char c, final int[] coordinates,
-            final int scaleMultiplier
+            final int scaleMultiplier, final boolean charSpecificSpacing
     ) {
         final int[] start = new int[] {
                 coordinates[X_INDEX] * X_INCREMENT * scaleMultiplier,
@@ -96,7 +99,12 @@ public class FontLoader {
         // COPY
         GameImage grapheme = retrieveGrapheme(image, start, size, firstXWith, firstXWithout);
 
-        return new Grapheme(grapheme, c, firstXWithout - firstXWith, size[Y_INDEX]);
+        // CHARACTER SPECIFIC SPACING
+        final int[][] charWidthComponents = charSpecificSpacing
+                ? determineCharWidthComponents(image, start, size, firstXWith, firstXWithout, scaleMultiplier)
+                : null;
+
+        return new Grapheme(grapheme, c, firstXWithout - firstXWith, size[Y_INDEX], charWidthComponents);
     }
 
     private static GameImage retrieveGrapheme(
@@ -119,7 +127,43 @@ public class FontLoader {
     ) {
         final int width = (int)(BASE_WHITESPACE_BREADTH * whitespaceBreadthMultiplier * scaleMultiplier);
         return new Grapheme(new GameImage(width, LINE_HEIGHT * scaleMultiplier),
-                ' ', width, LINE_HEIGHT * scaleMultiplier);
+                ' ', width, LINE_HEIGHT * scaleMultiplier, null);
+    }
+
+    private static int[][] determineCharWidthComponents(
+            final GameImage image, final int[] start, final int[] size,
+            final int firstXWith, final int firstXWithout, final int scaleMultiplier
+    ) {
+        final int LEFT = 0, RIGHT = 1, PAIR = 2;
+        final int[][] charWidthComponents = new int[size[Y_INDEX] / scaleMultiplier][PAIR];
+
+        for (int y = start[Y_INDEX]; y < start[Y_INDEX] + size[Y_INDEX]; y += scaleMultiplier) {
+            final int yIndex = (y - start[Y_INDEX]) / scaleMultiplier;
+
+            // LEFT
+            for (int x = firstXWith; x < firstXWithout; x++) {
+                if (ImageProcessing.colorAtPixel(image, x, y).equals(MATCH_COLOR)) {
+                    charWidthComponents[yIndex][LEFT] = x - firstXWith;
+                    break;
+                }
+
+                if (x + 1 >= firstXWithout)
+                    charWidthComponents[yIndex][LEFT] = Grapheme.SLICE_CONTAINS_NO_STROKE;
+            }
+
+            // RIGHT
+            for (int x = firstXWithout - 1; x >= firstXWith; x--) {
+                if (ImageProcessing.colorAtPixel(image, x, y).equals(MATCH_COLOR)) {
+                    charWidthComponents[yIndex][RIGHT] = (x - firstXWith) + 1; // potential bug (term + 1 vs term)
+                    break;
+                }
+
+                if (x - 1 < firstXWith)
+                    charWidthComponents[yIndex][RIGHT] = Grapheme.SLICE_CONTAINS_NO_STROKE;
+            }
+        }
+
+        return charWidthComponents;
     }
 
     private static int firstXWithout(final GameImage image, final int[] start, final int[] size) {
