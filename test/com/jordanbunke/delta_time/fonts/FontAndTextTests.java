@@ -43,8 +43,15 @@ public class FontAndTextTests {
     @Test
     public void renderASCIITextForInFonts() {
         renderTextForInFonts(
-                "Resource fetching test",
+                "Font test: XOWALY <- Check if letters wrap properly",
                 "ascii-test");
+    }
+
+    @Test
+    public void renderIntroductionForInFonts() {
+        renderTextForInFonts(
+                "My name is Jordan Bunke, and one of these is my handwriting...",
+                "introduction");
     }
 
     @Test

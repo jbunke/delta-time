@@ -23,12 +23,20 @@ public class TextComponent extends TextConstituent {
     private int calculateProspectiveWidth(final String s) {
         int width = 0;
 
-        for (char c : s.toCharArray()) {
-            width += font.getCharWidth(c);
-            width += font.getPixelSpacing();
-        }
+        if (font.hasCharSpecificSpacing()) {
+            for (int i = 0; i < s.length(); i++) {
+                if (i + 1 >= s.length())
+                    width += font.getCharWidth(s.charAt(i));
+                else
+                    width += font.getCharWidthRespectiveToNext(s.charAt(i), s.charAt(i + 1)) +
+                            font.getPixelSpacing();
+            }
+        } else {
+            for (char c : s.toCharArray())
+                width += font.getCharWidth(c) + font.getPixelSpacing();
 
-        width -= font.getPixelSpacing();
+            width -= font.getPixelSpacing();
+        }
 
         return Math.max(1, width);
     }
@@ -38,9 +46,22 @@ public class TextComponent extends TextConstituent {
 
         int processed = 0;
 
-        for (char c : contents.toCharArray()) {
-            image.draw(font.drawChar(c, color), processed, 0);
-            processed += font.getCharWidth(c) + font.getPixelSpacing();
+        if (font.hasCharSpecificSpacing()) {
+            for (int i = 0; i < contents.length(); i++) {
+                if (i + 1 >= contents.length()) {
+                    image.draw(font.drawChar(contents.charAt(i), color), processed, 0);
+                    processed += font.getCharWidth(contents.charAt(i));
+                } else {
+                    image.draw(font.drawChar(contents.charAt(i), color), processed, 0);
+                    processed += font.getCharWidthRespectiveToNext(contents.charAt(i), contents.charAt(i + 1)) +
+                            font.getPixelSpacing();
+                }
+            }
+        } else {
+            for (char c : contents.toCharArray()) {
+                image.draw(font.drawChar(c, color), processed, 0);
+                processed += font.getCharWidth(c) + font.getPixelSpacing();
+            }
         }
 
         return image.submit();
