@@ -16,25 +16,27 @@ import java.awt.*;
 
 public class DialogueTextExample {
     private static final Color DEFAULT_COLOR = new Color(0, 0, 0);
-    private static final FontFamily DEFAULT_FONT = FontsForTests.MY_HANDWRITING;
+    private static final FontFamily DEFAULT_FONT = FontsForTests.CLASSIC;
     private static final int SCALE_UP = 1, PADDING = 10, EXTRA_FRAMES = 50;
-    private static final double TEXT_SIZE = 4d;
+    private static final double TEXT_SIZE = 3d;
     private static final double TICK_HZ = 15d, FPS = 60d;
 
     public static void main(String[] args) {
         final String TITLE = "Dialogue text example";
 
         final String[] sections = {
-                "This should end up looking like my ", "\"natural\"",
-                "\nhandwriting, more or less. To what extent it\nactually will remains to be seen."
+                "This is an example of game text\nthat includes ", "emphasis",
+                " as well as ", "\nsomething written in a different tone.\nCapisce?"
         };
         final Color[] colorsPerSection = {
-                DEFAULT_COLOR, new Color(255, 0, 0), DEFAULT_COLOR
+                DEFAULT_COLOR, new Color(255, 0, 0),
+                DEFAULT_COLOR, DEFAULT_COLOR
         };
         final Font[] fontsPerSection = {
                 DEFAULT_FONT.getStandard(),
-                DEFAULT_FONT.getItalics(),
-                DEFAULT_FONT.getStandard()
+                DEFAULT_FONT.getStandard(),
+                DEFAULT_FONT.getStandard(),
+                DEFAULT_FONT.getItalics()
         };
 
         final AnimationMenuElement animation = generateAnimationFromTextInput(sections,

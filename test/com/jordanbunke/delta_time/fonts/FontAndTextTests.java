@@ -16,6 +16,8 @@ public class FontAndTextTests {
     private static final Font[] FONTS = new Font[] {
             FontsForTests.ARIAL,
             // FontsForTests.HALF_SCALE_ARIAL,
+            FontsForTests.BILHETE.getStandard(),
+            FontsForTests.BILHETE.getBold(),
             FontsForTests.MY_HANDWRITING.getStandard(),
             FontsForTests.MY_HANDWRITING.getItalics(),
             FontsForTests.BASIC.getStandard(),
@@ -43,14 +45,14 @@ public class FontAndTextTests {
     @Test
     public void renderASCIITextForInFonts() {
         renderTextForInFonts(
-                "Font test: XOVALY P. X O V p. <- Check it out! Do the letters wrap properly?",
+                "XOVAYJ_ P. X O V p. | rJ <- Folly? Jolly!",
                 "ascii-test");
     }
 
     @Test
     public void renderIntroductionForInFonts() {
         renderTextForInFonts(
-                "My name is Jordan Bunke, and one of these is my handwriting...",
+                "My name is Jordan Bunke.",
                 "introduction");
     }
 

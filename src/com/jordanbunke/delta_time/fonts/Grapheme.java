@@ -5,7 +5,7 @@ import com.jordanbunke.delta_time.image.ImageProcessing;
 
 import java.awt.*;
 
-import static com.jordanbunke.delta_time.fonts.FontConstants.MATCH_COLOR;
+import static com.jordanbunke.delta_time.fonts.FontConstants.FONT_PRIMARY_COLOR;
 
 public class Grapheme {
     public static int SLICE_CONTAINS_NO_STROKE = -1;
@@ -33,7 +33,7 @@ public class Grapheme {
     }
 
     public GameImage getImage(final Color color) {
-        return ImageProcessing.replaceColor(image, MATCH_COLOR, color);
+        return ImageProcessing.replaceColor(image, FONT_PRIMARY_COLOR, color);
     }
 
     @Override

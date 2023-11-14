@@ -6,6 +6,7 @@ import com.jordanbunke.delta_time.image.ImageProcessing;
 import com.jordanbunke.delta_time.io.GameImageIO;
 import com.jordanbunke.delta_time.io.ResourceLoader;
 
+import java.awt.*;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
@@ -112,11 +113,11 @@ public class FontLoader {
             final int firstXWith, final int firstXWithout
     ) {
         GameImage grapheme = new GameImage(firstXWithout - firstXWith, size[Y_INDEX]);
-        grapheme.setColor(MATCH_COLOR);
+        grapheme.setColor(FONT_PRIMARY_COLOR);
 
         for (int x = firstXWith; x < firstXWithout; x++)
             for (int y = start[Y_INDEX]; y < start[Y_INDEX] + size[Y_INDEX]; y++)
-                if (ImageProcessing.colorAtPixel(image, x, y).equals(MATCH_COLOR))
+                if (ImageProcessing.colorAtPixel(image, x, y).equals(FONT_PRIMARY_COLOR))
                     grapheme.fillRectangle(x - firstXWith, y - start[Y_INDEX], 1, 1);
 
         return grapheme.submit();
@@ -142,7 +143,7 @@ public class FontLoader {
 
             // LEFT
             for (int x = firstXWith; x < firstXWithout; x++) {
-                if (ImageProcessing.colorAtPixel(image, x, y).equals(MATCH_COLOR)) {
+                if (isAFontColor(ImageProcessing.colorAtPixel(image, x, y))) {
                     charWidthComponents[yIndex][LEFT] = x - firstXWith;
                     break;
                 }
@@ -153,7 +154,7 @@ public class FontLoader {
 
             // RIGHT
             for (int x = firstXWithout - 1; x >= firstXWith; x--) {
-                if (ImageProcessing.colorAtPixel(image, x, y).equals(MATCH_COLOR)) {
+                if (isAFontColor(ImageProcessing.colorAtPixel(image, x, y))) {
                     charWidthComponents[yIndex][RIGHT] = (x - firstXWith) + 1; // potential bug (term + 1 vs term)
                     break;
                 }
@@ -166,10 +167,14 @@ public class FontLoader {
         return charWidthComponents;
     }
 
+    private static boolean isAFontColor(final Color toCheck) {
+        return toCheck.equals(FONT_PRIMARY_COLOR) || toCheck.equals(FONT_SPACING_BOUND_COLOR);
+    }
+
     private static int firstXWithout(final GameImage image, final int[] start, final int[] size) {
         for (int x = (start[X_INDEX] + size[X_INDEX]) - 1; x >= start[X_INDEX]; x--)
             for (int y = start[Y_INDEX]; y < start[Y_INDEX] + size[Y_INDEX]; y++)
-                if (ImageProcessing.colorAtPixel(image, x, y).equals(MATCH_COLOR))
+                if (isAFontColor(ImageProcessing.colorAtPixel(image, x, y)))
                     return x + 1;
 
         return start[X_INDEX] + size[X_INDEX];
@@ -178,7 +183,7 @@ public class FontLoader {
     private static int firstXWith(final GameImage image, final int[] start, final int[] size) {
         for (int x = start[X_INDEX]; x < start[X_INDEX] + size[X_INDEX]; x++)
             for (int y = start[Y_INDEX]; y < start[Y_INDEX] + size[Y_INDEX]; y++)
-                if (ImageProcessing.colorAtPixel(image, x, y).equals(MATCH_COLOR))
+                if (isAFontColor(ImageProcessing.colorAtPixel(image, x, y)))
                     return x;
 
         return start[X_INDEX];
