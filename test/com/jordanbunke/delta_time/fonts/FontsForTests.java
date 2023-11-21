@@ -14,7 +14,7 @@ public class FontsForTests {
             CLASSIC = FontFamily.loadFromSources(
                     "Classic", FONT_PATH, true, "font-classic",
                     FontFamily.NOT_AVAILABLE, "font-classic-italics",
-                    2, 2, 0, true, CSS),
+                    2, 2, 1, true, CSS),
             VIGILANT = FontFamily.loadFromSources(
                     "Vigilant", FONT_PATH, true, "font-vigilant",
                     FontFamily.NOT_AVAILABLE, "font-vigilant-italics",
