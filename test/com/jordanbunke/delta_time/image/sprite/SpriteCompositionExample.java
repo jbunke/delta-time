@@ -149,19 +149,24 @@ public class SpriteCompositionExample {
     private static void saveSpriteSheet(
             final SpriteMap<Layer> spriteMap, final List<String> spriteIDs, final String prefix
     ) {
-        final int s = 5, w = WIDTH * s, h = HEIGHT * s;
+        final int s = 5, w = WIDTH * s, h = HEIGHT * s, intervalMillis = 250, reps = 5;
 
         final GameImage spriteSheet = new GameImage(w * spriteIDs.size(), h);
+        final GameImage[] animation = new GameImage[spriteIDs.size()];
         final int BUFFER = 10;
 
         for (int i = 0; i < spriteIDs.size(); i++) {
             final GameImage sprite = spriteMap.getSprite(spriteIDs.get(i));
+            animation[i] = sprite;
 
             spriteSheet.draw(ImageProcessing.scale(sprite, s), i * w, 0);
             spriteSheet.draw(drawText(spriteIDs.get(i)), BUFFER + (i * w), 0);
         }
 
-        GameImageIO.writeImage(Path.of("test_out", "sprite", prefix + "-spritesheet.png"), spriteSheet.submit());
+        final Path basePath = Path.of("test_out", "sprite");
+
+        GameImageIO.writeImage(basePath.resolve(Path.of(prefix + "-spritesheet.png")), spriteSheet.submit());
+        GameImageIO.writeGif(basePath.resolve(Path.of(prefix + "-anim.gif")), animation, intervalMillis, reps);
     }
 
     private static GameImage drawText(final String text) {
