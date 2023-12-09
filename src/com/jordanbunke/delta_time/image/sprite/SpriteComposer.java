@@ -28,7 +28,7 @@ public class SpriteComposer {
                 if (sampled.getAlpha() > 0) {
                     if (colorCoordinateMap.containsKey(sampled)) {
                         GameError.send("Duplicate color \"" + sampled +
-                                "\" detected for the second time at " +
+                                "\" detected again at " +
                                 new Coord2D(x, y));
                     } else {
                         colorCoordinateMap.put(sampled, new Coord2D(x, y));
