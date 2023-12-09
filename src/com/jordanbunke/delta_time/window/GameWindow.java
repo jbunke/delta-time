@@ -11,7 +11,7 @@ public class GameWindow {
     private final GameCanvas canvas;
     private final InputEventLogger eventLogger;
 
-    private final String title;
+    private String title;
     private int width, height;
 
     public GameWindow(final String title, final GameImage icon) {
@@ -71,6 +71,11 @@ public class GameWindow {
 
         canvas.setSizeFromWindow(width, height);
         frame.pack();
+    }
+
+    public void setTitle(final String title) {
+        this.title = title;
+        frame.setTitle(title);
     }
 
     public void closeInstance() {
