@@ -118,6 +118,10 @@ public class InputEventLogger implements
         return mousePosition;
     }
 
+    public Coord2D getRawMousePosition() {
+        return mousePosition;
+    }
+
     public boolean isPressed(final Key key) {
         return characterPressedStatusMap.getOrDefault(key, false);
     }
