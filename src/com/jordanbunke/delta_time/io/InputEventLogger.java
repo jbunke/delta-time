@@ -11,7 +11,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class InputEventLogger implements
-        KeyListener, MouseListener, MouseMotionListener, WindowListener {
+        KeyListener, MouseListener, MouseMotionListener, MouseWheelListener, WindowListener {
 
     private static final double DEFAULT_SCALE = 1.0;
 
@@ -169,19 +169,19 @@ public class InputEventLogger implements
     @Override
     public void mouseClicked(MouseEvent e) {
         eventList.add(new GameMouseEvent(new Coord2D(e.getX(), e.getY()),
-                GameMouseEvent.Action.CLICK));
+                GameMouseEvent.Action.CLICK, GameMouseEvent.Button.fromInt(e.getButton())));
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
         eventList.add(new GameMouseEvent(new Coord2D(e.getX(), e.getY()),
-                GameMouseEvent.Action.DOWN));
+                GameMouseEvent.Action.DOWN, GameMouseEvent.Button.fromInt(e.getButton())));
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
         eventList.add(new GameMouseEvent(new Coord2D(e.getX(), e.getY()),
-                GameMouseEvent.Action.UP));
+                GameMouseEvent.Action.UP, GameMouseEvent.Button.fromInt(e.getButton())));
     }
 
     @Override
@@ -210,6 +210,12 @@ public class InputEventLogger implements
         updateMousePosition(e);
         eventList.add(new GameMouseMoveEvent(new Coord2D(e.getX(), e.getY()),
                 GameMouseMoveEvent.Action.MOVE));
+    }
+
+    @Override
+    public void mouseWheelMoved(MouseWheelEvent e) {
+        updateMousePosition(e);
+        eventList.add(new GameMouseScrollEvent(e.getWheelRotation()));
     }
 
     @Override
