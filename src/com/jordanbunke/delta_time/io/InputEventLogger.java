@@ -172,47 +172,50 @@ public class InputEventLogger implements
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        eventList.add(new GameMouseEvent(new Coord2D(e.getX(), e.getY()),
+        updateMousePosition(e);
+        eventList.add(new GameMouseEvent(getAdjustedMousePosition(),
                 GameMouseEvent.Action.CLICK, GameMouseEvent.Button.fromInt(e.getButton())));
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        eventList.add(new GameMouseEvent(new Coord2D(e.getX(), e.getY()),
+        updateMousePosition(e);
+        eventList.add(new GameMouseEvent(getAdjustedMousePosition(),
                 GameMouseEvent.Action.DOWN, GameMouseEvent.Button.fromInt(e.getButton())));
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        eventList.add(new GameMouseEvent(new Coord2D(e.getX(), e.getY()),
+        updateMousePosition(e);
+        eventList.add(new GameMouseEvent(getAdjustedMousePosition(),
                 GameMouseEvent.Action.UP, GameMouseEvent.Button.fromInt(e.getButton())));
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
         updateMousePosition(e);
-        eventList.add(new GameMouseMoveEvent(new Coord2D(e.getX(), e.getY()),
+        eventList.add(new GameMouseMoveEvent(getAdjustedMousePosition(),
                 GameMouseMoveEvent.Action.ENTER));
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
         updateMousePosition(e);
-        eventList.add(new GameMouseMoveEvent(new Coord2D(e.getX(), e.getY()),
+        eventList.add(new GameMouseMoveEvent(getAdjustedMousePosition(),
                 GameMouseMoveEvent.Action.EXIT));
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
         updateMousePosition(e);
-        eventList.add(new GameMouseMoveEvent(new Coord2D(e.getX(), e.getY()),
+        eventList.add(new GameMouseMoveEvent(getAdjustedMousePosition(),
                 GameMouseMoveEvent.Action.DRAG));
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
         updateMousePosition(e);
-        eventList.add(new GameMouseMoveEvent(new Coord2D(e.getX(), e.getY()),
+        eventList.add(new GameMouseMoveEvent(getAdjustedMousePosition(),
                 GameMouseMoveEvent.Action.MOVE));
     }
 
