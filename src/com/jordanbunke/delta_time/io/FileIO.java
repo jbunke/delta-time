@@ -11,6 +11,8 @@ import java.nio.file.Path;
 import java.util.Optional;
 
 public class FileIO {
+    private static final JFileChooser FILE_DIALOG = new JFileChooser();
+
     public static void safeMakeDirectory(final Path dirPath) {
         File dir = dirPath.toFile();
 
@@ -85,25 +87,37 @@ public class FileIO {
         }
     }
 
+    public static void setDialogToFoldersOnly() {
+        FILE_DIALOG.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+    }
+
+    public static void setDialogToFilesOnly() {
+        FILE_DIALOG.setFileSelectionMode(JFileChooser.FILES_ONLY);
+    }
+
+    public static void setDialogToFilesAndFolders() {
+        FILE_DIALOG.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+    }
+
     public static Optional<File> openFileFromSystem() {
         return openFileFromSystem(new String[] {}, new String[][] {});
     }
 
-    public static Optional<File> openFileFromSystem(final String[] filterNames, final String[][] extensionFilters) {
-        final JFileChooser fc = new JFileChooser();
-
+    public static Optional<File> openFileFromSystem(
+            final String[] filterNames, final String[][] extensionFilters
+    ) {
         if (filterNames.length != extensionFilters.length) {
             GameError.send("Number of filter names does not match number of extensions in file chooser");
             return Optional.empty();
         }
 
         for (int i = 0; i < filterNames.length; i++)
-            fc.setFileFilter(new FileNameExtensionFilter(filterNames[i], extensionFilters[i]));
+            FILE_DIALOG.setFileFilter(new FileNameExtensionFilter(filterNames[i], extensionFilters[i]));
 
-        final int result = fc.showOpenDialog(null);
+        final int result = FILE_DIALOG.showOpenDialog(null);
 
         if (result == JFileChooser.APPROVE_OPTION)
-            return Optional.of(fc.getSelectedFile());
+            return Optional.of(FILE_DIALOG.getSelectedFile());
         else return Optional.empty();
     }
 }
