@@ -69,7 +69,7 @@ public class InputEventLogger implements
     public List<GameEvent> getUnprocessedEvents() {
         try {
             return new ArrayList<>(eventList).stream()
-                    .filter(x -> !x.isProcessed()).collect(Collectors.toList());
+                    .filter(x -> x!= null && !x.isProcessed()).collect(Collectors.toList());
         } catch (ConcurrentModificationException e) {
             GameError.send(
                     "Attempted to fetch unprocessed input events as one occurred. Events were not returned."
