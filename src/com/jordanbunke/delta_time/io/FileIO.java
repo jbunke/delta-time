@@ -11,7 +11,7 @@ import java.nio.file.Path;
 import java.util.Optional;
 
 public class FileIO {
-    private static final JFileChooser FILE_DIALOG = new JFileChooser();
+    private static JFileChooser FILE_DIALOG = new JFileChooser();
 
     public static void safeMakeDirectory(final Path dirPath) {
         File dir = dirPath.toFile();
@@ -85,6 +85,10 @@ public class FileIO {
         } catch (IOException e) {
             GameError.send("Couldn't delete file: " + filepath);
         }
+    }
+
+    public static void reinitializeDialog() {
+        FILE_DIALOG = new JFileChooser();
     }
 
     public static void setDialogToFoldersOnly() {

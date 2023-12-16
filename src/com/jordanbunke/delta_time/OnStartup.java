@@ -1,6 +1,7 @@
 package com.jordanbunke.delta_time;
 
 import com.jordanbunke.delta_time.error.GameError;
+import com.jordanbunke.delta_time.io.FileIO;
 import com.jordanbunke.delta_time.utility.DeltaTimeGlobal;
 
 import javax.swing.*;
@@ -10,6 +11,7 @@ public class OnStartup {
     public static void run() {
         startUpMessages();
         setLookAndFeel();
+        FileIO.reinitializeDialog();
     }
 
     private static void startUpMessages() {
