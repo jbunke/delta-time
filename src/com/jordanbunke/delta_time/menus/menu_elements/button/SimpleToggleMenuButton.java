@@ -1,17 +1,16 @@
 package com.jordanbunke.delta_time.menus.menu_elements.button;
 
 import com.jordanbunke.delta_time.debug.GameDebugger;
-import com.jordanbunke.delta_time.error.GameError;
 import com.jordanbunke.delta_time.image.GameImage;
 import com.jordanbunke.delta_time.utility.Coord2D;
 
-import java.util.concurrent.Callable;
+import java.util.function.Supplier;
 
 public class SimpleToggleMenuButton extends MenuButtonStub {
     private final GameImage[] nonHighlightedImages, highlightedImages;
     private final Runnable[] chosenBehaviours;
     private final Runnable globalBehaviour;
-    private final Callable<Integer> updateIndexLogic;
+    private final Supplier<Integer> updateIndexLogic;
 
     private int index;
     private final int length;
@@ -20,7 +19,7 @@ public class SimpleToggleMenuButton extends MenuButtonStub {
             final Coord2D position, final Coord2D dimensions,
             final Anchor anchor, final boolean visible,
             final GameImage[] nonHighlightedImages, final GameImage[] highlightedImages,
-            final Runnable[] chosenBehaviours, final Callable<Integer> updateIndexLogic,
+            final Runnable[] chosenBehaviours, final Supplier<Integer> updateIndexLogic,
             final Runnable globalBehaviour
     ) {
         super(position, dimensions, anchor, visible);
@@ -37,13 +36,8 @@ public class SimpleToggleMenuButton extends MenuButtonStub {
     }
 
     @Override
-    public void update(double deltaTime) {
-        try {
-            index = updateIndexLogic.call();
-        } catch (Exception e) {
-            GameError.send("Could not perform index update in " +
-                    this + ".");
-        }
+    public void update(final double deltaTime) {
+        index = updateIndexLogic.get();
     }
 
     @Override

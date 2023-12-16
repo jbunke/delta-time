@@ -1,18 +1,17 @@
 package com.jordanbunke.delta_time.menus;
 
-import com.jordanbunke.delta_time.error.GameError;
 import com.jordanbunke.delta_time.events.GameEvent;
-import com.jordanbunke.delta_time.events.Key;
 import com.jordanbunke.delta_time.events.GameKeyEvent;
 import com.jordanbunke.delta_time.events.GameMouseMoveEvent;
+import com.jordanbunke.delta_time.events.Key;
 import com.jordanbunke.delta_time.io.InputEventLogger;
 
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 public class MenuSelectionLogic {
-    private final Callable<List<Key>> fChoose, fLeft, fUp, fDown, fRight;
+    private final Supplier<List<Key>> fChoose, fLeft, fUp, fDown, fRight;
 
     private MenuSelectionLogic() {
         fChoose = () -> List.of(Key.ENTER, Key.SPACE);
@@ -23,11 +22,11 @@ public class MenuSelectionLogic {
     }
 
     private MenuSelectionLogic(
-            final Callable<List<Key>> fChoose,
-            final Callable<List<Key>> fLeft,
-            final Callable<List<Key>> fRight,
-            final Callable<List<Key>> fUp,
-            final Callable<List<Key>> fDown
+            final Supplier<List<Key>> fChoose,
+            final Supplier<List<Key>> fLeft,
+            final Supplier<List<Key>> fRight,
+            final Supplier<List<Key>> fUp,
+            final Supplier<List<Key>> fDown
     ) {
         this.fChoose = fChoose;
         this.fLeft = fLeft;
@@ -41,11 +40,11 @@ public class MenuSelectionLogic {
     }
 
     public static BiConsumer<InputEventLogger, Menu> generate(
-            final Callable<List<Key>> fChoose,
-            final Callable<List<Key>> fLeft,
-            final Callable<List<Key>> fRight,
-            final Callable<List<Key>> fUp,
-            final Callable<List<Key>> fDown
+            final Supplier<List<Key>> fChoose,
+            final Supplier<List<Key>> fLeft,
+            final Supplier<List<Key>> fRight,
+            final Supplier<List<Key>> fUp,
+            final Supplier<List<Key>> fDown
     ) {
         return new MenuSelectionLogic(fChoose, fLeft, fRight, fUp, fDown).get();
     }
@@ -69,34 +68,30 @@ public class MenuSelectionLogic {
                         keyEvent.matchesAction(GameKeyEvent.Action.PRESS)) {
                     final Key key = keyEvent.key;
 
-                    try {
-                        if (fLeft.call().contains(key)) {
-                            menu.select(Menu.Direction.LEFT);
-                            keyEvent.markAsProcessed();
-                            return;
-                        }
-                        else if (fRight.call().contains(key)) {
-                            menu.select(Menu.Direction.RIGHT);
-                            keyEvent.markAsProcessed();
-                            return;
-                        }
-                        else if (fUp.call().contains(key)) {
-                            menu.select(Menu.Direction.UP);
-                            keyEvent.markAsProcessed();
-                            return;
-                        }
-                        else if (fDown.call().contains(key)) {
-                            menu.select(Menu.Direction.DOWN);
-                            keyEvent.markAsProcessed();
-                            return;
-                        }
-                        else if (fChoose.call().contains(key)) {
-                            menu.attemptChoose();
-                            keyEvent.markAsProcessed();
-                            return;
-                        }
-                    } catch (Exception ex) {
-                        GameError.send("Selection logic function call to resolve keystroke resulted in an error");
+                    if (fLeft.get().contains(key)) {
+                        menu.select(Menu.Direction.LEFT);
+                        keyEvent.markAsProcessed();
+                        return;
+                    }
+                    else if (fRight.get().contains(key)) {
+                        menu.select(Menu.Direction.RIGHT);
+                        keyEvent.markAsProcessed();
+                        return;
+                    }
+                    else if (fUp.get().contains(key)) {
+                        menu.select(Menu.Direction.UP);
+                        keyEvent.markAsProcessed();
+                        return;
+                    }
+                    else if (fDown.get().contains(key)) {
+                        menu.select(Menu.Direction.DOWN);
+                        keyEvent.markAsProcessed();
+                        return;
+                    }
+                    else if (fChoose.get().contains(key)) {
+                        menu.attemptChoose();
+                        keyEvent.markAsProcessed();
+                        return;
                     }
                 }
             }
