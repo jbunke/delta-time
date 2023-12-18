@@ -73,6 +73,15 @@ public class GameWindow {
         frame.pack();
     }
 
+    public void hideCursor() {
+        frame.setCursor(Toolkit.getDefaultToolkit().createCustomCursor(
+                GameImage.dummy(), new Point(), "hidden"));
+    }
+
+    public void resetCursor() {
+        frame.setCursor(Cursor.getDefaultCursor());
+    }
+
     public void setTitle(final String title) {
         this.title = title;
         frame.setTitle(title);
