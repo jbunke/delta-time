@@ -5,7 +5,7 @@ import java.awt.event.KeyEvent;
 public enum Key {
     DOWN_ARROW, UP_ARROW, LEFT_ARROW, RIGHT_ARROW,
 
-    ENTER, BACKSPACE, DELETE, TAB, SHIFT, ESCAPE, SPACE, CTRL,
+    ENTER, BACKSPACE, DELETE, TAB, SHIFT, ESCAPE, SPACE, CTRL, ALT,
 
     A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,
 
@@ -17,7 +17,8 @@ public enum Key {
         return "[ " + switch (this) {
             case A, B, C, D, E, F, G, H, I, J, K, L, M,
                     N, O, P, Q, R, S, T, U, V, W, X, Y, Z,
-                    ENTER, BACKSPACE, DELETE, TAB, SHIFT, ESCAPE, SPACE, CTRL -> name();
+                    ENTER, BACKSPACE, DELETE, TAB, SHIFT,
+                    ESCAPE, SPACE, CTRL, ALT -> name();
             case _0, _1, _2, _3, _4, _5, _6, _7, _8, _9 -> name().substring(1);
             case UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW ->
                     name().replace("_", " ");
@@ -49,6 +50,7 @@ public enum Key {
             case 10 -> ENTER;
             case 16 -> SHIFT;
             case 17 -> CTRL;
+            case 18 -> ALT;
             case 27 -> ESCAPE;
             case 37 -> LEFT_ARROW;
             case 38 -> UP_ARROW;
