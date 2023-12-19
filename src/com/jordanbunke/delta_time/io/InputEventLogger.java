@@ -27,6 +27,7 @@ public class InputEventLogger implements
         canvas.addKeyListener(this);
         canvas.addMouseListener(this);
         canvas.addMouseMotionListener(this);
+        canvas.addMouseWheelListener(this);
 
         tasks = new ArrayList<>();
 
