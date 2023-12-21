@@ -1,5 +1,6 @@
 package com.jordanbunke.delta_time.image.sprite;
 
+import com.jordanbunke.anim.GIFWriter;
 import com.jordanbunke.delta_time.debug.GameDebugger;
 import com.jordanbunke.delta_time.fonts.FontsForTests;
 import com.jordanbunke.delta_time.game.Game;
@@ -166,7 +167,7 @@ public class SpriteCompositionExample {
         final Path basePath = Path.of("test_out", "sprite");
 
         GameImageIO.writeImage(basePath.resolve(Path.of(prefix + "-spritesheet.png")), spriteSheet.submit());
-        GameImageIO.writeGif(basePath.resolve(Path.of(prefix + "-anim.gif")), animation, intervalMillis, reps);
+        GIFWriter.get().write(basePath.resolve(Path.of(prefix + "-anim.gif")), animation, intervalMillis, reps);
     }
 
     private static GameImage drawText(final String text) {
