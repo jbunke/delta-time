@@ -87,6 +87,10 @@ public class InputEventLogger implements
         CollectionProcessing.emptyList(eventList);
     }
 
+    public void unpressAllKeys() {
+        characterPressedStatusMap.clear();
+    }
+
     public void addTask(final InputTask task) {
         tasks.add(task);
     }

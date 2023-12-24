@@ -115,6 +115,8 @@ public class FileIO {
             return Optional.empty();
         }
 
+        FILE_DIALOG.setMultiSelectionEnabled(false);
+
         for (int i = 0; i < filterNames.length; i++)
             FILE_DIALOG.setFileFilter(new FileNameExtensionFilter(filterNames[i], extensionFilters[i]));
 
@@ -122,6 +124,30 @@ public class FileIO {
 
         if (result == JFileChooser.APPROVE_OPTION)
             return Optional.of(FILE_DIALOG.getSelectedFile());
+        else return Optional.empty();
+    }
+
+    public static Optional<File[]> openFilesFromSystem() {
+        return openFilesFromSystem(new String[] {}, new String[][] {});
+    }
+
+    public static Optional<File[]> openFilesFromSystem(
+            final String[] filterNames, final String[][] extensionFilters
+    ) {
+        if (filterNames.length != extensionFilters.length) {
+            GameError.send("Number of filter names does not match number of extensions in file chooser");
+            return Optional.empty();
+        }
+
+        FILE_DIALOG.setMultiSelectionEnabled(true);
+
+        for (int i = 0; i < filterNames.length; i++)
+            FILE_DIALOG.setFileFilter(new FileNameExtensionFilter(filterNames[i], extensionFilters[i]));
+
+        final int result = FILE_DIALOG.showOpenDialog(null);
+
+        if (result == JFileChooser.APPROVE_OPTION)
+            return Optional.of(FILE_DIALOG.getSelectedFiles());
         else return Optional.empty();
     }
 }
