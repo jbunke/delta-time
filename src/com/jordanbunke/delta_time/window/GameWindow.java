@@ -55,6 +55,8 @@ public class GameWindow {
         canvas.setFocusable(true);
         canvas.requestFocus();
 
+        frame.addWindowListener(eventLogger);
+
         // Sizes the window according to the size of the canvas
         frame.pack();
 
