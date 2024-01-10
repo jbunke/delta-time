@@ -145,14 +145,14 @@ public class InputEventLogger implements
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {
+    public void keyTyped(final KeyEvent e) {
         char character = e.getKeyChar();
 
         handleKeyEvent(GameKeyEvent.newTypedKey(character));
     }
 
     @Override
-    public void keyPressed(KeyEvent e) {
+    public void keyPressed(final KeyEvent e) {
         Key key = Key.fromKeyEvent(e);
 
         if (characterPressedStatusMap.containsKey(key) && characterPressedStatusMap.get(key))
@@ -165,7 +165,7 @@ public class InputEventLogger implements
     }
 
     @Override
-    public void keyReleased(KeyEvent e) {
+    public void keyReleased(final KeyEvent e) {
         Key key = Key.fromKeyEvent(e);
 
         if (characterPressedStatusMap.containsKey(key) && !characterPressedStatusMap.get(key))
@@ -176,92 +176,92 @@ public class InputEventLogger implements
     }
 
     @Override
-    public void mouseClicked(MouseEvent e) {
+    public void mouseClicked(final MouseEvent e) {
         updateMousePosition(e);
         eventList.add(new GameMouseEvent(getAdjustedMousePosition(),
                 GameMouseEvent.Action.CLICK, GameMouseEvent.Button.fromInt(e.getButton())));
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {
+    public void mousePressed(final MouseEvent e) {
         updateMousePosition(e);
         eventList.add(new GameMouseEvent(getAdjustedMousePosition(),
                 GameMouseEvent.Action.DOWN, GameMouseEvent.Button.fromInt(e.getButton())));
     }
 
     @Override
-    public void mouseReleased(MouseEvent e) {
+    public void mouseReleased(final MouseEvent e) {
         updateMousePosition(e);
         eventList.add(new GameMouseEvent(getAdjustedMousePosition(),
                 GameMouseEvent.Action.UP, GameMouseEvent.Button.fromInt(e.getButton())));
     }
 
     @Override
-    public void mouseEntered(MouseEvent e) {
+    public void mouseEntered(final MouseEvent e) {
         updateMousePosition(e);
         eventList.add(new GameMouseMoveEvent(getAdjustedMousePosition(),
                 GameMouseMoveEvent.Action.ENTER));
     }
 
     @Override
-    public void mouseExited(MouseEvent e) {
+    public void mouseExited(final MouseEvent e) {
         updateMousePosition(e);
         eventList.add(new GameMouseMoveEvent(getAdjustedMousePosition(),
                 GameMouseMoveEvent.Action.EXIT));
     }
 
     @Override
-    public void mouseDragged(MouseEvent e) {
+    public void mouseDragged(final MouseEvent e) {
         updateMousePosition(e);
         eventList.add(new GameMouseMoveEvent(getAdjustedMousePosition(),
                 GameMouseMoveEvent.Action.DRAG));
     }
 
     @Override
-    public void mouseMoved(MouseEvent e) {
+    public void mouseMoved(final MouseEvent e) {
         updateMousePosition(e);
         eventList.add(new GameMouseMoveEvent(getAdjustedMousePosition(),
                 GameMouseMoveEvent.Action.MOVE));
     }
 
     @Override
-    public void mouseWheelMoved(MouseWheelEvent e) {
+    public void mouseWheelMoved(final MouseWheelEvent e) {
         updateMousePosition(e);
         eventList.add(new GameMouseScrollEvent(e.getWheelRotation()));
     }
 
     @Override
-    public void windowOpened(java.awt.event.WindowEvent e) {
+    public void windowOpened(final WindowEvent e) {
         eventList.add(new GameWindowEvent(GameWindowEvent.Action.OPENED));
     }
 
     @Override
-    public void windowClosing(java.awt.event.WindowEvent e) {
+    public void windowClosing(final WindowEvent e) {
         eventList.add(new GameWindowEvent(GameWindowEvent.Action.CLOSING));
     }
 
     @Override
-    public void windowClosed(java.awt.event.WindowEvent e) {
+    public void windowClosed(final WindowEvent e) {
         eventList.add(new GameWindowEvent(GameWindowEvent.Action.CLOSED));
     }
 
     @Override
-    public void windowIconified(java.awt.event.WindowEvent e) {
+    public void windowIconified(final WindowEvent e) {
         eventList.add(new GameWindowEvent(GameWindowEvent.Action.ICONIFIED));
     }
 
     @Override
-    public void windowDeiconified(java.awt.event.WindowEvent e) {
+    public void windowDeiconified(final WindowEvent e) {
         eventList.add(new GameWindowEvent(GameWindowEvent.Action.DEICONIFIED));
     }
 
     @Override
-    public void windowActivated(java.awt.event.WindowEvent e) {
+    public void windowActivated(final WindowEvent e) {
         eventList.add(new GameWindowEvent(GameWindowEvent.Action.ACTIVATED));
     }
 
     @Override
-    public void windowDeactivated(java.awt.event.WindowEvent e) {
+    public void windowDeactivated(final WindowEvent e) {
         eventList.add(new GameWindowEvent(GameWindowEvent.Action.DEACTIVATED));
     }
 

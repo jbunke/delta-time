@@ -91,9 +91,16 @@ public class GameWindow {
         frame.setTitle(title);
     }
 
-    public void closeInstance() {
+    public void disposeFrame() {
         frame.dispose();
+    }
 
+    public void closeInstance() {
+        disposeFrame();
+        executeOnClose();
+    }
+
+    public void executeOnClose() {
         if (onCloseBehaviour != null)
             onCloseBehaviour.run();
     }

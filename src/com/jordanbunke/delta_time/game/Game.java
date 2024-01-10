@@ -65,7 +65,7 @@ public class Game implements Runnable {
     }
 
     public void replaceWindow(final GameWindow replacement) {
-        window.closeInstance();
+        window.disposeFrame();
         window = replacement;
 
         updateScaleUp();
