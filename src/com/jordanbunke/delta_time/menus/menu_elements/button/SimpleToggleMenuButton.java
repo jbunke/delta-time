@@ -58,4 +58,8 @@ public class SimpleToggleMenuButton extends MenuButtonStub {
         index++;
         index %= length;
     }
+
+    public int getIndex() {
+        return index;
+    }
 }
