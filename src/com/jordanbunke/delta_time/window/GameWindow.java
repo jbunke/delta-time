@@ -14,6 +14,8 @@ public class GameWindow {
     private String title;
     private int width, height;
 
+    private Runnable onCloseBehaviour;
+
     public GameWindow(final String title, final GameImage icon) {
         this(title, Toolkit.getDefaultToolkit().getScreenSize().width,
                 Toolkit.getDefaultToolkit().getScreenSize().height,
@@ -36,6 +38,8 @@ public class GameWindow {
         frame = new JFrame(title);
         canvas = new GameCanvas(width, height);
         eventLogger = InputEventLogger.create(canvas);
+
+        onCloseBehaviour = null;
 
         if (maximized) {
             frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -89,6 +93,9 @@ public class GameWindow {
 
     public void closeInstance() {
         frame.dispose();
+
+        if (onCloseBehaviour != null)
+            onCloseBehaviour.run();
     }
 
     public void draw(final GameImage image) {
@@ -97,6 +104,10 @@ public class GameWindow {
 
     public void clearCanvas() {
         canvas.clear();
+    }
+
+    public void setOnCloseBehaviour(final Runnable onCloseBehaviour) {
+        this.onCloseBehaviour = onCloseBehaviour;
     }
 
     public InputEventLogger getEventLogger() {

@@ -132,6 +132,10 @@ public class Game implements Runnable {
         }
     }
 
+    public void terminateExecution() {
+        running = false;
+    }
+
     private void updateAndProcess(final double deltaTime) {
         // Update
         debugger.startTimer();
