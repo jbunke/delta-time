@@ -117,6 +117,8 @@ public class FileIO {
 
         FILE_DIALOG.setMultiSelectionEnabled(false);
 
+        FILE_DIALOG.resetChoosableFileFilters();
+
         for (int i = 0; i < filterNames.length; i++)
             FILE_DIALOG.setFileFilter(new FileNameExtensionFilter(filterNames[i], extensionFilters[i]));
 
