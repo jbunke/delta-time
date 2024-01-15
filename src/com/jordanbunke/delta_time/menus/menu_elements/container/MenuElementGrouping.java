@@ -3,8 +3,12 @@ package com.jordanbunke.delta_time.menus.menu_elements.container;
 import com.jordanbunke.delta_time.debug.GameDebugger;
 import com.jordanbunke.delta_time.image.GameImage;
 import com.jordanbunke.delta_time.io.InputEventLogger;
+import com.jordanbunke.delta_time.menus.menu_elements.DeferredRenderMenuElement;
 import com.jordanbunke.delta_time.menus.menu_elements.MenuElement;
 import com.jordanbunke.delta_time.utility.Coord2D;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MenuElementGrouping extends MenuElementContainer {
     private final MenuElement[] menuElements;
@@ -23,14 +27,30 @@ public class MenuElementGrouping extends MenuElementContainer {
 
     @Override
     public void render(final GameImage canvas) {
+        final List<DeferredRenderMenuElement> deferred = new ArrayList<>();
+
         for (MenuElement menuElement : menuElements)
-            menuElement.render(canvas);
+            if (menuElement instanceof DeferredRenderMenuElement d)
+                deferred.add(d);
+            else
+                menuElement.render(canvas);
+
+        for (DeferredRenderMenuElement d : deferred)
+            d.render(canvas);
     }
 
     @Override
     public void debugRender(final GameImage canvas, final GameDebugger debugger) {
+        final List<DeferredRenderMenuElement> deferred = new ArrayList<>();
+
         for (MenuElement menuElement : menuElements)
-            menuElement.debugRender(canvas, debugger);
+            if (menuElement instanceof DeferredRenderMenuElement d)
+                deferred.add(d);
+            else
+                menuElement.debugRender(canvas, debugger);
+
+        for (DeferredRenderMenuElement d : deferred)
+            d.debugRender(canvas, debugger);
     }
 
     @Override
