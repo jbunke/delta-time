@@ -17,7 +17,7 @@ public class Game implements Runnable {
     private GameWindow window;
     private final Thread updateThread;
     private int canvasWidth, canvasHeight;
-    private boolean scaleUp, running;
+    private boolean scaleUp, running, scheduleUpdates;
 
     // 3 interfaces ideally implemented as a single game manager
     private final EventHandler eventHandler;
@@ -46,6 +46,7 @@ public class Game implements Runnable {
 
         this.updateHz = updateHz;
         this.targetFps = targetFps;
+        scheduleUpdates = true;
 
         initialize();
     }
@@ -92,16 +93,25 @@ public class Game implements Runnable {
 
             // UPDATE BLOCK
             final double nanosSinceUpdate = now - lastUpdateTime;
-            final int updatesScheduled = (int)(nanosSinceUpdate / NANOSECONDS_PER_UPDATE);
 
-            for (int i = 0; i < updatesScheduled; i++) {
-                updateAndProcess(NANOSECONDS_PER_UPDATE);
+            if (scheduleUpdates) {
+                final int updatesScheduled = (int)(nanosSinceUpdate / NANOSECONDS_PER_UPDATE);
 
-                lastUpdateTime += NANOSECONDS_PER_UPDATE;
+                for (int i = 0; i < updatesScheduled; i++) {
+                    updateAndProcess(NANOSECONDS_PER_UPDATE);
+
+                    lastUpdateTime += NANOSECONDS_PER_UPDATE;
+                }
+
+                if (now - lastUpdateTime > NANOSECONDS_PER_UPDATE)
+                    lastUpdateTime = now - NANOSECONDS_PER_UPDATE;
+            } else {
+                if (nanosSinceUpdate > NANOSECONDS_PER_UPDATE) {
+                    updateAndProcess(nanosSinceUpdate);
+
+                    lastUpdateTime = now;
+                }
             }
-
-            if (now - lastUpdateTime > NANOSECONDS_PER_UPDATE)
-                lastUpdateTime = now - NANOSECONDS_PER_UPDATE;
 
             now = System.nanoTime();
 
@@ -176,6 +186,10 @@ public class Game implements Runnable {
     // SETTERS
     public void overrideDebugger(final GameDebugger debugger) {
         this.debugger = debugger;
+    }
+
+    public void setScheduleUpdates(final boolean scheduleUpdates) {
+        this.scheduleUpdates = scheduleUpdates;
     }
 
     public void setCanvasSize(final int canvasWidth, final int canvasHeight) {
