@@ -7,6 +7,18 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class MathPlus {
+    public static double bounded(
+            final double min, final double value, final double max
+    ) {
+        return Math.min(max, Math.max(value, min));
+    }
+
+    public static int bounded(
+            final int min, final int value, final int max
+    ) {
+        return Math.min(max, Math.max(value, min));
+    }
+
     public static double minMagnitude(final double... values) {
         return findBestDouble(0d, Double.MAX_VALUE, Math::abs,
                 (x, y) -> x < y, values);
