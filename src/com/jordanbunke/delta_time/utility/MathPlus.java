@@ -1,7 +1,10 @@
 package com.jordanbunke.delta_time.utility;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class MathPlus {
     public static double minMagnitude(final double... values) {
@@ -77,5 +80,20 @@ public class MathPlus {
 
     public static double maxMagnitude(final double a, final double b) {
         return Math.abs(a) > Math.abs(b) ? a : b;
+    }
+
+    public static <E> Set<E> union(final Set<E> a, final Set<E> b) {
+        final Set<E> s = new HashSet<>(a);
+        s.addAll(b);
+        return s;
+    }
+
+    public static <E> Set<E> intersection(final Set<E> a, final Set<E> b) {
+        return a.stream().filter(b::contains).collect(Collectors.toSet());
+    }
+
+    public static <E> Set<E> difference(final Set<E> a, final Set<E> b) {
+        return a.stream().filter(element -> !b.contains(element))
+                .collect(Collectors.toSet());
     }
 }
