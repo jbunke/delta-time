@@ -4,6 +4,7 @@ import com.jordanbunke.delta_time.debug.GameDebugger;
 import com.jordanbunke.delta_time.image.GameImage;
 import com.jordanbunke.delta_time.io.InputEventLogger;
 import com.jordanbunke.delta_time.menus.menu_elements.MenuElement;
+import com.jordanbunke.delta_time.utility.Coord2D;
 
 import java.util.function.Supplier;
 
@@ -46,5 +47,35 @@ public final class ThinkingMenuElement extends InvisibleMenuElement {
 
     private void think() {
         decision = thoughtProcess.get();
+    }
+
+    @Override
+    public Coord2D getRenderPosition() {
+        return decision != null ? decision.getRenderPosition() : super.getRenderPosition();
+    }
+
+    @Override
+    public Anchor getAnchor() {
+        return decision != null ? decision.getAnchor() : super.getAnchor();
+    }
+
+    @Override
+    public int getX() {
+        return decision != null ? decision.getX() : super.getX();
+    }
+
+    @Override
+    public int getY() {
+        return decision != null ? decision.getY() : super.getY();
+    }
+
+    @Override
+    public int getWidth() {
+        return decision != null ? decision.getWidth() : super.getWidth();
+    }
+
+    @Override
+    public int getHeight() {
+        return decision != null ? decision.getHeight() : super.getHeight();
     }
 }
