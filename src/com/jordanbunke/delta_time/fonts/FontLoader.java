@@ -10,6 +10,7 @@ import java.awt.*;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 import static com.jordanbunke.delta_time.fonts.FontConstants.*;
 
@@ -24,13 +25,22 @@ public class FontLoader {
 
     public static Map<Character, Grapheme> loadASCIIFromSource(
             final Path source, final boolean isResource,
-            final double whitespaceBreadthMultiplier, final boolean charSpecificSpacing
+            final double whitespaceBreadthMultiplier,
+            final boolean charSpecificSpacing
     ) {
-        GameImage image = isResource
+        final GameImage image = isResource
                 ? ResourceLoader.loadImageResource(source)
                 : GameImageIO.readImage(source);
-        Map<Character, Grapheme> map = new HashMap<>();
 
+        return loadASCII(image, whitespaceBreadthMultiplier,
+                charSpecificSpacing);
+    }
+
+    public static Map<Character, Grapheme> loadASCII(
+            final GameImage image, final double whitespaceBreadthMultiplier,
+            final boolean charSpecificSpacing
+    ) {
+        final Map<Character, Grapheme> map = new HashMap<>();
         final int scaleMultiplier = sourceToScaleMultiplier(image);
 
         // manual insertion of space character
@@ -42,15 +52,8 @@ public class FontLoader {
                 scaleMultiplier, charSpecificSpacing);
         map.put(REPLACEMENT, replacementGrapheme);
 
-        for (char c = STARTING_ASCII; c <= FINAL_ASCII; c++) {
-            int[] coordinates = asciiToCoordinates(c);
-
-            if (coordinates.length != 2) continue;
-
-            final Grapheme grapheme = graphemeFromCoordinates(image, c, coordinates,
-                    scaleMultiplier, charSpecificSpacing);
-            map.put(c, grapheme);
-        }
+        mapLoader(map, image, charSpecificSpacing, STARTING_ASCII,
+                FINAL_ASCII, i -> (char) i.intValue(), c -> false);
 
         return map;
     }
@@ -58,28 +61,50 @@ public class FontLoader {
     public static Map<Character, Grapheme> loadLatinExtendedFromSource(
             final Path source, final boolean isResource,
             final boolean charSpecificSpacing) {
-        GameImage image = isResource
+        final GameImage image = isResource
                 ? ResourceLoader.loadImageResource(source)
                 : GameImageIO.readImage(source);
-        Map<Character, Grapheme> map = new HashMap<>();
 
-        final int scaleMultiplier = sourceToScaleMultiplier(image);
+        return loadLatinExtended(image, charSpecificSpacing);
+    }
 
-        for (int i = 0; i < NUM_LATIN_EXTENDED_CHARS; i++) {
-            int[] coordinates = asciiToCoordinates((char) i);
-            char c = charFromIndexLatinExtended(i);
+    public static Map<Character, Grapheme> loadLatinExtended(
+            final GameImage image, final boolean charSpecificSpacing
+    ) {
+        final Map<Character, Grapheme> map = new HashMap<>();
 
-            if (coordinates.length != 2 || c == REPLACEMENT) continue;
-
-            Grapheme grapheme = graphemeFromCoordinates(image, c, coordinates,
-                    scaleMultiplier, charSpecificSpacing);
-            map.put(c, grapheme);
-        }
+        mapLoader(map, image, charSpecificSpacing, 0,
+                NUM_LATIN_EXTENDED_CHARS - 1,
+                FontLoader::charFromIndexLatinExtended,
+                c -> c == REPLACEMENT);
 
         return map;
     }
 
     // HELPER FUNCTIONS:
+    private static void mapLoader(
+            final Map<Character, Grapheme> map,
+            final GameImage image, final boolean charSpecificSpacing,
+            final int start, final int end,
+            final Function<Integer, Character> characterRetriever,
+            final Function<Character, Boolean> ignoreCondition
+    ) {
+        final int scaleMultiplier = sourceToScaleMultiplier(image);
+
+        for (int i = start; i <= end; i++) {
+            int[] coordinates = asciiToCoordinates((char) i);
+            char c = characterRetriever.apply(i);
+
+            if (coordinates.length != 2 || ignoreCondition.apply(c))
+                continue;
+
+            final Grapheme grapheme =
+                    graphemeFromCoordinates(image, c, coordinates,
+                            scaleMultiplier, charSpecificSpacing);
+            map.put(c, grapheme);
+        }
+    }
+
     private static Grapheme graphemeFromCoordinates(
             final GameImage image, final char c, final int[] coordinates,
             final int scaleMultiplier, final boolean charSpecificSpacing
@@ -218,6 +243,7 @@ public class FontLoader {
             case 24 -> 'Ú';
             case 25 -> 'Ù';
             case 26 -> 'Û';
+            // TODO - Ọ, Ẹ, Ị, Ụ, Ṣ
             // GAP
             case 32 -> 'ä';
             case 33 -> 'á';
@@ -246,6 +272,7 @@ public class FontLoader {
             case 56 -> 'ú';
             case 57 -> 'ù';
             case 58 -> 'û';
+            // TODO - ß, ọ, ẹ, ị, ụ, ṣ
             default -> REPLACEMENT;
         };
     }

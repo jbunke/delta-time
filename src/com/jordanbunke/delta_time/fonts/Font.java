@@ -47,7 +47,7 @@ public class Font {
     ) {
         final Path asciiFilepath = folder.resolve(baseName + ASCII_SUFFIX);
 
-        Map<Character, Grapheme> characterMap =
+        final Map<Character, Grapheme> characterMap =
                 FontLoader.loadASCIIFromSource(asciiFilepath, isResource,
                         whitespaceBreadthMultiplier, charSpecificSpacing);
 
@@ -63,8 +63,32 @@ public class Font {
         }
 
         final int height = characterMap.get(' ').height;
+        return new Font(characterMap, pixelSpacing, height,
+                smoothResizing, charSpecificSpacing);
+    }
 
-        return new Font(characterMap, pixelSpacing, height, smoothResizing, charSpecificSpacing);
+    public static Font loadFromImages(
+            final GameImage ascii, final GameImage latinExtended,
+            final double whitespaceBreadthMultiplier,
+            final int pixelSpacing,
+            final boolean smoothResizing,
+            final boolean charSpecificSpacing
+    ) {
+        final Map<Character, Grapheme> characterMap = FontLoader.loadASCII(
+                ascii, whitespaceBreadthMultiplier, charSpecificSpacing);
+
+        if (latinExtended != null && latinExtended.getWidth() >
+                GameImage.dummy().getWidth()) {
+            final Map<Character, Grapheme> latinExtendedMap = FontLoader
+                    .loadLatinExtended(latinExtended, charSpecificSpacing);
+
+            for (Character c : latinExtendedMap.keySet())
+                characterMap.put(c, latinExtendedMap.get(c));
+        }
+
+        final int height = characterMap.get(' ').height;
+        return new Font(characterMap, pixelSpacing, height,
+                smoothResizing, charSpecificSpacing);
     }
 
     public GameImage drawChar(final char c, final Color color) {
