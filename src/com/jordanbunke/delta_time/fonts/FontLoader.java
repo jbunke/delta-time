@@ -19,8 +19,9 @@ public class FontLoader {
     private static final int X_INDEX = 0, Y_INDEX = 1;
 
     private static final char STARTING_ASCII = 33, FINAL_ASCII = 126;
-    private static final int NUM_LATIN_EXTENDED_CHARS = 59;
-    private static final int CHARS_ON_ROW = 16;
+    private static final int
+            LAST_GRID_SLOT = 127,
+            CHARS_ON_ROW = 16;
     private static final int BASE_WHITESPACE_BREADTH = 8;
 
     public static Map<Character, Grapheme> loadASCIIFromSource(
@@ -48,7 +49,7 @@ public class FontLoader {
 
         // manual insertion of replacement character
         final Grapheme replacementGrapheme = graphemeFromCoordinates(
-                image, REPLACEMENT, asciiToCoordinates((char)127),
+                image, REPLACEMENT, asciiToCoordinates((char) LAST_GRID_SLOT),
                 scaleMultiplier, charSpecificSpacing);
         map.put(REPLACEMENT, replacementGrapheme);
 
@@ -73,8 +74,7 @@ public class FontLoader {
     ) {
         final Map<Character, Grapheme> map = new HashMap<>();
 
-        mapLoader(map, image, charSpecificSpacing, 0,
-                NUM_LATIN_EXTENDED_CHARS - 1,
+        mapLoader(map, image, charSpecificSpacing, 0, LAST_GRID_SLOT,
                 FontLoader::charFromIndexLatinExtended,
                 c -> c == REPLACEMENT);
 
