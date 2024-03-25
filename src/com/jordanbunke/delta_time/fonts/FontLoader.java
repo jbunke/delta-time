@@ -216,63 +216,97 @@ public class FontLoader {
 
     private static char charFromIndexLatinExtended(int i) {
         return switch (i) {
+            // row 1
             case 0 -> 'Ä';
             case 1 -> 'Á';
             case 2 -> 'À';
             case 3 -> 'Â';
             case 4 -> 'Ã';
-            case 5 -> 'Ç';
-            case 6 -> 'Ë';
-            case 7 -> 'É';
-            case 8 -> 'È';
-            case 9 -> 'Ê';
-            case 10 -> 'Ğ';
-            case 11 -> 'Ï';
-            case 12 -> 'Í';
-            case 13 -> 'Ì';
-            case 14 -> 'Î';
-            case 15 -> 'İ';
-            case 16 -> 'Ñ';
-            case 17 -> 'Ö';
-            case 18 -> 'Ó';
-            case 19 -> 'Ò';
-            case 20 -> 'Ô';
-            case 21 -> 'Õ';
-            case 22 -> 'Ş';
-            case 23 -> 'Ü';
-            case 24 -> 'Ú';
-            case 25 -> 'Ù';
-            case 26 -> 'Û';
-            // TODO - Ọ, Ẹ, Ị, Ụ, Ṣ
-            // GAP
-            case 32 -> 'ä';
-            case 33 -> 'á';
-            case 34 -> 'à';
-            case 35 -> 'â';
-            case 36 -> 'ã';
-            case 37 -> 'ç';
-            case 38 -> 'ë';
-            case 39 -> 'é';
-            case 40 -> 'è';
-            case 41 -> 'ê';
-            case 42 -> 'ğ';
-            case 43 -> 'ï';
-            case 44 -> 'í';
-            case 45 -> 'ì';
-            case 46 -> 'î';
-            case 47 -> 'ı';
-            case 48 -> 'ñ';
-            case 49 -> 'ö';
-            case 50 -> 'ó';
-            case 51 -> 'ò';
-            case 52 -> 'ô';
-            case 53 -> 'õ';
-            case 54 -> 'ş';
-            case 55 -> 'ü';
-            case 56 -> 'ú';
-            case 57 -> 'ù';
-            case 58 -> 'û';
-            // TODO - ß, ọ, ẹ, ị, ụ, ṣ
+            case 5 -> 'Å';
+            case 6 -> 'Æ';
+
+            case 9 -> 'Ë';
+            case 10 -> 'É';
+            case 11 -> 'È';
+            case 12 -> 'Ê';
+            case 13 -> 'Ẹ';
+
+            // row 2
+            case 16 -> 'Ï';
+            case 17 -> 'Í';
+            case 18 -> 'Ì';
+            case 19 -> 'Î';
+            case 20 -> 'İ';
+            case 21 -> 'Ị';
+
+            case 24 -> 'Ö';
+            case 25 -> 'Ó';
+            case 26 -> 'Ò';
+            case 27 -> 'Ô';
+            case 28 -> 'Õ';
+            case 29 -> 'Ọ';
+            case 30 -> 'Ø';
+
+            // row 3
+            case 32 -> 'Ü';
+            case 33 -> 'Ú';
+            case 34 -> 'Ù';
+            case 35 -> 'Û';
+            case 36 -> 'Ụ';
+
+            case 39 -> 'Ç';
+
+            case 43 -> 'Ğ';
+
+            // row 4
+            case 48 -> 'Ñ';
+
+            case 51 -> 'Ş';
+            case 52 -> 'Ṣ';
+
+            // row 5
+            case 64 -> 'ä';
+            case 65 -> 'á';
+            case 66 -> 'à';
+            case 67 -> 'â';
+            case 68 -> 'ã';
+            case 69 -> 'å';
+            case 70 -> 'æ';
+
+            // row 6
+            case 80 -> 'ï';
+            case 81 -> 'í';
+            case 82 -> 'ì';
+            case 83 -> 'î';
+            case 84 -> 'ı';
+            case 85 -> 'ị';
+
+            case 88 -> 'ö';
+            case 89 -> 'ó';
+            case 90 -> 'ò';
+            case 91 -> 'ô';
+            case 92 -> 'õ';
+            case 93 -> 'ọ';
+            case 94 -> 'ø';
+
+            // row 7
+            case 96 -> 'ü';
+            case 97 -> 'ú';
+            case 98 -> 'ù';
+            case 99 -> 'û';
+            case 100 -> 'ụ';
+
+            case 103 -> 'ç';
+
+            case 107 -> 'ğ';
+
+            // row 8
+            case 112 -> 'ñ';
+
+            case 115 -> 'ş';
+            case 116 -> 'ṣ';
+            case 117 -> 'ß';
+
             default -> REPLACEMENT;
         };
     }
