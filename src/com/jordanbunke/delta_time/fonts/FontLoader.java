@@ -273,6 +273,12 @@ public class FontLoader {
             case 69 -> 'å';
             case 70 -> 'æ';
 
+            case 73 -> 'ë';
+            case 74 -> 'é';
+            case 75 -> 'è';
+            case 76 -> 'ê';
+            case 77 -> 'ẹ';
+
             // row 6
             case 80 -> 'ï';
             case 81 -> 'í';
