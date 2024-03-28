@@ -51,31 +51,50 @@ public final class ThinkingMenuElement extends InvisibleMenuElement {
 
     @Override
     public Coord2D getRenderPosition() {
-        return decision != null ? decision.getRenderPosition() : super.getRenderPosition();
+        return decision != null
+                ? decision.getRenderPosition()
+                : super.getRenderPosition();
+    }
+
+    @Override
+    public int getRenderOrder() {
+        return decision != null
+                ? decision.getRenderOrder()
+                : super.getRenderOrder();
     }
 
     @Override
     public Anchor getAnchor() {
-        return decision != null ? decision.getAnchor() : super.getAnchor();
+        return decision != null
+                ? decision.getAnchor()
+                : super.getAnchor();
     }
 
     @Override
     public int getX() {
-        return decision != null ? decision.getX() : super.getX();
+        return decision != null
+                ? decision.getX()
+                : super.getX();
     }
 
     @Override
     public int getY() {
-        return decision != null ? decision.getY() : super.getY();
+        return decision != null
+                ? decision.getY()
+                : super.getY();
     }
 
     @Override
     public int getWidth() {
-        return decision != null ? decision.getWidth() : super.getWidth();
+        return decision != null
+                ? decision.getWidth()
+                : super.getWidth();
     }
 
     @Override
     public int getHeight() {
-        return decision != null ? decision.getHeight() : super.getHeight();
+        return decision != null
+                ? decision.getHeight()
+                : super.getHeight();
     }
 }

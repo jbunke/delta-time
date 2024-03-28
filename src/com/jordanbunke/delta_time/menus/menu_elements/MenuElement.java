@@ -52,6 +52,10 @@ public abstract class MenuElement implements ProgramContext {
         canvas.draw(image, renderPosition.x, renderPosition.y);
     }
 
+    public int getRenderOrder() {
+        return 0;
+    }
+
     public Coord2D getRenderPosition() {
         return switch (anchor) {
             case LEFT_TOP -> new Coord2D(position.x, position.y);

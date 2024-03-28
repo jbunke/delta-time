@@ -12,6 +12,8 @@ public final class GatewayMenuElement extends InvisibleMenuElement {
     private final MenuElement content;
     private final Supplier<Boolean> condition;
 
+    private boolean passing;
+
     public GatewayMenuElement(
             final MenuElement content, final Supplier<Boolean> condition
     ) {
@@ -19,59 +21,82 @@ public final class GatewayMenuElement extends InvisibleMenuElement {
 
         this.content = content;
         this.condition = condition;
+
+        passing = this.condition.get();
     }
 
     @Override
     public void process(final InputEventLogger eventLogger) {
-        if (condition.get())
+        if (passing)
             content.process(eventLogger);
     }
 
     @Override
     public void render(final GameImage canvas) {
-        if (condition.get())
+        if (passing)
             content.render(canvas);
     }
 
     @Override
     public void debugRender(final GameImage canvas, final GameDebugger debugger) {
-        if (condition.get())
+        if (passing)
             content.debugRender(canvas, debugger);
     }
 
     @Override
     public void update(final double deltaTime) {
-        if (condition.get())
+        passing = condition.get();
+
+        if (passing)
             content.update(deltaTime);
     }
 
     @Override
     public Coord2D getRenderPosition() {
-        return condition.get() ? content.getRenderPosition() : super.getRenderPosition();
+        return passing
+                ? content.getRenderPosition()
+                : super.getRenderPosition();
+    }
+
+    @Override
+    public int getRenderOrder() {
+        return passing
+                ? content.getRenderOrder()
+                : super.getRenderOrder();
     }
 
     @Override
     public Anchor getAnchor() {
-        return condition.get() ? content.getAnchor() : super.getAnchor();
+        return condition.get()
+                ? content.getAnchor()
+                : super.getAnchor();
     }
 
     @Override
     public int getX() {
-        return condition.get() ? content.getX() : super.getX();
+        return condition.get()
+                ? content.getX()
+                : super.getX();
     }
 
     @Override
     public int getY() {
-        return condition.get() ? content.getY() : super.getY();
+        return condition.get()
+                ? content.getY()
+                : super.getY();
     }
 
     @Override
     public int getWidth() {
-        return condition.get() ? content.getWidth() : super.getWidth();
+        return condition.get()
+                ? content.getWidth()
+                : super.getWidth();
     }
 
     @Override
     public int getHeight() {
-        return condition.get() ? content.getHeight() : super.getHeight();
+        return condition.get()
+                ? content.getHeight()
+                : super.getHeight();
     }
 }

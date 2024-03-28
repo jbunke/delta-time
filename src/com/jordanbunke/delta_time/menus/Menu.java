@@ -4,11 +4,11 @@ import com.jordanbunke.delta_time.contexts.ProgramContext;
 import com.jordanbunke.delta_time.debug.GameDebugger;
 import com.jordanbunke.delta_time.image.GameImage;
 import com.jordanbunke.delta_time.io.InputEventLogger;
-import com.jordanbunke.delta_time.menus.menu_elements.DeferredRenderMenuElement;
 import com.jordanbunke.delta_time.menus.menu_elements.MenuElement;
 import com.jordanbunke.delta_time.menus.menu_elements.SelectableMenuElement;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -45,30 +45,22 @@ public class Menu implements ProgramContext {
 
     @Override
     public void render(final GameImage canvas) {
-        final List<DeferredRenderMenuElement> deferred = new ArrayList<>();
+        final List<MenuElement> renderOrder =
+                new ArrayList<>(List.of(menuElements));
+        renderOrder.sort(Comparator.comparingInt(MenuElement::getRenderOrder));
 
         for (MenuElement element : menuElements)
-            if (element instanceof DeferredRenderMenuElement d)
-                deferred.add(d);
-            else
-                element.render(canvas);
-
-        for (DeferredRenderMenuElement d : deferred)
-            d.render(canvas);
+            element.render(canvas);
     }
 
     @Override
     public void debugRender(final GameImage canvas, final GameDebugger debugger) {
-        final List<DeferredRenderMenuElement> deferred = new ArrayList<>();
+        final List<MenuElement> renderOrder =
+                new ArrayList<>(List.of(menuElements));
+        renderOrder.sort(Comparator.comparingInt(MenuElement::getRenderOrder));
 
         for (MenuElement element : menuElements)
-            if (element instanceof DeferredRenderMenuElement d)
-                deferred.add(d);
-            else
-                element.debugRender(canvas, debugger);
-
-        for (DeferredRenderMenuElement d : deferred)
-            d.debugRender(canvas, debugger);
+            element.debugRender(canvas, debugger);
     }
 
     public void process(final InputEventLogger eventLogger) {
