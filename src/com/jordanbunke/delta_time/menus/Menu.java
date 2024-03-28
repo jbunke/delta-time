@@ -7,9 +7,6 @@ import com.jordanbunke.delta_time.io.InputEventLogger;
 import com.jordanbunke.delta_time.menus.menu_elements.MenuElement;
 import com.jordanbunke.delta_time.menus.menu_elements.SelectableMenuElement;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 import java.util.function.BiConsumer;
 
 public class Menu implements ProgramContext {
@@ -45,21 +42,19 @@ public class Menu implements ProgramContext {
 
     @Override
     public void render(final GameImage canvas) {
-        final List<MenuElement> renderOrder =
-                new ArrayList<>(List.of(menuElements));
-        renderOrder.sort(Comparator.comparingInt(MenuElement::getRenderOrder));
+        final MenuElement[] renderOrder =
+                MenuElement.sortForRender(menuElements);
 
-        for (MenuElement element : menuElements)
+        for (MenuElement element : renderOrder)
             element.render(canvas);
     }
 
     @Override
     public void debugRender(final GameImage canvas, final GameDebugger debugger) {
-        final List<MenuElement> renderOrder =
-                new ArrayList<>(List.of(menuElements));
-        renderOrder.sort(Comparator.comparingInt(MenuElement::getRenderOrder));
+        final MenuElement[] renderOrder =
+                MenuElement.sortForRender(menuElements);
 
-        for (MenuElement element : menuElements)
+        for (MenuElement element : renderOrder)
             element.debugRender(canvas, debugger);
     }
 

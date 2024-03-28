@@ -6,6 +6,8 @@ import com.jordanbunke.delta_time.image.GameImage;
 import com.jordanbunke.delta_time.utility.Coord2D;
 
 import java.awt.*;
+import java.util.Arrays;
+import java.util.Comparator;
 
 public abstract class MenuElement implements ProgramContext {
     private Coord2D position;
@@ -42,6 +44,13 @@ public abstract class MenuElement implements ProgramContext {
         this.dimensions = dimensions;
         this.anchor = anchor;
         this.visible = visible;
+    }
+
+    public static MenuElement[] sortForRender(
+            final MenuElement[] menuElements) {
+        return Arrays.stream(menuElements)
+                .sorted(Comparator.comparingInt(MenuElement::getRenderOrder))
+                .toArray(MenuElement[]::new);
     }
 
     public void draw(final GameImage image, final GameImage canvas) {

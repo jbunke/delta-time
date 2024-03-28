@@ -5,6 +5,7 @@ import com.jordanbunke.delta_time.menus.menu_elements.MenuElement;
 import com.jordanbunke.delta_time.menus.menu_elements.container.MenuElementContainer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -31,15 +32,18 @@ public class MenuBuilder {
 
     public MenuBuilder add(final MenuElement toAdd) {
         if (toAdd instanceof MenuElementContainer container) {
-            final MenuElement[] contained = container.getMenuElements();
-
-            for (MenuElement e : contained)
-                add(e);
+            addAll(container.getMenuElements());
 
             if (container.hasNonTrivialBehaviour())
                 menuElements.add(container);
         } else
             menuElements.add(toAdd);
+
+        return this;
+    }
+
+    public MenuBuilder addAll(final MenuElement... toAdd) {
+        Arrays.stream(toAdd).forEach(this::add);
 
         return this;
     }
