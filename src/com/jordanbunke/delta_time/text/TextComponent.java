@@ -16,18 +16,27 @@ public class TextComponent extends TextConstituent {
     public TextComponent(
             final String contents, final Font font, final Color color
     ) {
-        this.contents = replaceWithPrecomposed(contents);
+        this.contents = makeTextCompliant(contents);
         this.font = font;
         this.color = color;
     }
 
-    public static String replaceWithPrecomposed(String contents) {
-        final Map<Character, String> composedEquivalencyMap =
-                FontConstants.getComposedEquivalencyMap();
-        final Set<Character> precomposed = composedEquivalencyMap.keySet();
+    public static String makeTextCompliant(String contents) {
+        contents = characterMapCompliance(contents,
+                FontConstants.getComposedEquivalencyMap());
+        contents = characterMapCompliance(contents,
+                FontConstants.getCompositionSequenceMap());
+
+        return contents;
+    }
+
+    private static String characterMapCompliance(
+            String contents, final Map<Character, String> characterMap
+    ) {
+        final Set<Character> precomposed = characterMap.keySet();
 
         for (char pc : precomposed)
-            contents = contents.replace(composedEquivalencyMap.get(pc),
+            contents = contents.replace(characterMap.get(pc),
                     String.valueOf(pc));
 
         return contents;

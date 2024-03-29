@@ -36,6 +36,29 @@ public class FontConstants {
                     Map.entry(LSC_YO_UPPERCASE_OPEN_O_LOW_TONE, "Ọ̀"),
                     Map.entry(LSC_YO_LOWERCASE_OPEN_O_LOW_TONE, "ọ̀"));
 
+    private static final String
+            COMPOSED_CHAR_PREFIX = "[++",
+            COMPOSED_CHAR_SUFFIX = "++]";
+
+    private static final Map<Character, String> compositionSequenceMap =
+            Map.ofEntries(
+                    Map.entry(LSC_YO_UPPERCASE_OPEN_E_HIGH_TONE,
+                            makeCompositionSequence("E./")),
+                    Map.entry(LSC_YO_LOWERCASE_OPEN_E_HIGH_TONE,
+                            makeCompositionSequence("e./")),
+                    Map.entry(LSC_YO_UPPERCASE_OPEN_E_LOW_TONE,
+                            makeCompositionSequence("E.\\")),
+                    Map.entry(LSC_YO_LOWERCASE_OPEN_E_LOW_TONE,
+                            makeCompositionSequence("e.\\")),
+                    Map.entry(LSC_YO_UPPERCASE_OPEN_O_HIGH_TONE,
+                            makeCompositionSequence("O./")),
+                    Map.entry(LSC_YO_LOWERCASE_OPEN_O_HIGH_TONE,
+                            makeCompositionSequence("o./")),
+                    Map.entry(LSC_YO_UPPERCASE_OPEN_O_LOW_TONE,
+                            makeCompositionSequence("O.\\")),
+                    Map.entry(LSC_YO_LOWERCASE_OPEN_O_LOW_TONE,
+                            makeCompositionSequence("o.\\")));
+
     // file name components
     public static final String
             FILE_SUFFIX = ".png",
@@ -44,5 +67,13 @@ public class FontConstants {
 
     public static Map<Character, String> getComposedEquivalencyMap() {
         return new HashMap<>(composedEquivalencyMap);
+    }
+
+    public static Map<Character, String> getCompositionSequenceMap() {
+        return new HashMap<>(compositionSequenceMap);
+    }
+
+    private static String makeCompositionSequence(final String core) {
+        return COMPOSED_CHAR_PREFIX + core + COMPOSED_CHAR_SUFFIX;
     }
 }
