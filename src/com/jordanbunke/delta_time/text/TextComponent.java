@@ -1,19 +1,36 @@
 package com.jordanbunke.delta_time.text;
 
 import com.jordanbunke.delta_time.fonts.Font;
+import com.jordanbunke.delta_time.fonts.FontConstants;
 import com.jordanbunke.delta_time.image.GameImage;
 
 import java.awt.*;
+import java.util.Map;
+import java.util.Set;
 
 public class TextComponent extends TextConstituent {
     private final String contents;
     private final Font font;
     private final Color color;
 
-    public TextComponent(final String contents, final Font font, final Color color) {
-        this.contents = contents;
+    public TextComponent(
+            final String contents, final Font font, final Color color
+    ) {
+        this.contents = replaceWithPrecomposed(contents);
         this.font = font;
         this.color = color;
+    }
+
+    public static String replaceWithPrecomposed(String contents) {
+        final Map<Character, String> composedEquivalencyMap =
+                FontConstants.getComposedEquivalencyMap();
+        final Set<Character> precomposed = composedEquivalencyMap.keySet();
+
+        for (char pc : precomposed)
+            contents = contents.replace(composedEquivalencyMap.get(pc),
+                    String.valueOf(pc));
+
+        return contents;
     }
 
     public int calculateProspectiveWidth() {

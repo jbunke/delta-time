@@ -1,6 +1,8 @@
 package com.jordanbunke.delta_time.fonts;
 
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FontConstants {
     public static final Color
@@ -15,22 +17,32 @@ public class FontConstants {
     // language supplement characters
     public static final char
             LSC_YO_UPPERCASE_OPEN_E_HIGH_TONE = '\ue000',
-            LSC_YO_UPPERCASE_OPEN_E_LOW_TONE = '\ue001',
-            LSC_YO_UPPERCASE_N_HIGH_TONE = '\ue002',
-            LSC_YO_UPPERCASE_N_LOW_TONE = '\ue003',
+            LSC_YO_LOWERCASE_OPEN_E_HIGH_TONE = '\ue001',
+            LSC_YO_UPPERCASE_OPEN_E_LOW_TONE = '\ue002',
+            LSC_YO_LOWERCASE_OPEN_E_LOW_TONE = '\ue003',
             LSC_YO_UPPERCASE_OPEN_O_HIGH_TONE = '\ue004',
-            LSC_YO_UPPERCASE_OPEN_O_LOW_TONE = '\ue005',
+            LSC_YO_LOWERCASE_OPEN_O_HIGH_TONE = '\ue005',
+            LSC_YO_UPPERCASE_OPEN_O_LOW_TONE = '\ue006',
+            LSC_YO_LOWERCASE_OPEN_O_LOW_TONE = '\ue007';
 
-            LSC_YO_LOWERCASE_OPEN_E_HIGH_TONE = '\ue010',
-            LSC_YO_LOWERCASE_OPEN_E_LOW_TONE = '\ue011',
-            LSC_YO_LOWERCASE_N_HIGH_TONE = '\ue012',
-            LSC_YO_LOWERCASE_N_LOW_TONE = '\ue013',
-            LSC_YO_LOWERCASE_OPEN_O_HIGH_TONE = '\ue014',
-            LSC_YO_LOWERCASE_OPEN_O_LOW_TONE = '\ue015';
+    private static final Map<Character, String> composedEquivalencyMap =
+            Map.ofEntries(
+                    Map.entry(LSC_YO_UPPERCASE_OPEN_E_HIGH_TONE, "Ẹ́"),
+                    Map.entry(LSC_YO_LOWERCASE_OPEN_E_HIGH_TONE, "ẹ́"),
+                    Map.entry(LSC_YO_UPPERCASE_OPEN_E_LOW_TONE, "Ẹ̀"),
+                    Map.entry(LSC_YO_LOWERCASE_OPEN_E_LOW_TONE, "ẹ̀"),
+                    Map.entry(LSC_YO_UPPERCASE_OPEN_O_HIGH_TONE, "Ọ́"),
+                    Map.entry(LSC_YO_LOWERCASE_OPEN_O_HIGH_TONE, "ọ́"),
+                    Map.entry(LSC_YO_UPPERCASE_OPEN_O_LOW_TONE, "Ọ̀"),
+                    Map.entry(LSC_YO_LOWERCASE_OPEN_O_LOW_TONE, "ọ̀"));
 
     // file name components
     public static final String
             FILE_SUFFIX = ".png",
             ASCII_SUFFIX = "-ascii" + FILE_SUFFIX,
             LATIN_EXTENDED_SUFFIX = "-latin-extended" + FILE_SUFFIX;
+
+    public static Map<Character, String> getComposedEquivalencyMap() {
+        return new HashMap<>(composedEquivalencyMap);
+    }
 }

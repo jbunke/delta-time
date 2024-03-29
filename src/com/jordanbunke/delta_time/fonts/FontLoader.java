@@ -267,8 +267,8 @@ public class FontLoader {
             // precomposed Yoruba capitals
             case 58 -> LSC_YO_UPPERCASE_OPEN_E_HIGH_TONE;
             case 59 -> LSC_YO_UPPERCASE_OPEN_E_LOW_TONE;
-            case 60 -> LSC_YO_UPPERCASE_N_HIGH_TONE;
-            case 61 -> LSC_YO_UPPERCASE_N_LOW_TONE;
+            case 60 -> 'Ń';
+            case 61 -> 'Ǹ';
             case 62 -> LSC_YO_UPPERCASE_OPEN_O_HIGH_TONE;
             case 63 -> LSC_YO_UPPERCASE_OPEN_O_LOW_TONE;
 
@@ -324,8 +324,8 @@ public class FontLoader {
             // precomposed Yoruba capitals
             case 122 -> LSC_YO_LOWERCASE_OPEN_E_HIGH_TONE;
             case 123 -> LSC_YO_LOWERCASE_OPEN_E_LOW_TONE;
-            case 124 -> LSC_YO_LOWERCASE_N_HIGH_TONE;
-            case 125 -> LSC_YO_LOWERCASE_N_LOW_TONE;
+            case 124 -> 'ń';
+            case 125 -> 'ǹ';
             case 126 -> LSC_YO_LOWERCASE_OPEN_O_HIGH_TONE;
             case 127 -> LSC_YO_LOWERCASE_OPEN_O_LOW_TONE;
 
