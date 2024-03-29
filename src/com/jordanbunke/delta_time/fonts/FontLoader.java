@@ -264,6 +264,14 @@ public class FontLoader {
             case 51 -> 'Ş';
             case 52 -> 'Ṣ';
 
+            // precomposed Yoruba capitals
+            case 58 -> LSC_YO_UPPERCASE_OPEN_E_HIGH_TONE;
+            case 59 -> LSC_YO_UPPERCASE_OPEN_E_LOW_TONE;
+            case 60 -> LSC_YO_UPPERCASE_N_HIGH_TONE;
+            case 61 -> LSC_YO_UPPERCASE_N_LOW_TONE;
+            case 62 -> LSC_YO_UPPERCASE_OPEN_O_HIGH_TONE;
+            case 63 -> LSC_YO_UPPERCASE_OPEN_O_LOW_TONE;
+
             // row 5
             case 64 -> 'ä';
             case 65 -> 'á';
@@ -312,6 +320,14 @@ public class FontLoader {
             case 115 -> 'ş';
             case 116 -> 'ṣ';
             case 117 -> 'ß';
+
+            // precomposed Yoruba capitals
+            case 122 -> LSC_YO_LOWERCASE_OPEN_E_HIGH_TONE;
+            case 123 -> LSC_YO_LOWERCASE_OPEN_E_LOW_TONE;
+            case 124 -> LSC_YO_LOWERCASE_N_HIGH_TONE;
+            case 125 -> LSC_YO_LOWERCASE_N_LOW_TONE;
+            case 126 -> LSC_YO_LOWERCASE_OPEN_O_HIGH_TONE;
+            case 127 -> LSC_YO_LOWERCASE_OPEN_O_LOW_TONE;
 
             default -> REPLACEMENT;
         };
