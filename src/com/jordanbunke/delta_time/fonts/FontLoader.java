@@ -321,7 +321,7 @@ public class FontLoader {
             case 116 -> 'ṣ';
             case 117 -> 'ß';
 
-            // precomposed Yoruba capitals
+            // precomposed Yoruba lowercase
             case 122 -> LSC_YO_LOWERCASE_OPEN_E_HIGH_TONE;
             case 123 -> LSC_YO_LOWERCASE_OPEN_E_LOW_TONE;
             case 124 -> 'ń';
