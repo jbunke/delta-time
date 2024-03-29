@@ -57,7 +57,23 @@ public class FontConstants {
                     Map.entry(LSC_YO_UPPERCASE_OPEN_O_LOW_TONE,
                             makeCompositionSequence("O.\\")),
                     Map.entry(LSC_YO_LOWERCASE_OPEN_O_LOW_TONE,
-                            makeCompositionSequence("o.\\")));
+                            makeCompositionSequence("o.\\")),
+                    Map.entry('Ẹ', "E."), Map.entry('ẹ', "e."),
+                    Map.entry('Ọ', "O."), Map.entry('ọ', "o."),
+                    Map.entry('Ṣ', "S."), Map.entry('ṣ', "s."),
+                    Map.entry('À', "A\\"), Map.entry('à', "a\\"),
+                    Map.entry('Á', "A/"), Map.entry('á', "a/"),
+                    Map.entry('È', "E\\"), Map.entry('è', "e\\"),
+                    Map.entry('É', "E/"), Map.entry('é', "e/"),
+                    Map.entry('Ì', "I\\"), Map.entry('ì', "i\\"),
+                    Map.entry('Í', "I/"), Map.entry('í', "i/"),
+                    Map.entry('Ò', "O\\"), Map.entry('ò', "o\\"),
+                    Map.entry('Ó', "O/"), Map.entry('ó', "o/"),
+                    Map.entry('Ù', "U\\"), Map.entry('ù', "u\\"),
+                    Map.entry('Ú', "U/"), Map.entry('ú', "u/"),
+                    Map.entry('Ǹ', "N\\"), Map.entry('ǹ', "n\\"),
+                    Map.entry('Ń', "N/"), Map.entry('ń', "n/")
+            );
 
     // file name components
     public static final String
