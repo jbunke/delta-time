@@ -9,11 +9,21 @@ import java.util.Map;
 import java.util.Optional;
 
 public final class DeltaTimeGlobal {
+    private static final String NATIVE_STATUS_CODE_PREFIX = "dt:";
+
+    public static final String
+            DT_STATUS_CODE_TEXT_STRING_CONVERSION =
+            NATIVE_STATUS_CODE_PREFIX + "conv_text";
+
     private static final String DT_CHANNEL = Constants.TITLE;
 
     private static final Debugger DEBUGGER = Debugger.createWithExistingChannels(
             generateChannelMap());
     private static final Map<String, Object> STATUS_MAP = new HashMap<>();
+
+    static {
+        setStatus(DT_STATUS_CODE_TEXT_STRING_CONVERSION, true);
+    }
 
     private static Map<String, DebugChannel> generateChannelMap() {
         Map<String, DebugChannel> channelMap = new HashMap<>();

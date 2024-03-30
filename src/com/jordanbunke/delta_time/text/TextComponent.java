@@ -3,6 +3,7 @@ package com.jordanbunke.delta_time.text;
 import com.jordanbunke.delta_time.fonts.Font;
 import com.jordanbunke.delta_time.fonts.FontConstants;
 import com.jordanbunke.delta_time.image.GameImage;
+import com.jordanbunke.delta_time.utility.DeltaTimeGlobal;
 
 import java.awt.*;
 import java.util.Map;
@@ -16,7 +17,10 @@ public class TextComponent extends TextConstituent {
     public TextComponent(
             final String contents, final Font font, final Color color
     ) {
-        this.contents = makeTextCompliant(contents);
+        this.contents = DeltaTimeGlobal.getStatusOf(
+                DeltaTimeGlobal.DT_STATUS_CODE_TEXT_STRING_CONVERSION)
+                .orElse(Boolean.FALSE) instanceof Boolean b && b
+                ? makeTextCompliant(contents) : contents;
         this.font = font;
         this.color = color;
     }
