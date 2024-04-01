@@ -57,4 +57,22 @@ public abstract class MenuElementContainer extends MenuElement {
                 .reduce(super.getRenderOrder(),
                         Integer::max);
     }
+
+    @Override
+    public void setX(int x) {
+        final int was = getX();
+        super.setX(x);
+
+        for (MenuElement me : getMenuElements())
+            me.setX(x + (me.getX() - was));
+    }
+
+    @Override
+    public void setY(int y) {
+        final int was = getY();
+        super.setY(y);
+
+        for (MenuElement me : getMenuElements())
+            me.setY(y + (me.getY() - was));
+    }
 }
