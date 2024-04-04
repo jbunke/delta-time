@@ -1,6 +1,6 @@
 package com.jordanbunke.delta_time.sound;
 
-import com.jordanbunke.delta_time.Constants;
+import com.jordanbunke.delta_time.About;
 import com.jordanbunke.delta_time.error.GameError;
 
 import javax.sound.sampled.*;
@@ -35,7 +35,7 @@ public class GameAudioPlayer {
 
     public static Thread getLoopSoundThread(final Sound sound) {
         return new Thread(() -> loopSound(sound),
-                Constants.TITLE + " loop sound thread: " + sound.getId());
+                About.TITLE + " loop sound thread: " + sound.getId());
     }
 
     public static void playSoundInNewThread(final Sound sound) {
@@ -46,7 +46,7 @@ public class GameAudioPlayer {
 
     public static Thread getPlaySoundThread(final Sound sound) {
         return new Thread(() -> playSound(sound),
-                Constants.TITLE + " loop sound thread: " + sound.getId());
+                About.TITLE + " loop sound thread: " + sound.getId());
     }
 
     public static Clip getSoundClip(final Sound sound) {

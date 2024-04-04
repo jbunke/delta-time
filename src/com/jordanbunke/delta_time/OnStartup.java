@@ -15,7 +15,7 @@ public class OnStartup {
     }
 
     private static void startUpMessages() {
-        DeltaTimeGlobal.print(Constants.TITLE + " v" + Constants.VERSION +
+        DeltaTimeGlobal.print(About.TITLE + " v" + About.VERSION +
                 " | running from directory: " + Paths.get("").toAbsolutePath());
     }
 

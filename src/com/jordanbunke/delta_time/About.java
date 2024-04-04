@@ -7,7 +7,7 @@ import com.jordanbunke.delta_time.utility.StringProcessing;
 
 import java.nio.file.Path;
 
-public class Constants {
+public class About {
     public static final String INFO_FILENAME = "dt_info.txt";
 
     public static final String TITLE;

@@ -1,6 +1,6 @@
 package com.jordanbunke.delta_time.utility;
 
-import com.jordanbunke.delta_time.Constants;
+import com.jordanbunke.delta_time.About;
 import com.jordanbunke.delta_time.debug.DebugChannel;
 import com.jordanbunke.delta_time.debug.Debugger;
 
@@ -15,7 +15,7 @@ public final class DeltaTimeGlobal {
             DT_STATUS_CODE_TEXT_STRING_CONVERSION =
             NATIVE_STATUS_CODE_PREFIX + "conv_text";
 
-    private static final String DT_CHANNEL = Constants.TITLE;
+    private static final String DT_CHANNEL = About.TITLE;
 
     private static final Debugger DEBUGGER = Debugger.createWithExistingChannels(
             generateChannelMap());
