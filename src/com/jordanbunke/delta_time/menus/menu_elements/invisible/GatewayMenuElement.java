@@ -52,6 +52,18 @@ public final class GatewayMenuElement extends InvisibleMenuElement {
     }
 
     @Override
+    public void setX(int x) {
+        if (passing)
+            content.setX(x);
+    }
+
+    @Override
+    public void setY(int y) {
+        if (passing)
+            content.setY(y);
+    }
+
+    @Override
     public Coord2D getRenderPosition() {
         return passing
                 ? content.getRenderPosition()
