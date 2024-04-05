@@ -202,12 +202,14 @@ public class Game implements Runnable {
     private void updateScaleUp() {
         this.scaleUp = window.getWidth() != canvasWidth ||
                 window.getHeight() != canvasHeight;
+        final InputEventLogger eventLogger = window.getEventLogger();
 
-        if (scaleUp) {
-            final InputEventLogger eventLogger = window.getEventLogger();
-            eventLogger.setScaleUpRatioX(window.getWidth() / (double)canvasWidth);
-            eventLogger.setScaleUpRatioY(window.getHeight() / (double)canvasHeight);
-        }
+        eventLogger.setScaleUpRatioX(scaleUp
+                ? window.getWidth() / (double)canvasWidth
+                : InputEventLogger.DEFAULT_SCALE);
+        eventLogger.setScaleUpRatioY(scaleUp
+                ? window.getHeight() / (double)canvasHeight
+                : InputEventLogger.DEFAULT_SCALE);
     }
 
     // GETTERS

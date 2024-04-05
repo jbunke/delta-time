@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class InputEventLogger implements
         KeyListener, MouseListener, MouseMotionListener, MouseWheelListener, WindowListener {
 
-    private static final double DEFAULT_SCALE = 1.0;
+    public static final double DEFAULT_SCALE = 1.0;
 
     private final List<InputTask> tasks;
 
