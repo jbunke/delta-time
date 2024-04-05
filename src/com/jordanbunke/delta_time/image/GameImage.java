@@ -90,6 +90,12 @@ public class GameImage extends BufferedImage {
         fillRectangle(x, y, width, height);
     }
 
+    public void fill(final Color color) {
+        setColor(color);
+        initializeGraphics();
+        g.fillRect(0, 0, getWidth(), getHeight());
+    }
+
     public void dot(final int x, final int y) {
         fillRectangle(x, y, 1, 1);
     }
