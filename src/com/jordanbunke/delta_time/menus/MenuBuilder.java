@@ -32,10 +32,10 @@ public class MenuBuilder {
 
     public MenuBuilder add(final MenuElement toAdd) {
         if (toAdd instanceof MenuElementContainer container) {
-            addAll(container.getMenuElements());
-
             if (container.hasNonTrivialBehaviour())
                 menuElements.add(container);
+            else
+                addAll(container.getMenuElements());
         } else
             menuElements.add(toAdd);
 
