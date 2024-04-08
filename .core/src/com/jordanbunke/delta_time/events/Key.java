@@ -3,19 +3,22 @@ package com.jordanbunke.delta_time.events;
 import java.awt.event.KeyEvent;
 
 public enum Key {
+    // arrow keys
     DOWN_ARROW, UP_ARROW, LEFT_ARROW, RIGHT_ARROW,
-
+    // special keys
     ENTER, BACKSPACE, DELETE, TAB, SHIFT, ESCAPE, SPACE, CTRL, ALT,
+    // punctuation keys
     COMMA, PERIOD, MINUS, EQUALS, SEMICOLON, APOSTROPHE, SLASH, BACKSLASH,
     OPEN_SQUARE_BRACKET, CLOSE_SQUARE_BRACKET,
-
+    // alphabet keys
     A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,
-
+    // numerical keys
     _1, _2, _3, _4, _5, _6, _7, _8, _9, _0,
 
     UNSUPPORTED;
 
-    public String print() {
+    @Override
+    public String toString() {
         return "[ " + switch (this) {
             case A, B, C, D, E, F, G, H, I, J, K, L, M,
                     N, O, P, Q, R, S, T, U, V, W, X, Y, Z,

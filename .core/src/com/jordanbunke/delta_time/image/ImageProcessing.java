@@ -5,10 +5,6 @@ import com.jordanbunke.delta_time.utility.math.Coord2D;
 import java.awt.*;
 
 public class ImageProcessing {
-    public static Color colorAtPixel(final GameImage image, final int x, final int y) {
-        return new Color(image.getRGB(x, y), true);
-    }
-
     public static GameImage replaceColor(final GameImage original,
                                          final Color toReplace, final Color replaceWith) {
         final GameImage replacement = new GameImage(original.getWidth(), original.getHeight());
@@ -16,7 +12,7 @@ public class ImageProcessing {
 
         for (int x = 0; x < replacement.getWidth(); x++)
             for (int y = 0; y < replacement.getHeight(); y++)
-                if (colorAtPixel(original, x, y).equals(toReplace))
+                if (original.getColorAt(x, y).equals(toReplace))
                     replacement.dot(x, y);
 
         return replacement.submit();
@@ -61,7 +57,7 @@ public class ImageProcessing {
 
                     for (int originX = initialOriginX; originX <= finalOriginX; originX++) {
                         for (int originY = initialOriginY; originY <= finalOriginY; originY++) {
-                            final Color originColor = colorAtPixel(image, originX, originY);
+                            final Color originColor = image.getColorAt(originX, originY);
 
                             totalOpacity++;
                             cumulativeA += originColor.getAlpha();
@@ -92,7 +88,7 @@ public class ImageProcessing {
             for (int x = 0; x < image.getWidth(); x++) {
                 for (int y = 0; y < image.getHeight(); y++) {
                     final int FULL_OPACITY = 255;
-                    final Color color = colorAtPixel(image, x, y);
+                    final Color color = image.getColorAt(x, y);
                     scaledUp.setColor(color);
 
                     if (color.getAlpha() < FULL_OPACITY) {
@@ -102,7 +98,7 @@ public class ImageProcessing {
                                 yBound = Math.min(dims.y, yInit + (int)Math.ceil(scaleFactor));
                         for (int xp = xInit; xp < xBound; xp++)
                             for (int yp = yInit; yp < yBound; yp++)
-                                if (!colorAtPixel(scaledUp, xp, yp).equals(color))
+                                if (!scaledUp.getColorAt(xp, yp).equals(color))
                                     scaledUp.dot(xp, yp);
 
                     } else

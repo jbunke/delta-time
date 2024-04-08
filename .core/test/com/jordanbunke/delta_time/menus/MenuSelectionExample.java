@@ -1,10 +1,9 @@
 package com.jordanbunke.delta_time.menus;
 
-import com.jordanbunke.delta_time.contexts.MenuManager;
 import com.jordanbunke.delta_time.fonts.Font;
 import com.jordanbunke.delta_time.fonts.FontsForTests;
-import com.jordanbunke.delta_time.game.Game;
-import com.jordanbunke.delta_time.game.GameManager;
+import com.jordanbunke.delta_time._core.Program;
+import com.jordanbunke.delta_time._core.GameManager;
 import com.jordanbunke.delta_time.image.GameImage;
 import com.jordanbunke.delta_time.menus.menu_elements.MenuElement;
 import com.jordanbunke.delta_time.menus.menu_elements.button.SimpleMenuButton;
@@ -28,8 +27,8 @@ public class MenuSelectionExample {
         final GameManager gameManager = new GameManager(0,
                 new MenuManager(new MenuBuilder(generateMenuElements())
                         .build(MenuSelectionLogic.basic()), "menu"));
-        final Game game = new Game(new GameWindow("Example", GameImage.dummy()), gameManager);
-        game.setCanvasSize(CANVAS_W, CANVAS_H);
+        final Program program = new Program(new GameWindow("Example", GameImage.dummy()), gameManager);
+        program.setCanvasSize(CANVAS_W, CANVAS_H);
     }
 
     private static MenuElementGrouping generateMenuElements() {

@@ -74,8 +74,8 @@ public abstract class SelectableMenuElement extends MenuElement {
     }
 
     private int diagonalTax(final int offDim) {
-        final double diagonalMultiplier = 2.0;
-        return (int)(Math.abs(offDim) * diagonalMultiplier);
+        final double DIAGONAL_TAX = 2.0;
+        return (int)(Math.abs(offDim) * DIAGONAL_TAX);
     }
 
     public boolean isSelected() {

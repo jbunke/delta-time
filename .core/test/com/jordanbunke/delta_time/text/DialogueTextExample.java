@@ -3,8 +3,8 @@ package com.jordanbunke.delta_time.text;
 import com.jordanbunke.delta_time.fonts.Font;
 import com.jordanbunke.delta_time.fonts.FontFamily;
 import com.jordanbunke.delta_time.fonts.FontsForTests;
-import com.jordanbunke.delta_time.game.Game;
-import com.jordanbunke.delta_time.game.GameManager;
+import com.jordanbunke.delta_time._core.Program;
+import com.jordanbunke.delta_time._core.GameManager;
 import com.jordanbunke.delta_time.image.GameImage;
 import com.jordanbunke.delta_time.menus.Menu;
 import com.jordanbunke.delta_time.menus.menu_elements.MenuElement;
@@ -45,7 +45,7 @@ public class DialogueTextExample {
         final GameWindow gw = new GameWindow(TITLE, animation.getWidth() * SCALE_UP,
                 animation.getHeight() * SCALE_UP, GameImage.dummy(), false);
         final GameManager gm = new GameManager(0, new Menu(animation));
-        final Game ge = new Game(gw, gm, TICK_HZ, FPS);
+        final Program ge = new Program(gw, gm, TICK_HZ, FPS);
         ge.setCanvasSize(animation.getWidth(), animation.getHeight());
         ge.getDebugger().hideBoundingBoxes();
     }

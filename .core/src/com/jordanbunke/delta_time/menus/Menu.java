@@ -1,6 +1,6 @@
 package com.jordanbunke.delta_time.menus;
 
-import com.jordanbunke.delta_time.contexts.ProgramContext;
+import com.jordanbunke.delta_time._core.ProgramContext;
 import com.jordanbunke.delta_time.debug.GameDebugger;
 import com.jordanbunke.delta_time.image.GameImage;
 import com.jordanbunke.delta_time.io.InputEventLogger;

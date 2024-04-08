@@ -142,7 +142,7 @@ public class FontLoader {
 
         for (int x = firstXWith; x < firstXWithout; x++)
             for (int y = start[Y_INDEX]; y < start[Y_INDEX] + size[Y_INDEX]; y++)
-                if (ImageProcessing.colorAtPixel(image, x, y).equals(FONT_PRIMARY_COLOR))
+                if (image.getColorAt(x, y).equals(FONT_PRIMARY_COLOR))
                     grapheme.fillRectangle(x - firstXWith, y - start[Y_INDEX], 1, 1);
 
         return grapheme.submit();
@@ -168,7 +168,7 @@ public class FontLoader {
 
             // LEFT
             for (int x = firstXWith; x < firstXWithout; x++) {
-                if (isAFontColor(ImageProcessing.colorAtPixel(image, x, y))) {
+                if (isAFontColor(image.getColorAt(x, y))) {
                     charWidthComponents[yIndex][LEFT] = x - firstXWith;
                     break;
                 }
@@ -179,7 +179,7 @@ public class FontLoader {
 
             // RIGHT
             for (int x = firstXWithout - 1; x >= firstXWith; x--) {
-                if (isAFontColor(ImageProcessing.colorAtPixel(image, x, y))) {
+                if (isAFontColor(image.getColorAt(x, y))) {
                     charWidthComponents[yIndex][RIGHT] = (x - firstXWith) + 1; // potential bug (term + 1 vs term)
                     break;
                 }
@@ -199,7 +199,7 @@ public class FontLoader {
     private static int firstXWithout(final GameImage image, final int[] start, final int[] size) {
         for (int x = (start[X_INDEX] + size[X_INDEX]) - 1; x >= start[X_INDEX]; x--)
             for (int y = start[Y_INDEX]; y < start[Y_INDEX] + size[Y_INDEX]; y++)
-                if (isAFontColor(ImageProcessing.colorAtPixel(image, x, y)))
+                if (isAFontColor(image.getColorAt(x, y)))
                     return x + 1;
 
         return start[X_INDEX] + size[X_INDEX];
@@ -208,7 +208,7 @@ public class FontLoader {
     private static int firstXWith(final GameImage image, final int[] start, final int[] size) {
         for (int x = start[X_INDEX]; x < start[X_INDEX] + size[X_INDEX]; x++)
             for (int y = start[Y_INDEX]; y < start[Y_INDEX] + size[Y_INDEX]; y++)
-                if (isAFontColor(ImageProcessing.colorAtPixel(image, x, y)))
+                if (isAFontColor(image.getColorAt(x, y)))
                     return x;
 
         return start[X_INDEX];

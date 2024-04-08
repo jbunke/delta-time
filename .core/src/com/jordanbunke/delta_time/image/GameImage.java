@@ -134,4 +134,8 @@ public class GameImage extends BufferedImage {
     public GameImage section(final int left, final int top, final int right, final int bottom) {
         return new GameImage(getSubimage(left, top, right - left, bottom - top));
     }
+
+    public Color getColorAt(final int x, final int y) {
+        return new Color(getRGB(x, y), true);
+    }
 }

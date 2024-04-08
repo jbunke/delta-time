@@ -17,6 +17,6 @@ public class IncrementVersion {
                 ""
         };
 
-        FileIO.writeFile(Path.of("core", "res", About.INFO_FILENAME), infoFileContents);
+        FileIO.writeFile(Path.of(".core", "res", About.INFO_FILENAME), infoFileContents);
     }
 }

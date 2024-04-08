@@ -1,5 +1,6 @@
 package com.jordanbunke.delta_time.fonts;
 
+import com.jordanbunke.delta_time.io.FileIO;
 import com.jordanbunke.delta_time.io.GameImageIO;
 import com.jordanbunke.delta_time.text.Text;
 import com.jordanbunke.delta_time.text.TextBuilder;
@@ -9,10 +10,9 @@ import java.awt.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static com.jordanbunke.delta_time.fonts.FontConstants.FILE_SUFFIX;
-
 public class FontAndTextTests {
-    private static final Path FONT_TEST_OUTPUT_PATH = Paths.get("test_out", "fonts");
+    private static final Path FONT_TEST_OUTPUT_PATH =
+            Paths.get(".core", "test_out", "fonts");
     private static final Font[] FONTS = new Font[] {
             FontsForTests.ARIAL,
             // FontsForTests.HALF_SCALE_ARIAL,
@@ -37,7 +37,8 @@ public class FontAndTextTests {
         for (final Font font : FONTS)
             textBuilder.setFont(font).addText(text).addLineBreak();
 
-        final Path filepath = FONT_TEST_OUTPUT_PATH.resolve(saveCode + FILE_SUFFIX);
+        FileIO.safeMakeDirectory(FONT_TEST_OUTPUT_PATH);
+        final Path filepath = FONT_TEST_OUTPUT_PATH.resolve(saveCode + FontConstants.FILE_SUFFIX);
 
         GameImageIO.writeImage(filepath, textBuilder.build().draw());
     }
