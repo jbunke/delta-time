@@ -1,5 +1,4 @@
 # Project exclude paths
 /out/
-/test_out/
+/*/test_out/
 /.idea/
-*.iml
