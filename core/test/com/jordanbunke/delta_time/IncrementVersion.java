@@ -6,6 +6,7 @@ import java.nio.file.Path;
 
 public class IncrementVersion {
     public static void main(String[] args) {
+        OnStartup.run();
         About.VERSION.incrementBuild();
 
         System.out.println(About.VERSION);
@@ -16,6 +17,6 @@ public class IncrementVersion {
                 ""
         };
 
-        FileIO.writeFile(Path.of("res", About.INFO_FILENAME), infoFileContents);
+        FileIO.writeFile(Path.of("core", "res", About.INFO_FILENAME), infoFileContents);
     }
 }
