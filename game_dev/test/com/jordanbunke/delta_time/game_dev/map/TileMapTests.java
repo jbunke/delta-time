@@ -10,6 +10,7 @@ import com.jordanbunke.delta_time.io.ResourceLoader;
 
 import java.awt.*;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 public class TileMapTests {
@@ -90,7 +91,7 @@ public class TileMapTests {
             image.fillRectangle(step.x * UNIT_DIM, step.y * UNIT_DIM,
                     UNIT_DIM, UNIT_DIM);
 
-        final Path folder = Path.of("game_dev", "test_out", "tilemaps");
+        final Path folder = Paths.get("game_dev", "test_out", "tilemaps");
         FileIO.safeMakeDirectory(folder);
 
         GameImageIO.writeImage(folder.resolve(name + " result.png"),

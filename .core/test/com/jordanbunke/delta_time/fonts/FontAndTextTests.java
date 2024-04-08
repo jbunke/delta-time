@@ -12,7 +12,7 @@ import java.nio.file.Paths;
 
 public class FontAndTextTests {
     private static final Path FONT_TEST_OUTPUT_PATH =
-            Paths.get(".core", "test_out", "fonts");
+            Paths.get("test_out", "fonts");
     private static final Font[] FONTS = new Font[] {
             FontsForTests.ARIAL,
             // FontsForTests.HALF_SCALE_ARIAL,
