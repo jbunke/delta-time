@@ -1,8 +1,8 @@
-package com.jordanbunke.delta_time.menus;
+package com.jordanbunke.delta_time.menu;
 
 import com.jordanbunke.delta_time.io.InputEventLogger;
-import com.jordanbunke.delta_time.menus.menu_elements.MenuElement;
-import com.jordanbunke.delta_time.menus.menu_elements.container.MenuElementContainer;
+import com.jordanbunke.delta_time.menu.menu_elements.MenuElement;
+import com.jordanbunke.delta_time.menu.menu_elements.container.MenuElementContainer;
 
 import java.util.ArrayList;
 import java.util.Arrays;

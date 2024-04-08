@@ -1,4 +1,4 @@
-package com.jordanbunke.delta_time.menus.menu_elements.invisible;
+package com.jordanbunke.delta_time.menu.menu_elements.invisible;
 
 import com.jordanbunke.delta_time.io.InputEventLogger;
 

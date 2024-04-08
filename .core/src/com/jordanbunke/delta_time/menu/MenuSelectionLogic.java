@@ -1,4 +1,4 @@
-package com.jordanbunke.delta_time.menus;
+package com.jordanbunke.delta_time.menu;
 
 import com.jordanbunke.delta_time.events.GameEvent;
 import com.jordanbunke.delta_time.events.GameKeyEvent;

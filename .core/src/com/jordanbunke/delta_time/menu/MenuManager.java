@@ -1,10 +1,9 @@
-package com.jordanbunke.delta_time.menus;
+package com.jordanbunke.delta_time.menu;
 
 import com.jordanbunke.delta_time.debug.GameDebugger;
 import com.jordanbunke.delta_time._core.ProgramContext;
 import com.jordanbunke.delta_time.image.GameImage;
 import com.jordanbunke.delta_time.io.InputEventLogger;
-import com.jordanbunke.delta_time.menus.Menu;
 
 import java.util.HashMap;
 import java.util.Map;

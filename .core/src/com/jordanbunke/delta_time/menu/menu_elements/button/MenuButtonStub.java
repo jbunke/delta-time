@@ -1,9 +1,9 @@
-package com.jordanbunke.delta_time.menus.menu_elements.button;
+package com.jordanbunke.delta_time.menu.menu_elements.button;
 
 import com.jordanbunke.delta_time.events.GameEvent;
 import com.jordanbunke.delta_time.events.GameMouseEvent;
 import com.jordanbunke.delta_time.io.InputEventLogger;
-import com.jordanbunke.delta_time.menus.menu_elements.SelectableMenuElement;
+import com.jordanbunke.delta_time.menu.menu_elements.SelectableMenuElement;
 import com.jordanbunke.delta_time.utility.math.Coord2D;
 
 import java.util.List;

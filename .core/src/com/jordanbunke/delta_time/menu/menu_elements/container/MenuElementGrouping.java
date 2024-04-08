@@ -1,6 +1,6 @@
-package com.jordanbunke.delta_time.menus.menu_elements.container;
+package com.jordanbunke.delta_time.menu.menu_elements.container;
 
-import com.jordanbunke.delta_time.menus.menu_elements.MenuElement;
+import com.jordanbunke.delta_time.menu.menu_elements.MenuElement;
 import com.jordanbunke.delta_time.utility.math.Coord2D;
 
 public class MenuElementGrouping extends MenuElementContainer {

@@ -1,4 +1,4 @@
-package com.jordanbunke.delta_time.menus.menu_elements.button;
+package com.jordanbunke.delta_time.menu.menu_elements.button;
 
 import com.jordanbunke.delta_time.debug.GameDebugger;
 import com.jordanbunke.delta_time.image.GameImage;

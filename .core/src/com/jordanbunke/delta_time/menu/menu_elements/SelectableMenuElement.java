@@ -1,6 +1,6 @@
-package com.jordanbunke.delta_time.menus.menu_elements;
+package com.jordanbunke.delta_time.menu.menu_elements;
 
-import com.jordanbunke.delta_time.menus.Menu;
+import com.jordanbunke.delta_time.menu.Menu;
 import com.jordanbunke.delta_time.utility.math.Coord2D;
 
 public abstract class SelectableMenuElement extends MenuElement {

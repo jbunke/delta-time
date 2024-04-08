@@ -1,11 +1,11 @@
-package com.jordanbunke.delta_time.menus;
+package com.jordanbunke.delta_time.menu;
 
 import com.jordanbunke.delta_time._core.ProgramContext;
 import com.jordanbunke.delta_time.debug.GameDebugger;
 import com.jordanbunke.delta_time.image.GameImage;
 import com.jordanbunke.delta_time.io.InputEventLogger;
-import com.jordanbunke.delta_time.menus.menu_elements.MenuElement;
-import com.jordanbunke.delta_time.menus.menu_elements.SelectableMenuElement;
+import com.jordanbunke.delta_time.menu.menu_elements.MenuElement;
+import com.jordanbunke.delta_time.menu.menu_elements.SelectableMenuElement;
 
 import java.util.function.BiConsumer;
 

@@ -1,9 +1,9 @@
-package com.jordanbunke.delta_time.menus.menu_elements.visual;
+package com.jordanbunke.delta_time.menu.menu_elements.visual;
 
 import com.jordanbunke.delta_time.debug.GameDebugger;
 import com.jordanbunke.delta_time.image.GameImage;
 import com.jordanbunke.delta_time.io.InputEventLogger;
-import com.jordanbunke.delta_time.menus.menu_elements.MenuElement;
+import com.jordanbunke.delta_time.menu.menu_elements.MenuElement;
 import com.jordanbunke.delta_time.text.Text;
 import com.jordanbunke.delta_time.utility.math.Coord2D;
 

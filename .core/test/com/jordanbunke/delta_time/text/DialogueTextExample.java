@@ -6,9 +6,9 @@ import com.jordanbunke.delta_time.fonts.FontsForTests;
 import com.jordanbunke.delta_time._core.Program;
 import com.jordanbunke.delta_time._core.GameManager;
 import com.jordanbunke.delta_time.image.GameImage;
-import com.jordanbunke.delta_time.menus.Menu;
-import com.jordanbunke.delta_time.menus.menu_elements.MenuElement;
-import com.jordanbunke.delta_time.menus.menu_elements.visual.AnimationMenuElement;
+import com.jordanbunke.delta_time.menu.Menu;
+import com.jordanbunke.delta_time.menu.menu_elements.MenuElement;
+import com.jordanbunke.delta_time.menu.menu_elements.visual.AnimationMenuElement;
 import com.jordanbunke.delta_time.utility.math.Coord2D;
 import com.jordanbunke.delta_time.window.GameWindow;
 
