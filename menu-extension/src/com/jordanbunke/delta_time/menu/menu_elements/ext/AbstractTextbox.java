@@ -19,9 +19,7 @@ import java.util.function.Supplier;
 
 public abstract class AbstractTextbox extends MenuButtonStub {
     // matrix indices
-    private static final int I_INVALID = 0, I_VALID = 1,
-            I_NOT_HIGHLIGHTED = 0, I_HIGHLIGHTED = 1,
-            I_NOT_TYPING = 0, I_TYPING = 1;
+    private static final int I_TRUE = 1;
     private static final int TRUTH_TABLE_DIM = 2;
 
     private static String typingCode = "typing"; // default
@@ -77,16 +75,15 @@ public abstract class AbstractTextbox extends MenuButtonStub {
         prefix = prefixGetter.get();
         suffix = suffixGetter.get();
 
-        for (int iValidity = 0; iValidity < TRUTH_TABLE_DIM; iValidity++)
-            for (int iHighlighting = 0; iHighlighting < TRUTH_TABLE_DIM; iHighlighting++)
-                for (int iTyping = 0; iTyping < TRUTH_TABLE_DIM; iTyping++)
+        for (int iValidity = 0; iValidity <= I_TRUE; iValidity++)
+            for (int iHighlighting = 0; iHighlighting <= I_TRUE; iHighlighting++)
+                for (int iTyping = 0; iTyping <= I_TRUE; iTyping++)
                     imageMatrix[iValidity][iHighlighting][iTyping] = fDraw.draw(
                             new Coord2D(getWidth(), getHeight()),
                             prefix, text, suffix,
                             cursorIndex, selectionIndex,
-                            iValidity == I_VALID,
-                            iHighlighting == I_HIGHLIGHTED,
-                            iTyping == I_TYPING);
+                            iValidity == I_TRUE, iHighlighting == I_TRUE,
+                            iTyping == I_TRUE);
 
         lastText = text;
         lastCursorIndex = cursorIndex;
@@ -270,6 +267,8 @@ public abstract class AbstractTextbox extends MenuButtonStub {
                 !prefix.equals(prefixGetter.get()) ||
                 !suffix.equals(suffixGetter.get()))
             updateAssets();
+
+        determineCurrent();
     }
 
     @Override
@@ -283,9 +282,12 @@ public abstract class AbstractTextbox extends MenuButtonStub {
     }
 
     private void determineCurrent() {
-        current = imageMatrix[isValid() ? I_VALID : I_INVALID]
-                [isHighlighted() ? I_HIGHLIGHTED : I_NOT_HIGHLIGHTED]
-                [isTyping() ? I_TYPING : I_NOT_TYPING];
+        current = imageMatrix[toIndex(isValid())]
+                [toIndex(isHighlighted())][toIndex(isTyping())];
+    }
+
+    private int toIndex(final boolean property) {
+        return property ? I_TRUE : (1 - I_TRUE);
     }
 
     public void validate() {

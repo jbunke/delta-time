@@ -21,16 +21,13 @@ public abstract class AbstractDynamicLabel extends MenuElement {
 
     public AbstractDynamicLabel(
             final Coord2D position,
-            final String widestCase,
-            final int height,
+            final Coord2D dimensions,
             final Anchor anchor,
             final Color textColor,
             final Supplier<String> getter,
             final LabelDrawingFunction fDraw
     ) {
-        super(position, new Coord2D(
-                fDraw.draw(widestCase, textColor).getWidth(),
-                height), anchor, true);
+        super(position, dimensions, anchor, true);
 
         this.fDraw = fDraw;
         this.textColor = textColor;
@@ -39,6 +36,20 @@ public abstract class AbstractDynamicLabel extends MenuElement {
         text = getter.get();
 
         updateAssets();
+    }
+
+    public AbstractDynamicLabel(
+            final Coord2D position,
+            final String widestCase,
+            final int height,
+            final Anchor anchor,
+            final Color textColor,
+            final Supplier<String> getter,
+            final LabelDrawingFunction fDraw
+    ) {
+        this(position, new Coord2D(
+                fDraw.draw(widestCase, textColor).getWidth(),
+                height), anchor, textColor, getter, fDraw);
     }
 
     private void updateAssets() {

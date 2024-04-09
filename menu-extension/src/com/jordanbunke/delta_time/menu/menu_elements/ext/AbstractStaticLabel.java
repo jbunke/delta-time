@@ -18,4 +18,9 @@ public abstract class AbstractStaticLabel extends AbstractDynamicLabel {
         super(position, text, height, anchor, textColor,
                 Retriever.of(text), fDraw);
     }
+
+    @Override
+    public void update(final double deltaTime) {
+
+    }
 }
