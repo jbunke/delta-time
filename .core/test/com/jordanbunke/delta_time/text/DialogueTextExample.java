@@ -1,10 +1,10 @@
 package com.jordanbunke.delta_time.text;
 
-import com.jordanbunke.delta_time.fonts.Font;
-import com.jordanbunke.delta_time.fonts.FontFamily;
-import com.jordanbunke.delta_time.fonts.FontsForTests;
-import com.jordanbunke.delta_time._core.Program;
 import com.jordanbunke.delta_time._core.GameManager;
+import com.jordanbunke.delta_time._core.Program;
+import com.jordanbunke.delta_time.fonts.DeltaTimeFonts;
+import com.jordanbunke.delta_time.fonts.Font;
+import com.jordanbunke.delta_time.fonts.Typeface;
 import com.jordanbunke.delta_time.image.GameImage;
 import com.jordanbunke.delta_time.menu.Menu;
 import com.jordanbunke.delta_time.menu.menu_elements.MenuElement;
@@ -16,7 +16,10 @@ import java.awt.*;
 
 public class DialogueTextExample {
     private static final Color DEFAULT_COLOR = new Color(0, 0, 0);
-    private static final FontFamily DEFAULT_FONT = FontsForTests.CLASSIC;
+    private static final Typeface TYPEFACE = new Typeface(
+            "Deltan", DeltaTimeFonts.getDefault(),
+            DeltaTimeFonts.buildFontFromCode(DeltaTimeFonts.SKINNY),
+            null);
     private static final int SCALE_UP = 1, PADDING = 10, EXTRA_FRAMES = 50;
     private static final double TEXT_SIZE = 3d;
     private static final double TICK_HZ = 15d, FPS = 60d;
@@ -33,10 +36,10 @@ public class DialogueTextExample {
                 DEFAULT_COLOR, DEFAULT_COLOR
         };
         final Font[] fontsPerSection = {
-                DEFAULT_FONT.getStandard(),
-                DEFAULT_FONT.getStandard(),
-                DEFAULT_FONT.getStandard(),
-                DEFAULT_FONT.getItalics()
+                TYPEFACE.regular(),
+                TYPEFACE.regular(),
+                TYPEFACE.regular(),
+                TYPEFACE.bold()
         };
 
         final AnimationMenuElement animation = generateAnimationFromTextInput(sections,

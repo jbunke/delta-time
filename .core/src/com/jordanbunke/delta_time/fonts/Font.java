@@ -31,15 +31,6 @@ public class Font {
     public static Font loadFromSource(
             final Path folder, final boolean isResource,
             final String baseName, final boolean hasLatinExtended,
-            final int pixelSpacing, final boolean charSpecificSpacing
-    ) {
-        return loadFromSource(folder, isResource, baseName, hasLatinExtended,
-                1.0, pixelSpacing, false, charSpecificSpacing);
-    }
-
-    public static Font loadFromSource(
-            final Path folder, final boolean isResource,
-            final String baseName, final boolean hasLatinExtended,
             final double whitespaceBreadthMultiplier,
             final int pixelSpacing,
             final boolean smoothResizing,

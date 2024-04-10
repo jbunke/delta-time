@@ -2,9 +2,9 @@ package com.jordanbunke.delta_time.sprite;
 
 import com.jordanbunke.anim.GIFWriter;
 import com.jordanbunke.delta_time.debug.GameDebugger;
-import com.jordanbunke.delta_time.fonts.FontsForTests;
 import com.jordanbunke.delta_time._core.Program;
 import com.jordanbunke.delta_time._core.GameManager;
+import com.jordanbunke.delta_time.fonts.DeltaTimeFonts;
 import com.jordanbunke.delta_time.image.GameImage;
 import com.jordanbunke.delta_time.image.ImageProcessing;
 import com.jordanbunke.delta_time.sprite.constituents.DecisionSpriteConstituent;
@@ -171,9 +171,8 @@ public class SpriteCompositionExample {
     }
 
     private static GameImage drawText(final String text) {
-        return new TextBuilder(
-                1.0, Text.Orientation.LEFT, new Color(0, 0, 0),
-                FontsForTests.CLASSIC.getStandard()
-        ).addText(text).build().draw();
+        return new TextBuilder(1.0, Text.Orientation.LEFT,
+                new Color(0, 0, 0), DeltaTimeFonts.getDefault())
+                .addText(text).build().draw();
     }
 }

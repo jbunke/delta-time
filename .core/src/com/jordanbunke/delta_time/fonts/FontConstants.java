@@ -5,6 +5,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class FontConstants {
+    public static final double DEF_WHITESPACE_MULT = 1d;
+    public static final int DEF_PIXEL_SPACING = 1;
+    public static final boolean DEF_SMOOTH_RESIZING = false,
+            DEF_CHAR_SPECIFIC_SPACING = true;
+
     public static final Color
             FONT_PRIMARY_COLOR = new Color(255, 0, 0, 255),
             FONT_SPACING_BOUND_COLOR = new Color(0, 255, 0, 255);
