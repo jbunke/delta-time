@@ -19,4 +19,9 @@ public abstract class InvisibleMenuElement extends MenuElement {
     public void debugRender(final GameImage canvas, final GameDebugger debugger) {
 
     }
+
+    @Override
+    public String toString() {
+        return typeName();
+    }
 }

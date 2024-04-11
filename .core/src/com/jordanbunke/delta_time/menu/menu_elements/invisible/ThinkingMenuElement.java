@@ -97,6 +97,13 @@ public final class ThinkingMenuElement extends InvisibleMenuElement {
     }
 
     @Override
+    public Coord2D getPosition() {
+        return decision != null
+                ? decision.getPosition()
+                : super.getPosition();
+    }
+
+    @Override
     public int getWidth() {
         return decision != null
                 ? decision.getWidth()
@@ -108,5 +115,18 @@ public final class ThinkingMenuElement extends InvisibleMenuElement {
         return decision != null
                 ? decision.getHeight()
                 : super.getHeight();
+    }
+
+    @Override
+    public Coord2D getDimensions() {
+        return decision != null
+                ? decision.getDimensions()
+                : super.getDimensions();
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + (decision != null
+                ? "\n\tCurrently: " + decision : "");
     }
 }

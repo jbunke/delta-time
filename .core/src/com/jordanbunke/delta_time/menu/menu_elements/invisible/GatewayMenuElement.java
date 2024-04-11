@@ -79,36 +79,56 @@ public final class GatewayMenuElement extends InvisibleMenuElement {
 
     @Override
     public Anchor getAnchor() {
-        return condition.get()
+        return passing
                 ? content.getAnchor()
                 : super.getAnchor();
     }
 
     @Override
     public int getX() {
-        return condition.get()
+        return passing
                 ? content.getX()
                 : super.getX();
     }
 
     @Override
     public int getY() {
-        return condition.get()
+        return passing
                 ? content.getY()
                 : super.getY();
     }
 
     @Override
+    public Coord2D getPosition() {
+        return passing
+                ? content.getPosition()
+                : super.getPosition();
+    }
+
+    @Override
     public int getWidth() {
-        return condition.get()
+        return passing
                 ? content.getWidth()
                 : super.getWidth();
     }
 
     @Override
     public int getHeight() {
-        return condition.get()
+        return passing
                 ? content.getHeight()
                 : super.getHeight();
+    }
+
+    @Override
+    public Coord2D getDimensions() {
+        return passing
+                ? content.getDimensions()
+                : super.getDimensions();
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + "\n\t... " +
+                (passing ? "passing to " + content : "[closed]");
     }
 }

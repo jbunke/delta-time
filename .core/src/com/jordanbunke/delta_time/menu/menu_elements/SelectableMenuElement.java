@@ -81,4 +81,9 @@ public abstract class SelectableMenuElement extends MenuElement {
     public boolean isSelected() {
         return selected;
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + (selected ? " [selected]" : "");
+    }
 }

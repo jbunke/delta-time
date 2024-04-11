@@ -75,4 +75,14 @@ public abstract class MenuElementContainer extends MenuElement {
         for (MenuElement me : getMenuElements())
             me.setY(y + (me.getY() - was));
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder(super.toString());
+
+        for (final MenuElement me : getMenuElements())
+            sb.append("\n\t- ").append(me.toString());
+
+        return sb.toString();
+    }
 }

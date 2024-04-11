@@ -13,7 +13,7 @@ public final class Scrollable extends InvisibleMenuElement {
 
     public Scrollable(final MenuElement associated) {
         this.associated = associated;
-        this.originalPosition = new Coord2D(associated.getX(), associated.getY());
+        this.originalPosition = associated.getPosition();
         this.offset = new Coord2D();
     }
 
@@ -49,6 +49,16 @@ public final class Scrollable extends InvisibleMenuElement {
     @Override
     public int getWidth() {
         return associated.getWidth();
+    }
+
+    @Override
+    public Coord2D getDimensions() {
+        return associated.getDimensions();
+    }
+
+    @Override
+    public Coord2D getPosition() {
+        return associated.getPosition();
     }
 
     @Override
@@ -90,5 +100,10 @@ public final class Scrollable extends InvisibleMenuElement {
         super.setY(y);
 
         associated.setY(y + (associated.getY() - was));
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + ": " + associated;
     }
 }

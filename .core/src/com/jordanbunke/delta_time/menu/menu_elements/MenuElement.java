@@ -127,6 +127,14 @@ public abstract class MenuElement implements ProgramContext {
         setY(position.y + deltaY);
     }
 
+    public Coord2D getPosition() {
+        return position;
+    }
+
+    public Coord2D getDimensions() {
+        return dimensions;
+    }
+
     public int getX() {
         return position.x;
     }
@@ -151,10 +159,17 @@ public abstract class MenuElement implements ProgramContext {
         return visible;
     }
 
+    public String typeName() {
+        final String wholeName = getClass().getName();
+
+        return wholeName.substring(wholeName.lastIndexOf('.') + 1);
+    }
+
     @Override
     public String toString() {
-        return "at (" + position.x +
-                ", " + position.y +
-                ") [ " + anchor.toString() + " ]";
+        return typeName() +
+                " of " + dimensions.x + "x" + dimensions.y +
+                " at (" + position.x + ", " + position.y + ") [ " +
+                anchor.toString() + " ]";
     }
 }
