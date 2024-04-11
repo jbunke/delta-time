@@ -1,21 +1,21 @@
 package com.jordanbunke.delta_time.sprite;
 
 import com.jordanbunke.anim.GIFWriter;
-import com.jordanbunke.delta_time.debug.GameDebugger;
-import com.jordanbunke.delta_time.fonts.FontsForTests;
-import com.jordanbunke.delta_time._core.Program;
 import com.jordanbunke.delta_time._core.GameManager;
+import com.jordanbunke.delta_time._core.Program;
+import com.jordanbunke.delta_time.debug.GameDebugger;
+import com.jordanbunke.delta_time.fonts.DeltaTimeFonts;
 import com.jordanbunke.delta_time.image.GameImage;
 import com.jordanbunke.delta_time.image.ImageProcessing;
-import com.jordanbunke.delta_time.sprite.constituents.DecisionSpriteConstituent;
-import com.jordanbunke.delta_time.sprite.constituents.InterpretedSpriteSheet;
-import com.jordanbunke.delta_time.sprite.constituents.OffsetSingleSpriteConstituent;
 import com.jordanbunke.delta_time.io.GameImageIO;
 import com.jordanbunke.delta_time.io.ResourceLoader;
 import com.jordanbunke.delta_time.menu.Menu;
 import com.jordanbunke.delta_time.menu.MenuBuilder;
 import com.jordanbunke.delta_time.menu.menu_elements.MenuElement;
 import com.jordanbunke.delta_time.menu.menu_elements.visual.AnimationMenuElement;
+import com.jordanbunke.delta_time.sprite.constituents.DecisionSpriteConstituent;
+import com.jordanbunke.delta_time.sprite.constituents.InterpretedSpriteSheet;
+import com.jordanbunke.delta_time.sprite.constituents.OffsetSingleSpriteConstituent;
 import com.jordanbunke.delta_time.text.Text;
 import com.jordanbunke.delta_time.text.TextBuilder;
 import com.jordanbunke.delta_time.utility.math.Coord2D;
@@ -98,6 +98,8 @@ public class SpriteCompositionExample {
                 butterHelmSource = ResourceLoader.loadImageResource(Path.of("sprite", "spritesheets", "butter-helm.png")),
                 helmetDamageSource = ResourceLoader.loadImageResource(Path.of("sprite", "spritesheets", "helmet-damage.png"));
 
+        assert helmetDamageSource != null && butterHelmSource != null;
+
         final GameImage composedRunningFrames = SpriteComposer.compose(spriteSheet, colorNet, palette);
 
         final SpriteSheet runningSpriteSheet = new SpriteSheet(composedRunningFrames, WIDTH, HEIGHT);
@@ -171,9 +173,8 @@ public class SpriteCompositionExample {
     }
 
     private static GameImage drawText(final String text) {
-        return new TextBuilder(
-                1.0, Text.Orientation.LEFT, new Color(0, 0, 0),
-                FontsForTests.CLASSIC.getStandard()
-        ).addText(text).build().draw();
+        return new TextBuilder(1.0, Text.Orientation.LEFT,
+                new Color(0, 0, 0), DeltaTimeFonts.getDefault())
+                .addText(text).build().draw();
     }
 }

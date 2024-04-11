@@ -2,19 +2,15 @@ package com.jordanbunke.delta_time.fonts;
 
 import com.jordanbunke.delta_time.error.GameError;
 import com.jordanbunke.delta_time.image.GameImage;
-import com.jordanbunke.delta_time.image.ImageProcessing;
-import com.jordanbunke.delta_time.io.GameImageIO;
-import com.jordanbunke.delta_time.io.ResourceLoader;
 
 import java.awt.*;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
 import static com.jordanbunke.delta_time.fonts.FontConstants.*;
 
-public class FontLoader {
+public final class FontLoader {
     private static final int X_INCREMENT = 20, Y_INCREMENT = 38;
     private static final int X_INDEX = 0, Y_INDEX = 1;
 
@@ -23,19 +19,6 @@ public class FontLoader {
             LAST_GRID_SLOT = 127,
             CHARS_ON_ROW = 16;
     private static final int BASE_WHITESPACE_BREADTH = 8;
-
-    public static Map<Character, Grapheme> loadASCIIFromSource(
-            final Path source, final boolean isResource,
-            final double whitespaceBreadthMultiplier,
-            final boolean charSpecificSpacing
-    ) {
-        final GameImage image = isResource
-                ? ResourceLoader.loadImageResource(source)
-                : GameImageIO.readImage(source);
-
-        return loadASCII(image, whitespaceBreadthMultiplier,
-                charSpecificSpacing);
-    }
 
     public static Map<Character, Grapheme> loadASCII(
             final GameImage image, final double whitespaceBreadthMultiplier,
@@ -57,16 +40,6 @@ public class FontLoader {
                 FINAL_ASCII, i -> (char) i.intValue(), c -> false);
 
         return map;
-    }
-
-    public static Map<Character, Grapheme> loadLatinExtendedFromSource(
-            final Path source, final boolean isResource,
-            final boolean charSpecificSpacing) {
-        final GameImage image = isResource
-                ? ResourceLoader.loadImageResource(source)
-                : GameImageIO.readImage(source);
-
-        return loadLatinExtended(image, charSpecificSpacing);
     }
 
     public static Map<Character, Grapheme> loadLatinExtended(

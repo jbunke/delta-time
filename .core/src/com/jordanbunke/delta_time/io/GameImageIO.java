@@ -15,7 +15,7 @@ public class GameImageIO {
             GameError.send("Couldn't read image file: " + filepath);
         }
 
-        return GameImage.dummy();
+        return null;
     }
 
     public static void writeImage(final Path filepath, final GameImage image) {

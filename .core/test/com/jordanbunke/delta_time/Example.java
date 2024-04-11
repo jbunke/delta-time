@@ -1,14 +1,14 @@
 package com.jordanbunke.delta_time;
 
-import com.jordanbunke.delta_time.menu.MenuManager;
-import com.jordanbunke.delta_time.fonts.FontsForTests;
-import com.jordanbunke.delta_time._core.Program;
 import com.jordanbunke.delta_time._core.GameManager;
+import com.jordanbunke.delta_time._core.Program;
+import com.jordanbunke.delta_time.fonts.DeltaTimeFonts;
 import com.jordanbunke.delta_time.image.GameImage;
 import com.jordanbunke.delta_time.menu.Menu;
-import com.jordanbunke.delta_time.menu.menu_elements.visual.AnimationMenuElement;
+import com.jordanbunke.delta_time.menu.MenuManager;
 import com.jordanbunke.delta_time.menu.menu_elements.MenuElement;
 import com.jordanbunke.delta_time.menu.menu_elements.button.SimpleMenuButton;
+import com.jordanbunke.delta_time.menu.menu_elements.visual.AnimationMenuElement;
 import com.jordanbunke.delta_time.text.Text;
 import com.jordanbunke.delta_time.text.TextComponent;
 import com.jordanbunke.delta_time.utility.math.Coord2D;
@@ -30,10 +30,8 @@ public class Example {
                 new Color(0, 0, 0, 255);
         return new Text(
                 4.2, Text.Orientation.CENTER,
-                new TextComponent(
-                        "Você tem que respeitar as leis do país!",
-                        FontsForTests.CLASSIC.getItalics(), c
-                )).draw();
+                new TextComponent("Você tem que respeitar as leis do país!",
+                        DeltaTimeFonts.getDefault(), c)).draw();
     }
 
     private static GameImage drawBackground(final int index) {

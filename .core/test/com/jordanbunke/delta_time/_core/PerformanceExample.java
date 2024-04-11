@@ -1,7 +1,7 @@
 package com.jordanbunke.delta_time._core;
 
 import com.jordanbunke.delta_time.debug.GameDebugger;
-import com.jordanbunke.delta_time.fonts.FontsForTests;
+import com.jordanbunke.delta_time.fonts.DeltaTimeFonts;
 import com.jordanbunke.delta_time.image.GameImage;
 import com.jordanbunke.delta_time.io.InputEventLogger;
 import com.jordanbunke.delta_time.text.Text;
@@ -94,7 +94,6 @@ public class PerformanceExample {
         return new TextBuilder(
                 CANVAS_SCALE_UP / 20., Text.Orientation.LEFT,
                 new Color(0, 0, 0, 255),
-                FontsForTests.CLASSIC.getStandard()
-        ).addText(string).build().draw();
+                DeltaTimeFonts.getDefault()).addText(string).build().draw();
     }
 }

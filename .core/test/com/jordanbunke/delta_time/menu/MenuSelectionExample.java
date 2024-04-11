@@ -1,9 +1,9 @@
 package com.jordanbunke.delta_time.menu;
 
-import com.jordanbunke.delta_time.fonts.Font;
-import com.jordanbunke.delta_time.fonts.FontsForTests;
-import com.jordanbunke.delta_time._core.Program;
 import com.jordanbunke.delta_time._core.GameManager;
+import com.jordanbunke.delta_time._core.Program;
+import com.jordanbunke.delta_time.fonts.DeltaTimeFonts;
+import com.jordanbunke.delta_time.fonts.Font;
 import com.jordanbunke.delta_time.image.GameImage;
 import com.jordanbunke.delta_time.menu.menu_elements.MenuElement;
 import com.jordanbunke.delta_time.menu.menu_elements.button.SimpleMenuButton;
@@ -52,7 +52,7 @@ public class MenuSelectionExample {
     private static SimpleMenuButton generateButton(
             final String text, final double x, final double y
     ) {
-        final Font font = FontsForTests.CLASSIC.getItalics(); // BASIC.getBold() / CLASSIC.getItalics()
+        final Font font = DeltaTimeFonts.getDefault();
         final double textSize = 1.0;
         final Color nhc = new Color(0, 0, 0, 255),
                 hc = new Color(255, 255, 255, 255);
