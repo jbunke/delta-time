@@ -2,11 +2,7 @@ package com.jordanbunke.delta_time.sprite;
 
 import com.jordanbunke.delta_time.error.GameError;
 import com.jordanbunke.delta_time.image.GameImage;
-import com.jordanbunke.delta_time.io.GameImageIO;
-import com.jordanbunke.delta_time.io.ResourceLoader;
 import com.jordanbunke.delta_time.utility.math.Coord2D;
-
-import java.nio.file.Path;
 
 public class SpriteSheet {
     private final GameImage sheet;
@@ -42,26 +38,6 @@ public class SpriteSheet {
                 sprites[x][y] = sprite.submit();
             }
         }
-    }
-
-    public static SpriteSheet fromResource(
-            final Path resourcePath, final int singleSpriteWidth,
-            final int singleSpriteHeight
-    ) {
-        final GameImage sheet = ResourceLoader.loadImageResource(resourcePath);
-
-        return new SpriteSheet(sheet, singleSpriteWidth,
-                singleSpriteHeight);
-    }
-
-    public static SpriteSheet fromFile(
-            final Path filePath, final int singleSpriteWidth,
-            final int singleSpriteHeight
-    ) {
-        final GameImage sheet = GameImageIO.readImage(filePath);
-
-        return new SpriteSheet(sheet, singleSpriteWidth,
-                singleSpriteHeight);
     }
 
     public GameImage getSprite(final Coord2D coordinate) {

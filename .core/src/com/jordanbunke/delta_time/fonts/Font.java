@@ -2,6 +2,8 @@ package com.jordanbunke.delta_time.fonts;
 
 import com.jordanbunke.delta_time.error.GameError;
 import com.jordanbunke.delta_time.image.GameImage;
+import com.jordanbunke.delta_time.io.GameImageIO;
+import com.jordanbunke.delta_time.io.ResourceLoader;
 
 import java.awt.*;
 import java.nio.file.Path;
@@ -10,7 +12,7 @@ import java.util.Map;
 import static com.jordanbunke.delta_time.fonts.FontConstants.ASCII_SUFFIX;
 import static com.jordanbunke.delta_time.fonts.FontConstants.LATIN_EXTENDED_SUFFIX;
 
-public class Font {
+public final class Font {
 
     private final Map<Character, Grapheme> CHARACTER_MAP;
     private final int pixelSpacing, height;
@@ -28,29 +30,57 @@ public class Font {
         this.charSpecificSpacing = charSpecificSpacing;
     }
 
-    public static Font loadFromSource(
-            final Path folder, final boolean isResource,
-            final String baseName, final boolean hasLatinExtended,
+    public static Font loadFromFiles(
+            final Path folder, final boolean resource, final String baseName,
+            final double whitespaceBreadthMultiplier, final int pixelSpacing,
+            final boolean smoothResizing, final boolean charSpecificSpacing
+    ) {
+        final GameImage ascii = tryLoadFontSourceFile(
+                folder, resource, baseName, ASCII_SUFFIX),
+                latinExtended = tryLoadFontSourceFile(
+                        folder, resource, baseName, LATIN_EXTENDED_SUFFIX);
+
+        if (ascii == null) {
+            GameError.send(
+                    "Could not read the mandatory ASCII source file; font \"" +
+                            baseName + "\" could not be loaded.");
+            return null;
+        }
+
+        final FontSources fontSources = new FontSources(ascii, latinExtended);
+
+        return loadFromFontSources(fontSources, whitespaceBreadthMultiplier,
+                pixelSpacing, smoothResizing, charSpecificSpacing);
+    }
+
+    private static GameImage tryLoadFontSourceFile(
+            final Path folder, final boolean resource,
+            final String baseName, final String suffix
+    ) {
+        final Path filepath = folder.resolve(baseName + suffix);
+
+        return resource
+                ? ResourceLoader.loadImageResource(filepath)
+                : GameImageIO.readImage(filepath);
+    }
+
+    public static Font loadFromFontSources(
+            final FontSources fontSources,
             final double whitespaceBreadthMultiplier,
             final int pixelSpacing,
             final boolean smoothResizing,
             final boolean charSpecificSpacing
     ) {
-        final Path asciiFilepath = folder.resolve(baseName + ASCII_SUFFIX);
-
         final Map<Character, Grapheme> characterMap =
-                FontLoader.loadASCIIFromSource(asciiFilepath, isResource,
+                FontLoader.loadASCII(fontSources.ascii(),
                         whitespaceBreadthMultiplier, charSpecificSpacing);
 
-        // TODO: Each additional charset can be introduced with an analogous code block and font loader
-        if (hasLatinExtended) {
-            final Path latinExtendedFilepath = folder.resolve(baseName + LATIN_EXTENDED_SUFFIX);
-            Map<Character, Grapheme> latinExtendedMap =
-                    FontLoader.loadLatinExtendedFromSource(latinExtendedFilepath,
-                            isResource, charSpecificSpacing);
+        if (fontSourceIsValid(fontSources.latinExtended())) {
+            final Map<Character, Grapheme> latinExtendedMap =
+                    FontLoader.loadLatinExtended(fontSources.latinExtended(),
+                            charSpecificSpacing);
 
-            for (Character c : latinExtendedMap.keySet())
-                characterMap.put(c, latinExtendedMap.get(c));
+            characterMap.putAll(latinExtendedMap);
         }
 
         final int height = characterMap.get(' ').height;
@@ -58,28 +88,9 @@ public class Font {
                 smoothResizing, charSpecificSpacing);
     }
 
-    public static Font loadFromImages(
-            final GameImage ascii, final GameImage latinExtended,
-            final double whitespaceBreadthMultiplier,
-            final int pixelSpacing,
-            final boolean smoothResizing,
-            final boolean charSpecificSpacing
-    ) {
-        final Map<Character, Grapheme> characterMap = FontLoader.loadASCII(
-                ascii, whitespaceBreadthMultiplier, charSpecificSpacing);
-
-        if (latinExtended != null && latinExtended.getWidth() >
-                GameImage.dummy().getWidth()) {
-            final Map<Character, Grapheme> latinExtendedMap = FontLoader
-                    .loadLatinExtended(latinExtended, charSpecificSpacing);
-
-            for (Character c : latinExtendedMap.keySet())
-                characterMap.put(c, latinExtendedMap.get(c));
-        }
-
-        final int height = characterMap.get(' ').height;
-        return new Font(characterMap, pixelSpacing, height,
-                smoothResizing, charSpecificSpacing);
+    private static boolean fontSourceIsValid(final GameImage fontSource) {
+        return fontSource != null &&
+                fontSource.getWidth() % FontConstants.FONT_SOURCE_BASE_WIDTH == 0;
     }
 
     public GameImage drawChar(final char c, final Color color) {

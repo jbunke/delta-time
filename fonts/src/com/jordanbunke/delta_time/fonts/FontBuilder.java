@@ -1,7 +1,5 @@
 package com.jordanbunke.delta_time.fonts;
 
-import com.jordanbunke.delta_time.image.GameImage;
-
 import java.nio.file.Path;
 
 public final class FontBuilder {
@@ -23,22 +21,16 @@ public final class FontBuilder {
     }
 
     public Font build(
-            final Path folder, final boolean isResource,
-            final String baseName,
-            final boolean hasLatinExtended
+            final Path folder, final boolean resource,
+            final String baseName
     ) {
-        return Font.loadFromSource(folder, isResource,
-                baseName, hasLatinExtended,
+        return Font.loadFromFiles(folder, resource, baseName,
                 whitespaceBreadthMultiplier, pixelSpacing,
                 smoothResizing, charSpecificSpacing);
     }
 
     public Font build(final FontSources sources) {
-        return build(sources.ascii(), sources.latinExtended());
-    }
-
-    public Font build(final GameImage ascii, final GameImage latinExtended) {
-        return Font.loadFromImages(ascii, latinExtended,
+        return Font.loadFromFontSources(sources,
                 whitespaceBreadthMultiplier, pixelSpacing,
                 smoothResizing, charSpecificSpacing);
     }

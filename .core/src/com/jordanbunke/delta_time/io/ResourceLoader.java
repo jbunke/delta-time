@@ -33,6 +33,6 @@ public class ResourceLoader {
             GameError.send("Could not load image resource: " + resource);
         }
 
-        return GameImage.dummy();
+        return null;
     }
 }

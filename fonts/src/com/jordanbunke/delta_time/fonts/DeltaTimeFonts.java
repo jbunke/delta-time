@@ -49,8 +49,7 @@ public final class DeltaTimeFonts {
 
         final FontSources fontSources = SOURCES_MAP.get(validatedCode);
 
-        return Font.loadFromImages(
-                fontSources.ascii(), fontSources.latinExtended(),
+        return Font.loadFromFontSources(fontSources,
                 whitespaceBreadthMultiplier, pixelSpacing,
                 smoothResizing, charSpecificSpacing);
     }

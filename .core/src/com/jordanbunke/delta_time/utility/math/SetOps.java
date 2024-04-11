@@ -19,4 +19,8 @@ public final class SetOps {
         return a.stream().filter(element -> !b.contains(element))
                 .collect(Collectors.toSet());
     }
+
+    public static <E> Set<E> xor(final Set<E> a, final Set<E> b) {
+        return union(difference(a, b), difference(b, a));
+    }
 }
