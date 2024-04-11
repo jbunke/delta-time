@@ -6,25 +6,23 @@ import com.jordanbunke.delta_time.image.GameImage;
 import com.jordanbunke.delta_time.io.InputEventLogger;
 import com.jordanbunke.delta_time.menu.menu_elements.MenuElement;
 import com.jordanbunke.delta_time.utility.math.Coord2D;
+import com.jordanbunke.funke.core.Property;
 
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public abstract class AbstractSlider extends MenuElement {
     public final int minValue, maxValue, sliderBallDim;
     private int value, onClickDiffDim;
 
-    private final Supplier<Integer> getter;
-    private final Consumer<Integer> setter;
+    private final Property<Integer> property;
     private final boolean canSetImplicitly;
 
     private boolean sliding, highlighted;
 
     public AbstractSlider(
             final Coord2D position, final Coord2D dimensions, final Anchor anchor,
-            final int minValue, final int maxValue, final Supplier<Integer> getter,
-            final Consumer<Integer> setter, final boolean canSetImplicitly,
+            final int minValue, final int maxValue,
+            final Property<Integer> property, final boolean canSetImplicitly,
             final int sliderBallDim
     ) {
         super(position, dimensions, anchor, true);
@@ -33,10 +31,8 @@ public abstract class AbstractSlider extends MenuElement {
         this.maxValue = maxValue;
         this.sliderBallDim = sliderBallDim;
 
-        this.getter = getter;
-        value = this.getter.get();
-
-        this.setter = setter;
+        this.property = property;
+        value = this.property.get();
         this.canSetImplicitly = canSetImplicitly;
 
         sliding = false;
@@ -46,7 +42,7 @@ public abstract class AbstractSlider extends MenuElement {
     @Override
     public void update(final double deltaTime) {
         if (!sliding)
-            setValue(getter.get());
+            setValue(property.get());
     }
 
     @Override
@@ -104,7 +100,7 @@ public abstract class AbstractSlider extends MenuElement {
             setValueFromSliderBallDim(sliderBallDim);
 
             if (lastValue != value)
-                setter.accept(value);
+                property.accept(value);
         }
     }
 
@@ -155,7 +151,7 @@ public abstract class AbstractSlider extends MenuElement {
         this.value = Math.max(minValue, Math.min(value, maxValue));
 
         if (canSetImplicitly)
-            setter.accept(this.value);
+            property.accept(this.value);
 
         if (getValue() != valueWas)
             updateAssets();
