@@ -41,6 +41,10 @@ public final class Scrollable extends InvisibleMenuElement {
         associated.update(deltaTime);
     }
 
+    public MenuElement getAssociated() {
+        return associated;
+    }
+
     @Override
     public int getHeight() {
         return associated.getHeight();

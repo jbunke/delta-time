@@ -8,7 +8,7 @@ import com.jordanbunke.delta_time.menu.menu_elements.ext.scroll.AbstractVertical
 import com.jordanbunke.delta_time.utility.math.Coord2D;
 
 public sealed abstract class AbstractDropdown extends MenuElement
-        permits AbstractNestedDropdown, AbstractOneOfDropdown, AbstractRootDropdown {
+        permits AbstractDropdownList, AbstractDropdownMenu {
     private boolean droppedDown;
 
     private final int renderOrder;
@@ -46,18 +46,21 @@ public sealed abstract class AbstractDropdown extends MenuElement
     protected abstract Coord2D contentsDisplacement();
 
     protected void select(final int i) {
-        if (items[i] instanceof DropdownBehaviour behaviour) {
+        if (items[i] instanceof SimpleItem behaviour) {
             behaviour.run();
             close();
         }
     }
 
-    protected boolean isDroppedDown() {
+    public boolean isDroppedDown() {
         return droppedDown;
     }
 
     protected void toggleDropDown() {
-        droppedDown = !droppedDown;
+        if (isDroppedDown())
+            close();
+        else
+            open();
     }
 
     protected void close() {
@@ -80,6 +83,10 @@ public sealed abstract class AbstractDropdown extends MenuElement
         return items[i];
     }
 
+    protected MenuElement getElement(final int i) {
+        return ddContainer.getMenuElements()[i].getAssociated();
+    }
+
     protected int getSize() {
         return items.length;
     }
@@ -88,7 +95,7 @@ public sealed abstract class AbstractDropdown extends MenuElement
     public void process(final InputEventLogger eventLogger) {
         ddButton.process(eventLogger);
 
-        if (droppedDown)
+        if (isDroppedDown())
             ddContainer.process(eventLogger);
     }
 
@@ -96,7 +103,7 @@ public sealed abstract class AbstractDropdown extends MenuElement
     public void update(final double deltaTime) {
         ddButton.update(deltaTime);
 
-        if (droppedDown)
+        if (isDroppedDown())
             ddContainer.update(deltaTime);
     }
 
@@ -104,7 +111,7 @@ public sealed abstract class AbstractDropdown extends MenuElement
     public void render(final GameImage canvas) {
         ddButton.render(canvas);
 
-        if (droppedDown)
+        if (isDroppedDown())
             ddContainer.render(canvas);
     }
 
@@ -115,7 +122,7 @@ public sealed abstract class AbstractDropdown extends MenuElement
 
     @Override
     public int getRenderOrder() {
-        return droppedDown ? renderOrder : super.getRenderOrder();
+        return isDroppedDown() ? renderOrder : super.getRenderOrder();
     }
 
     @Override

@@ -2,13 +2,14 @@ package com.jordanbunke.delta_time.menu.menu_elements.ext.dropdown;
 
 import com.jordanbunke.delta_time.utility.math.Coord2D;
 
-public abstract non-sealed class AbstractNestedDropdown extends AbstractDropdown {
-    private final AbstractDropdown parent;
+public abstract non-sealed class AbstractNestedDropdownMenu extends AbstractDropdownMenu {
+    private final AbstractDropdownMenu parent;
 
-    public AbstractNestedDropdown(
+    public AbstractNestedDropdownMenu(
             final Coord2D position, final Coord2D dimensions,
             final Anchor anchor, final int renderOrder,
-            final DropdownItem[] items, final AbstractDropdown parent
+            final AbstractDropdownMenu parent,
+            final DropdownItem[] items
     ) {
         super(position, dimensions, anchor, renderOrder, items);
 
@@ -20,11 +21,20 @@ public abstract non-sealed class AbstractNestedDropdown extends AbstractDropdown
         return new Coord2D(getWidth(), 0);
     }
 
-    @Override
-    protected void close() {
+    protected final void transitiveClose() {
         super.close();
 
         if (parent.isDroppedDown())
             parent.close();
+    }
+
+    @Override
+    protected final void open() {
+        super.open();
+        ping();
+    }
+
+    private void ping() {
+        parent.pinged(this);
     }
 }

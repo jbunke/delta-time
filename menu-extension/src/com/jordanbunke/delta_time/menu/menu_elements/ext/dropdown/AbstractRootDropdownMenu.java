@@ -2,8 +2,8 @@ package com.jordanbunke.delta_time.menu.menu_elements.ext.dropdown;
 
 import com.jordanbunke.delta_time.utility.math.Coord2D;
 
-public abstract non-sealed class AbstractRootDropdown extends AbstractDropdown {
-    public AbstractRootDropdown(
+public abstract non-sealed class AbstractRootDropdownMenu extends AbstractDropdownMenu {
+    public AbstractRootDropdownMenu(
             final Coord2D position, final Coord2D dimensions,
             final Anchor anchor, final int renderOrder,
             final DropdownItem[] items

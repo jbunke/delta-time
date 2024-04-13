@@ -4,13 +4,13 @@ import com.jordanbunke.delta_time.utility.math.Coord2D;
 
 import java.util.function.Supplier;
 
-public abstract non-sealed class AbstractOneOfDropdown extends AbstractDropdown {
+public abstract non-sealed class AbstractDropdownList extends AbstractDropdown {
     private int index;
 
-    public AbstractOneOfDropdown(
+    public AbstractDropdownList(
             final Coord2D position, final Coord2D dimensions,
             final Anchor anchor, final int renderOrder,
-            final DropdownItem[] items,
+            final SimpleItem[] items,
             final Supplier<Integer> initialIndexFunction
     ) {
         super(position, dimensions, anchor, renderOrder, items);
@@ -20,7 +20,7 @@ public abstract non-sealed class AbstractOneOfDropdown extends AbstractDropdown 
 
     @Override
     protected void select(final int i) {
-        if (getItem(i) instanceof DropdownBehaviour behaviour) {
+        if (getItem(i) instanceof SimpleItem behaviour) {
             behaviour.run();
 
             index = i;

@@ -1,9 +1,9 @@
 package com.jordanbunke.delta_time.menu.menu_elements.ext.dropdown;
 
-public final class DropdownBehaviour extends DropdownItem implements Runnable {
+public sealed class SimpleItem extends DropdownItem implements Runnable permits LogicItem {
     private final Runnable behaviour;
 
-    public DropdownBehaviour(
+    public SimpleItem(
             final String label,
             final Runnable behaviour
     ) {
