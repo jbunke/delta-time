@@ -18,10 +18,4 @@ public final class LogicItem extends SimpleItem implements Supplier<Boolean> {
     public Boolean get() {
         return precondition.get();
     }
-
-    @Override
-    public void run() {
-        if (precondition.get())
-            run();
-    }
 }
