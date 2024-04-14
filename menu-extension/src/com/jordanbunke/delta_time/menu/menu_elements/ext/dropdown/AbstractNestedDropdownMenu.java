@@ -24,8 +24,12 @@ public abstract non-sealed class AbstractNestedDropdownMenu extends AbstractDrop
     protected final void transitiveClose() {
         super.close();
 
-        if (parent.isDroppedDown())
-            parent.close();
+        if (parent.isDroppedDown()) {
+            if (parent instanceof AbstractNestedDropdownMenu nested)
+                nested.transitiveClose();
+            else
+                parent.close();
+        }
     }
 
     @Override

@@ -17,7 +17,7 @@ public abstract class AbstractNavbar extends AbstractRootDropdownMenu {
         return true;
     }
 
-    public void closeRest(final AbstractRootDropdownMenu submenu) {
+    public void closeRest(final AbstractDropdownMenu submenu) {
         final int size = getSize();
 
         for (int i = 0; i < size; i++)
