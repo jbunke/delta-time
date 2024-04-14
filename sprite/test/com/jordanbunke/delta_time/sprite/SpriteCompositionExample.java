@@ -18,6 +18,7 @@ import com.jordanbunke.delta_time.sprite.constituents.InterpretedSpriteSheet;
 import com.jordanbunke.delta_time.sprite.constituents.OffsetSingleSpriteConstituent;
 import com.jordanbunke.delta_time.text.Text;
 import com.jordanbunke.delta_time.text.TextBuilder;
+import com.jordanbunke.delta_time.utility.math.Bounds2D;
 import com.jordanbunke.delta_time.utility.math.Coord2D;
 import com.jordanbunke.delta_time.utility.math.RNG;
 import com.jordanbunke.delta_time.window.GameWindow;
@@ -63,7 +64,7 @@ public class SpriteCompositionExample {
         saveSpriteSheet(spriteMap, validSpriteIDs, prefix);
 
         final Menu menu = new MenuBuilder().add(new AnimationMenuElement(
-                new Coord2D(0, 0), new Coord2D(WIDTH, HEIGHT),
+                new Coord2D(0, 0), new Bounds2D(WIDTH, HEIGHT),
                 MenuElement.Anchor.LEFT_TOP, 1,
                 validSpriteIDs.stream().map(spriteMap::getSprite).toArray(GameImage[]::new)
         )).build();

@@ -10,6 +10,7 @@ import com.jordanbunke.delta_time.io.InputEventLogger;
 import com.jordanbunke.delta_time.menu.menu_elements.button.MenuButtonStub;
 import com.jordanbunke.delta_time.menu.menu_elements.ext.drawing_functions.TextboxDrawingFunction;
 import com.jordanbunke.delta_time.utility.DeltaTimeGlobal;
+import com.jordanbunke.delta_time.utility.math.Bounds2D;
 import com.jordanbunke.delta_time.utility.math.Coord2D;
 
 import java.util.List;
@@ -44,7 +45,7 @@ public abstract class AbstractTextbox extends MenuButtonStub {
     }
 
     public AbstractTextbox(
-            final Coord2D position, final Coord2D dimensions, final Anchor anchor,
+            final Coord2D position, final Bounds2D dimensions, final Anchor anchor,
             final Supplier<String> prefixGetter, final String initialText,
             final Supplier<String> suffixGetter,
             final Function<String, Boolean> textValidator,

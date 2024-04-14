@@ -11,6 +11,7 @@ import com.jordanbunke.delta_time.menu.menu_elements.container.MenuElementGroupi
 import com.jordanbunke.delta_time.menu.menu_elements.visual.StaticMenuElement;
 import com.jordanbunke.delta_time.text.Text;
 import com.jordanbunke.delta_time.text.TextBuilder;
+import com.jordanbunke.delta_time.utility.math.Bounds2D;
 import com.jordanbunke.delta_time.utility.math.Coord2D;
 import com.jordanbunke.delta_time.window.GameWindow;
 
@@ -64,7 +65,7 @@ public class MenuSelectionExample {
 
         return new SimpleMenuButton(
                 new Coord2D((int)(CANVAS_W * x), (int)(CANVAS_H * y)),
-                new Coord2D(nhi.getWidth() + 2, hi.getHeight() + 2),
+                new Bounds2D(nhi.getWidth() + 2, hi.getHeight() + 2),
                 MenuElement.Anchor.CENTRAL, true, () -> System.exit(0),
                 nhi, hi);
     }

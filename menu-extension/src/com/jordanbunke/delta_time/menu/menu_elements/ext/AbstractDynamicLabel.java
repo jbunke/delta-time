@@ -5,6 +5,7 @@ import com.jordanbunke.delta_time.image.GameImage;
 import com.jordanbunke.delta_time.io.InputEventLogger;
 import com.jordanbunke.delta_time.menu.menu_elements.MenuElement;
 import com.jordanbunke.delta_time.menu.menu_elements.ext.drawing_functions.LabelDrawingFunction;
+import com.jordanbunke.delta_time.utility.math.Bounds2D;
 import com.jordanbunke.delta_time.utility.math.Coord2D;
 
 import java.awt.*;
@@ -21,7 +22,7 @@ public abstract class AbstractDynamicLabel extends MenuElement {
 
     public AbstractDynamicLabel(
             final Coord2D position,
-            final Coord2D dimensions,
+            final Bounds2D dimensions,
             final Anchor anchor,
             final Color textColor,
             final Supplier<String> getter,
@@ -47,7 +48,7 @@ public abstract class AbstractDynamicLabel extends MenuElement {
             final Supplier<String> getter,
             final LabelDrawingFunction fDraw
     ) {
-        this(position, new Coord2D(
+        this(position, new Bounds2D(
                 fDraw.draw(widestCase, textColor).getWidth(),
                 height), anchor, textColor, getter, fDraw);
     }

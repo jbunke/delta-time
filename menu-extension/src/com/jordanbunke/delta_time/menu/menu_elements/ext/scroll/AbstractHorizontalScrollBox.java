@@ -1,6 +1,7 @@
 package com.jordanbunke.delta_time.menu.menu_elements.ext.scroll;
 
 import com.jordanbunke.delta_time.menu.menu_elements.ext.drawing_functions.ScrollBoxDrawingFunction;
+import com.jordanbunke.delta_time.utility.math.Bounds2D;
 import com.jordanbunke.delta_time.utility.math.Coord2D;
 
 public abstract class AbstractHorizontalScrollBox extends ScrollBox {
@@ -9,7 +10,7 @@ public abstract class AbstractHorizontalScrollBox extends ScrollBox {
     private final AbstractSlider slider;
 
     public AbstractHorizontalScrollBox(
-            final Coord2D position, final Coord2D dimensions,
+            final Coord2D position, final Bounds2D dimensions,
             final Scrollable[] menuElements,
             final ScrollBoxDrawingFunction fDraw,
             final int pixelsPerScrollClick,
@@ -22,7 +23,7 @@ public abstract class AbstractHorizontalScrollBox extends ScrollBox {
 
         offsetX = -Math.max(minOffsetX, Math.min(initialOffsetX, maxOffsetX));
 
-        final boolean canScroll = realRightX > position.x + dimensions.x;
+        final boolean canScroll = realRightX > position.x + dimensions.width();
         slider = canScroll ? makeSlider(maxOffsetX) : null;
     }
 

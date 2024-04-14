@@ -5,6 +5,7 @@ import com.jordanbunke.delta_time.events.GameMouseEvent;
 import com.jordanbunke.delta_time.image.GameImage;
 import com.jordanbunke.delta_time.io.InputEventLogger;
 import com.jordanbunke.delta_time.menu.menu_elements.MenuElement;
+import com.jordanbunke.delta_time.utility.math.Bounds2D;
 import com.jordanbunke.delta_time.utility.math.Coord2D;
 import com.jordanbunke.funke.core.Property;
 
@@ -20,7 +21,7 @@ public abstract class AbstractSlider extends MenuElement {
     private boolean sliding, highlighted;
 
     public AbstractSlider(
-            final Coord2D position, final Coord2D dimensions, final Anchor anchor,
+            final Coord2D position, final Bounds2D dimensions, final Anchor anchor,
             final int minValue, final int maxValue,
             final Property<Integer> property, final boolean canSetImplicitly,
             final int sliderBallDim

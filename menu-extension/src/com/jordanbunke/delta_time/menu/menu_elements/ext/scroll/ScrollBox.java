@@ -8,6 +8,7 @@ import com.jordanbunke.delta_time.io.InputEventLogger;
 import com.jordanbunke.delta_time.menu.menu_elements.MenuElement;
 import com.jordanbunke.delta_time.menu.menu_elements.container.MenuElementContainer;
 import com.jordanbunke.delta_time.menu.menu_elements.ext.drawing_functions.ScrollBoxDrawingFunction;
+import com.jordanbunke.delta_time.utility.math.Bounds2D;
 import com.jordanbunke.delta_time.utility.math.Coord2D;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public abstract class ScrollBox extends MenuElementContainer {
     private final GameImage background;
 
     public ScrollBox(
-            final Coord2D position, final Coord2D dimensions,
+            final Coord2D position, final Bounds2D dimensions,
             final Scrollable[] menuElements,
             final int pixelsPerScrollClick,
             final ScrollBoxDrawingFunction fDraw

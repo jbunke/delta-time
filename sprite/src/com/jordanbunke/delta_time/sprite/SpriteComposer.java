@@ -2,7 +2,6 @@ package com.jordanbunke.delta_time.sprite;
 
 import com.jordanbunke.delta_time.error.GameError;
 import com.jordanbunke.delta_time.image.GameImage;
-import com.jordanbunke.delta_time.image.ImageProcessing;
 import com.jordanbunke.delta_time.utility.math.Coord2D;
 
 import java.awt.*;
@@ -28,8 +27,9 @@ public class SpriteComposer {
                 if (sampled.getAlpha() > 0) {
                     if (colorCoordinateMap.containsKey(sampled)) {
                         GameError.send("Duplicate color \"" + sampled +
-                                "\" detected again at " +
-                                new Coord2D(x, y));
+                                "\" associated with first sampled at " +
+                                colorCoordinateMap.get(sampled) +
+                                " was detected again at " + new Coord2D(x, y));
                     } else {
                         colorCoordinateMap.put(sampled, new Coord2D(x, y));
                     }

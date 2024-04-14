@@ -1,6 +1,6 @@
 package com.jordanbunke.delta_time.image;
 
-import com.jordanbunke.delta_time.utility.math.Coord2D;
+import com.jordanbunke.delta_time.utility.math.Bounds2D;
 
 import java.awt.*;
 
@@ -33,23 +33,23 @@ public class ImageProcessing {
             final GameImage image, final double scaleFactor,
             final boolean smooth
     ) {
-        final Coord2D dims = new Coord2D(
+        final Bounds2D dims = new Bounds2D(
                 Math.max(1, (int)(image.getWidth() * scaleFactor)),
                 Math.max(1, (int)(image.getHeight() * scaleFactor))
         );
 
-        final GameImage scaledUp = new GameImage(dims.x, dims.y);
+        final GameImage scaledUp = new GameImage(dims.width(), dims.height());
 
         if (smooth) {
-            for (int x = 0; x < dims.x; x++) {
-                for (int y = 0; y < dims.y; y++) {
-                    final int initialOriginX = (int)((x / (double) dims.x) * image.getWidth());
+            for (int x = 0; x < dims.width(); x++) {
+                for (int y = 0; y < dims.height(); y++) {
+                    final int initialOriginX = (int)((x / (double) dims.width()) * image.getWidth());
                     final int finalOriginX = Math.min(
-                            (int)(((x + 1) / (double) dims.x) * image.getWidth()),
+                            (int)(((x + 1) / (double) dims.width()) * image.getWidth()),
                             image.getWidth() - 1);
-                    final int initialOriginY = (int)((y / (double) dims.y) * image.getHeight());
+                    final int initialOriginY = (int)((y / (double) dims.height()) * image.getHeight());
                     final int finalOriginY = Math.min(
-                            (int)(((y + 1) / (double) dims.y) * image.getHeight()),
+                            (int)(((y + 1) / (double) dims.height()) * image.getHeight()),
                             image.getHeight() - 1);
 
                     int cumulativeR = 0, cumulativeG = 0, cumulativeB = 0, cumulativeA = 0;
@@ -94,8 +94,10 @@ public class ImageProcessing {
                     if (color.getAlpha() < FULL_OPACITY) {
                         final int xInit = (int)(x * scaleFactor),
                                 yInit = (int)(y * scaleFactor),
-                                xBound = Math.min(dims.x, xInit + (int)Math.ceil(scaleFactor)),
-                                yBound = Math.min(dims.y, yInit + (int)Math.ceil(scaleFactor));
+                                xBound = Math.min(dims.width(),
+                                        xInit + (int)Math.ceil(scaleFactor)),
+                                yBound = Math.min(dims.height(),
+                                        yInit + (int)Math.ceil(scaleFactor));
                         for (int xp = xInit; xp < xBound; xp++)
                             for (int yp = yInit; yp < yBound; yp++)
                                 if (!scaledUp.getColorAt(xp, yp).equals(color))

@@ -11,6 +11,7 @@ import com.jordanbunke.delta_time.menu.menu_elements.button.SimpleMenuButton;
 import com.jordanbunke.delta_time.menu.menu_elements.visual.AnimationMenuElement;
 import com.jordanbunke.delta_time.text.Text;
 import com.jordanbunke.delta_time.text.TextComponent;
+import com.jordanbunke.delta_time.utility.math.Bounds2D;
 import com.jordanbunke.delta_time.utility.math.Coord2D;
 import com.jordanbunke.delta_time.window.GameWindow;
 
@@ -42,7 +43,7 @@ public class Example {
 
     private static void example1() {
         AnimationMenuElement animationMenuElement = new AnimationMenuElement(
-                new Coord2D(), new Coord2D(width, height), MenuElement.Anchor.LEFT_TOP,
+                new Coord2D(), new Bounds2D(width, height), MenuElement.Anchor.LEFT_TOP,
                 5, drawBackground(0),
                 drawBackground(1), drawBackground(2), drawBackground(3),
                 drawBackground(4), drawBackground(5), drawBackground(6),
@@ -52,7 +53,7 @@ public class Example {
         GameImage button = button(false), highlightedButton = button(true);
         SimpleMenuButton menuButton = new SimpleMenuButton(
                 new Coord2D(width / 2, height / 2),
-                new Coord2D(button.getWidth() + 100, button.getHeight() - 20),
+                new Bounds2D(button.getWidth() + 100, button.getHeight() - 20),
                 MenuElement.Anchor.CENTRAL, true, () -> System.exit(0),
                 button, highlightedButton);
         Menu menu = new Menu(animationMenuElement, menuButton);
