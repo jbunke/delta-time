@@ -4,6 +4,7 @@ import com.jordanbunke.delta_time.events.GameEvent;
 import com.jordanbunke.delta_time.events.GameMouseEvent;
 import com.jordanbunke.delta_time.io.InputEventLogger;
 import com.jordanbunke.delta_time.menu.menu_elements.SelectableMenuElement;
+import com.jordanbunke.delta_time.utility.math.Bounds2D;
 import com.jordanbunke.delta_time.utility.math.Coord2D;
 
 import java.util.List;
@@ -12,7 +13,7 @@ public abstract class MenuButtonStub extends SelectableMenuElement {
     private boolean highlighted;
 
     public MenuButtonStub(
-            final Coord2D position, final Coord2D dimensions,
+            final Coord2D position, final Bounds2D dimensions,
             final Anchor anchor, final boolean visible
     ) {
         super(position, dimensions, anchor, visible);

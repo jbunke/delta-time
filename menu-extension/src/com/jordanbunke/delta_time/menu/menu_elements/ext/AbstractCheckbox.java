@@ -4,6 +4,7 @@ import com.jordanbunke.delta_time.debug.GameDebugger;
 import com.jordanbunke.delta_time.image.GameImage;
 import com.jordanbunke.delta_time.menu.menu_elements.button.MenuButtonStub;
 import com.jordanbunke.delta_time.menu.menu_elements.ext.drawing_functions.CheckboxDrawingFunction;
+import com.jordanbunke.delta_time.utility.math.Bounds2D;
 import com.jordanbunke.delta_time.utility.math.Coord2D;
 import com.jordanbunke.funke.core.Property;
 
@@ -16,7 +17,7 @@ public abstract class AbstractCheckbox extends MenuButtonStub {
 
     public AbstractCheckbox(
             final Coord2D position,
-            final Coord2D dimensions,
+            final Bounds2D dimensions,
             final Anchor anchor,
             final Property<Boolean> property,
             final CheckboxDrawingFunction fDraw

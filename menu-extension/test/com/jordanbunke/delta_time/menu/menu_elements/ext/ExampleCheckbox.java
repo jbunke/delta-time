@@ -1,6 +1,7 @@
 package com.jordanbunke.delta_time.menu.menu_elements.ext;
 
 import com.jordanbunke.delta_time.image.GameImage;
+import com.jordanbunke.delta_time.utility.math.Bounds2D;
 import com.jordanbunke.delta_time.utility.math.Coord2D;
 import com.jordanbunke.funke.core.Property;
 
@@ -17,7 +18,7 @@ public class ExampleCheckbox extends AbstractCheckbox {
     public ExampleCheckbox(
             final Coord2D position, final Property<Boolean> property
     ) {
-        super(position, new Coord2D(DIM_PX, DIM_PX), Anchor.LEFT_TOP, property, ExampleCheckbox::draw);
+        super(position, new Bounds2D(DIM_PX, DIM_PX), Anchor.LEFT_TOP, property, ExampleCheckbox::draw);
     }
 
     public static GameImage draw(final boolean highlighted, final boolean checked) {

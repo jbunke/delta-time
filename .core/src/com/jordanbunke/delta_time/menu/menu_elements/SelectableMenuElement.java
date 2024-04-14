@@ -1,6 +1,7 @@
 package com.jordanbunke.delta_time.menu.menu_elements;
 
 import com.jordanbunke.delta_time.menu.Menu;
+import com.jordanbunke.delta_time.utility.math.Bounds2D;
 import com.jordanbunke.delta_time.utility.math.Coord2D;
 
 public abstract class SelectableMenuElement extends MenuElement {
@@ -9,7 +10,7 @@ public abstract class SelectableMenuElement extends MenuElement {
     private boolean selected;
 
     public SelectableMenuElement(
-            final Coord2D position, final Coord2D dimensions,
+            final Coord2D position, final Bounds2D dimensions,
             final Anchor anchor, final boolean visible
     ) {
         super(position, dimensions, anchor, visible);

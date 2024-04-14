@@ -4,6 +4,7 @@ import com.jordanbunke.delta_time.debug.GameDebugger;
 import com.jordanbunke.delta_time.image.GameImage;
 import com.jordanbunke.delta_time.io.InputEventLogger;
 import com.jordanbunke.delta_time.menu.menu_elements.MenuElement;
+import com.jordanbunke.delta_time.utility.math.Bounds2D;
 import com.jordanbunke.delta_time.utility.math.Coord2D;
 
 import java.util.function.Supplier;
@@ -120,7 +121,7 @@ public final class GatewayMenuElement extends InvisibleMenuElement {
     }
 
     @Override
-    public Coord2D getDimensions() {
+    public Bounds2D getDimensions() {
         return passing
                 ? content.getDimensions()
                 : super.getDimensions();

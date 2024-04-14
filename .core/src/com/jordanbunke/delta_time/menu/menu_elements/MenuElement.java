@@ -3,6 +3,7 @@ package com.jordanbunke.delta_time.menu.menu_elements;
 import com.jordanbunke.delta_time._core.ProgramContext;
 import com.jordanbunke.delta_time.debug.GameDebugger;
 import com.jordanbunke.delta_time.image.GameImage;
+import com.jordanbunke.delta_time.utility.math.Bounds2D;
 import com.jordanbunke.delta_time.utility.math.Coord2D;
 
 import java.awt.*;
@@ -12,7 +13,7 @@ import java.util.function.IntFunction;
 
 public abstract class MenuElement implements ProgramContext {
     private Coord2D position;
-    private final Coord2D dimensions;
+    private final Bounds2D dimensions;
     private final Anchor anchor;
     private final boolean visible;
 
@@ -38,7 +39,7 @@ public abstract class MenuElement implements ProgramContext {
     }
 
     public MenuElement(
-            final Coord2D position, final Coord2D dimensions,
+            final Coord2D position, final Bounds2D dimensions,
             final Anchor anchor, final boolean visible
     ) {
         this.position = position;
@@ -76,14 +77,21 @@ public abstract class MenuElement implements ProgramContext {
     public Coord2D getRenderPosition() {
         return switch (anchor) {
             case LEFT_TOP -> new Coord2D(position.x, position.y);
-            case CENTRAL_TOP -> new Coord2D(position.x - (dimensions.x / 2), position.y);
-            case RIGHT_TOP -> new Coord2D(position.x - dimensions.x, position.y);
-            case LEFT_CENTRAL -> new Coord2D(position.x, position.y - (dimensions.y / 2));
-            case CENTRAL -> new Coord2D(position.x - (dimensions.x / 2), position.y - (dimensions.y / 2));
-            case RIGHT_CENTRAL -> new Coord2D(position.x - dimensions.x, position.y - (dimensions.y / 2));
-            case LEFT_BOTTOM -> new Coord2D(position.x, position.y - dimensions.y);
-            case CENTRAL_BOTTOM -> new Coord2D(position.x - (dimensions.x / 2), position.y - dimensions.y);
-            case RIGHT_BOTTOM -> new Coord2D(position.x - dimensions.x, position.y - dimensions.y);
+            case CENTRAL_TOP -> new Coord2D(
+                    position.x - (dimensions.width() / 2), position.y);
+            case RIGHT_TOP -> new Coord2D(position.x - dimensions.width(), position.y);
+            case LEFT_CENTRAL -> new Coord2D(position.x,
+                    position.y - (dimensions.height() / 2));
+            case CENTRAL -> new Coord2D(position.x - (dimensions.width() / 2),
+                    position.y - (dimensions.height() / 2));
+            case RIGHT_CENTRAL -> new Coord2D(position.x - dimensions.width(),
+                    position.y - (dimensions.height() / 2));
+            case LEFT_BOTTOM -> new Coord2D(position.x,
+                    position.y - dimensions.height());
+            case CENTRAL_BOTTOM -> new Coord2D(position.x - (dimensions.width() / 2),
+                    position.y - dimensions.height());
+            case RIGHT_BOTTOM -> new Coord2D(position.x - dimensions.width(),
+                    position.y - dimensions.height());
         };
     }
 
@@ -92,7 +100,7 @@ public abstract class MenuElement implements ProgramContext {
             return false;
 
         final Coord2D min = getRenderPosition();
-        final Coord2D max = new Coord2D(min.x + dimensions.x, min.y + dimensions.y);
+        final Coord2D max = new Coord2D(min.x + dimensions.width(), min.y + dimensions.height());
 
         return mousePosition.x >= min.x && mousePosition.x < max.x &&
                 mousePosition.y >= min.y && mousePosition.y < max.y;
@@ -108,7 +116,7 @@ public abstract class MenuElement implements ProgramContext {
         final Graphics2D g = canvas.g();
         g.setStroke(new BasicStroke(1));
         g.drawRect(renderPosition.x, renderPosition.y,
-                dimensions.x - 1, dimensions.y - 1);
+                dimensions.width() - 1, dimensions.height() - 1);
     }
 
     public void setX(final int x) {
@@ -131,7 +139,7 @@ public abstract class MenuElement implements ProgramContext {
         return position;
     }
 
-    public Coord2D getDimensions() {
+    public Bounds2D getDimensions() {
         return dimensions;
     }
 
@@ -144,11 +152,11 @@ public abstract class MenuElement implements ProgramContext {
     }
 
     public int getWidth() {
-        return dimensions.x;
+        return dimensions.width();
     }
 
     public int getHeight() {
-        return dimensions.y;
+        return dimensions.height();
     }
 
     public Anchor getAnchor() {
@@ -168,7 +176,7 @@ public abstract class MenuElement implements ProgramContext {
     @Override
     public String toString() {
         return typeName() +
-                " of " + dimensions.x + "x" + dimensions.y +
+                " of " + dimensions.width() + "x" + dimensions.height() +
                 " at (" + position.x + ", " + position.y + ") [ " +
                 anchor.toString() + " ]";
     }

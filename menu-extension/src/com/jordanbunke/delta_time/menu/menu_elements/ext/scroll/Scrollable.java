@@ -4,6 +4,7 @@ import com.jordanbunke.delta_time.image.GameImage;
 import com.jordanbunke.delta_time.io.InputEventLogger;
 import com.jordanbunke.delta_time.menu.menu_elements.MenuElement;
 import com.jordanbunke.delta_time.menu.menu_elements.invisible.InvisibleMenuElement;
+import com.jordanbunke.delta_time.utility.math.Bounds2D;
 import com.jordanbunke.delta_time.utility.math.Coord2D;
 
 public final class Scrollable extends InvisibleMenuElement {
@@ -56,7 +57,7 @@ public final class Scrollable extends InvisibleMenuElement {
     }
 
     @Override
-    public Coord2D getDimensions() {
+    public Bounds2D getDimensions() {
         return associated.getDimensions();
     }
 

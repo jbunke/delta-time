@@ -9,6 +9,7 @@ import com.jordanbunke.delta_time.menu.Menu;
 import com.jordanbunke.delta_time.menu.MenuBuilder;
 import com.jordanbunke.delta_time.menu.menu_elements.MenuElement;
 import com.jordanbunke.delta_time.menu.menu_elements.visual.AnimationMenuElement;
+import com.jordanbunke.delta_time.utility.math.Bounds2D;
 import com.jordanbunke.delta_time.utility.math.Coord2D;
 import com.jordanbunke.delta_time.window.GameWindow;
 import org.junit.Assert;
@@ -113,7 +114,7 @@ public class SpriteStatesTests {
 
         final String title = "Animation test";
         final Menu menu = new MenuBuilder().add(new AnimationMenuElement(
-                new Coord2D(s / 2, s / 2), new Coord2D(s, s),
+                new Coord2D(s / 2, s / 2), new Bounds2D(s, s),
                 MenuElement.Anchor.LEFT_TOP, 2,
                 animation)).build();
         final GameManager gm = new GameManager(0, menu);

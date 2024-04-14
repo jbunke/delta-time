@@ -2,6 +2,7 @@ package com.jordanbunke.delta_time.menu.menu_elements.button;
 
 import com.jordanbunke.delta_time.debug.GameDebugger;
 import com.jordanbunke.delta_time.image.GameImage;
+import com.jordanbunke.delta_time.utility.math.Bounds2D;
 import com.jordanbunke.delta_time.utility.math.Coord2D;
 
 import java.util.function.Supplier;
@@ -16,7 +17,7 @@ public class SimpleToggleMenuButton extends MenuButtonStub {
     private final int length;
 
     public SimpleToggleMenuButton(
-            final Coord2D position, final Coord2D dimensions,
+            final Coord2D position, final Bounds2D dimensions,
             final Anchor anchor, final boolean visible,
             final GameImage[] nonHighlightedImages, final GameImage[] highlightedImages,
             final Runnable[] chosenBehaviours, final Supplier<Integer> updateIndexLogic,
