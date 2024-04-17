@@ -39,7 +39,7 @@ public abstract class AbstractHorizontalScrollBox extends ScrollBox {
     }
 
     @Override
-    boolean renderAndProcessChild(final Scrollable child) {
+    protected boolean renderAndProcessChild(final Scrollable child) {
         final Coord2D rp = getRenderPosition(), childRP = child.getRenderPosition();
         final int w = getWidth(), childW = child.getWidth();
 

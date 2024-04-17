@@ -1,5 +1,7 @@
 package com.jordanbunke.delta_time.menu.menu_elements.ext.scroll;
 
+import com.jordanbunke.delta_time.image.GameImage;
+import com.jordanbunke.delta_time.io.InputEventLogger;
 import com.jordanbunke.delta_time.menu.menu_elements.ext.drawing_functions.ScrollBoxDrawingFunction;
 import com.jordanbunke.delta_time.utility.math.Bounds2D;
 import com.jordanbunke.delta_time.utility.math.Coord2D;
@@ -50,13 +52,33 @@ public abstract class AbstractBidirectionalScrollBox extends ScrollBox {
         offset = new Coord2D(offset.x, offsetY);
     }
 
+    private boolean hasBothSliders() {
+        return verticalSlider != null && horizontalSlider != null;
+    }
+
+    @Override
+    public void render(final GameImage canvas) {
+        super.render(canvas);
+
+        if (hasBothSliders())
+            horizontalSlider.render(canvas);
+    }
+
+    @Override
+    public void process(final InputEventLogger eventLogger) {
+        if (hasBothSliders())
+            horizontalSlider.process(eventLogger);
+
+        super.process(eventLogger);
+    }
+
     @Override
     protected Coord2D getOffset() {
         return offset;
     }
 
     @Override
-    boolean renderAndProcessChild(Scrollable child) {
+    protected boolean renderAndProcessChild(Scrollable child) {
         final Coord2D rp = getRenderPosition(), childRP = child.getRenderPosition();
         final int w = getWidth(), childW = child.getWidth(),
                 h = getHeight(), childH = child.getHeight();

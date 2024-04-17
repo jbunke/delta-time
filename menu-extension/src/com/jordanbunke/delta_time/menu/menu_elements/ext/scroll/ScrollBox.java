@@ -82,10 +82,23 @@ public abstract class ScrollBox extends MenuElementContainer {
                 MenuElement.sortForRender(menuElements,
                         Scrollable[]::new);
 
+        final GameImage childCanvas =
+                new GameImage(canvas.getWidth(), canvas.getHeight());
+
         // contents
         for (Scrollable sme : renderOrder)
             if (renderAndProcessChild(sme))
-                sme.render(canvas);
+                sme.render(childCanvas);
+
+        final Coord2D rp = getRenderPosition();
+        final int right = Math.min(rp.x + getWidth(), canvas.getWidth()),
+                bottom = Math.min(rp.y + getHeight(), canvas.getHeight());
+
+        if (rp.x >= 0 && rp.x < canvas.getWidth() &&
+                rp.y >= 0 && rp.y < canvas.getHeight() &&
+                right > rp.x && bottom > rp.y)
+            canvas.draw(childCanvas.section(rp.x, rp.y, right, bottom),
+                    rp.x, rp.y);
 
         if (hasSlider())
             getSlider().render(canvas);
@@ -110,7 +123,7 @@ public abstract class ScrollBox extends MenuElementContainer {
 
     protected abstract Coord2D getOffset();
 
-    abstract boolean renderAndProcessChild(final Scrollable child);
+    protected abstract boolean renderAndProcessChild(final Scrollable child);
 
     abstract boolean hasSlider();
 
