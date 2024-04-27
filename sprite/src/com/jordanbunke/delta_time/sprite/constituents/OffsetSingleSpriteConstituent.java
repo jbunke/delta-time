@@ -5,7 +5,8 @@ import com.jordanbunke.delta_time.utility.math.Coord2D;
 
 import java.util.function.Function;
 
-public class OffsetSingleSpriteConstituent<R> implements SpriteConstituent<R> {
+public sealed class OffsetSingleSpriteConstituent<R> implements SpriteConstituent<R>
+        permits IdentitySpriteConstituent {
     private final GameImage content;
     private final Function<R, Coord2D> offsetFunction;
 

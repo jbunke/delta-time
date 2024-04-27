@@ -101,7 +101,7 @@ public class SpriteCompositionExample {
 
         assert helmetDamageSource != null && butterHelmSource != null;
 
-        final GameImage composedRunningFrames = SpriteComposer.compose(spriteSheet, colorNet, palette);
+        final GameImage composedRunningFrames = TextureColorReplace.replace(spriteSheet, colorNet, palette);
 
         final SpriteSheet runningSpriteSheet = new SpriteSheet(composedRunningFrames, WIDTH, HEIGHT);
         final InterpretedSpriteSheet<String> body = new InterpretedSpriteSheet<>(

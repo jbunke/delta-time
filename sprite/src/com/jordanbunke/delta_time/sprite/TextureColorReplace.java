@@ -8,21 +8,21 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SpriteComposer {
-    private final GameImage colorNet;
+public class TextureColorReplace {
+    private final GameImage lookup;
     private final Map<Color, Coord2D> colorCoordinateMap;
 
-    public SpriteComposer(final GameImage colorNet) {
-        this.colorNet = colorNet;
+    public TextureColorReplace(final GameImage lookup) {
+        this.lookup = lookup;
         this.colorCoordinateMap = new HashMap<>();
 
         populateColorCoordinateMap();
     }
 
     private void populateColorCoordinateMap() {
-        for (int x = 0; x < colorNet.getWidth(); x++) {
-            for (int y = 0; y < colorNet.getHeight(); y++) {
-                final Color sampled = colorNet.getColorAt(x, y);
+        for (int x = 0; x < lookup.getWidth(); x++) {
+            for (int y = 0; y < lookup.getHeight(); y++) {
+                final Color sampled = lookup.getColorAt(x, y);
 
                 if (sampled.getAlpha() > 0) {
                     if (colorCoordinateMap.containsKey(sampled)) {
@@ -38,69 +38,75 @@ public class SpriteComposer {
         }
     }
 
-    public static GameImage compose(
-            final GameImage overlayTexture, final GameImage colorNet, final GameImage lookupNet
+    public static GameImage replace(
+            final GameImage texture,
+            final GameImage lookup,
+            final GameImage replacementColors
     ) {
-        final SpriteComposer composer = new SpriteComposer(colorNet);
-        return composer.compose(overlayTexture, lookupNet);
+        final TextureColorReplace textureColorReplace =
+                new TextureColorReplace(lookup);
+        return textureColorReplace.replace(texture, replacementColors);
     }
 
-    public GameImage compose(
-            final GameImage overlayTexture, final GameImage lookupNet
+    public GameImage replace(
+            final GameImage texture,
+            final GameImage replacementColors
     ) {
-        if (colorNet.getWidth() != lookupNet.getWidth() ||
-                colorNet.getHeight() != lookupNet.getHeight()) {
+        if (lookup.getWidth() != replacementColors.getWidth() ||
+                lookup.getHeight() != replacementColors.getHeight()) {
             GameError.send(
                     "The lookup net and the color net are different sizes!" +
                             "The sprite could not be composed and the " +
-                            "input was texture was returned instead."
-            );
-            return overlayTexture;
+                            "input was texture was returned instead.");
+            return texture;
         }
 
-        final int width = overlayTexture.getWidth(),
-                height = overlayTexture.getHeight();
-        final GameImage composition = new GameImage(width, height);
+        final int width = texture.getWidth(),
+                height = texture.getHeight();
+        final GameImage replaced = new GameImage(width, height);
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                final Color sampled = overlayTexture.getColorAt(x, y);
+                final Color sampled = texture.getColorAt(x, y);
 
                 if (sampled.getAlpha() > 0) {
                     if (colorCoordinateMap.containsKey(sampled)) {
                         final Coord2D coordinate = colorCoordinateMap.get(sampled);
-                        final Color lookedUp = lookupNet
+                        final Color lookedUp = replacementColors
                                 .getColorAt(coordinate.x, coordinate.y);
-                        composition.dot(lookedUp, x, y);
+                        replaced.dot(lookedUp, x, y);
                     } else {
                         GameError.send("Did not find \"" + sampled +
                                 "\" in the color coordinate map. " +
                                 "Passed color sampled from overlay " +
                                 "texture back to the result at " +
                                 new Coord2D(x, y) + ".");
-                        composition.dot(sampled, x, y);
+                        replaced.dot(sampled, x, y);
                     }
                 }
             }
         }
 
-        return composition.submit();
+        return replaced.submit();
     }
 
-    public static GameImage generateNaiveColorNet(final GameImage lookupNet, final boolean stripedVertically) {
-        final int width = lookupNet.getWidth(), height = lookupNet.getHeight();
+    public static GameImage generateNaiveLookup(
+            final GameImage base,
+            final boolean stripedVertically
+    ) {
+        final int width = base.getWidth(), height = base.getHeight();
         final int outerDim = stripedVertically ? width : height,
                 innerDim = stripedVertically ? height : width;
-        final GameImage colorNet = new GameImage(width, height);
+        final GameImage lookup = new GameImage(width, height);
 
         int nonTransparentCounter = 0;
 
         for (int x = 0; x < width; x++)
             for (int y = 0; y < height; y++)
-                if (lookupNet.getColorAt(x, y).getAlpha() > 0)
+                if (base.getColorAt(x, y).getAlpha() > 0)
                     nonTransparentCounter++;
 
-        final int colorsInNet = nonTransparentCounter;
+        final int totalColorsToAssign = nonTransparentCounter;
 
         int colorsAssigned = 0;
 
@@ -108,15 +114,16 @@ public class SpriteComposer {
             for (int d1 = 0; d1 < innerDim; d1++) {
                 final int x = stripedVertically ? d0 : d1,
                         y = stripedVertically ? d1 : d0;
-                if (lookupNet.getColorAt(x, y).getAlpha() > 0) {
-                    final Color assignee = getNaiveColor(colorsAssigned, colorsInNet);
-                    colorNet.dot(assignee, x, y);
+                if (base.getColorAt(x, y).getAlpha() > 0) {
+                    final Color assignee =
+                            getNaiveColor(colorsAssigned, totalColorsToAssign);
+                    lookup.dot(assignee, x, y);
                     colorsAssigned++;
                 }
             }
         }
 
-        return colorNet.submit();
+        return lookup.submit();
     }
 
     private static Color getNaiveColor(final int index, final int total) {

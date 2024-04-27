@@ -37,7 +37,7 @@ public class SpriteStatesTests {
         final GameImage source = ResourceLoader.loadImageResource(Path.of("sprite", "spritesheets", "stickman.png")),
                 colorMap = ResourceLoader.loadImageResource(Path.of("sprite", "spritemaps", "stickman-color-net.png")),
                 lookup = ResourceLoader.loadImageResource(Path.of("sprite", "spritemaps", "stickman-palette.png"));
-        final SpriteSheet sheet = new SpriteSheet(SpriteComposer.compose(source, colorMap, lookup), s, s);
+        final SpriteSheet sheet = new SpriteSheet(TextureColorReplace.replace(source, colorMap, lookup), s, s);
 
         final Function<String, Coord2D> coordinateLogic = id -> {
             int x = 0, y;
