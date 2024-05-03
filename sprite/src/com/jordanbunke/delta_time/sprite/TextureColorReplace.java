@@ -55,9 +55,9 @@ public class TextureColorReplace {
         if (lookup.getWidth() != replacementColors.getWidth() ||
                 lookup.getHeight() != replacementColors.getHeight()) {
             GameError.send(
-                    "The lookup net and the color net are different sizes!" +
-                            "The sprite could not be composed and the " +
-                            "input was texture was returned instead.");
+                    "The lookup net and the color net are different sizes! " +
+                            "The sprite could not be composed, so the " +
+                            "input texture was returned instead.");
             return texture;
         }
 
