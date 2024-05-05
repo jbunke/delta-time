@@ -10,7 +10,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class InputEventLogger implements
-        KeyListener, MouseListener, MouseMotionListener, MouseWheelListener, WindowListener {
+        KeyListener, ComponentListener, WindowListener,
+        MouseListener, MouseMotionListener, MouseWheelListener {
 
     public static final double DEFAULT_SCALE = 1.0;
 
@@ -258,6 +259,24 @@ public class InputEventLogger implements
     public void windowActivated(final WindowEvent e) {
         eventList.add(new GameWindowEvent(GameWindowEvent.Action.ACTIVATED));
     }
+
+    @Override
+    public void componentResized(final ComponentEvent e) {
+        eventList.add(new WindowResizedEvent(
+                e.getComponent().getWidth(), e.getComponent().getHeight()));
+    }
+
+    @Override
+    public void componentMoved(final ComponentEvent e) {
+        eventList.add(new WindowMovedEvent(
+                e.getComponent().getX(), e.getComponent().getY()));
+    }
+
+    @Override
+    public void componentShown(final ComponentEvent e) {}
+
+    @Override
+    public void componentHidden(final ComponentEvent e) {}
 
     @Override
     public void windowDeactivated(final WindowEvent e) {

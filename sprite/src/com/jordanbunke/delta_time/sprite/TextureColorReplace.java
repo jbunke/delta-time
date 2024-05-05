@@ -75,14 +75,8 @@ public class TextureColorReplace {
                         final Color lookedUp = replacementColors
                                 .getColorAt(coordinate.x, coordinate.y);
                         replaced.dot(lookedUp, x, y);
-                    } else {
-                        GameError.send("Did not find \"" + sampled +
-                                "\" in the color coordinate map. " +
-                                "Passed color sampled from overlay " +
-                                "texture back to the result at " +
-                                new Coord2D(x, y) + ".");
+                    } else
                         replaced.dot(sampled, x, y);
-                    }
                 }
             }
         }

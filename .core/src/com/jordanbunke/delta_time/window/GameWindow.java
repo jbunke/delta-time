@@ -56,6 +56,7 @@ public class GameWindow {
         canvas.requestFocus();
 
         frame.addWindowListener(eventLogger);
+        frame.addComponentListener(eventLogger);
 
         // Sizes the window according to the size of the canvas
         frame.pack();
@@ -77,6 +78,10 @@ public class GameWindow {
 
         canvas.setSizeFromWindow(width, height);
         frame.pack();
+    }
+
+    public void setPosition(final int x, final int y) {
+        frame.setLocation(x, y);
     }
 
     public void hideCursor() {
