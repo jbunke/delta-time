@@ -12,7 +12,7 @@ public final class StringLiteralNode extends LiteralNode {
     ) {
         super(position);
 
-        this.value = value;
+        this.value = process(value);
     }
 
     @Override
@@ -27,6 +27,22 @@ public final class StringLiteralNode extends LiteralNode {
 
     @Override
     public String toString() {
-        return "\"" + value + "\"";
+        return "\"" + display(value) + "\"";
+    }
+
+    private String process(final String s) {
+        final String temp = "%_temp_%";
+        return s.replace("\\\\", temp) // first
+                .replace("\\n", "\n")
+                .replace("\\t", "\t")
+                .replace(temp, "\\"); // last
+    }
+
+    private String display(final String s) {
+        final String temp = "%_temp_%";
+        return s.replace("\\", temp) // first
+                .replace("\n", "\\n")
+                .replace("\t", "\\t")
+                .replace(temp, "\\\\"); // last
     }
 }
