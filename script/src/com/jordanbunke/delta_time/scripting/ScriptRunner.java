@@ -70,6 +70,9 @@ public class ScriptRunner {
         try {
             script.semanticErrorCheck(scriptTable);
         } catch (Exception e) {
+            ScriptErrorLog.fireError(
+                    ScriptErrorLog.Message.CUSTOM_CT,
+                    TextPosition.N_A, "Unknown and unexpected");
             return false;
         }
 
@@ -90,8 +93,8 @@ public class ScriptRunner {
                     : Optional.empty();
         } catch (Exception e) {
             ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.UNEXPECTED_RUNTIME_ERROR,
-                    TextPosition.N_A);
+                    ScriptErrorLog.Message.CUSTOM_RT,
+                    TextPosition.N_A, "Unknown and unexpected");
             return Optional.empty();
         }
     }

@@ -65,7 +65,6 @@ public final class ScriptErrorLog {
         ASSIGN_EXPR_NOT_STRING,
         NOT_ITERABLE,
         COULD_NOT_READ,
-        UNEXPECTED_RUNTIME_ERROR,
         SUB_BEG_OUT_OF_BOUNDS,
         SUB_END_OUT_OF_BOUNDS,
         SUB_END_GEQ_BEG
@@ -117,7 +116,6 @@ public final class ScriptErrorLog {
                             "argument (" + end + ")";
                 }
                 case COULD_NOT_READ -> "Couldn't read the script file";
-                case UNEXPECTED_RUNTIME_ERROR -> "Unknown and unexpected";
                 case NOT_ITERABLE ->
                     typeMismatch("non-iterable type used in iterator loop",
                             args[0], args[1]);
