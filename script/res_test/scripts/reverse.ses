@@ -1,0 +1,8 @@
+(final string s -> string) {
+    string bw = "";
+
+    for (final char c in s)
+        bw = c + bw;
+
+    return bw;
+}
