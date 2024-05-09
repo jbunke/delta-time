@@ -1,6 +1,9 @@
 package com.jordanbunke.delta_time.scripting.ast.symbol_table;
 
+import com.jordanbunke.delta_time.image.GameImage;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
+
+import java.awt.*;
 
 public final class Variable {
     private final boolean mutable;
@@ -47,6 +50,17 @@ public final class Variable {
         if (value == null)
             return base;
 
-        return base + ":" + value;
+        return base + ":" + valueText();
+    }
+
+    private String valueText() {
+        if (value instanceof GameImage img)
+            return "Image of " + img.getWidth() + "x" + img.getHeight() + " px";
+        else if (value instanceof Color c)
+            return "[ R=" + c.getRed() + " G=" + c.getGreen() +
+                    " B=" + c.getBlue() + (c.getAlpha() != 0xFF
+                    ? " A=" + c.getAlpha() : "") + " ]";
+
+        return value.toString();
     }
 }

@@ -31,6 +31,6 @@ public final class HelperFuncNode extends FuncNode {
 
     @Override
     public String toString() {
-        return "$" + name + super.toString();
+        return name + super.toString();
     }
 }

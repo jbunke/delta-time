@@ -28,7 +28,7 @@ public final class SymbolTable {
     }
 
     public static String funcWithName(final String name) {
-        return "$" + name;
+        return "::" + name;
     }
 
     public static SymbolTable root(
@@ -82,5 +82,28 @@ public final class SymbolTable {
         }
 
         contents.get(ident).set(value);
+    }
+
+    @Override
+    public String toString() {
+        final int gen = generation();
+        final String tab = "  ".repeat(gen);
+
+        final StringBuilder sb = new StringBuilder();
+
+        sb.append(tab).append("Scope: ")
+                .append(scope.getClass().getSimpleName()).append("\n\n");
+
+        for (String var : contents.keySet()) {
+            sb.append(tab).append(var).append(" -> ")
+                    .append(contents.get(var)).append("\n");
+        }
+
+        return (parent != null ? parent + "\n" + tab +
+                "-".repeat(20 + (2 * gen)) : "") + "\n" + sb;
+    }
+
+    private int generation() {
+        return parent == null ? 0 : 1 + parent.generation();
     }
 }

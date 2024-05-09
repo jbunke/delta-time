@@ -639,9 +639,26 @@ public class ScriptVisitor
     public IntLiteralNode visitIntLiteral(
             final ScriptParser.IntLiteralContext ctx
     ) {
+        return (IntLiteralNode) visit(ctx.int_lit());
+    }
+
+    @Override
+    public IntLiteralNode visitHexadecimal(
+            final ScriptParser.HexadecimalContext ctx
+    ) {
         return new IntLiteralNode(
-                TextPosition.fromToken(ctx.int_lit().start),
-                Integer.parseInt(ctx.int_lit().getText()));
+                TextPosition.fromToken(ctx.start),
+                Integer.parseInt(ctx.HEX_LIT().getText()
+                        .substring(2).toUpperCase(), 16));
+    }
+
+    @Override
+    public IntLiteralNode visitDecimal(
+            final ScriptParser.DecimalContext ctx
+    ) {
+        return new IntLiteralNode(
+                TextPosition.fromToken(ctx.start),
+                Integer.parseInt(ctx.DEC_LIT().getText()));
     }
 
     @Override
