@@ -2,7 +2,6 @@ package com.jordanbunke.delta_time.scripting.ast.nodes.expression.native_calls.s
 
 import com.jordanbunke.delta_time.scripting.ast.collection.ScriptMap;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
-import com.jordanbunke.delta_time.scripting.ast.nodes.types.CollectionTypeNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.MapTypeNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
@@ -15,8 +14,8 @@ public final class MapKeysetNode extends ScopedNativeCallNode {
             final TextPosition position,
             final ExpressionNode owner
     ) {
-        super(position, owner, Set.of(new MapTypeNode(
-                TypeNode.wildcard(), TypeNode.wildcard())));
+        super(position, owner, Set.of(
+                new MapTypeNode(TypeNode.wildcard(), TypeNode.wildcard())));
     }
 
     @Override
@@ -28,8 +27,7 @@ public final class MapKeysetNode extends ScopedNativeCallNode {
     public TypeNode getType(final SymbolTable symbolTable) {
         final MapTypeNode mtn = (MapTypeNode) getScope().getType(symbolTable);
 
-        return new CollectionTypeNode(CollectionTypeNode.Type.SET,
-                mtn.getKeyType());
+        return TypeNode.setOf(mtn.getKeyType());
     }
 
     @Override

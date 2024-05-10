@@ -23,9 +23,9 @@ public final class ScriptColorTests {
         final HeadFuncNode script = getScript("color_sum");
 
         Assert.assertNotNull(script);
-        Assert.assertEquals(BLACK, ScriptRunner.get()
+        Assert.assertEquals(BLACK, Interpreter.get()
                 .run(script, of(BLACK, BLACK, BLACK)));
-        Assert.assertEquals(WHITE, ScriptRunner.get()
+        Assert.assertEquals(WHITE, Interpreter.get()
                 .run(script, of(RED, GREEN, BLUE)));
     }
 

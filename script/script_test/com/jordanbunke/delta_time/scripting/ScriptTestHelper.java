@@ -25,7 +25,7 @@ public final class ScriptTestHelper {
         final String content = FileIO.readResource(
                 ResourceLoader.loadResource(path), "read script");
 
-        final HeadFuncNode script = ScriptRunner.get().build(content);
+        final HeadFuncNode script = Interpreter.get().build(content);
         Assert.assertNotNull(script);
         Assert.assertTrue(ScriptErrorLog.hasNoErrors());
         printErrors();

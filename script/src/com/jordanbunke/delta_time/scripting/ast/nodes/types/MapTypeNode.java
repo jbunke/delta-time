@@ -38,11 +38,11 @@ public final class MapTypeNode extends TypeNode {
 
     @Override
     public boolean equals(final Object o) {
-        if (!(o instanceof MapTypeNode that))
-            return false;
-
-        return this.keyType.equals(that.keyType) &&
+        if (o instanceof MapTypeNode that)
+            return this.keyType.equals(that.keyType) &&
                 this.valueType.equals(that.valueType);
+        else
+            return o instanceof BaseTypeNode that && that.isWildcard();
     }
 
     @Override

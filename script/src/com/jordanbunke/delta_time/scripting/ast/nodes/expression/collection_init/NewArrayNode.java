@@ -2,7 +2,6 @@ package com.jordanbunke.delta_time.scripting.ast.nodes.expression.collection_ini
 
 import com.jordanbunke.delta_time.scripting.ast.collection.ScriptArray;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
-import com.jordanbunke.delta_time.scripting.ast.nodes.types.CollectionTypeNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
@@ -50,8 +49,7 @@ public final class NewArrayNode extends ExpressionNode {
 
     @Override
     public TypeNode getType(final SymbolTable symbolTable) {
-        return new CollectionTypeNode(
-                CollectionTypeNode.Type.ARRAY, elementType);
+        return TypeNode.arrayOf(elementType);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.jordanbunke.delta_time.scripting.ast.collection;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -48,6 +49,17 @@ public final class ScriptSet implements ScriptCollection {
     @Override
     public Stream<Object> stream() {
         return structure.stream();
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (!(o instanceof ScriptSet s))
+            return false;
+
+        final HashSet<Object>
+                a = new HashSet<>(structure),
+                b = new HashSet<>(s.structure);
+        return a.containsAll(b) && b.containsAll(a);
     }
 
     @Override

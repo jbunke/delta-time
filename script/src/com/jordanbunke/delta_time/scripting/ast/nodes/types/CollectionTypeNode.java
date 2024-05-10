@@ -57,11 +57,11 @@ public final class CollectionTypeNode extends TypeNode {
 
     @Override
     public boolean equals(final Object o) {
-        if (!(o instanceof CollectionTypeNode that))
-            return false;
-
-        return this.type == that.type &&
+        if (o instanceof CollectionTypeNode that)
+            return this.type == that.type &&
                 this.elementType.equals(that.elementType);
+        else
+            return o instanceof BaseTypeNode that && that.isWildcard();
     }
 
     @Override

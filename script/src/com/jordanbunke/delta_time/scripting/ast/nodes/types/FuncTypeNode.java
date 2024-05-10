@@ -47,17 +47,17 @@ public final class FuncTypeNode extends TypeNode {
 
     @Override
     public boolean equals(final Object o) {
-        if (!(o instanceof FuncTypeNode f))
-            return false;
-
-        if (paramTypes.length != f.paramTypes.length)
-            return false;
-
-        for (int i = 0; i < paramTypes.length; i++)
-            if (!paramTypes[i].equals(f.paramTypes[i]))
+        if (o instanceof FuncTypeNode f) {
+            if (paramTypes.length != f.paramTypes.length)
                 return false;
 
-        return returnType.equals(f.returnType);
+            for (int i = 0; i < paramTypes.length; i++)
+                if (!paramTypes[i].equals(f.paramTypes[i]))
+                    return false;
+
+            return returnType.equals(f.returnType);
+        } else
+            return o instanceof BaseTypeNode that && that.isWildcard();
     }
 
     @Override

@@ -51,7 +51,7 @@ public final class ScriptStringTests {
 
         for (String arg : ARGS)
             Assert.assertEquals(operation.apply(arg),
-                    ScriptRunner.get().run(script, arg));
+                    Interpreter.get().run(script, arg));
     }
 
     public void stringBinOpTest(
@@ -61,7 +61,7 @@ public final class ScriptStringTests {
 
         for (StringPair arg : BIN_ARGS)
             Assert.assertEquals(operation.apply(arg.a, arg.b),
-                    ScriptRunner.get().run(script, arg.a, arg.b));
+                    Interpreter.get().run(script, arg.a, arg.b));
     }
 
 

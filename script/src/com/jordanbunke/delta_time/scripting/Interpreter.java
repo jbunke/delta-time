@@ -12,11 +12,11 @@ import org.antlr.v4.runtime.CommonTokenStream;
 
 import java.util.Optional;
 
-public class ScriptRunner {
+public class Interpreter {
     private static ScriptVisitor visitor = new ScriptVisitor();
 
-    public static ScriptRunner get() {
-        return new ScriptRunner();
+    public static Interpreter get() {
+        return new Interpreter();
     }
 
     public Object run(
@@ -107,6 +107,6 @@ public class ScriptRunner {
     }
 
     public static void overrideVisitor(final ScriptVisitor visitor) {
-        ScriptRunner.visitor = visitor;
+        Interpreter.visitor = visitor;
     }
 }

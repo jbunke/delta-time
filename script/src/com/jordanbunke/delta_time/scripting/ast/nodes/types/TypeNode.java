@@ -38,6 +38,33 @@ public abstract class TypeNode extends ASTNode {
         return Set.of(getInt(), getFloat());
     }
 
+    public static CollectionTypeNode set() {
+        return setOf(wildcard());
+    }
+
+    public static CollectionTypeNode setOf(final TypeNode elementType) {
+        return new CollectionTypeNode(
+                CollectionTypeNode.Type.SET, elementType);
+    }
+
+    public static CollectionTypeNode list() {
+        return listOf(wildcard());
+    }
+
+    public static CollectionTypeNode listOf(final TypeNode elementType) {
+        return new CollectionTypeNode(
+                CollectionTypeNode.Type.LIST, elementType);
+    }
+
+    public static CollectionTypeNode array() {
+        return arrayOf(wildcard());
+    }
+
+    public static CollectionTypeNode arrayOf(final TypeNode elementType) {
+        return new CollectionTypeNode(
+                CollectionTypeNode.Type.ARRAY, elementType);
+    }
+
     public static BaseTypeNode getFloat() {
         if (FLOAT == null)
             FLOAT = new BaseTypeNode(BaseTypeNode.Type.FLOAT);

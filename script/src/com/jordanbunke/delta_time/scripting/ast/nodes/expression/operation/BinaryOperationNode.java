@@ -4,7 +4,6 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.BaseTypeNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
-import com.jordanbunke.delta_time.scripting.util.ScriptEquality;
 import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
@@ -153,8 +152,7 @@ public final class BinaryOperationNode extends ExpressionNode {
                 };
             }
             case EQUAL, NOT_EQUAL -> {
-                final boolean equal =
-                        ScriptEquality.equal(o1Value,  o2Value);
+                final boolean equal = o1Value.equals(o2Value);
 
                 yield (operator == Operator.EQUAL) == equal;
             }

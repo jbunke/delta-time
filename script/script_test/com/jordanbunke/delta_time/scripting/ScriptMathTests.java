@@ -17,6 +17,6 @@ public final class ScriptMathTests {
                 { 7.5, -18.1, 4f, 5.6, 7.8, 9.2, -1267.8, 13663.45262 };
 
         for (Double arg : args)
-            Assert.assertEquals(arg.intValue(), ScriptRunner.get().run(script, arg));
+            Assert.assertEquals(arg.intValue(), Interpreter.get().run(script, arg));
     }
 }

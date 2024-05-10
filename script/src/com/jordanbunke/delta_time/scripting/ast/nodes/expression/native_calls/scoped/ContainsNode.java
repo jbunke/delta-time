@@ -20,14 +20,9 @@ public final class ContainsNode extends ScopedNativeCallNode {
             final ExpressionNode owner,
             final ExpressionNode element
     ) {
-        super(position, owner, Set.of(new MapTypeNode(
-                TypeNode.wildcard(), TypeNode.wildcard()),
-                new CollectionTypeNode(CollectionTypeNode.Type.LIST,
-                        TypeNode.wildcard()),
-                new CollectionTypeNode(CollectionTypeNode.Type.ARRAY,
-                        TypeNode.wildcard()),
-                new CollectionTypeNode(CollectionTypeNode.Type.SET,
-                        TypeNode.wildcard())));
+        super(position, owner, Set.of(
+                new MapTypeNode(TypeNode.wildcard(), TypeNode.wildcard()),
+                TypeNode.set(), TypeNode.list(), TypeNode.array()));
 
         this.element = element;
     }

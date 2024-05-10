@@ -31,7 +31,7 @@ public final class ScriptLogicTests {
         final HeadFuncNode script = ScriptTestHelper.getScript(code);
 
         for (TruthTableEntry ab : TRUTH_TABLE) {
-            final Object res = ScriptRunner.get().run(script, ab.a, ab.b);
+            final Object res = Interpreter.get().run(script, ab.a, ab.b);
             final boolean expected = binOp.apply(ab.a, ab.b);
 
             Assert.assertNotNull(res);
@@ -71,7 +71,7 @@ public final class ScriptLogicTests {
     ) {
         final HeadFuncNode script =
                 ScriptTestHelper.getScript((and ? "and" : "or") + "_reduce");
-        final Object res = ScriptRunner.get().run(script, fromVarArgs(elems));
+        final Object res = Interpreter.get().run(script, fromVarArgs(elems));
 
         Assert.assertNotNull(res);
         check(expected, (boolean) res);

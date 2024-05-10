@@ -57,6 +57,21 @@ public final class ScriptList implements ScriptCollection {
     }
 
     @Override
+    public boolean equals(final Object o) {
+        if (!(o instanceof ScriptList l))
+            return false;
+
+        if (size() != l.size())
+            return false;
+
+        for (int i = 0; i < size(); i++)
+            if (!get(i).equals(l.get(i)))
+                return false;
+
+        return true;
+    }
+
+    @Override
     public String toString() {
         return switch (structure.size()) {
             case 0 -> "<>";

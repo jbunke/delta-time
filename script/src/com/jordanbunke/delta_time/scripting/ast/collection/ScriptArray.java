@@ -1,7 +1,5 @@
 package com.jordanbunke.delta_time.scripting.ast.collection;
 
-import com.jordanbunke.delta_time.scripting.util.ScriptEquality;
-
 import java.util.Arrays;
 import java.util.stream.Stream;
 
@@ -32,7 +30,7 @@ public final class ScriptArray implements ScriptCollection {
     @Override
     public boolean contains(final Object element) {
         for (int i = 0; i < size(); i++)
-            if (ScriptEquality.equal(structure[i], element))
+            if (structure[i].equals(element))
                 return true;
 
         return false;
@@ -56,6 +54,21 @@ public final class ScriptArray implements ScriptCollection {
     @Override
     public Stream<Object> stream() {
         return Arrays.stream(structure);
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (!(o instanceof ScriptArray a))
+            return false;
+
+        if (size() != a.size())
+            return false;
+
+        for (int i = 0; i < size(); i++)
+            if (!get(i).equals(a.get(i)))
+                return false;
+
+        return true;
     }
 
     @Override

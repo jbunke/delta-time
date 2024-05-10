@@ -34,7 +34,7 @@ public final class RunScriptSTDIO {
                 args.add(arg);
         } while (!arg.isEmpty());
 
-        final Object res = ScriptRunner.get().run(script,
+        final Object res = Interpreter.get().run(script,
                 (Object[]) args.toArray(String[]::new));
         System.out.println(res);
     }

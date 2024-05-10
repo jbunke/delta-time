@@ -110,7 +110,7 @@ public final class ScriptDataTypesTests {
         final HeadFuncNode script = getScript(scriptCode);
 
         Assert.assertNotNull(script);
-        Assert.assertEquals(expected, ScriptRunner.get().run(script, args));
+        Assert.assertEquals(expected, Interpreter.get().run(script, args));
     }
 
     private <DT> String getDataCode(final DT args) {

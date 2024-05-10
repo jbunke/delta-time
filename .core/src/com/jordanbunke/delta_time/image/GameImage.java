@@ -138,4 +138,22 @@ public class GameImage extends BufferedImage {
     public Color getColorAt(final int x, final int y) {
         return new Color(getRGB(x, y), true);
     }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (!(o instanceof GameImage img))
+            return false;
+
+        if (getWidth() != img.getWidth() || getHeight() != img.getHeight())
+            return false;
+
+        final int w = getWidth(), h = getHeight();
+
+        for (int x = 0; x < w; x++)
+            for (int y = 0; y < h; y++)
+                if (!getColorAt(x, y).equals(img.getColorAt(x, y)))
+                    return false;
+
+        return true;
+    }
 }

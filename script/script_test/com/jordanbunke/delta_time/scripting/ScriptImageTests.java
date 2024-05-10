@@ -2,7 +2,6 @@ package com.jordanbunke.delta_time.scripting;
 
 import com.jordanbunke.delta_time.image.GameImage;
 import com.jordanbunke.delta_time.scripting.ast.nodes.function.HeadFuncNode;
-import com.jordanbunke.delta_time.scripting.util.ScriptEquality;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -24,8 +23,8 @@ public final class ScriptImageTests {
         final GameImage base = getImage("base"),
                 reflectY = getImage(code);
         final HeadFuncNode script = getScript(code);
-        final GameImage res = (GameImage) ScriptRunner.get().run(script, base);
+        final GameImage res = (GameImage) Interpreter.get().run(script, base);
 
-        Assert.assertTrue(ScriptEquality.equal(reflectY, res));
+        Assert.assertEquals(reflectY, res);
     }
 }

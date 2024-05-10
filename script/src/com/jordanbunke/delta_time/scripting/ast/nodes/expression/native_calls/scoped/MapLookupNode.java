@@ -18,10 +18,8 @@ public final class MapLookupNode extends ScopedNativeCallNode {
             ExpressionNode owner,
             final ExpressionNode element
     ) {
-        super(position, owner,
-                Set.of(new MapTypeNode(
-                        TypeNode.wildcard(),
-                        TypeNode.wildcard())));
+        super(position, owner, Set.of(
+                new MapTypeNode(TypeNode.wildcard(), TypeNode.wildcard())));
 
         this.element = element;
     }
