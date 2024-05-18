@@ -24,6 +24,9 @@ public final class TypeCompatibility {
     }
 
     private static Object prepArg(final Object arg) {
+        if (arg instanceof ScriptCollection || arg instanceof ScriptMap)
+            return arg;
+
         if (arg instanceof List<?> l) {
             final ScriptList list = new ScriptList();
             l.forEach(elem -> list.add(prepArg(elem)));
@@ -60,7 +63,7 @@ public final class TypeCompatibility {
         else if (notABaseType(arg)) {
             ScriptErrorLog.fireError(
                     ScriptErrorLog.Message.INVALID_ARG_TYPE,
-                    TextPosition.N_A, arg.getClass().getName());
+                    TextPosition.N_A, arg.getClass().getSimpleName());
         }
 
         return arg;
