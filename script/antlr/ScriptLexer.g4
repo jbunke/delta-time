@@ -75,47 +75,7 @@ IF: 'if';
 ELSE: 'else';
 TRUE: 'true';
 FALSE: 'false';
-
-// Native call keywords
 NEW: 'new';
-FROM: 'from';
-RGBA: 'rgba';
-RGB: 'rgb';
-BLANK: 'blank';
-TEX_COL_REPL: 'tex_col_repl';
-GEN_LOOKUP: 'gen_lookup';
-ABS: 'abs';
-MIN: 'min';
-MAX: 'max';
-CLAMP: 'clamp';
-RAND: 'rand';
-PROB: 'prob';
-FLIP_COIN: 'flip_coin';
-
-// Native field keywords
-RED: '.' ('red' | 'r');
-GREEN: '.' ('green' | 'g');
-BLUE: '.' ('blue' | 'b');
-ALPHA: '.' ('alpha' | 'a');
-WIDTH: '.' ('width' | 'w');
-HEIGHT: '.' ('height' | 'h');
-
-// Native function keywords
-HAS: '.has';
-LOOKUP: '.lookup';
-KEYS: '.keys';
-PIXEL: '.pixel';
-ADD: '.add';
-REMOVE: '.remove';
-DEFINE: '.define';
-DRAW: '.draw';
-AT: '.at';
-SUB: '.sub';
-DOT: '.dot';
-LINE: '.line';
-FILL: '.fill';
-SECTION: '.section';
-CALL: '.call';
 
 // numbers
 fragment DIGIT: '0'..'9';
@@ -139,4 +99,4 @@ ESC_CHAR: '\\' ('0' | 'b' | 't' | 'n' | 'f' | 'r' | '"' | '\'' | '\\');
 
 // Identifier
 IDENTIFIER: [_A-Za-z] [_A-Za-z0-9]*;
-PATH: EXTENSION IDENTIFIER (PERIOD IDENTIFIER)*;
+SUB_IDENT: PERIOD IDENTIFIER;
