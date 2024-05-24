@@ -9,19 +9,8 @@ import java.awt.*;
 import java.util.Set;
 
 public final class ColorChannelNode extends ScopedNativeCallNode {
-    private enum ColorChannel {
+    public enum Channel {
         RED, GREEN, BLUE, ALPHA;
-
-        private static ColorChannel fromString(final String s) {
-            final char channel = s.charAt(0);
-
-            return switch (channel) {
-                case 'r' -> RED;
-                case 'g' -> GREEN;
-                case 'b' -> BLUE;
-                default -> ALPHA;
-            };
-        }
 
         private int evaluate(final Color c) {
             return switch (this) {
@@ -33,16 +22,16 @@ public final class ColorChannelNode extends ScopedNativeCallNode {
         }
     }
 
-    private final ColorChannel channel;
+    private final Channel channel;
 
     public ColorChannelNode(
             final TextPosition position,
             final ExpressionNode owner,
-            final String channelString
+            final Channel channel
     ) {
         super(position, owner, Set.of(TypeNode.getColor()));
 
-        channel = ColorChannel.fromString(channelString);
+        this.channel = channel;
     }
 
     @Override
