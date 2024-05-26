@@ -53,24 +53,9 @@ stat
 | var_def SEMICOLON                         #VarDefStatement
 | assignment SEMICOLON                      #AssignmentStatement
 | return_stat                               #ReturnStatement
-| col=expr ADD LPAREN elem=expr
-  (COMMA index=expr)? RPAREN SEMICOLON      #AddToCollection
-| col=expr REMOVE LPAREN
-  arg=expr RPAREN SEMICOLON                 #RemoveFromCollection
-| map=expr DEFINE LPAREN key=expr
-  COMMA val=expr RPAREN SEMICOLON           #DefineMapEntryStatement
-| canvas=expr DRAW LPAREN img=expr COMMA
-  x=expr COMMA y=expr RPAREN SEMICOLON      #DrawOntoImageStatement
-| canvas=expr DOT LPAREN col=expr COMMA
-  x=expr COMMA y=expr RPAREN SEMICOLON      #DotStatement
-| canvas=expr LINE LPAREN col=expr COMMA
-  breadth=expr COMMA x1=expr COMMA y1=expr
-  COMMA x2=expr COMMA y2=expr RPAREN
-  SEMICOLON                                 #DrawLineStatement
-| canvas=expr FILL LPAREN col=expr COMMA
-  x=expr COMMA y=expr COMMA w=expr COMMA
-  h=expr RPAREN SEMICOLON                   #FillStatement
-| PATH args SEMICOLON                       #ExtFuncCallStatement
+| expr subident args SEMICOLON              #ScopedFuncCallStatement
+| ident args SEMICOLON                      #FunctionCallStatement
+| namespace args SEMICOLON                  #ExtFuncCallStatement
 ;
 
 return_stat: RETURN expr? SEMICOLON;
@@ -97,45 +82,11 @@ if_def: IF LPAREN cond=expr RPAREN body;
 
 expr
 : LPAREN expr RPAREN                        #NestedExpression
-| col=expr HAS LPAREN elem=expr RPAREN      #ContainsExpression
-| map=expr LOOKUP LPAREN elem=expr RPAREN   #MapLookupExpression
-| map=expr KEYS LPAREN RPAREN               #MapKeysetExpression
-| c=expr op=(RED | GREEN | BLUE | ALPHA)    #ColorChannelExpression
-| ABS LPAREN expr RPAREN                    #AbsoluteExpression
-| MIN LPAREN expr RPAREN                    #MinCollectionExpression
-| MIN LPAREN a=expr COMMA b=expr RPAREN     #MinTwoArgExpression
-| MAX LPAREN expr RPAREN                    #MaxCollectionExpression
-| MAX LPAREN a=expr COMMA b=expr RPAREN     #MaxTwoArgExpression
-| CLAMP LPAREN min=expr COMMA val=expr
-  COMMA max=expr RPAREN                     #ClampExpression
-| RAND LPAREN RPAREN                        #RandomExpression
-| RAND LPAREN min=expr COMMA
-  max=expr RPAREN                           #RandomTwoArgExpression
-| PROB LPAREN expr RPAREN                   #ProbabilityExpression
-| FLIP_COIN LPAREN RPAREN                   #FlipCoinBoolExpression
-| FLIP_COIN LPAREN t=expr COMMA
-  f=expr RPAREN                             #FlipCoinArgExpression
-| FROM LPAREN expr RPAREN                   #ImageFromPathExpression
-| BLANK LPAREN width=expr
-  COMMA height=expr RPAREN                  #ImageOfBoundsExpression
-| TEX_COL_REPL LPAREN texture=expr COMMA
-  lookup=expr COMMA replace=expr RPAREN     #TextureColorReplaceExpression
-| GEN_LOOKUP LPAREN source=expr COMMA
-  vert=expr RPAREN                          #GenLookupExpression
-| img=expr SECTION LPAREN x=expr COMMA
-  y=expr COMMA w=expr COMMA h=expr RPAREN   #ImageSectionExpression
-| img=expr PIXEL LPAREN x=expr
-  COMMA y=expr RPAREN                       #ColorAtPixelExpression
-| expr op=(WIDTH | HEIGHT)                  #ImageBoundExpression
-| RGB LPAREN r=expr COMMA g=expr
-  COMMA b=expr RPAREN                       #RGBColorExpression
-| RGBA LPAREN r=expr COMMA g=expr
-  COMMA b=expr COMMA a=expr RPAREN          #RGBAColorExpression
-| string=expr AT LPAREN index=expr RPAREN   #CharAtExpression
-| string=expr SUB LPAREN beg=expr
-  COMMA end=expr RPAREN                     #SubstringExpression
-// Higher-order function call comes after natives with owners
-| func=expr CALL args                       #HOFuncCallExpression
+| ident args                                #FunctionCallExpression
+| namespace args                            #ExtFuncCallExpression
+| DEF ident                                 #HOFuncExpression
+| expr subident args                        #ScopedFuncCallExpression
+| expr subident                             #PropertyExpression
 | op=(MINUS | NOT | SIZE) expr              #UnaryExpression
 | LPAREN type RPAREN expr                   #CastExpression
 | a=expr op=(PLUS | MINUS) b=expr           #ArithmeticBinExpression
@@ -154,9 +105,6 @@ expr
 | NEW type LT GT                            #NewListExpression
 | NEW type LCURLY RCURLY                    #NewSetExpression
 | NEW LCURLY kt=type COLON vt=type RCURLY   #NewMapExpression
-| ident args                                #FunctionCallExpression
-| DEF ident                                 #HOFuncExpression
-| PATH args                                 #ExtFuncCallExpression
 | assignable                                #AssignableExpression
 | literal                                   #LiteralExpression
 ;
@@ -194,6 +142,10 @@ assignable
 ;
 
 ident: IDENTIFIER;
+
+subident: SUB_IDENT;
+
+namespace: EXTENSION ident subident;
 
 literal
 : STRING_LIT                                #StringLiteral

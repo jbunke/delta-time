@@ -3,7 +3,7 @@ package com.jordanbunke.delta_time.scripting.util;
 import com.jordanbunke.delta_time.scripting.ScriptParser;
 import com.jordanbunke.delta_time.scripting.ScriptParserBaseVisitor;
 import com.jordanbunke.delta_time.scripting.ast.nodes.ASTNode;
-import com.jordanbunke.delta_time.scripting.ast.nodes.IllegalLanguageFeatureNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.GenericIllegalNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.*;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.assignable.*;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.collection_init.*;
@@ -27,15 +27,42 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.statement.native_calls.*;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.*;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 public class ScriptVisitor
         extends ScriptParserBaseVisitor<ASTNode> {
+    protected static final String SCOPE_SEP = ".";
+
+    // function IDs
+    protected static final String
+            // properties
+            RED_L = "red", RED_S = "r",
+            GREEN_L = "green", GREEN_S = "g",
+            BLUE_L = "blue", BLUE_S = "b",
+            ALPHA_L = "alpha", ALPHA_S = "a",
+            WIDTH_L = "width", WIDTH_S = "w",
+            HEIGHT_L = "height", HEIGHT_S = "h",
+            // scoped
+            CALL = "call",
+            HAS = "has", LOOKUP = "lookup", KEYS = "keys",
+            SECTION = "section", PIXEL = "pixel",
+            AT = "at", SUB = "sub",
+            ADD = "add", REMOVE = "remove",
+            DEFINE = "define",
+            DRAW = "draw", DOT = "dot", LINE = "line", FILL = "fill",
+            // global
+            ABS = "abs", MIN = "min", MAX = "max", CLAMP = "clamp",
+            RAND = "rand", PROB = "prob", FLIP_COIN = "flip_coin",
+            FROM = "from", BLANK = "blank",
+            TEX_COL_REPL = "tex_col_repl", GEN_LOOKUP = "gen_lookup",
+            RGB = "rgb", RGBA = "rgba";
+
     // to extend
     @Override
     public ASTNode visitExtensionType(
             ScriptParser.ExtensionTypeContext ctx
     ) {
-        return new IllegalLanguageFeatureNode(
+        return new GenericIllegalNode(
                 TextPosition.fromToken(ctx.start),
                 "Extension type");
     }
@@ -43,7 +70,7 @@ public class ScriptVisitor
     @Override
     public ASTNode visitExtFuncCallStatement(
             final ScriptParser.ExtFuncCallStatementContext ctx) {
-        return new IllegalLanguageFeatureNode(
+        return new GenericIllegalNode(
                 TextPosition.fromToken(ctx.start),
                 "Global extension function call expression");
     }
@@ -51,9 +78,38 @@ public class ScriptVisitor
     @Override
     public ASTNode visitExtFuncCallExpression(
             final ScriptParser.ExtFuncCallExpressionContext ctx) {
-        return new IllegalLanguageFeatureNode(
+        return new GenericIllegalNode(
                 TextPosition.fromToken(ctx.start),
                 "Global extension function call expression");
+    }
+
+    public ExpressionNode determineExtPropertyExpression(
+            final TextPosition position, final ExpressionNode scope,
+            final String propertyID
+    ) {
+        return new IllegalExpressionNode(position,
+                "Undefined property \"" + propertyID +
+                        "\" called on \"" + scope + "\"");
+    }
+
+    @SuppressWarnings("unused")
+    public ExpressionNode determineExtScopedFunctionExpression(
+            final TextPosition position, final ExpressionNode scope,
+            final String functionID, final ExpressionNode... args
+    ) {
+        return new IllegalExpressionNode(position,
+                "Undefined scoped function \"" + functionID +
+                        "\" called on \"" + scope + "\"");
+    }
+
+    @SuppressWarnings("unused")
+    public StatementNode determineExtScopedFunctionStatement(
+            final TextPosition position, final ExpressionNode scope,
+            final String functionID, final ExpressionNode... args
+    ) {
+        return new IllegalStatementNode(position,
+                "Undefined scoped function \"" + functionID +
+                        "\" called on \"" + scope + "\"");
     }
 
     // concrete implementations
@@ -397,89 +453,50 @@ public class ScriptVisitor
     }
 
     @Override
-    public AddNode visitAddToCollection(
-            final ScriptParser.AddToCollectionContext ctx
+    public StatementNode visitScopedFuncCallStatement(
+            final ScriptParser.ScopedFuncCallStatementContext ctx
     ) {
-        return new AddNode(
-                TextPosition.fromToken(ctx.start),
-                (ExpressionNode) visit(ctx.col),
-                (ExpressionNode) visit(ctx.elem),
-                ctx.index != null
-                        ? (ExpressionNode) visit(ctx.index) : null);
-    }
+        final ExpressionNode[] args = ctx.args().expr().stream()
+                .map(arg -> (ExpressionNode) visit(arg))
+                .toArray(ExpressionNode[]::new);
+        final ExpressionNode scope = (ExpressionNode) visit(ctx.expr());
+        // trim leading "." from the function ID
+        final String functionID = ctx.subident().SUB_IDENT()
+                .getSymbol().getText().substring(SCOPE_SEP.length());
+        final TextPosition position = TextPosition.fromToken(ctx.start);
 
-    @Override
-    public RemoveNode visitRemoveFromCollection(
-            final ScriptParser.RemoveFromCollectionContext ctx
-    ) {
-        return new RemoveNode(
-                TextPosition.fromToken(ctx.start),
-                (ExpressionNode) visit(ctx.col),
-                (ExpressionNode) visit(ctx.arg));
-    }
+        final Supplier<StatementNode> extension =
+                () -> determineExtScopedFunctionStatement(
+                        position, scope, functionID, args);
 
-    @Override
-    public MapDefineNode visitDefineMapEntryStatement(
-            final ScriptParser.DefineMapEntryStatementContext ctx
-    ) {
-        return new MapDefineNode(
-                TextPosition.fromToken(ctx.start),
-                (ExpressionNode) visit(ctx.map),
-                (ExpressionNode) visit(ctx.key),
-                (ExpressionNode) visit(ctx.val));
-    }
-
-    @Override
-    public DrawNode visitDrawOntoImageStatement(
-            final ScriptParser.DrawOntoImageStatementContext ctx
-    ) {
-        return new DrawNode(
-                TextPosition.fromToken(ctx.start),
-                (ExpressionNode) visit(ctx.canvas),
-                (ExpressionNode) visit(ctx.img),
-                (ExpressionNode) visit(ctx.x),
-                (ExpressionNode) visit(ctx.y));
-    }
-
-    @Override
-    public DotNode visitDotStatement(
-            final ScriptParser.DotStatementContext ctx
-    ) {
-        return new DotNode(
-                TextPosition.fromToken(ctx.start),
-                (ExpressionNode) visit(ctx.canvas),
-                (ExpressionNode) visit(ctx.col),
-                (ExpressionNode) visit(ctx.x),
-                (ExpressionNode) visit(ctx.y));
-    }
-
-    @Override
-    public DrawLineNode visitDrawLineStatement(
-            final ScriptParser.DrawLineStatementContext ctx
-    ) {
-        return new DrawLineNode(
-                TextPosition.fromToken(ctx.start),
-                (ExpressionNode) visit(ctx.canvas),
-                (ExpressionNode) visit(ctx.col),
-                (ExpressionNode) visit(ctx.breadth),
-                (ExpressionNode) visit(ctx.x1),
-                (ExpressionNode) visit(ctx.y1),
-                (ExpressionNode) visit(ctx.x2),
-                (ExpressionNode) visit(ctx.y2));
-    }
-
-    @Override
-    public FillNode visitFillStatement(
-            final ScriptParser.FillStatementContext ctx
-    ) {
-        return new FillNode(
-                TextPosition.fromToken(ctx.start),
-                (ExpressionNode) visit(ctx.canvas),
-                (ExpressionNode) visit(ctx.col),
-                (ExpressionNode) visit(ctx.x),
-                (ExpressionNode) visit(ctx.y),
-                (ExpressionNode) visit(ctx.w),
-                (ExpressionNode) visit(ctx.h));
+        return switch (functionID) {
+            case ADD -> switch (args.length) {
+                case 1 -> new AddNode(position, scope, args[0], null);
+                case 2 -> new AddNode(position, scope, args[0], args[1]);
+                default -> extension.get();
+            };
+            case REMOVE -> args.length == 1
+                    ? new RemoveNode(position, scope, args[0])
+                    : extension.get();
+            case DEFINE -> args.length == 2
+                    ? new MapDefineNode(position, scope, args[0], args[1])
+                    : extension.get();
+            case DRAW -> args.length == 3
+                    ? new DrawNode(position, scope, args[0], args[1], args[2])
+                    : extension.get();
+            case DOT -> args.length == 3
+                    ? new DotNode(position, scope, args[0], args[1], args[2])
+                    : extension.get();
+            case LINE -> args.length == 6
+                    ? new DrawLineNode(position, scope,
+                    args[0], args[1], args[2], args[3], args[4], args[5])
+                    : extension.get();
+            case FILL -> args.length == 5
+                    ? new FillNode(position, scope,
+                    args[0], args[1], args[2], args[3], args[4])
+                    : extension.get();
+            default -> extension.get();
+        };
     }
 
     @Override
@@ -707,27 +724,141 @@ public class ScriptVisitor
     }
 
     @Override
-    public FuncCallNode visitFunctionCallExpression(
+    public ExpressionNode visitFunctionCallExpression(
             final ScriptParser.FunctionCallExpressionContext ctx
     ) {
         final ExpressionNode[] args = ctx.args().expr().stream()
                 .map(arg -> (ExpressionNode) visit(arg))
                 .toArray(ExpressionNode[]::new);
+        final String functionID = ctx.ident().getText();
+        final TextPosition position = TextPosition.fromToken(ctx.start);
 
-        return new FuncCallNode(TextPosition.fromToken(ctx.start),
-                ctx.ident().getText(), args);
+        final Supplier<ExpressionNode> scriptDefined =
+                () -> new FuncCallNode(position, functionID, args);
+
+        return switch (functionID) {
+            case ABS -> args.length == 1
+                    ? new AbsoluteNode(position, args[0])
+                    : scriptDefined.get();
+            case CLAMP -> args.length == 3
+                    ? new ClampNode(position, args[0], args[1], args[2])
+                    : scriptDefined.get();
+            case PROB -> args.length == 1
+                    ? new ProbabilityNode(position, args[0])
+                    : scriptDefined.get();
+            case FROM -> args.length == 1
+                    ? new ImageFromPathNode(position, args[0])
+                    : scriptDefined.get();
+            case BLANK -> args.length == 2
+                    ? new ImageOfBoundsNode(position, args[0], args[1])
+                    : scriptDefined.get();
+            case TEX_COL_REPL -> args.length == 3
+                    ? new TextureColorReplaceNode(
+                            position, args[0], args[1], args[2])
+                    : scriptDefined.get();
+            case GEN_LOOKUP -> args.length == 2
+                    ? new GenLookupNode(position, args[0], args[1])
+                    : scriptDefined.get();
+            case RGB -> args.length == 3
+                    ? new RGBColorNode(position, args[0], args[1], args[2])
+                    : scriptDefined.get();
+            case RGBA -> args.length == 4
+                    ? new RGBAColorNode(
+                            position, args[0], args[1], args[2], args[3])
+                    : scriptDefined.get();
+            case MIN -> switch (args.length) {
+                case 1 -> new MinMaxCollectionNode(position, false, args[0]);
+                case 2 -> new MinMaxTwoArgNode(position, false, args[0], args[1]);
+                default -> scriptDefined.get();
+            };
+            case MAX -> switch (args.length) {
+                case 1 -> new MinMaxCollectionNode(position, true, args[0]);
+                case 2 -> new MinMaxTwoArgNode(position, true, args[0], args[1]);
+                default -> scriptDefined.get();
+            };
+            case RAND -> switch (args.length) {
+                case 0 -> new RandNode(position);
+                case 2 -> new RandTwoArgNode(position, args[0], args[1]);
+                default -> scriptDefined.get();
+            };
+            case FLIP_COIN -> switch (args.length) {
+                case 0 -> new FlipCoinNode(position);
+                case 2 -> new TernaryOperationNode(position,
+                        new FlipCoinNode(position), args[0], args[1]);
+                default -> scriptDefined.get();
+            };
+            default -> scriptDefined.get();
+        };
     }
 
     @Override
-    public HOFuncCallNode visitHOFuncCallExpression(
-            final ScriptParser.HOFuncCallExpressionContext ctx
+    public ExpressionNode visitPropertyExpression(
+            final ScriptParser.PropertyExpressionContext ctx
+    ) {
+        final ExpressionNode scope = (ExpressionNode) visit(ctx.expr());
+        // trim leading "." from the property ID
+        final String propertyID = ctx.subident().SUB_IDENT()
+                .getSymbol().getText().substring(SCOPE_SEP.length());
+        final TextPosition position = TextPosition.fromToken(ctx.start);
+
+        return switch (propertyID) {
+            case RED_L, RED_S -> new ColorChannelNode(
+                    position, scope, ColorChannelNode.Channel.RED);
+            case GREEN_L, GREEN_S -> new ColorChannelNode(
+                    position, scope, ColorChannelNode.Channel.GREEN);
+            case BLUE_L, BLUE_S -> new ColorChannelNode(
+                    position, scope, ColorChannelNode.Channel.BLUE);
+            case ALPHA_L, ALPHA_S -> new ColorChannelNode(
+                    position, scope, ColorChannelNode.Channel.ALPHA);
+            case WIDTH_L, WIDTH_S -> new ImageBoundNode(position, scope, true);
+            case HEIGHT_L, HEIGHT_S -> new ImageBoundNode(position, scope, false);
+            default -> determineExtPropertyExpression(position, scope, propertyID);
+        };
+    }
+
+    @Override
+    public ExpressionNode visitScopedFuncCallExpression(
+            final ScriptParser.ScopedFuncCallExpressionContext ctx
     ) {
         final ExpressionNode[] args = ctx.args().expr().stream()
                 .map(arg -> (ExpressionNode) visit(arg))
                 .toArray(ExpressionNode[]::new);
+        final ExpressionNode scope = (ExpressionNode) visit(ctx.expr());
+        // trim leading "." from the function ID
+        final String functionID = ctx.subident().SUB_IDENT()
+                .getSymbol().getText().substring(SCOPE_SEP.length());
+        final TextPosition position = TextPosition.fromToken(ctx.start);
 
-        return new HOFuncCallNode(TextPosition.fromToken(ctx.start),
-                (ExpressionNode) visit(ctx.func), args);
+        final Supplier<ExpressionNode> extension =
+                () -> determineExtScopedFunctionExpression(
+                        position, scope, functionID, args);
+
+        return switch (functionID) {
+            case CALL -> new HOFuncCallNode(position, scope, args);
+            case HAS -> args.length == 1
+                    ? new ContainsNode(position, scope, args[0])
+                    : extension.get();
+            case LOOKUP -> args.length == 1
+                    ? new MapLookupNode(position, scope, args[0])
+                    : extension.get();
+            case KEYS -> args.length == 0
+                    ? new MapKeysetNode(position, scope)
+                    : extension.get();
+            case SECTION -> args.length == 4
+                    ? new ImageSectionNode(position, scope, args[0],
+                        args[1], args[2], args[3])
+                    : extension.get();
+            case PIXEL -> args.length == 2
+                    ? new ColorAtPixelNode(position, scope, args[0], args[1])
+                    : extension.get();
+            case AT -> args.length == 1
+                    ? new CharAtNode(position, scope, args[0])
+                    : extension.get();
+            case SUB -> args.length == 2
+                    ? new SubstringNode(position, scope, args[0], args[1])
+                    : extension.get();
+            default -> extension.get();
+        };
     }
 
     @Override
@@ -847,268 +978,6 @@ public class ScriptVisitor
                 (ExpressionNode) visit(ctx.cond),
                 (ExpressionNode) visit(ctx.if_),
                 (ExpressionNode) visit(ctx.else_));
-    }
-
-    @Override
-    public ContainsNode visitContainsExpression(
-            final ScriptParser.ContainsExpressionContext ctx
-    ) {
-        return new ContainsNode(
-                TextPosition.fromToken(ctx.start),
-                (ExpressionNode) visit(ctx.col),
-                (ExpressionNode) visit(ctx.elem));
-    }
-
-    @Override
-    public MapLookupNode visitMapLookupExpression(
-            final ScriptParser.MapLookupExpressionContext ctx
-    ) {
-        return new MapLookupNode(
-                TextPosition.fromToken(ctx.start),
-                (ExpressionNode) visit(ctx.map),
-                (ExpressionNode) visit(ctx.elem));
-    }
-
-    @Override
-    public MapKeysetNode visitMapKeysetExpression(
-            final ScriptParser.MapKeysetExpressionContext ctx
-    ) {
-        return new MapKeysetNode(
-                TextPosition.fromToken(ctx.start),
-                (ExpressionNode) visit(ctx.map));
-    }
-
-    @Override
-    public ColorChannelNode visitColorChannelExpression(
-            final ScriptParser.ColorChannelExpressionContext ctx
-    ) {
-        return new ColorChannelNode(
-                TextPosition.fromToken(ctx.start),
-                (ExpressionNode) visit(ctx.expr()),
-                ctx.op.getText().substring(1).toLowerCase());
-    }
-
-    @Override
-    public AbsoluteNode visitAbsoluteExpression(
-            final ScriptParser.AbsoluteExpressionContext ctx
-    ) {
-        return new AbsoluteNode(
-                TextPosition.fromToken(ctx.ABS().getSymbol()),
-                (ExpressionNode) visit(ctx.expr()));
-    }
-
-    @Override
-    public MinMaxCollectionNode visitMinCollectionExpression(
-            final ScriptParser.MinCollectionExpressionContext ctx
-    ) {
-        return new MinMaxCollectionNode(
-                TextPosition.fromToken(ctx.MIN().getSymbol()),
-                true, (ExpressionNode) visit(ctx.expr()));
-    }
-
-    @Override
-    public MinMaxTwoArgNode visitMinTwoArgExpression(
-            final ScriptParser.MinTwoArgExpressionContext ctx
-    ) {
-        return new MinMaxTwoArgNode(
-                TextPosition.fromToken(ctx.MIN().getSymbol()),
-                false, (ExpressionNode) visit(ctx.a),
-                (ExpressionNode) visit(ctx.b));
-    }
-
-    @Override
-    public MinMaxCollectionNode visitMaxCollectionExpression(
-            final ScriptParser.MaxCollectionExpressionContext ctx
-    ) {
-        return new MinMaxCollectionNode(
-                TextPosition.fromToken(ctx.MAX().getSymbol()),
-                true, (ExpressionNode) visit(ctx.expr()));
-    }
-
-    @Override
-    public MinMaxTwoArgNode visitMaxTwoArgExpression(
-            final ScriptParser.MaxTwoArgExpressionContext ctx
-    ) {
-        return new MinMaxTwoArgNode(
-                TextPosition.fromToken(ctx.MAX().getSymbol()),
-                true, (ExpressionNode) visit(ctx.a),
-                (ExpressionNode) visit(ctx.b));
-    }
-
-    @Override
-    public ClampNode visitClampExpression(
-            final ScriptParser.ClampExpressionContext ctx
-    ) {
-        return new ClampNode(
-                TextPosition.fromToken(ctx.CLAMP().getSymbol()),
-                (ExpressionNode) visit(ctx.min),
-                (ExpressionNode) visit(ctx.val),
-                (ExpressionNode) visit(ctx.max));
-    }
-
-    @Override
-    public RandNode visitRandomExpression(
-            final ScriptParser.RandomExpressionContext ctx
-    ) {
-        return new RandNode(
-                TextPosition.fromToken(ctx.RAND().getSymbol()));
-    }
-
-    @Override
-    public RandTwoArgNode visitRandomTwoArgExpression(
-            final ScriptParser.RandomTwoArgExpressionContext ctx
-    ) {
-        return new RandTwoArgNode(
-                TextPosition.fromToken(ctx.RAND().getSymbol()),
-                (ExpressionNode) visit(ctx.min),
-                (ExpressionNode) visit(ctx.max));
-    }
-
-    @Override
-    public ProbabilityNode visitProbabilityExpression(
-            final ScriptParser.ProbabilityExpressionContext ctx
-    ) {
-        return new ProbabilityNode(
-                TextPosition.fromToken(ctx.PROB().getSymbol()),
-                (ExpressionNode) visit(ctx.expr()));
-    }
-
-    @Override
-    public FlipCoinNode visitFlipCoinBoolExpression(
-            ScriptParser.FlipCoinBoolExpressionContext ctx
-    ) {
-        return new FlipCoinNode(TextPosition.fromToken(
-                ctx.FLIP_COIN().getSymbol()));
-    }
-
-    @Override
-    public TernaryOperationNode visitFlipCoinArgExpression(
-            ScriptParser.FlipCoinArgExpressionContext ctx
-    ) {
-        final TextPosition pos = TextPosition.fromToken(
-                ctx.FLIP_COIN().getSymbol());
-        return new TernaryOperationNode(pos, new FlipCoinNode(pos),
-                (ExpressionNode) visit(ctx.t),
-                (ExpressionNode) visit(ctx.f));
-    }
-
-    @Override
-    public ImageFromPathNode visitImageFromPathExpression(
-            final ScriptParser.ImageFromPathExpressionContext ctx
-    ) {
-        return new ImageFromPathNode(
-                TextPosition.fromToken(ctx.expr().start),
-                (ExpressionNode) visit(ctx.expr()));
-    }
-
-    @Override
-    public ImageOfBoundsNode visitImageOfBoundsExpression(
-            final ScriptParser.ImageOfBoundsExpressionContext ctx
-    ) {
-        return new ImageOfBoundsNode(
-                TextPosition.fromToken(ctx.BLANK().getSymbol()),
-                (ExpressionNode) visit(ctx.width),
-                (ExpressionNode) visit(ctx.height));
-    }
-
-    @Override
-    public ColorAtPixelNode visitColorAtPixelExpression(
-            final ScriptParser.ColorAtPixelExpressionContext ctx
-    ) {
-        return new ColorAtPixelNode(
-                TextPosition.fromToken(ctx.img.start),
-                (ExpressionNode) visit(ctx.img),
-                (ExpressionNode) visit(ctx.x),
-                (ExpressionNode) visit(ctx.y));
-    }
-
-    @Override
-    public ImageBoundNode visitImageBoundExpression(
-            final ScriptParser.ImageBoundExpressionContext ctx
-    ) {
-        final String text = ctx.op.getText().substring(1);
-
-        return new ImageBoundNode(TextPosition.fromToken(ctx.start),
-                (ExpressionNode) visit(ctx.expr()),
-                text.toLowerCase().startsWith("w"));
-    }
-
-    @Override
-    public TextureColorReplaceNode visitTextureColorReplaceExpression(
-            final ScriptParser.TextureColorReplaceExpressionContext ctx
-    ) {
-        return new TextureColorReplaceNode(
-                TextPosition.fromToken(ctx.TEX_COL_REPL().getSymbol()),
-                (ExpressionNode) visit(ctx.texture),
-                (ExpressionNode) visit(ctx.lookup),
-                (ExpressionNode) visit(ctx.replace));
-    }
-
-    @Override
-    public GenLookupNode visitGenLookupExpression(
-            final ScriptParser.GenLookupExpressionContext ctx
-    ) {
-        return new GenLookupNode(
-                TextPosition.fromToken(ctx.GEN_LOOKUP().getSymbol()),
-                (ExpressionNode) visit(ctx.source),
-                (ExpressionNode) visit(ctx.vert));
-    }
-
-    @Override
-    public ImageSectionNode visitImageSectionExpression(
-            final ScriptParser.ImageSectionExpressionContext ctx
-    ) {
-        return new ImageSectionNode(
-                TextPosition.fromToken(ctx.start),
-                (ExpressionNode) visit(ctx.img),
-                (ExpressionNode) visit(ctx.x),
-                (ExpressionNode) visit(ctx.y),
-                (ExpressionNode) visit(ctx.w),
-                (ExpressionNode) visit(ctx.h));
-    }
-
-    @Override
-    public CharAtNode visitCharAtExpression(
-            final ScriptParser.CharAtExpressionContext ctx
-    ) {
-        return new CharAtNode(
-                TextPosition.fromToken(ctx.start),
-                (ExpressionNode) visit(ctx.string),
-                (ExpressionNode) visit(ctx.index));
-    }
-
-    @Override
-    public SubstringNode visitSubstringExpression(
-            final ScriptParser.SubstringExpressionContext ctx
-    ) {
-        return new SubstringNode(
-                TextPosition.fromToken(ctx.start),
-                (ExpressionNode) visit(ctx.string),
-                (ExpressionNode) visit(ctx.beg),
-                (ExpressionNode) visit(ctx.end));
-    }
-
-    @Override
-    public RGBColorNode visitRGBColorExpression(
-            final ScriptParser.RGBColorExpressionContext ctx
-    ) {
-        return new RGBColorNode(
-                TextPosition.fromToken(ctx.RGB().getSymbol()),
-                (ExpressionNode) visit(ctx.r),
-                (ExpressionNode) visit(ctx.g),
-                (ExpressionNode) visit(ctx.b));
-    }
-
-    @Override
-    public RGBAColorNode visitRGBAColorExpression(
-            final ScriptParser.RGBAColorExpressionContext ctx
-    ) {
-        return new RGBAColorNode(
-                TextPosition.fromToken(ctx.RGBA().getSymbol()),
-                (ExpressionNode) visit(ctx.r),
-                (ExpressionNode) visit(ctx.g),
-                (ExpressionNode) visit(ctx.b),
-                (ExpressionNode) visit(ctx.a));
     }
 
     @Override
