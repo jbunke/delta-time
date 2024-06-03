@@ -112,6 +112,10 @@ public class GameWindow {
             onCloseBehaviour.run();
     }
 
+    public void focus() {
+        canvas.grabFocus();
+    }
+
     public void draw(final GameImage image) {
         canvas.draw(image);
     }

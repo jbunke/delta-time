@@ -31,7 +31,7 @@ public class Program implements Runnable {
             final double updateHz, final double targetFps
     ) {
         this.window = window;
-        updateThread = new Thread(this, "[ \"" + window.getTitle() + "\" game loop ]");
+        updateThread = new Thread(this, "[ \"" + window.getTitle() + "\" execution loop ]");
 
         canvasWidth = window.getWidth();
         canvasHeight = window.getHeight();
