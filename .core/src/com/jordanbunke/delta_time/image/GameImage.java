@@ -27,16 +27,16 @@ public class GameImage extends BufferedImage {
         g.dispose();
     }
 
-    public void draw(final BufferedImage toDraw) {
+    public void draw(final Image toDraw) {
         draw(toDraw, 0, 0);
     }
 
-    public void draw(final BufferedImage toDraw, final int x, final int y) {
+    public void draw(final Image toDraw, final int x, final int y) {
         initializeGraphics();
         g.drawImage(toDraw, x, y, null);
     }
 
-    public void draw(final BufferedImage toDraw, final int x, final int y, final int width, final int height) {
+    public void draw(final Image toDraw, final int x, final int y, final int width, final int height) {
         initializeGraphics();
         g.drawImage(toDraw, x, y, width, height, null);
     }

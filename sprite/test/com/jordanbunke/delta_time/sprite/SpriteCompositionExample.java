@@ -1,6 +1,7 @@
 package com.jordanbunke.delta_time.sprite;
 
-import com.jordanbunke.anim.GIFWriter;
+import com.jordanbunke.anim.data.Animation;
+import com.jordanbunke.anim.writers.GIFWriter;
 import com.jordanbunke.delta_time._core.GameManager;
 import com.jordanbunke.delta_time._core.Program;
 import com.jordanbunke.delta_time.debug.GameDebugger;
@@ -156,21 +157,22 @@ public class SpriteCompositionExample {
         final int s = 5, w = WIDTH * s, h = HEIGHT * s, intervalMillis = 250, reps = 5;
 
         final GameImage spriteSheet = new GameImage(w * spriteIDs.size(), h);
-        final GameImage[] animation = new GameImage[spriteIDs.size()];
+        final GameImage[] frames = new GameImage[spriteIDs.size()];
         final int BUFFER = 10;
 
         for (int i = 0; i < spriteIDs.size(); i++) {
             final GameImage sprite = spriteMap.getSprite(spriteIDs.get(i));
-            animation[i] = sprite;
+            frames[i] = sprite;
 
             spriteSheet.draw(ImageProcessing.scale(sprite, s), i * w, 0);
             spriteSheet.draw(drawText(spriteIDs.get(i)), BUFFER + (i * w), 0);
         }
 
         final Path basePath = Path.of("sprite", "test_out");
+        final Animation animation = Animation.makeUniform(intervalMillis, frames);
 
         GameImageIO.writeImage(basePath.resolve(Path.of(prefix + "-spritesheet.png")), spriteSheet.submit());
-        GIFWriter.get().write(basePath.resolve(Path.of(prefix + "-anim.gif")), animation, intervalMillis, reps);
+        GIFWriter.get().write(basePath.resolve(Path.of(prefix + "-anim.gif")), animation, reps);
     }
 
     private static GameImage drawText(final String text) {
