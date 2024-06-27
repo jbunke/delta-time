@@ -1,6 +1,7 @@
 package com.jordanbunke.delta_time.scripting.ast.nodes.expression.native_calls.scoped;
 
 import com.jordanbunke.delta_time.scripting.ast.collection.ScriptMap;
+import com.jordanbunke.delta_time.scripting.ast.collection.ScriptSet;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.MapTypeNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
@@ -19,8 +20,9 @@ public final class MapKeysetNode extends ScopedNativeCallNode {
     }
 
     @Override
-    public Set<Object> evaluate(final SymbolTable symbolTable) {
-        return ((ScriptMap) getScope().evaluate(symbolTable)).keySet();
+    public ScriptSet evaluate(final SymbolTable symbolTable) {
+        return new ScriptSet(((ScriptMap) getScope().evaluate(symbolTable))
+                .keySet().stream());
     }
 
     @Override
