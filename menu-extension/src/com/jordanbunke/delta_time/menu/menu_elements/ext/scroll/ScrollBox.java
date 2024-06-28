@@ -20,6 +20,7 @@ public abstract class ScrollBox extends MenuElementContainer {
 
     // cosmetic
     private final GameImage background;
+    private boolean renderBeyondBounds;
 
     public ScrollBox(
             final Coord2D position, final Bounds2D dimensions,
@@ -34,7 +35,8 @@ public abstract class ScrollBox extends MenuElementContainer {
         this.menuElements = MenuElement
                 .sortForRender(menuElements, Scrollable[]::new);
 
-        this.background = fDraw.draw(getWidth(), getHeight());
+        background = fDraw.draw(getWidth(), getHeight());
+        renderBeyondBounds = false;
     }
 
     @Override
@@ -88,17 +90,19 @@ public abstract class ScrollBox extends MenuElementContainer {
         // contents
         for (Scrollable sme : renderOrder)
             if (renderAndProcessChild(sme))
-                sme.render(childCanvas);
+                sme.render(renderBeyondBounds ? canvas : childCanvas);
 
-        final Coord2D rp = getRenderPosition();
-        final int right = Math.min(rp.x + getWidth(), canvas.getWidth()),
-                bottom = Math.min(rp.y + getHeight(), canvas.getHeight());
+        if (!renderBeyondBounds) {
+            final Coord2D rp = getRenderPosition();
+            final int right = Math.min(rp.x + getWidth(), canvas.getWidth()),
+                    bottom = Math.min(rp.y + getHeight(), canvas.getHeight());
 
-        if (rp.x >= 0 && rp.x < canvas.getWidth() &&
-                rp.y >= 0 && rp.y < canvas.getHeight() &&
-                right > rp.x && bottom > rp.y)
-            canvas.draw(childCanvas.section(rp.x, rp.y, right, bottom),
-                    rp.x, rp.y);
+            if (rp.x >= 0 && rp.x < canvas.getWidth() &&
+                    rp.y >= 0 && rp.y < canvas.getHeight() &&
+                    right > rp.x && bottom > rp.y)
+                canvas.draw(childCanvas.section(rp.x, rp.y, right, bottom),
+                        rp.x, rp.y);
+        }
 
         if (hasSlider())
             getSlider().render(canvas);
@@ -128,4 +132,8 @@ public abstract class ScrollBox extends MenuElementContainer {
     abstract boolean hasSlider();
 
     abstract AbstractSlider getSlider();
+
+    public final void setRenderBeyondBounds(final boolean renderBeyondBounds) {
+        this.renderBeyondBounds = renderBeyondBounds;
+    }
 }
