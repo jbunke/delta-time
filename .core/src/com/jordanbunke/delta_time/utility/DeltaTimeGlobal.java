@@ -12,8 +12,8 @@ public final class DeltaTimeGlobal {
     private static final String NATIVE_STATUS_CODE_PREFIX = "dt:";
 
     public static final String
-            DT_STATUS_CODE_TEXT_STRING_CONVERSION =
-            NATIVE_STATUS_CODE_PREFIX + "conv_text";
+            SC_TEXT_STRING_CONVERSION = NATIVE_STATUS_CODE_PREFIX + "conv_text",
+            SC_CURSOR_CAPTURED = NATIVE_STATUS_CODE_PREFIX + "cursor_captured";
 
     private static final String DT_CHANNEL = About.TITLE;
 
@@ -22,7 +22,8 @@ public final class DeltaTimeGlobal {
     private static final Map<String, Object> STATUS_MAP = new HashMap<>();
 
     static {
-        setStatus(DT_STATUS_CODE_TEXT_STRING_CONVERSION, true);
+        setStatus(SC_TEXT_STRING_CONVERSION, true);
+        setStatus(SC_CURSOR_CAPTURED, null);
     }
 
     private static Map<String, DebugChannel> generateChannelMap() {
@@ -42,6 +43,9 @@ public final class DeltaTimeGlobal {
     }
 
     public static void setStatus(final String code, final Object value) {
-        STATUS_MAP.put(code, value);
+        if (value == null)
+            STATUS_MAP.remove(code);
+        else
+            STATUS_MAP.put(code, value);
     }
 }

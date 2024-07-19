@@ -141,4 +141,12 @@ public sealed abstract class AbstractDropdown extends MenuElement
         ddButton.setY(y);
         ddContainer.setY(y + getHeight());
     }
+
+    public AbstractVerticalScrollBox getContainer() {
+        return ddContainer;
+    }
+
+    public MenuElement getButton() {
+        return ddButton;
+    }
 }

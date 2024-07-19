@@ -18,7 +18,7 @@ public class TextComponent extends TextConstituent {
             final String contents, final Font font, final Color color
     ) {
         this.contents = DeltaTimeGlobal.getStatusOf(
-                DeltaTimeGlobal.DT_STATUS_CODE_TEXT_STRING_CONVERSION)
+                DeltaTimeGlobal.SC_TEXT_STRING_CONVERSION)
                 .orElse(Boolean.FALSE) instanceof Boolean b && b
                 ? makeTextCompliant(contents) : contents;
         this.font = font;
