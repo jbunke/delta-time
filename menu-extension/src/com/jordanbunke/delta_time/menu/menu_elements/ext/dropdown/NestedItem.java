@@ -1,6 +1,6 @@
 package com.jordanbunke.delta_time.menu.menu_elements.ext.dropdown;
 
-public final class NestedItem extends DropdownItem {
+public class NestedItem extends DropdownItem {
     private final DropdownItem[] items;
 
     public NestedItem(
