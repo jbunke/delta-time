@@ -46,6 +46,23 @@ public class GameImage extends BufferedImage {
         g.setColor(color);
     }
 
+    public void drawOval(
+            final float strokeWidth, final int x, final int y,
+            final int width, final int height
+    ) {
+        initializeGraphics();
+        g.setStroke(new BasicStroke(strokeWidth));
+        g.drawOval(x, y, width, height);
+    }
+
+    public void drawOval(
+            final Color color, final float strokeWidth,
+            final int x, final int y, final int width, final int height
+    ) {
+        setColor(color);
+        drawOval(strokeWidth, x, y, width, height);
+    }
+
     public void drawRectangle(
             final float strokeWidth, final int x, final int y,
             final int width, final int height
