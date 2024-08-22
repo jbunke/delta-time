@@ -84,6 +84,7 @@ expr
 : LPAREN expr RPAREN                        #NestedExpression
 | ident args                                #FunctionCallExpression
 | namespace args                            #ExtFuncCallExpression
+| namespace                                 #ExtPropertyExpression
 | DEF ident                                 #HOFuncExpression
 | expr subident args                        #ScopedFuncCallExpression
 | expr subident                             #PropertyExpression

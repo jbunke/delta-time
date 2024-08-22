@@ -72,7 +72,7 @@ public class ScriptVisitor
             final ScriptParser.ExtFuncCallStatementContext ctx) {
         return new GenericIllegalNode(
                 TextPosition.fromToken(ctx.start),
-                "Global extension function call expression");
+                "Global extension function call statement");
     }
 
     @Override
@@ -81,6 +81,13 @@ public class ScriptVisitor
         return new GenericIllegalNode(
                 TextPosition.fromToken(ctx.start),
                 "Global extension function call expression");
+    }
+
+    @Override
+    public ASTNode visitExtPropertyExpression(
+            final ScriptParser.ExtPropertyExpressionContext ctx) {
+        return new GenericIllegalNode(TextPosition.fromToken(ctx.start),
+                "Global extension property expression");
     }
 
     public ExpressionNode determineExtPropertyExpression(
