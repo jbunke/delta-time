@@ -2,16 +2,15 @@ package com.jordanbunke.delta_time.io;
 
 import com.jordanbunke.delta_time.error.GameError;
 import com.jordanbunke.delta_time.utility.StringProcessing;
+import com.jordanbunke.sorkin.IFileDialog;
 
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
 
 public class FileIO {
-    private static JFileChooser FILE_DIALOG = new JFileChooser();
+    private static IFileDialog FILE_DIALOG = IFileDialog.make();
 
     public static void safeMakeDirectory(final Path dirPath) {
         File dir = dirPath.toFile();
@@ -88,19 +87,19 @@ public class FileIO {
     }
 
     public static void reinitializeDialog() {
-        FILE_DIALOG = new JFileChooser();
+        FILE_DIALOG = IFileDialog.make();
     }
 
     public static void setDialogToFoldersOnly() {
-        FILE_DIALOG.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        FILE_DIALOG.setFileSelectionMode(IFileDialog.FOLDERS);
     }
 
     public static void setDialogToFilesOnly() {
-        FILE_DIALOG.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        FILE_DIALOG.setFileSelectionMode(IFileDialog.FILES);
     }
 
     public static void setDialogToFilesAndFolders() {
-        FILE_DIALOG.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        FILE_DIALOG.setFileSelectionMode(IFileDialog.BOTH);
     }
 
     public static Optional<File> openFileFromSystem() {
@@ -120,11 +119,11 @@ public class FileIO {
         FILE_DIALOG.resetChoosableFileFilters();
 
         for (int i = 0; i < filterNames.length; i++)
-            FILE_DIALOG.setFileFilter(new FileNameExtensionFilter(filterNames[i], extensionFilters[i]));
+            FILE_DIALOG.addFileFilter(filterNames[i], extensionFilters[i]);
 
-        final int result = FILE_DIALOG.showOpenDialog(null);
+        final int result = FILE_DIALOG.showOpenDialog();
 
-        if (result == JFileChooser.APPROVE_OPTION)
+        if (result == IFileDialog.VALID)
             return Optional.of(FILE_DIALOG.getSelectedFile());
         else return Optional.empty();
     }
@@ -146,11 +145,11 @@ public class FileIO {
         FILE_DIALOG.resetChoosableFileFilters();
 
         for (int i = 0; i < filterNames.length; i++)
-            FILE_DIALOG.setFileFilter(new FileNameExtensionFilter(filterNames[i], extensionFilters[i]));
+            FILE_DIALOG.addFileFilter(filterNames[i], extensionFilters[i]);
 
-        final int result = FILE_DIALOG.showOpenDialog(null);
+        final int result = FILE_DIALOG.showOpenDialog();
 
-        if (result == JFileChooser.APPROVE_OPTION)
+        if (result == IFileDialog.VALID)
             return Optional.of(FILE_DIALOG.getSelectedFiles());
         else return Optional.empty();
     }
