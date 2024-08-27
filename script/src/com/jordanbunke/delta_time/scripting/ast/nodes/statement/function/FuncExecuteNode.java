@@ -1,18 +1,19 @@
-package com.jordanbunke.delta_time.scripting.ast.nodes.expression.function;
+package com.jordanbunke.delta_time.scripting.ast.nodes.statement.function;
 
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.function.HelperFuncNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.statement.StatementNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import com.jordanbunke.delta_time.scripting.util.*;
 
 import java.util.Arrays;
 
-public final class FuncCallNode extends ExpressionNode implements IHookable {
+public final class FuncExecuteNode extends StatementNode implements IHookable {
     private final ExpressionNode[] args;
     private final String name;
 
-    public FuncCallNode(
+    public FuncExecuteNode(
             final TextPosition position,
             final String name, final ExpressionNode[] args
     ) {
@@ -43,18 +44,13 @@ public final class FuncCallNode extends ExpressionNode implements IHookable {
     }
 
     @Override
-    public Object evaluate(final SymbolTable symbolTable) {
+    public FuncControlFlow execute(final SymbolTable symbolTable) {
         final HelperFuncNode func = FunctionHook.getFunc(symbolTable, this);
         assert func != null;
 
-        return FuncHelper.evaluate(func, args, symbolTable);
-    }
+        FuncHelper.execute(func, args, symbolTable);
 
-    @Override
-    public TypeNode getType(final SymbolTable symbolTable) {
-        final HelperFuncNode func = FunctionHook.getFunc(symbolTable, this);
-
-        return func == null ? null : func.getReturnType();
+        return FuncControlFlow.cont();
     }
 
     @Override
@@ -70,6 +66,6 @@ public final class FuncCallNode extends ExpressionNode implements IHookable {
                 .map(ExpressionNode::toString)
                 .reduce((a, b) -> a + ", " + b).orElse("");
 
-        return name + "(" + contents + ")";
+        return name + "(" + contents + ");";
     }
 }

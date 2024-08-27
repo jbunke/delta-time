@@ -23,6 +23,7 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.statement.*;
 import com.jordanbunke.delta_time.scripting.ast.nodes.statement.assignment.*;
 import com.jordanbunke.delta_time.scripting.ast.nodes.statement.control_flow.*;
 import com.jordanbunke.delta_time.scripting.ast.nodes.statement.declaration.*;
+import com.jordanbunke.delta_time.scripting.ast.nodes.statement.function.FuncExecuteNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.statement.native_calls.*;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.*;
 
@@ -504,6 +505,20 @@ public class ScriptVisitor
                     : extension.get();
             default -> extension.get();
         };
+    }
+
+    @Override
+    public StatementNode visitFunctionCallStatement(
+            final ScriptParser.FunctionCallStatementContext ctx
+    ) {
+        final ExpressionNode[] args = ctx.args().expr().stream()
+                .map(arg -> (ExpressionNode) visit(arg))
+                .toArray(ExpressionNode[]::new);
+
+        final String functionID = ctx.ident().getText();
+        final TextPosition position = TextPosition.fromToken(ctx.start);
+
+        return new FuncExecuteNode(position, functionID, args);
     }
 
     @Override

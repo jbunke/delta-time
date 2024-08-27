@@ -18,4 +18,12 @@ public final class FuncHelper {
 
         return func.execute(funcTable, argVals);
     }
+
+    public static void execute(
+            final HelperFuncNode func,
+            final ExpressionNode[] args,
+            final SymbolTable symbolTable
+    ) {
+        evaluate(func, args, symbolTable);
+    }
 }
