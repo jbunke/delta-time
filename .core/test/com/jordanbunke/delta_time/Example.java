@@ -18,8 +18,8 @@ import com.jordanbunke.delta_time.window.GameWindow;
 import java.awt.*;
 
 public class Example {
-    private static final int width = Toolkit.getDefaultToolkit().getScreenSize().width,
-            height = Toolkit.getDefaultToolkit().getScreenSize().height;
+    private static final int width = Toolkit.getDefaultToolkit().getScreenSize().width / 4,
+            height = Toolkit.getDefaultToolkit().getScreenSize().height / 4;
 
     public static void main(String[] args) {
         example1();
@@ -29,8 +29,7 @@ public class Example {
         Color c = highlighted ?
                 new Color(255, 255, 255, 255) :
                 new Color(0, 0, 0, 255);
-        return new Text(
-                4.2, Text.Orientation.CENTER,
+        return new Text(1d, Text.Orientation.CENTER,
                 new TextComponent("Você tem que respeitar as leis do país!",
                         DeltaTimeFonts.getDefault(), c)).draw();
     }
@@ -58,8 +57,12 @@ public class Example {
                 button, highlightedButton);
         Menu menu = new Menu(animationMenuElement, menuButton);
         GameManager manager = new GameManager(0, new MenuManager(menu, "instant quit"));
-        new Program(new GameWindow(
-                "Example 1", width, height, GameImage.dummy(), false),
-                manager, 30d, 60d);
+
+        final GameWindow w = new GameWindow("Example 1", width, height,
+                GameImage.dummy(), true, true, false);
+        w.setMinSize(100, 100);
+        w.setMaxSize(width * 2, height * 2);
+
+        new Program(w, manager, 30d, 60d);
     }
 }

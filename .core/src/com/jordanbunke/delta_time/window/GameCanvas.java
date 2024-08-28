@@ -28,7 +28,7 @@ public class GameCanvas extends JPanel {
     void setSizeFromWindow(final int width, final int height) {
         setSize(width, height);
         setPreferredSize(new Dimension(width, height));
-        clear();
+        // clear();
     }
 
     @Override
