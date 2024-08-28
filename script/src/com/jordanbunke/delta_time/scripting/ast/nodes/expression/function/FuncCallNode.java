@@ -40,6 +40,11 @@ public final class FuncCallNode extends ExpressionNode implements IHookable {
             ScriptErrorLog.fireError(
                     ScriptErrorLog.Message.ARGS_SIGNATURE_MISMATCH,
                     getPosition(), name);
+
+        if (func.getReturnType() == null)
+            ScriptErrorLog.fireError(
+                    ScriptErrorLog.Message.VOID_F_AS_EXPRESSION,
+                    getPosition(), name);
     }
 
     @Override

@@ -50,10 +50,10 @@ public final class Variable {
         if (value == null)
             return base;
 
-        return base + ":" + valueText();
+        return base + ":" + valueText(value);
     }
 
-    private String valueText() {
+    public static String valueText(final Object value) {
         if (value instanceof GameImage img)
             return "Image of " + img.getWidth() + "x" + img.getHeight() + " px";
         else if (value instanceof Color c)

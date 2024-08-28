@@ -21,6 +21,7 @@ public final class ScriptErrorLog {
     public enum Message {
         CUSTOM_CT, CUSTOM_RT,
         NOT_HOF,
+        VOID_F_AS_EXPRESSION,
         ARG_PARAM_MISMATCH,
         INVALID_ARG_TYPE,
         ARGS_SIGNATURE_MISMATCH,
@@ -73,6 +74,9 @@ public final class ScriptErrorLog {
         private String get(final String[] args) {
             return errorClass().prefix() + switch (this) {
                 case CUSTOM_CT, CUSTOM_RT -> args[0];
+                case VOID_F_AS_EXPRESSION ->
+                        "Attempting to call the void function \"" + args[0] +
+                                "\" as an expression";
                 case NOT_HOF -> "Treating the expression \"" + args[0] +
                         "\" as a higher-order function although it is " +
                         "of type \"" + args[1] + "\"";

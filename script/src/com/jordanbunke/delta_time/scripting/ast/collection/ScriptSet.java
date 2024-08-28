@@ -1,5 +1,7 @@
 package com.jordanbunke.delta_time.scripting.ast.collection;
 
+import com.jordanbunke.delta_time.scripting.ast.symbol_table.Variable;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -65,7 +67,7 @@ public final class ScriptSet implements ScriptCollection {
     @Override
     public String toString() {
         final List<String> strings = structure.stream()
-                .map(Object::toString).sorted().toList();
+                .map(Variable::valueText).sorted().toList();
 
         return switch (structure.size()) {
             case 0 -> "{}";

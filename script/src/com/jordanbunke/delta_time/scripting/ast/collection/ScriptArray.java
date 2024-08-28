@@ -1,5 +1,7 @@
 package com.jordanbunke.delta_time.scripting.ast.collection;
 
+import com.jordanbunke.delta_time.scripting.ast.symbol_table.Variable;
+
 import java.util.Arrays;
 import java.util.stream.Stream;
 
@@ -77,7 +79,7 @@ public final class ScriptArray implements ScriptCollection {
             case 0 -> "[]";
             case 1 -> "[" + structure[0] + "]";
             default -> "[" + Arrays.stream(structure)
-                    .map(Object::toString)
+                    .map(Variable::valueText)
                     .reduce((a, b) -> a + ", " + b).orElse("") + "]";
         };
     }

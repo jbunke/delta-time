@@ -1,5 +1,7 @@
 package com.jordanbunke.delta_time.scripting.ast.collection;
 
+import com.jordanbunke.delta_time.scripting.ast.symbol_table.Variable;
+
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -25,14 +27,16 @@ public final class ScriptMap extends HashMap<Object, Object> {
     @Override
     public String toString() {
         final List<Object> keys = keySet().stream()
-                .sorted(Comparator.comparing(Object::toString)).toList();
+                .sorted(Comparator.comparing(Variable::valueText)).toList();
 
         return switch (keys.size()) {
             case 0 -> "{:}";
-            case 1 -> "{ " + keys.get(0) + ":" + get(keys.get(0)) + " }";
-            default -> "{" + keys.stream()
-                    .map(k -> k + ":" + get(k))
-                    .reduce((a, b) -> a + ", " + b).orElse("") + "}";
+            case 1 -> "{ " + Variable.valueText(keys.get(0)) +
+                    ":" + Variable.valueText(get(keys.get(0))) + " }";
+            default -> "{ " + keys.stream()
+                    .map(k -> Variable.valueText(k) + ":" +
+                            Variable.valueText(get(k)))
+                    .reduce((a, b) -> a + ", " + b).orElse("") + " }";
         };
     }
 }

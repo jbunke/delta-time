@@ -63,23 +63,21 @@ public class Interpreter {
         }
     }
 
-    private boolean check(
+    private static boolean check(
             final HeadFuncNode script,
             final SymbolTable scriptTable
     ) {
         try {
             script.semanticErrorCheck(scriptTable);
         } catch (Exception e) {
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.CUSTOM_CT,
-                    TextPosition.N_A, "Unknown and unexpected");
+            errorHandling(false);
             return false;
         }
 
         return ScriptErrorLog.hasNoErrors();
     }
 
-    private Optional<Object> execute(
+    private static Optional<Object> execute(
             final HeadFuncNode script,
             final SymbolTable scriptTable,
             final Object[] args
@@ -92,11 +90,19 @@ public class Interpreter {
                     ? Optional.of(result)
                     : Optional.empty();
         } catch (Exception e) {
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.CUSTOM_RT,
-                    TextPosition.N_A, "Unknown and unexpected");
+            errorHandling(true);
             return Optional.empty();
         }
+    }
+
+    private static void errorHandling(
+            final boolean runtime
+    ) {
+        if (!ScriptErrorLog.hasNoErrors())
+            ScriptErrorLog.fireError(runtime
+                            ? ScriptErrorLog.Message.CUSTOM_RT
+                            : ScriptErrorLog.Message.CUSTOM_CT,
+                    TextPosition.N_A, "Unknown and unexpected");
     }
 
     protected void displayErrors() {

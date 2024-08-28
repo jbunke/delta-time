@@ -1,5 +1,7 @@
 package com.jordanbunke.delta_time.scripting.ast.collection;
 
+import com.jordanbunke.delta_time.scripting.ast.symbol_table.Variable;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -77,7 +79,7 @@ public final class ScriptList implements ScriptCollection {
             case 0 -> "<>";
             case 1 -> "<" + structure.get(0) + ">";
             default -> "<" + structure.stream()
-                    .map(Object::toString)
+                    .map(Variable::valueText)
                     .reduce((a, b) -> a + ", " + b).orElse("") + ">";
         };
     }
