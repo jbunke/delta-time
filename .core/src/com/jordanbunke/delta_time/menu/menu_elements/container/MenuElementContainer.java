@@ -60,7 +60,7 @@ public abstract class MenuElementContainer extends MenuElement {
     }
 
     @Override
-    public void setX(int x) {
+    public void setX(final int x) {
         final int was = getX();
         super.setX(x);
 
@@ -69,12 +69,22 @@ public abstract class MenuElementContainer extends MenuElement {
     }
 
     @Override
-    public void setY(int y) {
+    public void setY(final int y) {
         final int was = getY();
         super.setY(y);
 
         for (MenuElement me : getMenuElements())
             me.setY(y + (me.getY() - was));
+    }
+
+    @Override
+    public void setPosition(final Coord2D position) {
+        final Coord2D was = getPosition();
+        super.setPosition(position);
+
+        for (MenuElement me : getMenuElements())
+            me.setPosition(position.displace(
+                    me.getPosition().displace(was.scale(-1))));
     }
 
     @Override

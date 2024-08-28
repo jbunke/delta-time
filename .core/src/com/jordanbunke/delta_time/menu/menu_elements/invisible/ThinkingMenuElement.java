@@ -63,6 +63,12 @@ public final class ThinkingMenuElement extends InvisibleMenuElement {
     }
 
     @Override
+    public void setPosition(final Coord2D position) {
+        if (decision != null)
+            decision.setPosition(position);
+    }
+
+    @Override
     public Coord2D getRenderPosition() {
         return decision != null
                 ? decision.getRenderPosition()

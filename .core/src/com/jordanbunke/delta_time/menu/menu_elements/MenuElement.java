@@ -127,6 +127,10 @@ public abstract class MenuElement implements ProgramContext {
         position = new Coord2D(position.x, y);
     }
 
+    public void setPosition(final Coord2D position) {
+        this.position = position;
+    }
+
     public void incrementX(final int deltaX) {
         setX(position.x + deltaX);
     }

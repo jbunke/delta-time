@@ -108,6 +108,15 @@ public final class Scrollable extends InvisibleMenuElement {
     }
 
     @Override
+    public void setPosition(final Coord2D position) {
+        final Coord2D was = getPosition();
+        super.setPosition(position);
+
+        associated.setPosition(position.displace(
+                associated.getPosition().displace(was.scale(-1))));
+    }
+
+    @Override
     public String toString() {
         return super.toString() + ": " + associated;
     }
