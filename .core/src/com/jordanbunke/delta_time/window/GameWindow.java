@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.util.function.BiConsumer;
 
 public class GameWindow {
     private final JFrame frame;
@@ -18,6 +19,7 @@ public class GameWindow {
     private String title;
     private int width, height;
     private int minWidth, minHeight, maxWidth, maxHeight;
+    private BiConsumer<Integer, Integer> postResizeLogic;
 
     private Runnable onCloseBehaviour;
 
@@ -45,6 +47,8 @@ public class GameWindow {
         this.maxWidth = width;
         this.minHeight = height;
         this.maxHeight = height;
+
+        postResizeLogic = (w, h) -> {};
 
         frame = new JFrame(title);
         canvas = new GameCanvas(width, height);
@@ -77,7 +81,7 @@ public class GameWindow {
         frame.setResizable(resizable);
 
         if (resizable)
-            setOnResizeBehaviour();
+            addResizeListener();
 
         frame.setDefaultCloseOperation(
                 exitOnClose ? JFrame.EXIT_ON_CLOSE : JFrame.DISPOSE_ON_CLOSE
@@ -95,13 +99,23 @@ public class GameWindow {
         frame.pack();
     }
 
-    private void setOnResizeBehaviour() {
+    private void addResizeListener() {
         frame.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(final ComponentEvent e) {
-                enforceSizeBounds();
+                onResize();
             }
         });
+    }
+
+    public void setPostResizeLogic(final BiConsumer<Integer, Integer> postResizeLogic) {
+        if (postResizeLogic != null)
+            this.postResizeLogic = postResizeLogic;
+    }
+
+    private void onResize() {
+        enforceSizeBounds();
+        postResizeLogic.accept(width, height);
     }
 
     private void enforceSizeBounds() {
