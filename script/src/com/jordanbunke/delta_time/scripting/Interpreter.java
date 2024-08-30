@@ -98,7 +98,7 @@ public class Interpreter {
     private static void errorHandling(
             final boolean runtime
     ) {
-        if (!ScriptErrorLog.hasNoErrors())
+        if (ScriptErrorLog.hasNoErrors())
             ScriptErrorLog.fireError(runtime
                             ? ScriptErrorLog.Message.CUSTOM_RT
                             : ScriptErrorLog.Message.CUSTOM_CT,

@@ -13,7 +13,7 @@ import java.util.function.IntFunction;
 
 public abstract class MenuElement implements ProgramContext {
     private Coord2D position;
-    private final Bounds2D dimensions;
+    private Bounds2D dimensions;
     private final Anchor anchor;
     private final boolean visible;
 
@@ -137,6 +137,20 @@ public abstract class MenuElement implements ProgramContext {
 
     public void incrementY(final int deltaY) {
         setY(position.y + deltaY);
+    }
+
+    public void setDimensions(final Bounds2D dimensions) {
+        this.dimensions = dimensions;
+    }
+
+    public void setWidth(final int width) {
+        if (width > 0)
+            dimensions = new Bounds2D(width, dimensions.height());
+    }
+
+    public void setHeight(final int height) {
+        if (height > 0)
+            dimensions = new Bounds2D(dimensions.width(), height);
     }
 
     public Coord2D getPosition() {
