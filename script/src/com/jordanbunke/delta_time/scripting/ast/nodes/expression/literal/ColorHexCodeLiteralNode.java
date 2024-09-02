@@ -17,10 +17,12 @@ public final class ColorHexCodeLiteralNode extends LiteralNode {
         super(position);
 
         // trim prepended #
-        final String contents = code.substring(1);
+        String hex = code.substring(1);
 
-        this.value = ColorHelper.hexCodeToColor(
-                contents + (contents.length() == 6 ? "ff" : ""));
+        // add opaque alpha component if alpha is not present
+        hex += hex.length() == 6 ? "ff" : "";
+
+        this.value = ColorHelper.hexCodeToColor(hex);
     }
 
     @Override

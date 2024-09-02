@@ -1,4 +1,4 @@
-// Generated from C:/Users/Jordan Bunke/Documents/Java/2022/delta-time/script/antlr/ScriptParser.g4 by ANTLR 4.13.1
+// Generated from C:/Users/Jordan Bunke/Documents/Java/2022/delta-time/script/grammars/ScriptParser.g4 by ANTLR 4.13.1
 package com.jordanbunke.delta_time.scripting;
 
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;

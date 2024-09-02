@@ -1,0 +1,3 @@
+[submodule "script/deltascript"]
+	path = script/deltascript
+	url = https://github.com/jbunke/deltascript
