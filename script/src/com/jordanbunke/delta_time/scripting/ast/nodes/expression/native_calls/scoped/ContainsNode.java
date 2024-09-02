@@ -53,6 +53,13 @@ public final class ContainsNode extends ScopedNativeCallNode {
                         ScriptErrorLog.Message.ELEMENT_DOES_NOT_MATCH_COL,
                         element.getPosition(),
                         colElemType.toString(), elemType.toString());
+        } else if (ownerType.equals(TypeNode.getString())) {
+            if (!(elemType.equals(TypeNode.getChar()) ||
+                    elemType.equals(TypeNode.getString())))
+                ScriptErrorLog.fireError(
+                        ScriptErrorLog.Message.EXPECTED_FOR_CALL,
+                        getPosition(), callName(), "\"char\" or \"string\"",
+                        elemType.toString());
         }
     }
 
@@ -65,6 +72,12 @@ public final class ContainsNode extends ScopedNativeCallNode {
             return map.containsKey(elemValue);
         else if (owner instanceof ScriptCollection c)
             return c.contains(elemValue);
+        else if (owner instanceof String s) {
+            if (elemValue instanceof String sub)
+                return s.contains(sub);
+            else if (elemValue instanceof Character c)
+                return s.indexOf(c) >= 0;
+        }
 
         return false;
     }
