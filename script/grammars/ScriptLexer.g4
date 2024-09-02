@@ -79,7 +79,7 @@ NEW: 'new';
 
 // numbers
 fragment DIGIT: '0'..'9';
-fragment HEX_DIGIT: DIGIT | 'a'..'f';
+fragment HEX_DIGIT: DIGIT | 'a'..'f' | 'A'..'F';
 fragment CHANNEL: HEX_DIGIT HEX_DIGIT;
 FLOAT_LIT: (DIGIT+ '.' DIGIT+) | (DIGIT+ 'f');
 DEC_LIT: DIGIT+;
