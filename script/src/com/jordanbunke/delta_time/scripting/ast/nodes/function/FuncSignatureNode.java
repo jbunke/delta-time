@@ -7,23 +7,32 @@ import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
 public final class FuncSignatureNode extends ASTNode {
-    private final TypeNode returnType;
+    private TypeNode returnType;
     private final ParametersNode parameters;
+    final boolean mutableReturn;
 
     public FuncSignatureNode(
             final TextPosition position, final ParametersNode parameters,
             final TypeNode returnType
     ) {
-        super(position);
-
-        this.returnType = returnType;
-        this.parameters = parameters;
+        this(position, parameters, returnType, false);
     }
 
     public FuncSignatureNode(
             final TextPosition position, final ParametersNode parameters
     ) {
-        this(position, parameters, null);
+        this(position, parameters, TypeNode.wildcard(), true);
+    }
+
+    public FuncSignatureNode(
+            final TextPosition position, final ParametersNode parameters,
+            final TypeNode returnType, final boolean mutableReturn
+    ) {
+        super(position);
+
+        this.returnType = returnType;
+        this.parameters = parameters;
+        this.mutableReturn = mutableReturn;
     }
 
     public void execute(
@@ -61,6 +70,11 @@ public final class FuncSignatureNode extends ASTNode {
 
     public TypeNode getReturnType() {
         return returnType;
+    }
+
+    public void setReturnType(final TypeNode returnType) {
+        if (mutableReturn)
+            this.returnType = returnType;
     }
 
     public FuncTypeNode getType() {

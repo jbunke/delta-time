@@ -10,6 +10,7 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.expression.collection_init
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.function.FuncCallNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.function.HOFuncCallNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.function.HOFuncNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.function.LambdaExpressionNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.literal.*;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.native_calls.global.color_def.*;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.native_calls.global.img_gen.*;
@@ -166,6 +167,71 @@ public class ScriptVisitor
     }
 
     @Override
+    public LambdaExpressionNode visitLambdaFunctionExpression(
+            final ScriptParser.LambdaFunctionExpressionContext ctx
+    ) {
+        final ParametersNode params = (ParametersNode) visit(ctx.lambda_params());
+        final TextPosition pos = params.getPosition();
+        final StatementNode body = (StatementNode) visit(ctx.lambda_body());
+
+        final LambdaFuncNode f = new LambdaFuncNode(pos,
+                new FuncSignatureNode(pos, params), body);
+
+        return new LambdaExpressionNode(f);
+    }
+
+    @Override
+    public ParametersNode visitNoLambdaParams(
+            final ScriptParser.NoLambdaParamsContext ctx
+    ) {
+        return new ParametersNode(
+                TextPosition.fromToken(ctx.start),
+                new DeclarationNode[] {});
+    }
+
+    @Override
+    public ParametersNode visitOneLambdaParam(
+            final ScriptParser.OneLambdaParamContext ctx
+    ) {
+        final ScriptParser.IdentContext ident = ctx.ident();
+        final ImplicitDeclarationNode declaration =
+                new ImplicitDeclarationNode(
+                        TextPosition.fromToken(ident.start),
+                        visitIdent(ident));
+
+        return new ParametersNode(TextPosition.fromToken(ctx.start),
+                new DeclarationNode[] { declaration });
+    }
+
+    @Override
+    public ParametersNode visitMultLambdaParams(
+            final ScriptParser.MultLambdaParamsContext ctx
+    ) {
+        return new ParametersNode(
+                TextPosition.fromToken(ctx.start),
+                ctx.ident().stream()
+                        .map(i -> new ImplicitDeclarationNode(
+                                TextPosition.fromToken(i.start), visitIdent(i)))
+                        .toArray(ImplicitDeclarationNode[]::new));
+    }
+
+    @Override
+    public StatementNode visitStandardLambdaBody(
+            final ScriptParser.StandardLambdaBodyContext ctx
+    ) {
+        return (StatementNode) visit(ctx.body());
+    }
+
+    @Override
+    public ReturnStatementNode visitExprLambdaBody(
+            final ScriptParser.ExprLambdaBodyContext ctx
+    ) {
+        return ReturnStatementNode.forTyped(
+                TextPosition.fromToken(ctx.start),
+                (ExpressionNode) visit(ctx.expr()));
+    }
+
+    @Override
     public FuncSignatureNode visitVoidReturnSignature(
             final ScriptParser.VoidReturnSignatureContext ctx
     ) {
@@ -178,7 +244,8 @@ public class ScriptVisitor
                 new ExplicitDeclarationNode[] {});
 
         return new FuncSignatureNode(
-                TextPosition.fromToken(ctx.LPAREN().getSymbol()), parameters);
+                TextPosition.fromToken(ctx.LPAREN().getSymbol()),
+                parameters, null, false);
     }
 
     @Override

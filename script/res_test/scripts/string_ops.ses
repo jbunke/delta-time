@@ -1,6 +1,6 @@
 (~ string s -> string) {
     ~ (string -> string)[] string_fs =
-            [ ::identity, ::reverse, ::rev_caps, ::capitalize, ::miniscule ];
+            [ s -> s, ::reverse, s -> reverse(capitalize(s)), ::capitalize, ::miniscule ];
     ~ int l = #|string_fs;
     ~ string[] results = new string[l];
 
@@ -29,8 +29,6 @@ reverse(~ string s -> string) {
     return r;
 }
 
-rev_caps(~ string s -> string) -> reverse(capitalize(s))
-identity(~ string s -> string) -> s
 capitalize(~ string s -> string) -> element_wise(::to_upper, s)
 miniscule(~ string s -> string) -> element_wise(::to_lower, s)
 

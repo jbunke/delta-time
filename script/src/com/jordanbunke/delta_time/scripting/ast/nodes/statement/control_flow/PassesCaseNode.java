@@ -1,7 +1,7 @@
 package com.jordanbunke.delta_time.scripting.ast.nodes.statement.control_flow;
 
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
-import com.jordanbunke.delta_time.scripting.ast.nodes.function.HelperFuncNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.function.ChildFuncNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.statement.StatementNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import com.jordanbunke.delta_time.scripting.util.FuncHelper;
@@ -27,14 +27,13 @@ public final class PassesCaseNode extends CaseNode {
 
     @Override
     boolean test(final ExpressionNode control, final SymbolTable symbolTable) {
-        // TODO - lambdas may require an abstraction of HelperFuncNode
-        final HelperFuncNode p = (HelperFuncNode) predicate.evaluate(symbolTable);
+        final ChildFuncNode p = (ChildFuncNode) predicate.evaluate(symbolTable);
 
-        if (p == null)
-            return false;
+        if (p != null)
+            return (Boolean) FuncHelper.evaluate(p,
+                    new ExpressionNode[] { control }, symbolTable);
 
-        return (Boolean) FuncHelper.evaluate(p,
-                new ExpressionNode[] { control }, symbolTable);
+        return false;
     }
 
     @Override

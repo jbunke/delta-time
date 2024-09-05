@@ -1,7 +1,7 @@
 package com.jordanbunke.delta_time.scripting.ast.nodes.expression.function;
 
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
-import com.jordanbunke.delta_time.scripting.ast.nodes.function.HelperFuncNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.function.ChildFuncNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.FuncTypeNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
@@ -50,7 +50,7 @@ public final class HOFuncCallNode extends ExpressionNode {
         if (paramTypes.length != argTypes.length) {
             ScriptErrorLog.fireError(
                     ScriptErrorLog.Message.ARGS_SIGNATURE_MISMATCH,
-                    getPosition(), "higher-order function " + f.toString());
+                    getPosition(), "function pointer " + f.toString());
             return;
         }
 
@@ -58,13 +58,13 @@ public final class HOFuncCallNode extends ExpressionNode {
             if (!argTypes[i].equals(paramTypes[i]))
                 ScriptErrorLog.fireError(
                         ScriptErrorLog.Message.ARG_NOT_TYPE,
-                        args[i].getPosition(), "higher-order function",
+                        args[i].getPosition(), "function pointer",
                         paramTypes[i].toString(), argTypes[i].toString());
     }
 
     @Override
     public Object evaluate(final SymbolTable symbolTable) {
-        final HelperFuncNode func = (HelperFuncNode) f.evaluate(symbolTable);
+        final ChildFuncNode func = (ChildFuncNode) f.evaluate(symbolTable);
         assert func != null;
 
         return FuncHelper.evaluate(func, args, symbolTable);

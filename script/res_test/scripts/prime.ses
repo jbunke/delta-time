@@ -32,14 +32,11 @@
 
 is_prime(~ int num -> bool) {
     when (num) {
-        passes ::too_small -> return false;
-        passes ::even -> return num == 2;
+        passes n -> n <= 1 -> return false;
+        passes n -> n % 2 == 0 -> return num == 2;
         otherwise -> return #|factors(num) == 2;
     }
 }
-
-too_small(int num -> bool) -> num <= 1
-even(int num -> bool) -> num % 2 == 0
 
 factors(int num -> int<>) {
     ~ int<> factors = <>;
