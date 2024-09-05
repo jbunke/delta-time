@@ -1,0 +1,4 @@
+() {
+    (string, string -> string) concat = (a, b) -> a + b;
+    print(concat.call("Lorem ", "Ipsum"));
+}

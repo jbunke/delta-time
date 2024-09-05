@@ -11,7 +11,7 @@ import com.jordanbunke.delta_time.scripting.util.TextPosition;
 import java.util.Arrays;
 
 public final class ParametersNode extends ASTNode {
-    private final DeclarationNode[] params;
+    final DeclarationNode[] params;
 
     public ParametersNode(
             final TextPosition position, final DeclarationNode[] params

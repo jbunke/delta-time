@@ -1,6 +1,7 @@
 package com.jordanbunke.delta_time.scripting.ast.nodes.statement.control_flow;
 
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.function.LambdaExpressionNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.statement.StatementNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.FuncTypeNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
@@ -35,6 +36,9 @@ public final class WhenStatementNode extends StatementNode {
             c.semanticErrorCheck(symbolTable);
 
             if (c instanceof PassesCaseNode p) {
+                if (p.predicate instanceof LambdaExpressionNode l)
+                    l.f.populateTypes(new TypeNode[] { cType }, boolType);
+
                 final TypeNode pType = p.predicate.getType(symbolTable);
 
                 if (!(pType instanceof FuncTypeNode pFuncType)) {

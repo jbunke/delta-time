@@ -2,6 +2,8 @@ package com.jordanbunke.delta_time.scripting.ast.nodes.statement.assignment;
 
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.assignable.AssignableNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.function.LambdaExpressionNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.types.FuncTypeNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import com.jordanbunke.delta_time.scripting.util.FuncControlFlow;
@@ -23,11 +25,20 @@ public final class StandardAssignmentNode extends AssignmentNode {
 
     @Override
     public void semanticErrorCheck(final SymbolTable symbolTable) {
+        expression.semanticErrorCheck(symbolTable);
         super.semanticErrorCheck(symbolTable);
 
-        final TypeNode
-                assignableType = getAssignable().getType(symbolTable),
-                exprType = expression.getType(symbolTable);
+        final TypeNode assignableType = getAssignable().getType(symbolTable);
+
+        if (assignableType instanceof FuncTypeNode fType &&
+                expression instanceof LambdaExpressionNode l) {
+            final TypeNode returnType = fType.getReturnType();
+            final TypeNode[] paramTypes = fType.getParamTypes();
+
+            l.f.populateTypes(paramTypes, returnType);
+        }
+
+        final TypeNode exprType = expression.getType(symbolTable);
 
         if (!assignableType.equals(exprType))
             ScriptErrorLog.fireError(
