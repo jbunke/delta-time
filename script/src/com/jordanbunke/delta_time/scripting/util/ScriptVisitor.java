@@ -13,6 +13,8 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.expression.function.HOFunc
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.literal.*;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.native_calls.global.color_def.*;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.native_calls.global.img_gen.*;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.native_calls.global.io.PromptNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.native_calls.global.io.ReadNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.native_calls.global.min_max.*;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.native_calls.global.rng.*;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.native_calls.global.tex_lookup.*;
@@ -25,8 +27,10 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.statement.control_flow.*;
 import com.jordanbunke.delta_time.scripting.ast.nodes.statement.declaration.*;
 import com.jordanbunke.delta_time.scripting.ast.nodes.statement.function.FuncExecuteNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.statement.native_calls.*;
+import com.jordanbunke.delta_time.scripting.ast.nodes.statement.native_calls.global.PrintNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -54,6 +58,7 @@ public class ScriptVisitor
             // global
             ABS = "abs", MIN = "min", MAX = "max", CLAMP = "clamp",
             RAND = "rand", PROB = "prob", FLIP_COIN = "flip_coin",
+            PRINT = "print", READ = "read", PROMPT = "prompt",
             FROM = "from", BLANK = "blank",
             TEX_COL_REPL = "tex_col_repl", GEN_LOOKUP = "gen_lookup",
             RGB = "rgb", RGBA = "rgba";
@@ -437,6 +442,59 @@ public class ScriptVisitor
     }
 
     @Override
+    public WhenStatementNode visitWhenStatement(
+            final ScriptParser.WhenStatementContext ctx
+    ) {
+        return visitWhen_stat(ctx.when_stat());
+    }
+
+    @Override
+    public WhenStatementNode visitWhen_stat(
+            final ScriptParser.When_statContext ctx
+    ) {
+        final ExpressionNode control = (ExpressionNode) visit(ctx.control);
+
+        final List<CaseNode> cases = new ArrayList<>(
+                ctx.when_body().case_().stream()
+                        .map(c -> (CaseNode) visit(c)).toList());
+
+        if (ctx.when_body().otherwise() != null)
+            cases.add((OtherwiseNode) visit(ctx.when_body().otherwise()));
+
+        return new WhenStatementNode(TextPosition.fromToken(ctx.start),
+                control, cases.toArray(CaseNode[]::new));
+    }
+
+    @Override
+    public IsCaseNode visitIsCase(
+            final ScriptParser.IsCaseContext ctx
+    ) {
+        return new IsCaseNode(
+                TextPosition.fromToken(ctx.IS().getSymbol()),
+                (ExpressionNode) visit(ctx.expr()),
+                (StatementNode) visit(ctx.body()));
+    }
+
+    @Override
+    public PassesCaseNode visitPassesCase(
+            final ScriptParser.PassesCaseContext ctx
+    ) {
+        return new PassesCaseNode(
+                TextPosition.fromToken(ctx.PASSES().getSymbol()),
+                (ExpressionNode) visit(ctx.expr()),
+                (StatementNode) visit(ctx.body()));
+    }
+
+    @Override
+    public OtherwiseNode visitOtherwise(
+            final ScriptParser.OtherwiseContext ctx
+    ) {
+        return new OtherwiseNode(
+                TextPosition.fromToken(ctx.OTHERWISE().getSymbol()),
+                (StatementNode) visit(ctx.body()));
+    }
+
+    @Override
     public ExplicitDeclarationNode visitVarDefStatement(
             final ScriptParser.VarDefStatementContext ctx
     ) {
@@ -528,6 +586,9 @@ public class ScriptVisitor
         final ExpressionNode[] args = unpackElements(ctx.args().elements());
         final String functionID = ctx.ident().getText();
         final TextPosition position = TextPosition.fromToken(ctx.start);
+
+        if (functionID.equals(PRINT) && args.length == 1)
+            return new PrintNode(position, args[0]);
 
         return new FuncExecuteNode(position, functionID, args);
     }
@@ -818,6 +879,12 @@ public class ScriptVisitor
                         new FlipCoinNode(position), args[0], args[1]);
                 default -> scriptDefined.get();
             };
+            case READ -> args.length == 0
+                    ? new ReadNode(position)
+                    : scriptDefined.get();
+            case PROMPT -> args.length == 1
+                    ? new PromptNode(position, args[0])
+                    : scriptDefined.get();
             default -> scriptDefined.get();
         };
     }

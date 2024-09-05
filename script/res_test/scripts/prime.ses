@@ -1,0 +1,87 @@
+() {
+    ~ string quit = "!q";
+
+    print("Input a number to see if it is prime. Type '" +
+            quit + "' to quit\n");
+
+    while (true) {
+        ~ string input = prompt("Number: ");
+
+        if (input == quit)
+            return;
+
+        ~ int n = (int) input;
+        ~ bool prime = is_prime(n);
+
+        print(n + " is" + (prime ? "" : " not") + " prime");
+
+        if (!prime) {
+            ~ int<> factors = factors(n);
+
+            string assembled = "";
+
+            for (factor in factors)
+                assembled += (assembled == "" ? "" : ", ") + factor;
+
+            print("[ " + assembled + " ]");
+        }
+
+        print("");
+    }
+}
+
+is_prime(~ int num -> bool) {
+    when (num) {
+        passes ::too_small -> return false;
+        passes ::even -> return num == 2;
+        otherwise -> return #|factors(num) == 2;
+    }
+}
+
+too_small(int num -> bool) -> num <= 1
+even(int num -> bool) -> num % 2 == 0
+
+factors(int num -> int<>) {
+    ~ int<> factors = <>;
+
+    int sq = 1;
+
+    while (sq * sq < num)
+        sq++;
+
+    for (int check = sq - (sq * sq == num ? 0 : 1); check > 0; check--)
+        if (num % check == 0) {
+            factors.add(check, 0);
+
+            if (num / check != check)
+                factors.add(num / check, #|factors);
+        }
+
+    return factors;
+}
+
+/*
+Goal implementation:
+
+(~ int num -> bool) {
+    when (num) {
+        passes n -> n <= 1 -> return false;
+        passes n -> n % 2 == 0 -> return num == 2;
+        otherwise -> return is_prime(num);
+    }
+}
+
+Stretch goal implementation:
+
+(~ int num -> bool) {
+    return when (num) {
+        passes n -> n <= 1 -> false;
+        passes n -> n % 2 == 0 -> num == 2;
+        otherwise -> {
+            // is_prime logic
+
+            yield result;
+        };
+    };
+}
+*/

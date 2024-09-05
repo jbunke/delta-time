@@ -11,12 +11,37 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 
 import java.util.Optional;
+import java.util.Scanner;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class Interpreter {
     private static ScriptVisitor visitor = new ScriptVisitor();
+    private static Consumer<String> stdout = System.out::print;
+    private static Supplier<String> stdin = () -> {
+        final Scanner in = new Scanner(System.in);
+        return in.nextLine();
+    };
 
     public static Interpreter get() {
         return new Interpreter();
+    }
+
+    public static String read() {
+        return stdin.get();
+    }
+
+    public static void print(final String message) {
+        stdout.accept(message);
+    }
+
+    public static void println(final String message) {
+        print(message + "\n");
+    }
+
+    public static String prompt(final String prompt) {
+        print(prompt);
+        return read();
     }
 
     public Object run(
@@ -114,5 +139,13 @@ public class Interpreter {
 
     public static void overrideVisitor(final ScriptVisitor visitor) {
         Interpreter.visitor = visitor;
+    }
+
+    public static void overrideStdout(final Consumer<String> stdout) {
+        Interpreter.stdout = stdout;
+    }
+
+    public static void overrideStdin(final Supplier<String> stdin) {
+        Interpreter.stdin = stdin;
     }
 }

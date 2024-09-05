@@ -20,6 +20,7 @@ public final class ScriptErrorLog {
 
     public enum Message {
         CUSTOM_CT, CUSTOM_RT,
+        TYPE_MISMATCH,
         NOT_HOF,
         VOID_F_AS_EXPRESSION,
         ARG_PARAM_MISMATCH,
@@ -74,6 +75,8 @@ public final class ScriptErrorLog {
         private String get(final String[] args) {
             return errorClass().prefix() + switch (this) {
                 case CUSTOM_CT, CUSTOM_RT -> args[0];
+                case TYPE_MISMATCH ->
+                        typeMismatch(args[0], args[1], args[2]);
                 case VOID_F_AS_EXPRESSION ->
                         "Attempting to call the void function \"" + args[0] +
                                 "\" as an expression";

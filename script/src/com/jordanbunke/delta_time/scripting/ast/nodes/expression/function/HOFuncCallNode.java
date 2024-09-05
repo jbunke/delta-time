@@ -30,6 +30,9 @@ public final class HOFuncCallNode extends ExpressionNode {
         for (ExpressionNode arg : args)
             arg.semanticErrorCheck(symbolTable);
 
+        // untested addition
+        f.semanticErrorCheck(symbolTable);
+
         final TypeNode fType = f.getType(symbolTable);
 
         if (!(fType instanceof FuncTypeNode funcType)) {

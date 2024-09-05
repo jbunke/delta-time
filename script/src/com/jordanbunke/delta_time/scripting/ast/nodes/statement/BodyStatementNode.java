@@ -43,8 +43,8 @@ public final class BodyStatementNode extends StatementNode {
     @Override
     public String toString() {
         return switch (statements.length) {
-            case 0 -> "";
-            case 1 -> statements[0].toString();
+            case 0 -> "{}";
+            case 1 -> "\t" + statements[0].toString();
             default -> "{\n" + Arrays.stream(statements)
                     .map(sn -> "\t" + sn)
                     .reduce((a, b) -> a + "\n" + b).orElse("") + "\n}";

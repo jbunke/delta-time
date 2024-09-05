@@ -12,8 +12,9 @@ import java.util.Set;
 public final class CastNode extends ExpressionNode {
     private static final Map<TypeNode, Set<TypeNode>>
             CAST_MATRIX = Map.ofEntries(
-                    Map.entry(TypeNode.getInt(), Set.of(TypeNode.getInt(),
-                            TypeNode.getFloat(), TypeNode.getChar())),
+                    Map.entry(TypeNode.getInt(), Set.of(
+                            TypeNode.getInt(), TypeNode.getFloat(),
+                            TypeNode.getChar(), TypeNode.getString())),
                     Map.entry(TypeNode.getFloat(), TypeNode.numTypes()),
                     Map.entry(TypeNode.getChar(), Set.of(TypeNode.getInt())),
                     Map.entry(TypeNode.getString(), Set.of(
@@ -68,6 +69,17 @@ public final class CastNode extends ExpressionNode {
                     yield d.intValue();
                 else if (val instanceof Character c)
                     yield (int) c;
+                else if (val instanceof String s) {
+                    try {
+                        yield Integer.parseInt(s);
+                    } catch (NumberFormatException e) {
+                        ScriptErrorLog.fireError(
+                                ScriptErrorLog.Message.CUSTOM_RT,
+                                this.e.getPosition(),
+                                "The string \"" + s +
+                                        "\" could not be cast to an int");
+                    }
+                }
 
                 yield val;
             }
