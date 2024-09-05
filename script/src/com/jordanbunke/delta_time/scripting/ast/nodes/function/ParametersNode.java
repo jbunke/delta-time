@@ -43,7 +43,7 @@ public final class ParametersNode extends ASTNode {
                 symbolTable.update(param.getIdent(), arg);
             else
                 ScriptErrorLog.fireError(
-                        ScriptErrorLog.Message.ARG_PARAM_MISMATCH,
+                        ScriptErrorLog.Message.ARG_PARAM_TYPE_MISMATCH,
                         param.getPosition(), type.toString());
 
             symbolTable.put(param.getIdent(),
