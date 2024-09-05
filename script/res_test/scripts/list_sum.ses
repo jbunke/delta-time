@@ -1,7 +1,7 @@
-(~ int<> is -> int) {
+(~ int<> nums -> int) {
     int sum = 0;
 
-    for (~ int i in is)
+    for (i in nums)
         sum += i;
 
     return sum;

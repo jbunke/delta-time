@@ -1,1 +1,1 @@
-(~ int[] is -> int) -> #|is
+(~ int[] nums -> int) -> #|nums

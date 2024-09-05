@@ -1,7 +1,7 @@
 package com.jordanbunke.delta_time.scripting.ast.nodes.function;
 
 import com.jordanbunke.delta_time.scripting.ast.nodes.ASTNode;
-import com.jordanbunke.delta_time.scripting.ast.nodes.statement.declaration.DeclarationNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.statement.declaration.ExplicitDeclarationNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.Variable;
@@ -11,10 +11,10 @@ import com.jordanbunke.delta_time.scripting.util.TextPosition;
 import java.util.Arrays;
 
 public final class ParametersNode extends ASTNode {
-    private final DeclarationNode[] params;
+    private final ExplicitDeclarationNode[] params;
 
     public ParametersNode(
-            final TextPosition position, final DeclarationNode[] params
+            final TextPosition position, final ExplicitDeclarationNode[] params
     ) {
         super(position);
 
@@ -34,7 +34,7 @@ public final class ParametersNode extends ASTNode {
         }
 
         for (int i = 0; i < params.length; i++) {
-            final DeclarationNode param = params[i];
+            final ExplicitDeclarationNode param = params[i];
             final Object arg = args[i];
 
             final TypeNode type = param.getType();
@@ -53,13 +53,13 @@ public final class ParametersNode extends ASTNode {
 
     public TypeNode[] getTypes() {
         return Arrays.stream(params)
-                .map(DeclarationNode::getType)
+                .map(ExplicitDeclarationNode::getType)
                 .toArray(TypeNode[]::new);
     }
 
     @Override
     public void semanticErrorCheck(final SymbolTable symbolTable) {
-        for (DeclarationNode param : params)
+        for (ExplicitDeclarationNode param : params)
             param.semanticErrorCheck(symbolTable);
     }
 

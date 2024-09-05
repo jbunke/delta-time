@@ -8,7 +8,7 @@ import com.jordanbunke.delta_time.scripting.util.FuncControlFlow;
 import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
-public final class InitializationNode extends DeclarationNode {
+public final class InitializationNode extends ExplicitDeclarationNode {
     private final ExpressionNode value;
 
     public InitializationNode(

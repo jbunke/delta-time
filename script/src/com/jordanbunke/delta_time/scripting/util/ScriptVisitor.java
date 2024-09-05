@@ -170,7 +170,7 @@ public class ScriptVisitor
                 ? visitParam_list(ctx.param_list())
                 : new ParametersNode(
                         TextPosition.fromToken(ctx.RPAREN().getSymbol()),
-                new DeclarationNode[] {});
+                new ExplicitDeclarationNode[] {});
 
         return new FuncSignatureNode(
                 TextPosition.fromToken(ctx.LPAREN().getSymbol()), parameters);
@@ -186,7 +186,7 @@ public class ScriptVisitor
                 ? visitParam_list(ctx.param_list())
                 : new ParametersNode(
                 TextPosition.fromToken(ctx.RPAREN().getSymbol()),
-                new DeclarationNode[] {});
+                new ExplicitDeclarationNode[] {});
 
         return new FuncSignatureNode(
                 TextPosition.fromToken(ctx.LPAREN().getSymbol()),
@@ -201,14 +201,14 @@ public class ScriptVisitor
                 TextPosition.fromToken(ctx.start),
                 ctx.declaration().stream()
                         .map(this::visitDeclaration)
-                        .toArray(DeclarationNode[]::new));
+                        .toArray(ExplicitDeclarationNode[]::new));
     }
 
     @Override
-    public DeclarationNode visitDeclaration(
+    public ExplicitDeclarationNode visitDeclaration(
             final ScriptParser.DeclarationContext ctx
     ) {
-        return new DeclarationNode(
+        return new ExplicitDeclarationNode(
                 TextPosition.fromToken(ctx.start),
                 ctx.FINAL() == null,
                 (TypeNode) visit(ctx.type()),
@@ -370,7 +370,7 @@ public class ScriptVisitor
             final ScriptParser.IteratorLoopContext ctx
     ) {
         final DeclarationNode declaration =
-                visitDeclaration(ctx.iteration_def().declaration());
+                (DeclarationNode) visit(ctx.iteration_def().iterator_declaration());
         final ExpressionNode collection =
                 (ExpressionNode) visit(ctx.iteration_def().expr());
         final StatementNode loopBody = (StatementNode) visit(ctx.body());
@@ -378,6 +378,22 @@ public class ScriptVisitor
         return new IteratorLoopNode(
                 TextPosition.fromToken(ctx.start),
                 declaration, collection, loopBody);
+    }
+
+    @Override
+    public ExplicitDeclarationNode visitExplicitDeclaration(
+            final ScriptParser.ExplicitDeclarationContext ctx
+    ) {
+        return visitDeclaration(ctx.declaration());
+    }
+
+    @Override
+    public ImplicitDeclarationNode visitImplicitDeclaration(
+            final ScriptParser.ImplicitDeclarationContext ctx
+    ) {
+        return new ImplicitDeclarationNode(
+                TextPosition.fromToken(ctx.ident().start),
+                visitIdent(ctx.ident()));
     }
 
     @Override
@@ -421,10 +437,10 @@ public class ScriptVisitor
     }
 
     @Override
-    public DeclarationNode visitVarDefStatement(
+    public ExplicitDeclarationNode visitVarDefStatement(
             final ScriptParser.VarDefStatementContext ctx
     ) {
-        return (DeclarationNode) visit(ctx.var_def());
+        return (ExplicitDeclarationNode) visit(ctx.var_def());
     }
 
     @Override
@@ -464,9 +480,7 @@ public class ScriptVisitor
     public StatementNode visitScopedFuncCallStatement(
             final ScriptParser.ScopedFuncCallStatementContext ctx
     ) {
-        final ExpressionNode[] args = ctx.args().expr().stream()
-                .map(arg -> (ExpressionNode) visit(arg))
-                .toArray(ExpressionNode[]::new);
+        final ExpressionNode[] args = unpackElements(ctx.args().elements());
         final ExpressionNode scope = (ExpressionNode) visit(ctx.expr());
         // trim leading "." from the function ID
         final String functionID = ctx.subident().SUB_IDENT()
@@ -511,10 +525,7 @@ public class ScriptVisitor
     public StatementNode visitFunctionCallStatement(
             final ScriptParser.FunctionCallStatementContext ctx
     ) {
-        final ExpressionNode[] args = ctx.args().expr().stream()
-                .map(arg -> (ExpressionNode) visit(arg))
-                .toArray(ExpressionNode[]::new);
-
+        final ExpressionNode[] args = unpackElements(ctx.args().elements());
         final String functionID = ctx.ident().getText();
         final TextPosition position = TextPosition.fromToken(ctx.start);
 
@@ -749,9 +760,7 @@ public class ScriptVisitor
     public ExpressionNode visitFunctionCallExpression(
             final ScriptParser.FunctionCallExpressionContext ctx
     ) {
-        final ExpressionNode[] args = ctx.args().expr().stream()
-                .map(arg -> (ExpressionNode) visit(arg))
-                .toArray(ExpressionNode[]::new);
+        final ExpressionNode[] args = unpackElements(ctx.args().elements());
         final String functionID = ctx.ident().getText();
         final TextPosition position = TextPosition.fromToken(ctx.start);
 
@@ -842,9 +851,7 @@ public class ScriptVisitor
     public ExpressionNode visitScopedFuncCallExpression(
             final ScriptParser.ScopedFuncCallExpressionContext ctx
     ) {
-        final ExpressionNode[] args = ctx.args().expr().stream()
-                .map(arg -> (ExpressionNode) visit(arg))
-                .toArray(ExpressionNode[]::new);
+        final ExpressionNode[] args = unpackElements(ctx.args().elements());
         final ExpressionNode scope = (ExpressionNode) visit(ctx.expr());
         // trim leading "." from the function ID
         final String functionID = ctx.subident().SUB_IDENT()
@@ -1030,9 +1037,7 @@ public class ScriptVisitor
         return new ExplicitCollectionInitNode(
                 TextPosition.fromToken(ctx.LBRACKET().getSymbol()),
                 CollectionTypeNode.Type.ARRAY,
-                ctx.expr().stream()
-                        .map(e -> (ExpressionNode) visit(e))
-                        .toArray(ExpressionNode[]::new));
+                unpackElements(ctx.elements()));
     }
 
     @Override
@@ -1042,9 +1047,7 @@ public class ScriptVisitor
         return new ExplicitCollectionInitNode(
                 TextPosition.fromToken(ctx.LT().getSymbol()),
                 CollectionTypeNode.Type.LIST,
-                ctx.expr().stream()
-                        .map(e -> (ExpressionNode) visit(e))
-                        .toArray(ExpressionNode[]::new));
+                unpackElements(ctx.elements()));
     }
 
     @Override
@@ -1054,9 +1057,18 @@ public class ScriptVisitor
         return new ExplicitCollectionInitNode(
                 TextPosition.fromToken(ctx.LCURLY().getSymbol()),
                 CollectionTypeNode.Type.SET,
-                ctx.expr().stream()
-                        .map(e -> (ExpressionNode) visit(e))
-                        .toArray(ExpressionNode[]::new));
+                unpackElements(ctx.elements()));
+    }
+
+    private ExpressionNode[] unpackElements(
+            final ScriptParser.ElementsContext ctx
+    ) {
+        if (ctx == null)
+            return new ExpressionNode[0];
+
+        return ctx.expr().stream()
+                .map(e -> (ExpressionNode) visit(e))
+                .toArray(ExpressionNode[]::new);
     }
 
     @Override
@@ -1067,26 +1079,6 @@ public class ScriptVisitor
                 TextPosition.fromToken(ctx.NEW().getSymbol()),
                 (TypeNode) visit(ctx.type()),
                 (ExpressionNode) visit(ctx.expr()));
-    }
-
-    @Override
-    public NewCollectionNode visitNewListExpression(
-            final ScriptParser.NewListExpressionContext ctx
-    ) {
-        return new NewCollectionNode(
-                TextPosition.fromToken(ctx.NEW().getSymbol()),
-                CollectionTypeNode.Type.LIST,
-                (TypeNode) visit(ctx.type()));
-    }
-
-    @Override
-    public NewCollectionNode visitNewSetExpression(
-            final ScriptParser.NewSetExpressionContext ctx
-    ) {
-        return new NewCollectionNode(
-                TextPosition.fromToken(ctx.NEW().getSymbol()),
-                CollectionTypeNode.Type.SET,
-                (TypeNode) visit(ctx.type()));
     }
 
     @Override

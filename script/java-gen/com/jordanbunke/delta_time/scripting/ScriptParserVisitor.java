@@ -1,4 +1,4 @@
-// Generated from C:/Users/Jordan Bunke/Documents/Java/2022/delta-time/script/grammars/ScriptParser.g4 by ANTLR 4.13.1
+// Generated from C:/Users/Jordan Bunke/Documents/Java/2022/delta-time/script/deltascript/grammars/ScriptParser.g4 by ANTLR 4.13.1
 package com.jordanbunke.delta_time.scripting;
 
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
@@ -195,6 +195,13 @@ public interface ScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitIfStatement(ScriptParser.IfStatementContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code WhenStatement}
+	 * labeled alternative in {@link ScriptParser#stat}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWhenStatement(ScriptParser.WhenStatementContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code VarDefStatement}
 	 * labeled alternative in {@link ScriptParser#stat}.
 	 * @param ctx the parse tree
@@ -277,6 +284,20 @@ public interface ScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitIteration_def(ScriptParser.Iteration_defContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code ExplicitDeclaration}
+	 * labeled alternative in {@link ScriptParser#iterator_declaration}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExplicitDeclaration(ScriptParser.ExplicitDeclarationContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ImplicitDeclaration}
+	 * labeled alternative in {@link ScriptParser#iterator_declaration}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitImplicitDeclaration(ScriptParser.ImplicitDeclarationContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link ScriptParser#while_def}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -300,6 +321,38 @@ public interface ScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitIf_def(ScriptParser.If_defContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ScriptParser#when_stat}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWhen_stat(ScriptParser.When_statContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ScriptParser#when_body}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWhen_body(ScriptParser.When_bodyContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code IsCase}
+	 * labeled alternative in {@link ScriptParser#case_}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIsCase(ScriptParser.IsCaseContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code PassesCase}
+	 * labeled alternative in {@link ScriptParser#case_}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPassesCase(ScriptParser.PassesCaseContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ScriptParser#otherwise}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitOtherwise(ScriptParser.OtherwiseContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code LogicBinExpression}
 	 * labeled alternative in {@link ScriptParser#expr()}.
@@ -329,12 +382,26 @@ public interface ScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitMultBinExpression(ScriptParser.MultBinExpressionContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code LiteralExpression}
+	 * labeled alternative in {@link ScriptParser#expr()}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLiteralExpression(ScriptParser.LiteralExpressionContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code UnaryExpression}
 	 * labeled alternative in {@link ScriptParser#expr()}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitUnaryExpression(ScriptParser.UnaryExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ExtPropertyExpression}
+	 * labeled alternative in {@link ScriptParser#expr()}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExtPropertyExpression(ScriptParser.ExtPropertyExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code PowerBinExpression}
 	 * labeled alternative in {@link ScriptParser#expr()}.
@@ -363,69 +430,6 @@ public interface ScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitComparisonBinExpression(ScriptParser.ComparisonBinExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code AssignableExpression}
-	 * labeled alternative in {@link ScriptParser#expr()}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAssignableExpression(ScriptParser.AssignableExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code ExplicitSetExpression}
-	 * labeled alternative in {@link ScriptParser#expr()}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitExplicitSetExpression(ScriptParser.ExplicitSetExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code PropertyExpression}
-	 * labeled alternative in {@link ScriptParser#expr()}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPropertyExpression(ScriptParser.PropertyExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code NewMapExpression}
-	 * labeled alternative in {@link ScriptParser#expr()}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitNewMapExpression(ScriptParser.NewMapExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code ExtFuncCallExpression}
-	 * labeled alternative in {@link ScriptParser#expr()}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitExtFuncCallExpression(ScriptParser.ExtFuncCallExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code NewSetExpression}
-	 * labeled alternative in {@link ScriptParser#expr()}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitNewSetExpression(ScriptParser.NewSetExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code LiteralExpression}
-	 * labeled alternative in {@link ScriptParser#expr()}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitLiteralExpression(ScriptParser.LiteralExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code NewListExpression}
-	 * labeled alternative in {@link ScriptParser#expr()}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitNewListExpression(ScriptParser.NewListExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code ExtPropertyExpression}
-	 * labeled alternative in {@link ScriptParser#expr()}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitExtPropertyExpression(ScriptParser.ExtPropertyExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code ScopedFuncCallExpression}
 	 * labeled alternative in {@link ScriptParser#expr()}.
@@ -462,6 +466,27 @@ public interface ScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitArithmeticBinExpression(ScriptParser.ArithmeticBinExpressionContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code AssignableExpression}
+	 * labeled alternative in {@link ScriptParser#expr()}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAssignableExpression(ScriptParser.AssignableExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ExplicitSetExpression}
+	 * labeled alternative in {@link ScriptParser#expr()}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExplicitSetExpression(ScriptParser.ExplicitSetExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code PropertyExpression}
+	 * labeled alternative in {@link ScriptParser#expr()}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPropertyExpression(ScriptParser.PropertyExpressionContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code CastExpression}
 	 * labeled alternative in {@link ScriptParser#expr()}.
 	 * @param ctx the parse tree
@@ -469,12 +494,68 @@ public interface ScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitCastExpression(ScriptParser.CastExpressionContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code NewMapExpression}
+	 * labeled alternative in {@link ScriptParser#expr()}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNewMapExpression(ScriptParser.NewMapExpressionContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code NewArrayExpression}
 	 * labeled alternative in {@link ScriptParser#expr()}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitNewArrayExpression(ScriptParser.NewArrayExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code LambdaFunctionExpression}
+	 * labeled alternative in {@link ScriptParser#expr()}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLambdaFunctionExpression(ScriptParser.LambdaFunctionExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ExtFuncCallExpression}
+	 * labeled alternative in {@link ScriptParser#expr()}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExtFuncCallExpression(ScriptParser.ExtFuncCallExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code NoLambdaParams}
+	 * labeled alternative in {@link ScriptParser#lambda_params}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNoLambdaParams(ScriptParser.NoLambdaParamsContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code OneLambdaParam}
+	 * labeled alternative in {@link ScriptParser#lambda_params}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitOneLambdaParam(ScriptParser.OneLambdaParamContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code MultLambdaParams}
+	 * labeled alternative in {@link ScriptParser#lambda_params}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMultLambdaParams(ScriptParser.MultLambdaParamsContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code StandardLambdaBody}
+	 * labeled alternative in {@link ScriptParser#lambda_body}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStandardLambdaBody(ScriptParser.StandardLambdaBodyContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ExprLambdaBody}
+	 * labeled alternative in {@link ScriptParser#lambda_body}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExprLambdaBody(ScriptParser.ExprLambdaBodyContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ScriptParser#k_v_pairs}.
 	 * @param ctx the parse tree
@@ -493,6 +574,12 @@ public interface ScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitArgs(ScriptParser.ArgsContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ScriptParser#elements}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitElements(ScriptParser.ElementsContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code StandardAssignment}
 	 * labeled alternative in {@link ScriptParser#assignment}.
