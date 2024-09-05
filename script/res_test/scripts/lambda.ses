@@ -1,4 +1,29 @@
 () {
-    (string, string -> string) concat = (a, b) -> a + b;
-    print(concat.call("Lorem ", "Ipsum"));
+    // defined here to test lambda symbol table scopes
+    ~ (int -> bool) likely = n -> {
+        int a = n;
+        return a < 3;
+    };
+    ~ (int -> bool) unlikely = n -> n < 6;
+    ~ (int -> bool) certain = n -> n < 8;
+
+    print("Welcome to the Magic 8 ball! Quit anytime by typing \"!q\".\n");
+
+    while (true) {
+        string q = prompt("Ask a question about the future: ");
+
+        if (q == "!q")
+            return;
+
+        ~ int response = rand(0, 11);
+
+        when (response) {
+            passes likely -> print("It is likely.");
+            passes unlikely -> print("It is unlikely.");
+            passes certain -> print("It is certain.");
+            otherwise -> print("It is impossible.");
+        }
+
+        print("");
+    }
 }

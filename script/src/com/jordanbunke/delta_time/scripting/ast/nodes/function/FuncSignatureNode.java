@@ -8,7 +8,7 @@ import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
 public final class FuncSignatureNode extends ASTNode {
     private TypeNode returnType;
-    final ParametersNode parameters;
+    public final ParametersNode parameters;
     final boolean mutableReturn;
 
     public FuncSignatureNode(

@@ -57,6 +57,10 @@ public final class ParametersNode extends ASTNode {
                 .toArray(TypeNode[]::new);
     }
 
+    public DeclarationNode[] getParams() {
+        return params;
+    }
+
     @Override
     public void semanticErrorCheck(final SymbolTable symbolTable) {
         for (DeclarationNode param : params)

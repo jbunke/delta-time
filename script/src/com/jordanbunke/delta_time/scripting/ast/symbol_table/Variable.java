@@ -40,11 +40,6 @@ public final class Variable {
     }
 
     public void set(final Object value) {
-        if (!type.complies(value)) {
-            // TODO - fire error
-            return;
-        }
-
         this.value = value;
     }
 

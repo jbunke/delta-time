@@ -24,6 +24,12 @@ public final class HelperFuncNode extends ChildFuncNode {
     }
 
     @Override
+    public void semanticErrorCheck(final SymbolTable symbolTable) {
+        final SymbolTable innerTable = new SymbolTable(this, symbolTable);
+        super.semanticErrorCheck(innerTable);
+    }
+
+    @Override
     public String toString() {
         return name + super.toString();
     }
