@@ -11,6 +11,9 @@ public final class CollectionHelper {
     public static TypeNode getConcreteType(
             final ExpressionNode[] elements, final SymbolTable symbolTable
     ) {
+        if (elements.length == 0)
+            return TypeNode.wildcard();
+
         return Arrays.stream(elements)
                 .map(e -> e.getType(symbolTable))
                 .filter(t -> t instanceof BaseTypeNode st &&
@@ -19,10 +22,13 @@ public final class CollectionHelper {
                         elements[0].getType(symbolTable));
     }
 
-    public static void checkInteralTypeConsistency(
+    public static void checkInternalTypeConsistency(
             final ExpressionNode[] elements, final SymbolTable symbolTable,
             final String initDescriptor
     ) {
+        if (elements.length == 0)
+            return;
+
         final TypeNode firstElemType = elements[0].getType(symbolTable);
 
         for (int i = 1; i < elements.length; i++) {

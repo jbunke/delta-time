@@ -2,13 +2,15 @@ package com.jordanbunke.delta_time.scripting.ast.nodes.statement.declaration;
 
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.assignable.IdentifierNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.function.LambdaExpressionNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.types.FuncTypeNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import com.jordanbunke.delta_time.scripting.util.FuncControlFlow;
 import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
-public final class InitializationNode extends DeclarationNode {
+public final class InitializationNode extends ExplicitDeclarationNode {
     private final ExpressionNode value;
 
     public InitializationNode(
@@ -24,12 +26,21 @@ public final class InitializationNode extends DeclarationNode {
     @Override
     public void semanticErrorCheck(final SymbolTable symbolTable) {
         value.semanticErrorCheck(symbolTable);
-
         super.semanticErrorCheck(symbolTable);
+
+        final TypeNode declarationType = getType();
+
+        if (declarationType instanceof FuncTypeNode fType &&
+                value instanceof LambdaExpressionNode l) {
+            final TypeNode returnType = fType.getReturnType();
+            final TypeNode[] paramTypes = fType.getParamTypes();
+
+            l.f.populateTypes(paramTypes, returnType);
+        }
 
         final TypeNode initType = value.getType(symbolTable);
 
-        if (!initType.equals(getType()))
+        if (!declarationType.equals(initType))
             ScriptErrorLog.fireError(
                     ScriptErrorLog.Message.VAR_TYPE_MISMATCH,
                     value.getPosition(), getType().toString(),

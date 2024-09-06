@@ -9,26 +9,21 @@ import com.jordanbunke.delta_time.scripting.util.FuncControlFlow;
 import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
-public sealed class DeclarationNode extends StatementNode
-        permits InitializationNode {
-    private final boolean mutable;
-    private final TypeNode type;
-    private final IdentifierNode ident;
+public abstract sealed class DeclarationNode extends StatementNode
+        permits ExplicitDeclarationNode, ImplicitDeclarationNode {
+    final IdentifierNode ident;
 
     public DeclarationNode(
-            final TextPosition position, final boolean mutable,
-            final TypeNode type, final IdentifierNode ident
+            final TextPosition position,
+            final IdentifierNode ident
     ) {
         super(position);
 
-        this.mutable = mutable;
-        this.type = type;
         this.ident = ident;
     }
 
-    public final boolean isMutable() {
-        return mutable;
-    }
+    public abstract boolean isMutable();
+    public abstract TypeNode getType();
 
     public final String getIdent() {
         return ident.getName();
@@ -36,30 +31,24 @@ public sealed class DeclarationNode extends StatementNode
 
     @Override
     public void semanticErrorCheck(final SymbolTable symbolTable) {
-        // do not check identifier semantics here
-        type.semanticErrorCheck(symbolTable);
-
         if (symbolTable.hasVarAtLevel(getIdent()))
             ScriptErrorLog.fireError(
                     ScriptErrorLog.Message.VAR_ALREADY_DEFINED,
                     ident.getPosition(), getIdent());
         else
-            symbolTable.put(getIdent(), new Variable(mutable, type));
+            symbolTable.put(getIdent(), new Variable(isMutable(), getType()));
     }
 
     @Override
     public FuncControlFlow execute(final SymbolTable symbolTable) {
-        symbolTable.put(ident.getName(), new Variable(mutable, type));
+        symbolTable.put(ident.getName(),
+                new Variable(isMutable(), getType()));
 
         return FuncControlFlow.cont();
     }
 
-    public TypeNode getType() {
-        return type;
-    }
-
     @Override
     public String toString() {
-        return (mutable ? "" : "final ") + type + " " + ident;
+        return (isMutable() ? "" : "final ") + getType() + " " + ident;
     }
 }

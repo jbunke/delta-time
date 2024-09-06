@@ -1,6 +1,7 @@
 package com.jordanbunke.delta_time.scripting.ast.nodes.statement;
 
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
+import com.jordanbunke.delta_time.scripting.util.DebugUtils;
 import com.jordanbunke.delta_time.scripting.util.FuncControlFlow;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
@@ -43,10 +44,12 @@ public final class BodyStatementNode extends StatementNode {
     @Override
     public String toString() {
         return switch (statements.length) {
-            case 0 -> "";
-            case 1 -> statements[0].toString();
+            case 0 -> "{}";
+            case 1 -> DebugUtils.formatMultiLineNode("\t",
+                    statements[0].toString());
             default -> "{\n" + Arrays.stream(statements)
-                    .map(sn -> "\t" + sn)
+                    .map(sn -> DebugUtils.formatMultiLineNode(
+                            "\t", sn.toString()))
                     .reduce((a, b) -> a + "\n" + b).orElse("") + "\n}";
         };
     }

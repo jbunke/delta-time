@@ -1,9 +1,8 @@
 package com.jordanbunke.delta_time.scripting;
 
 import com.jordanbunke.delta_time.scripting.ast.nodes.function.HeadFuncNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.statement.declaration.DeclarationNode;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 import static com.jordanbunke.delta_time.scripting.ScriptTestHelper.getScript;
@@ -23,19 +22,16 @@ public final class RunScriptSTDIO {
             return;
         }
 
-        System.out.println("Args: (leave blank to finish)");
-        final List<String> args = new ArrayList<>();
-        String arg;
+        final DeclarationNode[] params = script.signature.parameters.getParams();
+        final int paramCount = params.length;
+        final String[] args = new String[paramCount];
 
-        do {
-            arg = scanner.nextLine().trim();
+        for (int i = 0; i < paramCount; i++) {
+            System.out.print(params[i].getIdent() + ": ");
+            args[i] = scanner.nextLine().trim();
+        }
 
-            if (!arg.isEmpty())
-                args.add(arg);
-        } while (!arg.isEmpty());
-
-        final Object res = Interpreter.get().run(script,
-                (Object[]) args.toArray(String[]::new));
+        final Object res = Interpreter.get().run(script, (Object[]) args);
         System.out.println(res);
     }
 }

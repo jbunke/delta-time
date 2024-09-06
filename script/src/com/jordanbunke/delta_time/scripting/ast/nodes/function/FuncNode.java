@@ -9,9 +9,9 @@ import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
 public sealed abstract class FuncNode extends ASTNode
-        permits HeadFuncNode, HelperFuncNode {
-    private final FuncSignatureNode signature;
-    private final StatementNode body;
+        permits HeadFuncNode, ChildFuncNode {
+    public final FuncSignatureNode signature;
+    final StatementNode body;
 
     FuncNode(
             final TextPosition position,

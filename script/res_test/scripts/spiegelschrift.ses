@@ -1,5 +1,5 @@
 (final string s, string stem -> string) {
-    for (final char c in s)
+    for (c in s)
         stem = c + stem + c;
 
     return stem;

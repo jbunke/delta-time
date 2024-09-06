@@ -5,7 +5,7 @@ import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.Variable;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
-public final class HelperFuncNode extends FuncNode {
+public final class HelperFuncNode extends ChildFuncNode {
     private final String name;
 
     public HelperFuncNode(
@@ -25,8 +25,8 @@ public final class HelperFuncNode extends FuncNode {
 
     @Override
     public void semanticErrorCheck(final SymbolTable symbolTable) {
-        final SymbolTable helperTable = new SymbolTable(this, symbolTable);
-        super.semanticErrorCheck(helperTable);
+        final SymbolTable innerTable = new SymbolTable(this, symbolTable);
+        super.semanticErrorCheck(innerTable);
     }
 
     @Override

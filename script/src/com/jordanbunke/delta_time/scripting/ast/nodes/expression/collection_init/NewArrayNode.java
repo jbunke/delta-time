@@ -54,6 +54,6 @@ public final class NewArrayNode extends ExpressionNode {
 
     @Override
     public String toString() {
-        return "new " + elementType + "[" + length + "]";
+        return elementType + "[" + length + "]";
     }
 }

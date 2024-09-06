@@ -31,9 +31,9 @@ public final class ExplicitMapInitNode extends ExpressionNode {
         for (ExpressionNode val : vals)
             val.semanticErrorCheck(symbolTable);
 
-        CollectionHelper.checkInteralTypeConsistency(
+        CollectionHelper.checkInternalTypeConsistency(
                 keys, symbolTable, "map key");
-        CollectionHelper.checkInteralTypeConsistency(
+        CollectionHelper.checkInternalTypeConsistency(
                 vals, symbolTable, "map value");
     }
 

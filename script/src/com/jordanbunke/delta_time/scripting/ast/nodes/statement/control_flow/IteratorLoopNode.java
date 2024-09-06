@@ -4,7 +4,7 @@ import com.jordanbunke.delta_time.scripting.ast.collection.ScriptCollection;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.statement.StatementNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.statement.declaration.DeclarationNode;
-import com.jordanbunke.delta_time.scripting.ast.nodes.types.BaseTypeNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.statement.declaration.ImplicitDeclarationNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.CollectionTypeNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
@@ -38,26 +38,29 @@ public final class IteratorLoopNode extends StatementNode {
         collection.semanticErrorCheck(innerTable);
         loopBody.semanticErrorCheck(innerTable);
 
-        final BaseTypeNode stringType = TypeNode.getString();
-        final TypeNode colType = collection.getType(symbolTable),
-                varType = declaration.getType();
+        final TypeNode charType = TypeNode.getChar(),
+                stringType = TypeNode.getString(),
+                colType = collection.getType(symbolTable),
+                elemType;
 
-        if (colType instanceof CollectionTypeNode c) {
-            final TypeNode elemType = c.getElementType();
+        if (colType instanceof CollectionTypeNode c)
+            elemType = c.getElementType();
+        else if (stringType.equals(colType))
+            elemType = charType;
+        else
+            elemType = null;
 
+        if (declaration instanceof ImplicitDeclarationNode implicit)
+            implicit.setType(elemType);
+
+        final TypeNode varType = declaration.getType();
+
+        if (elemType != null) {
             if (!varType.equals(elemType))
                 ScriptErrorLog.fireError(
                         ScriptErrorLog.Message.ELEMENT_DOES_NOT_MATCH_COL,
                         declaration.getPosition(),
                         elemType.toString(), varType.toString());
-        } else if (stringType.equals(colType)) {
-            final BaseTypeNode charType = TypeNode.getChar();
-
-            if (!varType.equals(charType))
-                ScriptErrorLog.fireError(
-                        ScriptErrorLog.Message.ELEMENT_DOES_NOT_MATCH_COL,
-                        declaration.getPosition(),
-                        charType.toString(), varType.toString());
         } else
             ScriptErrorLog.fireError(
                     ScriptErrorLog.Message.NOT_ITERABLE,

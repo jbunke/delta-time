@@ -1,6 +1,6 @@
 package com.jordanbunke.delta_time.scripting.ast.nodes.types;
 
-import com.jordanbunke.delta_time.scripting.ast.nodes.function.HelperFuncNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.function.ChildFuncNode;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
 import java.util.Arrays;
@@ -42,7 +42,7 @@ public final class FuncTypeNode extends TypeNode {
 
     @Override
     public boolean complies(final Object o) {
-        return o instanceof HelperFuncNode;
+        return o instanceof ChildFuncNode;
     }
 
     @Override

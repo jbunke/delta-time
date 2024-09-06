@@ -34,7 +34,7 @@ public final class ExplicitCollectionInitNode extends ExpressionNode {
         for (ExpressionNode initElement : initElements)
             initElement.semanticErrorCheck(symbolTable);
 
-        CollectionHelper.checkInteralTypeConsistency(
+        CollectionHelper.checkInternalTypeConsistency(
                 initElements, symbolTable, collectionType.description());
     }
 

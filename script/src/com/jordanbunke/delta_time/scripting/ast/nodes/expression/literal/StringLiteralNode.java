@@ -35,6 +35,7 @@ public final class StringLiteralNode extends LiteralNode {
         return s.replace("\\\\", temp) // first
                 .replace("\\n", "\n")
                 .replace("\\t", "\t")
+                .replace("\\\"", "\"")
                 .replace(temp, "\\"); // last
     }
 
@@ -43,6 +44,7 @@ public final class StringLiteralNode extends LiteralNode {
         return s.replace("\\", temp) // first
                 .replace("\n", "\\n")
                 .replace("\t", "\\t")
+                .replace("\"", "\\\"")
                 .replace(temp, "\\\\"); // last
     }
 }

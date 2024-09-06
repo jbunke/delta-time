@@ -11,7 +11,7 @@ import com.jordanbunke.delta_time.scripting.util.TextPosition;
 import java.util.Arrays;
 
 public final class ParametersNode extends ASTNode {
-    private final DeclarationNode[] params;
+    final DeclarationNode[] params;
 
     public ParametersNode(
             final TextPosition position, final DeclarationNode[] params
@@ -43,7 +43,7 @@ public final class ParametersNode extends ASTNode {
                 symbolTable.update(param.getIdent(), arg);
             else
                 ScriptErrorLog.fireError(
-                        ScriptErrorLog.Message.ARG_PARAM_MISMATCH,
+                        ScriptErrorLog.Message.ARG_PARAM_TYPE_MISMATCH,
                         param.getPosition(), type.toString());
 
             symbolTable.put(param.getIdent(),
@@ -55,6 +55,10 @@ public final class ParametersNode extends ASTNode {
         return Arrays.stream(params)
                 .map(DeclarationNode::getType)
                 .toArray(TypeNode[]::new);
+    }
+
+    public DeclarationNode[] getParams() {
+        return params;
     }
 
     @Override

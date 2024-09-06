@@ -20,9 +20,10 @@ public final class ScriptErrorLog {
 
     public enum Message {
         CUSTOM_CT, CUSTOM_RT,
+        TYPE_MISMATCH,
         NOT_HOF,
         VOID_F_AS_EXPRESSION,
-        ARG_PARAM_MISMATCH,
+        ARG_PARAM_TYPE_MISMATCH,
         INVALID_ARG_TYPE,
         ARGS_SIGNATURE_MISMATCH,
         CANNOT_REDUCE_EMPTY_COL,
@@ -74,13 +75,15 @@ public final class ScriptErrorLog {
         private String get(final String[] args) {
             return errorClass().prefix() + switch (this) {
                 case CUSTOM_CT, CUSTOM_RT -> args[0];
+                case TYPE_MISMATCH ->
+                        typeMismatch(args[0], args[1], args[2]);
                 case VOID_F_AS_EXPRESSION ->
                         "Attempting to call the void function \"" + args[0] +
                                 "\" as an expression";
                 case NOT_HOF -> "Treating the expression \"" + args[0] +
                         "\" as a higher-order function although it is " +
                         "of type \"" + args[1] + "\"";
-                case ARG_PARAM_MISMATCH -> "Attempting to pass an argument" +
+                case ARG_PARAM_TYPE_MISMATCH -> "Attempting to pass an argument" +
                         " into the script that does not comply with the type" +
                         " of the parameter: \"" + args[0] + "\"";
                 case INVALID_ARG_TYPE ->
@@ -328,6 +331,7 @@ public final class ScriptErrorLog {
                         NON_POSITIVE_IMAGE_BOUND,
                         MAP_DOES_NOT_CONTAIN_ELEMENT,
                         ARGS_PARAMS_MISMATCH,
+                        ARG_PARAM_TYPE_MISMATCH,
                         UNINITIALIZED_VAR,
                         INDEX_OUT_OF_BOUNDS,
                         SUB_BEG_OUT_OF_BOUNDS,
