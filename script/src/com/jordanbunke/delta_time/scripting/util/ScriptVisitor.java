@@ -1185,7 +1185,7 @@ public class ScriptVisitor
                 unpackElements(ctx.elements()));
     }
 
-    private ExpressionNode[] unpackElements(
+    protected ExpressionNode[] unpackElements(
             final ScriptParser.ElementsContext ctx
     ) {
         if (ctx == null)
