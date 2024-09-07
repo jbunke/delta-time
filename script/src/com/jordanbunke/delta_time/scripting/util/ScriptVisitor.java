@@ -18,7 +18,6 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.expression.native_calls.gl
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.native_calls.global.io.ReadNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.native_calls.global.min_max.*;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.native_calls.global.rng.*;
-import com.jordanbunke.delta_time.scripting.ast.nodes.expression.native_calls.global.tex_lookup.*;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.native_calls.scoped.*;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.operation.*;
 import com.jordanbunke.delta_time.scripting.ast.nodes.function.*;
@@ -60,8 +59,7 @@ public class ScriptVisitor
             ABS = "abs", MIN = "min", MAX = "max", CLAMP = "clamp",
             RAND = "rand", PROB = "prob", FLIP_COIN = "flip_coin",
             PRINT = "print", READ = "read", PROMPT = "prompt",
-            FROM = "from", BLANK = "blank",
-            TEX_COL_REPL = "tex_col_repl", GEN_LOOKUP = "gen_lookup",
+            READ_IMAGE = "read_image", NEW_IMAGE_OF = "new_image_of",
             RGB = "rgb", RGBA = "rgba";
 
     // to extend
@@ -905,18 +903,11 @@ public class ScriptVisitor
             case PROB -> args.length == 1
                     ? new ProbabilityNode(position, args[0])
                     : scriptDefined.get();
-            case FROM -> args.length == 1
+            case READ_IMAGE -> args.length == 1
                     ? new ImageFromPathNode(position, args[0])
                     : scriptDefined.get();
-            case BLANK -> args.length == 2
+            case NEW_IMAGE_OF -> args.length == 2
                     ? new ImageOfBoundsNode(position, args[0], args[1])
-                    : scriptDefined.get();
-            case TEX_COL_REPL -> args.length == 3
-                    ? new TextureColorReplaceNode(
-                            position, args[0], args[1], args[2])
-                    : scriptDefined.get();
-            case GEN_LOOKUP -> args.length == 2
-                    ? new GenLookupNode(position, args[0], args[1])
                     : scriptDefined.get();
             case RGB -> args.length == 3
                     ? new RGBColorNode(position, args[0], args[1], args[2])

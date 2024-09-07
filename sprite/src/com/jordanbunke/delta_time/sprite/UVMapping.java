@@ -8,11 +8,11 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TextureColorReplace {
+public class UVMapping {
     private final GameImage lookup;
     private final Map<Color, Coord2D> colorCoordinateMap;
 
-    public TextureColorReplace(final GameImage lookup) {
+    public UVMapping(final GameImage lookup) {
         this.lookup = lookup;
         this.colorCoordinateMap = new HashMap<>();
 
@@ -25,14 +25,13 @@ public class TextureColorReplace {
                 final Color sampled = lookup.getColorAt(x, y);
 
                 if (sampled.getAlpha() > 0) {
-                    if (colorCoordinateMap.containsKey(sampled)) {
+                    if (colorCoordinateMap.containsKey(sampled))
                         GameError.send("Duplicate color \"" + sampled +
                                 "\" associated with first sampled at " +
                                 colorCoordinateMap.get(sampled) +
                                 " was detected again at " + new Coord2D(x, y));
-                    } else {
+                    else
                         colorCoordinateMap.put(sampled, new Coord2D(x, y));
-                    }
                 }
             }
         }
@@ -40,20 +39,19 @@ public class TextureColorReplace {
 
     public static GameImage replace(
             final GameImage texture,
-            final GameImage lookup,
-            final GameImage replacementColors
+            final GameImage map,
+            final GameImage animation
     ) {
-        final TextureColorReplace textureColorReplace =
-                new TextureColorReplace(lookup);
-        return textureColorReplace.replace(texture, replacementColors);
+        final UVMapping uvm = new UVMapping(map);
+        return uvm.replace(texture, animation);
     }
 
     public GameImage replace(
             final GameImage texture,
-            final GameImage replacementColors
+            final GameImage animation
     ) {
-        if (lookup.getWidth() != replacementColors.getWidth() ||
-                lookup.getHeight() != replacementColors.getHeight()) {
+        if (lookup.getWidth() != animation.getWidth() ||
+                lookup.getHeight() != animation.getHeight()) {
             GameError.send(
                     "The lookup net and the color net are different sizes! " +
                             "The sprite could not be composed, so the " +
@@ -72,7 +70,7 @@ public class TextureColorReplace {
                 if (sampled.getAlpha() > 0) {
                     if (colorCoordinateMap.containsKey(sampled)) {
                         final Coord2D coordinate = colorCoordinateMap.get(sampled);
-                        final Color lookedUp = replacementColors
+                        final Color lookedUp = animation
                                 .getColorAt(coordinate.x, coordinate.y);
                         replaced.dot(lookedUp, x, y);
                     } else
@@ -85,12 +83,11 @@ public class TextureColorReplace {
     }
 
     public static GameImage generateNaiveLookup(
-            final GameImage base,
-            final boolean stripedVertically
+            final GameImage base, final boolean horz
     ) {
         final int width = base.getWidth(), height = base.getHeight();
-        final int outerDim = stripedVertically ? width : height,
-                innerDim = stripedVertically ? height : width;
+        final int outerDim = horz ? height : width,
+                innerDim = horz ? width : height;
         final GameImage lookup = new GameImage(width, height);
 
         int nonTransparentCounter = 0;
@@ -106,8 +103,8 @@ public class TextureColorReplace {
 
         for (int d0 = 0; d0 < outerDim; d0++) {
             for (int d1 = 0; d1 < innerDim; d1++) {
-                final int x = stripedVertically ? d0 : d1,
-                        y = stripedVertically ? d1 : d0;
+                final int x = horz ? d1 : d0,
+                        y = horz ? d0 : d1;
                 if (base.getColorAt(x, y).getAlpha() > 0) {
                     final Color assignee =
                             getNaiveColor(colorsAssigned, totalColorsToAssign);

@@ -59,6 +59,6 @@ public final class ImageFromPathNode extends ExpressionNode {
 
     @Override
     public String toString() {
-        return "from(" + path + ")";
+        return "read_image(" + path + ")";
     }
 }

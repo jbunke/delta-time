@@ -73,6 +73,6 @@ public final class ImageOfBoundsNode extends ExpressionNode {
 
     @Override
     public String toString() {
-        return "blank(" + width + ", " + height + ")";
+        return "new_image_of(" + width + ", " + height + ")";
     }
 }
