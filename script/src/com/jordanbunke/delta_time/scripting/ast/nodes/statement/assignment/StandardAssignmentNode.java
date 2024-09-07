@@ -35,7 +35,7 @@ public final class StandardAssignmentNode extends AssignmentNode {
             final TypeNode returnType = fType.getReturnType();
             final TypeNode[] paramTypes = fType.getParamTypes();
 
-            l.f.populateTypes(paramTypes, returnType);
+            l.f.setTypes(paramTypes, returnType);
         }
 
         final TypeNode exprType = expression.getType(symbolTable);

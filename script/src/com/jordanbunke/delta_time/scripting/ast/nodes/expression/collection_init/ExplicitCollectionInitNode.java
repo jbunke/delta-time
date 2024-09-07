@@ -51,7 +51,7 @@ public final class ExplicitCollectionInitNode extends ExpressionNode {
     }
 
     @Override
-    public TypeNode getType(final SymbolTable symbolTable) {
+    public CollectionTypeNode getType(final SymbolTable symbolTable) {
         final TypeNode notRawType =
                 CollectionHelper.getConcreteType(initElements, symbolTable);
 

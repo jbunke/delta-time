@@ -5,7 +5,6 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.statement.declaration.Decl
 import com.jordanbunke.delta_time.scripting.ast.nodes.statement.declaration.ImplicitDeclarationNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
-import com.jordanbunke.delta_time.scripting.ast.symbol_table.Variable;
 import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
@@ -22,9 +21,12 @@ public final class LambdaFuncNode extends ChildFuncNode {
         scope = null;
     }
 
-    public void populateTypes(
+    public void setTypes(
             final TypeNode[] paramTypes, final TypeNode returnType
     ) {
+        if (signature.mutableReturn)
+            signature.setReturnType(returnType);
+
         final DeclarationNode[] params = signature.parameters.params;
 
         if (params.length != paramTypes.length) {
@@ -35,17 +37,12 @@ public final class LambdaFuncNode extends ChildFuncNode {
             return;
         }
 
-        if (signature.mutableReturn)
-            signature.setReturnType(returnType);
-
         final int l = params.length;
         boolean recheckBodySemantics = false;
 
         for (int i = 0; i < l; i++) {
             if (params[i] instanceof ImplicitDeclarationNode ip) {
-                ip.setType(paramTypes[i]);
-                scope.put(ip.getIdent(),
-                        new Variable(ip.isMutable(), ip.getType()));
+                ip.setType(paramTypes[i], scope);
                 recheckBodySemantics = true;
             }
         }

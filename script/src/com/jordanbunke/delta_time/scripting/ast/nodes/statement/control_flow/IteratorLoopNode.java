@@ -36,7 +36,6 @@ public final class IteratorLoopNode extends StatementNode {
 
         declaration.semanticErrorCheck(innerTable);
         collection.semanticErrorCheck(innerTable);
-        loopBody.semanticErrorCheck(innerTable);
 
         final TypeNode charType = TypeNode.getChar(),
                 stringType = TypeNode.getString(),
@@ -51,7 +50,9 @@ public final class IteratorLoopNode extends StatementNode {
             elemType = null;
 
         if (declaration instanceof ImplicitDeclarationNode implicit)
-            implicit.setType(elemType);
+            implicit.setType(elemType, innerTable);
+
+        loopBody.semanticErrorCheck(innerTable);
 
         final TypeNode varType = declaration.getType();
 

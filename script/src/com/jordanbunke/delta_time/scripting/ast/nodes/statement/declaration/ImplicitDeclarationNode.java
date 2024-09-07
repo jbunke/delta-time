@@ -2,6 +2,8 @@ package com.jordanbunke.delta_time.scripting.ast.nodes.statement.declaration;
 
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.assignable.IdentifierNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
+import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
+import com.jordanbunke.delta_time.scripting.ast.symbol_table.Variable;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
 public final class ImplicitDeclarationNode extends DeclarationNode {
@@ -25,7 +27,8 @@ public final class ImplicitDeclarationNode extends DeclarationNode {
         return type;
     }
 
-    public void setType(final TypeNode type) {
+    public void setType(final TypeNode type, final SymbolTable symbolTable) {
         this.type = type;
+        symbolTable.put(getIdent(), new Variable(isMutable(), type));
     }
 }
