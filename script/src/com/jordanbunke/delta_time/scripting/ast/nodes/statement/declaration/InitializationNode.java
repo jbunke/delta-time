@@ -2,11 +2,10 @@ package com.jordanbunke.delta_time.scripting.ast.nodes.statement.declaration;
 
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.assignable.IdentifierNode;
-import com.jordanbunke.delta_time.scripting.ast.nodes.expression.function.LambdaExpressionNode;
-import com.jordanbunke.delta_time.scripting.ast.nodes.types.FuncTypeNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import com.jordanbunke.delta_time.scripting.util.FuncControlFlow;
+import com.jordanbunke.delta_time.scripting.util.FuncHelper;
 import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
@@ -29,15 +28,7 @@ public final class InitializationNode extends ExplicitDeclarationNode {
         super.semanticErrorCheck(symbolTable);
 
         final TypeNode declarationType = getType();
-
-        if (declarationType instanceof FuncTypeNode fType &&
-                value instanceof LambdaExpressionNode l) {
-            final TypeNode returnType = fType.getReturnType();
-            final TypeNode[] paramTypes = fType.getParamTypes();
-
-            l.f.setTypes(paramTypes, returnType);
-        }
-
+        FuncHelper.deepLambdaTypeDefinitions(declarationType, value);
         final TypeNode initType = value.getType(symbolTable);
 
         if (!declarationType.equals(initType))

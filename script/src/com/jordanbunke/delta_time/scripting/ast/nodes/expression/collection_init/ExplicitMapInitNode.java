@@ -53,6 +53,14 @@ public final class ExplicitMapInitNode extends ExpressionNode {
         return map;
     }
 
+    public ExpressionNode[] getKeys() {
+        return keys;
+    }
+
+    public ExpressionNode[] getVals() {
+        return vals;
+    }
+
     @Override
     public TypeNode getType(final SymbolTable symbolTable) {
         final TypeNode

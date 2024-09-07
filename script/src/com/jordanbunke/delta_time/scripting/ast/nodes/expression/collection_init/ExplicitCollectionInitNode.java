@@ -50,6 +50,10 @@ public final class ExplicitCollectionInitNode extends ExpressionNode {
         };
     }
 
+    public ExpressionNode[] getInitElements() {
+        return initElements;
+    }
+
     @Override
     public CollectionTypeNode getType(final SymbolTable symbolTable) {
         final TypeNode notRawType =

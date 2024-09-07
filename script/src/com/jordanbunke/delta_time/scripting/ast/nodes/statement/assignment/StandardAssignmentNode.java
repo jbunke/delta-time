@@ -2,11 +2,10 @@ package com.jordanbunke.delta_time.scripting.ast.nodes.statement.assignment;
 
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.assignable.AssignableNode;
-import com.jordanbunke.delta_time.scripting.ast.nodes.expression.function.LambdaExpressionNode;
-import com.jordanbunke.delta_time.scripting.ast.nodes.types.FuncTypeNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import com.jordanbunke.delta_time.scripting.util.FuncControlFlow;
+import com.jordanbunke.delta_time.scripting.util.FuncHelper;
 import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
@@ -29,15 +28,7 @@ public final class StandardAssignmentNode extends AssignmentNode {
         super.semanticErrorCheck(symbolTable);
 
         final TypeNode assignableType = getAssignable().getType(symbolTable);
-
-        if (assignableType instanceof FuncTypeNode fType &&
-                expression instanceof LambdaExpressionNode l) {
-            final TypeNode returnType = fType.getReturnType();
-            final TypeNode[] paramTypes = fType.getParamTypes();
-
-            l.f.setTypes(paramTypes, returnType);
-        }
-
+        FuncHelper.deepLambdaTypeDefinitions(assignableType, expression);
         final TypeNode exprType = expression.getType(symbolTable);
 
         if (!assignableType.equals(exprType))
