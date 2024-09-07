@@ -50,27 +50,27 @@ public class UVMapping {
             final GameImage texture,
             final GameImage animation
     ) {
-        if (lookup.getWidth() != animation.getWidth() ||
-                lookup.getHeight() != animation.getHeight()) {
+        if (lookup.getWidth() != texture.getWidth() ||
+                lookup.getHeight() != texture.getHeight()) {
             GameError.send(
                     "The lookup net and the color net are different sizes! " +
                             "The sprite could not be composed, so the " +
                             "input texture was returned instead.");
-            return texture;
+            return animation;
         }
 
-        final int width = texture.getWidth(),
-                height = texture.getHeight();
+        final int width = animation.getWidth(),
+                height = animation.getHeight();
         final GameImage replaced = new GameImage(width, height);
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                final Color sampled = texture.getColorAt(x, y);
+                final Color sampled = animation.getColorAt(x, y);
 
                 if (sampled.getAlpha() > 0) {
                     if (colorCoordinateMap.containsKey(sampled)) {
                         final Coord2D coordinate = colorCoordinateMap.get(sampled);
-                        final Color lookedUp = animation
+                        final Color lookedUp = texture
                                 .getColorAt(coordinate.x, coordinate.y);
                         replaced.dot(lookedUp, x, y);
                     } else
