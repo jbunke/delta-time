@@ -1,6 +1,7 @@
 package com.jordanbunke.delta_time.scripting.ast.symbol_table;
 
 import com.jordanbunke.delta_time.scripting.ast.nodes.ASTNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.function.FuncNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.function.HeadFuncNode;
 
@@ -12,6 +13,7 @@ public final class SymbolTable {
     private final SymbolTable parent;
     private final Map<ASTNode, SymbolTable> children;
     private final Map<String, Variable> contents;
+    private Variable scopeVar;
 
     public SymbolTable(
             final ASTNode scope,
@@ -20,8 +22,9 @@ public final class SymbolTable {
         this.scope = scope;
         this.parent = parent;
 
-        this.children = new HashMap<>();
-        this.contents = new HashMap<>();
+        children = new HashMap<>();
+        contents = new HashMap<>();
+        scopeVar = null;
 
         if (parent != null)
             parent.addChild(this.scope, this);
@@ -84,6 +87,18 @@ public final class SymbolTable {
         contents.get(ident).set(value);
     }
 
+    public void defineScopeVar(final ExpressionNode e) {
+        scopeVar = new Variable(false, e.getType(this));
+    }
+
+    public void evaluateScopeVar(final ExpressionNode e) {
+        scopeVar.set(e.evaluate(this));
+    }
+
+    public Variable getScopeVar() {
+        return scopeVar;
+    }
+
     @Override
     public String toString() {
         final int gen = generation();
@@ -91,8 +106,11 @@ public final class SymbolTable {
 
         final StringBuilder sb = new StringBuilder();
 
-        sb.append(tab).append("Scope: ")
-                .append(scope.getClass().getSimpleName()).append("\n\n");
+        final String header = "Scope: " + scope.getClass().getSimpleName();
+
+        sb.append(tab).append(header)
+                .append(" ".repeat(Math.max(5, 40 - (header + tab).length())))
+                .append(scope.toString().split("\n")[0]).append("\n\n");
 
         for (String var : contents.keySet()) {
             sb.append(tab).append(var).append(" -> ")

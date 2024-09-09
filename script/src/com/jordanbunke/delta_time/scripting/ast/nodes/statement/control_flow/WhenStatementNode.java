@@ -27,21 +27,24 @@ public final class WhenStatementNode extends StatementNode {
 
     @Override
     public void semanticErrorCheck(final SymbolTable symbolTable) {
-        control.semanticErrorCheck(symbolTable);
+        final SymbolTable innerTable = new SymbolTable(this, symbolTable);
 
-        final TypeNode cType = control.getType(symbolTable),
+        control.semanticErrorCheck(innerTable);
+        innerTable.defineScopeVar(control);
+
+        final TypeNode cType = control.getType(innerTable),
                 boolType = TypeNode.getBool();
 
         for (CaseNode c : cases) {
-            // moved down - c.semanticErrorCheck(symbolTable);
+            // moved down - c.semanticErrorCheck(innerTable);
 
             if (c instanceof PassesCaseNode p) {
                 if (p.predicate instanceof LambdaExpressionNode l) {
-                    l.f.setScope(symbolTable);
+                    l.f.setScope(innerTable);
                     l.f.setTypes(new TypeNode[] { cType }, boolType);
                 }
 
-                final TypeNode pType = p.predicate.getType(symbolTable);
+                final TypeNode pType = p.predicate.getType(innerTable);
 
                 if (!(pType instanceof FuncTypeNode pFuncType)) {
                     ScriptErrorLog.fireError(ScriptErrorLog.Message.NOT_HOF,
@@ -71,8 +74,17 @@ public final class WhenStatementNode extends StatementNode {
                                 "when statement case predicate return type",
                                 boolType.toString(), returnType.toString());
                 }
+            } else if (c instanceof MatchesCaseNode m) {
+                final TypeNode condType = m.condition.getType(innerTable);
+
+                if (!boolType.equals(condType))
+                    ScriptErrorLog.fireError(
+                            ScriptErrorLog.Message.TYPE_MISMATCH,
+                            m.condition.getPosition(),
+                            "when statement \"matches\" case condition type",
+                            boolType.toString(), condType.toString());
             } else if (c instanceof IsCaseNode is) {
-                final TypeNode isType = is.matcher.getType(symbolTable);
+                final TypeNode isType = is.matcher.getType(innerTable);
 
                 if (!cType.equals(isType))
                     ScriptErrorLog.fireError(
@@ -82,15 +94,17 @@ public final class WhenStatementNode extends StatementNode {
                             cType.toString(), isType.toString());
             }
 
-            c.semanticErrorCheck(symbolTable);
+            c.semanticErrorCheck(innerTable);
         }
     }
 
     @Override
     public FuncControlFlow execute(final SymbolTable symbolTable) {
+        final SymbolTable innerTable = symbolTable.getChild(this);
+
         for (CaseNode c : cases)
-            if (c.test(control, symbolTable))
-                return c.execute(symbolTable);
+            if (c.test(control, innerTable))
+                return c.execute(innerTable);
 
         return FuncControlFlow.cont();
     }

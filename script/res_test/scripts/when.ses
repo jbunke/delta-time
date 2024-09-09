@@ -11,7 +11,7 @@
 
         when (num) {
             is 16, 4, 1999 -> print("Huzzah!");
-            passes n -> n % 4 == 0 -> print("Not bad!");
+            matches _ % 4 == 0 -> print("Not bad!");
             otherwise -> print("Try again");
         }
     }

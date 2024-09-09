@@ -547,6 +547,16 @@ public class ScriptVisitor
     }
 
     @Override
+    public MatchesCaseNode visitMatchesCase(
+            final ScriptParser.MatchesCaseContext ctx
+    ) {
+        return new MatchesCaseNode(
+                TextPosition.fromToken(ctx.MATCHES().getSymbol()),
+                (ExpressionNode) visit(ctx.expr()),
+                (StatementNode) visit(ctx.body()));
+    }
+
+    @Override
     public PassesCaseNode visitPassesCase(
             final ScriptParser.PassesCaseContext ctx
     ) {

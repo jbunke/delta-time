@@ -341,6 +341,13 @@ public interface ScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitIsCase(ScriptParser.IsCaseContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code MatchesCase}
+	 * labeled alternative in {@link ScriptParser#case_}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMatchesCase(ScriptParser.MatchesCaseContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code PassesCase}
 	 * labeled alternative in {@link ScriptParser#case_}.
 	 * @param ctx the parse tree

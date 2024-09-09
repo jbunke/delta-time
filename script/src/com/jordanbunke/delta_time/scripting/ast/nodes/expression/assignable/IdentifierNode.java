@@ -7,6 +7,8 @@ import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
 public final class IdentifierNode extends AssignableNode {
+    private static final String REPLACER = "_";
+
     public IdentifierNode(
             final TextPosition position, final String name
     ) {
@@ -23,7 +25,7 @@ public final class IdentifierNode extends AssignableNode {
 
     @Override
     public Object evaluate(final SymbolTable symbolTable) {
-        final Variable var = symbolTable.get(getName());
+        final Variable var = get(symbolTable);
         assert var != null;
 
         final Object value = var.get();
@@ -38,7 +40,7 @@ public final class IdentifierNode extends AssignableNode {
 
     @Override
     public TypeNode getType(final SymbolTable symbolTable) {
-        final Variable var = symbolTable.get(getName());
+        final Variable var = get(symbolTable);
 
         // this if statement should never pass; consider refactoring
         if (var == null) {
@@ -49,6 +51,21 @@ public final class IdentifierNode extends AssignableNode {
         }
 
         return var.getType();
+    }
+
+    @Override
+    public void semanticErrorCheck(final SymbolTable symbolTable) {
+        if (get(symbolTable) == null)
+            ScriptErrorLog.fireError(
+                    ScriptErrorLog.Message.UNDEFINED_VAR,
+                    getPosition(), getName());
+    }
+
+    private Variable get(final SymbolTable symbolTable) {
+        final String name = getName();
+        return name.equals(REPLACER)
+                ? symbolTable.getScopeVar()
+                : symbolTable.get(name);
     }
 
     @Override
