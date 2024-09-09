@@ -58,16 +58,6 @@ factors(int num -> int<>) {
 }
 
 /*
-Goal implementation:
-
-(~ int num -> bool) {
-    when (num) {
-        passes n -> n <= 1 -> return false;
-        passes n -> n % 2 == 0 -> return num == 2;
-        otherwise -> return is_prime(num);
-    }
-}
-
 Stretch goal implementation:
 
 (~ int num -> bool) {

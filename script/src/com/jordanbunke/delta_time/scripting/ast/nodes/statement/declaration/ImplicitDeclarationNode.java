@@ -29,6 +29,9 @@ public final class ImplicitDeclarationNode extends DeclarationNode {
 
     public void setType(final TypeNode type, final SymbolTable symbolTable) {
         this.type = type;
-        symbolTable.put(getIdent(), new Variable(isMutable(), type));
+
+        // overwrite wildcard in symbol table with concrete-typed variable
+        if (symbolTable.hasVarAtLevel(getIdent()))
+            symbolTable.put(getIdent(), new Variable(isMutable(), type));
     }
 }

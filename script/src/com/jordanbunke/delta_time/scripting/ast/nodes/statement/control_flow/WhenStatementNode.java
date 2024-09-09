@@ -36,8 +36,10 @@ public final class WhenStatementNode extends StatementNode {
             // moved down - c.semanticErrorCheck(symbolTable);
 
             if (c instanceof PassesCaseNode p) {
-                if (p.predicate instanceof LambdaExpressionNode l)
+                if (p.predicate instanceof LambdaExpressionNode l) {
+                    l.f.setScope(symbolTable);
                     l.f.setTypes(new TypeNode[] { cType }, boolType);
+                }
 
                 final TypeNode pType = p.predicate.getType(symbolTable);
 

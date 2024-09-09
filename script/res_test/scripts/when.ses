@@ -1,0 +1,18 @@
+() {
+    print("Type \"!q\" to quit");
+
+    while (true) {
+        string input = prompt("Guess a magic number: ");
+
+        if (input == "!q")
+            return;
+
+        int num = (int) input;
+
+        when (num) {
+            is 16, 4, 1999 -> print("Huzzah!");
+            passes n -> n % 4 == 0 -> print("Not bad!");
+            otherwise -> print("Try again");
+        }
+    }
+}

@@ -519,25 +519,31 @@ public class ScriptVisitor
     ) {
         final ExpressionNode control = (ExpressionNode) visit(ctx.control);
 
-        final List<CaseNode> cases = new ArrayList<>(
-                ctx.when_body().case_().stream()
-                        .map(c -> (CaseNode) visit(c)).toList());
+        final List<CaseNode> cases = new ArrayList<>();
+
+        for (ScriptParser.CaseContext cc : ctx.when_body().case_()) {
+            if (cc instanceof ScriptParser.IsCaseContext icc) {
+                final ExpressionNode[] expressions =
+                        icc.elements().expr().stream()
+                                .map(e -> (ExpressionNode) visit(e))
+                                .toArray(ExpressionNode[]::new);
+                final StatementNode body = (StatementNode) visit(icc.body());
+
+                for (int i = 0; i < expressions.length; i++) {
+                    final TextPosition pos = i == 0
+                            ? TextPosition.fromToken(icc.IS().getSymbol())
+                            : expressions[i].getPosition();
+                    cases.add(new IsCaseNode(pos, expressions[i], body));
+                }
+            } else
+                cases.add((CaseNode) visit(cc));
+        }
 
         if (ctx.when_body().otherwise() != null)
             cases.add((OtherwiseNode) visit(ctx.when_body().otherwise()));
 
         return new WhenStatementNode(TextPosition.fromToken(ctx.start),
                 control, cases.toArray(CaseNode[]::new));
-    }
-
-    @Override
-    public IsCaseNode visitIsCase(
-            final ScriptParser.IsCaseContext ctx
-    ) {
-        return new IsCaseNode(
-                TextPosition.fromToken(ctx.IS().getSymbol()),
-                (ExpressionNode) visit(ctx.expr()),
-                (StatementNode) visit(ctx.body()));
     }
 
     @Override

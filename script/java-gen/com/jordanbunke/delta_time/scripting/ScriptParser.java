@@ -2100,8 +2100,8 @@ public class ScriptParser extends Parser {
 	@SuppressWarnings("CheckReturnValue")
 	public static class IsCaseContext extends CaseContext {
 		public TerminalNode IS() { return getToken(ScriptParser.IS, 0); }
-		public ExprContext expr() {
-			return getRuleContext(ExprContext.class,0);
+		public ElementsContext elements() {
+			return getRuleContext(ElementsContext.class,0);
 		}
 		public TerminalNode ARROW() { return getToken(ScriptParser.ARROW, 0); }
 		public BodyContext body() {
@@ -2146,7 +2146,7 @@ public class ScriptParser extends Parser {
 				setState(293);
 				match(IS);
 				setState(294);
-				expr(0);
+				elements();
 				setState(295);
 				match(ARROW);
 				setState(296);
@@ -4677,7 +4677,7 @@ public class ScriptParser extends Parser {
 		"\u0001\u0000\u0000\u0000\u0120\u0122\u0003,\u0016\u0000\u0121\u0120\u0001"+
 		"\u0000\u0000\u0000\u0121\u0122\u0001\u0000\u0000\u0000\u0122\u0123\u0001"+
 		"\u0000\u0000\u0000\u0123\u0124\u0005\t\u0000\u0000\u0124)\u0001\u0000"+
-		"\u0000\u0000\u0125\u0126\u0005@\u0000\u0000\u0126\u0127\u0003.\u0017\u0000"+
+		"\u0000\u0000\u0125\u0126\u0005@\u0000\u0000\u0126\u0127\u0003:\u001d\u0000"+
 		"\u0127\u0128\u0005\u001a\u0000\u0000\u0128\u0129\u0003\u0012\t\u0000\u0129"+
 		"\u0130\u0001\u0000\u0000\u0000\u012a\u012b\u0005A\u0000\u0000\u012b\u012c"+
 		"\u0003.\u0017\u0000\u012c\u012d\u0005\u001a\u0000\u0000\u012d\u012e\u0003"+

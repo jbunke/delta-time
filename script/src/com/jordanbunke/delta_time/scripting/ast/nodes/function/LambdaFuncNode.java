@@ -53,12 +53,13 @@ public final class LambdaFuncNode extends ChildFuncNode {
 
     @Override
     public void semanticErrorCheck(final SymbolTable symbolTable) {
-        final SymbolTable innerTable = new SymbolTable(this, symbolTable);
+        setScope(symbolTable);
+        super.semanticErrorCheck(scope);
+    }
 
+    public void setScope(final SymbolTable parent) {
         if (scope == null)
-            scope = innerTable;
-
-        super.semanticErrorCheck(innerTable);
+            scope = new SymbolTable(this, parent);
     }
 
     public SymbolTable getScope() {
