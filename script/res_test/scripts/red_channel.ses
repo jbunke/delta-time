@@ -1,5 +1,5 @@
 (~ image src -> image) {
-    ~ image res = blank(src.w, src.h);
+    ~ image res = new_image_of(src.w, src.h);
 
     ~ int w = res.w;
     ~ int h = res.h;
