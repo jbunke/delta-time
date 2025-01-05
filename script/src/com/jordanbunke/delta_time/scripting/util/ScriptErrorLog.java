@@ -62,7 +62,7 @@ public final class ScriptErrorLog {
         RETURN_TYPE_MISMATCH,
         VAR_ALREADY_DEFINED,
         ADD_TO_ARRAY,
-        REMOVE_FROM_SET_OR_ARRAY,
+        REMOVE_FROM_ARRAY,
         ASSIGN_EXPR_NOT_NUM,
         ASSIGN_EXPR_NOT_STRING,
         NOT_ITERABLE,
@@ -288,9 +288,9 @@ public final class ScriptErrorLog {
                 case ADD_TO_ARRAY ->
                         "Arrays are of fixed length; elements " +
                                 "cannot be added";
-                case REMOVE_FROM_SET_OR_ARRAY ->
-                        "Cannot remove an element by index " +
-                                "from a set or an array, only from a list";
+                case REMOVE_FROM_ARRAY ->
+                        "Arrays are of fixed length; elements " +
+                                "cannot be removed";
             };
         }
 

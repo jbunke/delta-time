@@ -27,7 +27,10 @@ public final class ScriptArray implements ScriptCollection {
     public void add(final Object element) {}
 
     @Override
-    public void remove(final int index) {}
+    public void removeAt(final int index) {}
+
+    @Override
+    public void remove(final Object element) {}
 
     @Override
     public boolean contains(final Object element) {
