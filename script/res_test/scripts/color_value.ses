@@ -1,0 +1,8 @@
+() {
+    color[] cs = [ #ff0000, #28283c, rgba(169, 75, 0x80, 0x3b) ];
+
+    for (c in cs)
+        print("Value: " + value(c));
+}
+
+value(color c -> int) -> max([ c.red, c.green, c.blue ])

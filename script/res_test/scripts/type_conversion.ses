@@ -1,0 +1,12 @@
+() {
+    float_add();
+    int_add();
+}
+
+float_add() {
+    print("Floating-point addition: " + (27.25 + 12));
+}
+
+int_add() {
+    print("Integer addition: " + ((int) 27.25 + 12));
+}
