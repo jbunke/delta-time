@@ -445,19 +445,19 @@ public interface ScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitScopedFuncCallExpression(ScriptParser.ScopedFuncCallExpressionContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code NestedExpression}
-	 * labeled alternative in {@link ScriptParser#expr()}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitNestedExpression(ScriptParser.NestedExpressionContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code ExplicitMapExpression}
 	 * labeled alternative in {@link ScriptParser#expr()}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitExplicitMapExpression(ScriptParser.ExplicitMapExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code NestedExpression}
+	 * labeled alternative in {@link ScriptParser#expr()}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNestedExpression(ScriptParser.NestedExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code HOFuncExpression}
 	 * labeled alternative in {@link ScriptParser#expr()}.

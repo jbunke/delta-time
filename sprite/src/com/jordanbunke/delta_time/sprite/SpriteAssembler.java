@@ -2,12 +2,11 @@ package com.jordanbunke.delta_time.sprite;
 
 import com.jordanbunke.delta_time.error.GameError;
 import com.jordanbunke.delta_time.image.GameImage;
-import com.jordanbunke.delta_time.image.ImageProcessing;
 import com.jordanbunke.delta_time.sprite.constituents.SpriteConstituent;
 
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 
 public class SpriteAssembler<T, R> {
