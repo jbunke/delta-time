@@ -1,0 +1,29 @@
+(-> color<>) {
+    ~ color input = rgb(rc(), rc(), rc());
+    print(input);
+
+    ~ (color -> color)[] color_functions = [
+         c -> rgba(c.r, 0, 0, c.a),     // isolate red channel
+         c -> rgba(0, c.g, 0, c.a),     // isolate green channel
+         ::iso_blue,                    // reference to function "iso_blue"
+         c -> {
+            int avg = (c.r + c.g + c.b) / 3;
+            return rgba(avg, avg, avg, c.a);
+         },                             // greyscale of color
+         c -> rgb(rc(), rc(), rc()),    // random opaque color
+         c -> #ffffff                   // the color white
+    ];
+    ~ color<> channels = <>;
+
+    for (f in color_functions)
+        channels.add(f.call(input));
+
+    return channels;
+}
+
+// helper function to isolate the blue channel of a color
+iso_blue(~ color c -> color) -> rgba(0, 0, c.b, c.a)
+
+// helper function to generate a random color channel value
+// uses the hexadecimal integer literal 0x100 (= 256)
+rc(-> int) -> rand(0, 0x100)

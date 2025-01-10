@@ -29,8 +29,13 @@ public final class ScriptList implements ScriptCollection {
     }
 
     @Override
-    public void remove(final int index) {
+    public void removeAt(final int index) {
         structure.remove(index);
+    }
+
+    @Override
+    public void remove(final Object element) {
+        structure.remove(element);
     }
 
     @Override

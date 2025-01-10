@@ -5,7 +5,8 @@ import java.util.stream.Stream;
 public interface ScriptCollection {
     void add(final int index, final Object element);
     void add(final Object element);
-    void remove(final int index);
+    void removeAt(final int index);
+    void remove(final Object element);
     boolean contains(final Object element);
     Object get(final int index);
     void set(final int index, final Object element);

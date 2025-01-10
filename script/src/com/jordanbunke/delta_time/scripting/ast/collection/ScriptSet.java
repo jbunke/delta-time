@@ -24,11 +24,17 @@ public final class ScriptSet implements ScriptCollection {
 
     @Override
     public void add(final Object element) {
-        structure.add(element);
+        if (!contains(element))
+            structure.add(element);
     }
 
     @Override
-    public void remove(final int index) {}
+    public void removeAt(final int index) {}
+
+    @Override
+    public void remove(final Object element) {
+        structure.remove(element);
+    }
 
     @Override
     public boolean contains(final Object element) {

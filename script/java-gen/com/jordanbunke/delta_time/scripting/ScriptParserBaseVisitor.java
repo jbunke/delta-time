@@ -467,14 +467,14 @@ public class ScriptParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> impl
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitNestedExpression(ScriptParser.NestedExpressionContext ctx) { return visitChildren(ctx); }
+	@Override public T visitExplicitMapExpression(ScriptParser.ExplicitMapExpressionContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitExplicitMapExpression(ScriptParser.ExplicitMapExpressionContext ctx) { return visitChildren(ctx); }
+	@Override public T visitNestedExpression(ScriptParser.NestedExpressionContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
