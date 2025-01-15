@@ -1,0 +1,29 @@
+() {
+  print("Please provide the 8-bit channel values of an RGBA color!");
+
+  ~ int r = (int) prompt("Red: ");
+  ~ int g = (int) prompt("Green: ");
+  ~ int b = (int) prompt("Blue: ");
+  ~ int a = (int) prompt("Alpha / opacity: ");
+
+  ~ color c = rgba(r, g, b, a);
+  ~ string pfx = "The color is ";
+
+  when (c) {
+    matches _.alpha == 0 -> print(pfx + "transparent");
+    is #000000 -> print(pfx + "black");
+    is #ffffff -> print(pfx + "white");
+    matches _.r == _.g && _.r == _.b && opaque(_) ->
+            print(pfx + "a shade of grey");
+    is #ff0000, #00ff00, #0000ff -> print(pfx + "an RGB primary color");
+    passes ::bright_opaque -> print("bright");
+    otherwise -> print(pfx + "not a match");
+  }
+}
+
+bright_opaque(color c -> bool) {
+  int max = max([ c.r, c.g, c.b ]);
+  return max == 0xff && opaque(c);
+}
+
+opaque(color c -> bool) -> c.alpha == 0xff
