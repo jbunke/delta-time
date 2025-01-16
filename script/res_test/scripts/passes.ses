@@ -1,0 +1,82 @@
+() {
+  string[] words = [
+    "Racecar", "Pilot", "Madam",
+    "Able was I ere I saw Elba",
+    "Nurses run", "Highway 61",
+    "A man, a plan, a canal - Panama"
+  ];
+
+  (string -> bool) no_whitespace_palindrome =
+          (s -> palindrome(no_whitespace(s)));
+
+  for (word in words) {
+    when (word) {
+      passes ::palindrome -> print("\"" + _ + "\" is a pure palindrome!");
+      passes no_whitespace_palindrome ->
+              print("\"" + _ + "\" is a palindrome if whitespace is ignored");
+      passes (s -> palindrome(only_letters(s))) ->
+              print("\"" + _ + "\" is a palindrome if whitespace and punctuation are ignored");
+      otherwise -> print("\"" + _ + "\" is not a palindrome");
+    }
+  }
+}
+
+palindrome(string s -> bool) {
+  string lc = lowercase(s);
+  return lc == reverse(lc);
+}
+
+reverse(string s -> string) {
+  string res = "";
+
+  for (c in s)
+    res = c + res;
+
+  return res;
+}
+
+lowercase(string s -> string) {
+  string res = "";
+
+  for (c in s) {
+    int unicode = (int) c;
+
+    if (uppercase_letter(c))
+      res += (char) ((int) 'a' + (unicode - (int) 'A'))
+    else
+      res += c;
+  }
+
+  return res;
+}
+
+no_whitespace(string s -> string) {
+  ~ char{} WHITESPACE = { ' ', '\t' '\n' };
+  string res = "";
+
+  for (c in s)
+    if (!WHITESPACE.has(c))
+      res += c;
+
+  return res;
+}
+
+only_letters(string s -> string) {
+  string res = "";
+
+  for (c in s)
+    if (uppercase_letter(c) || lowercase_letter(c))
+      res += c;
+
+  return res;
+}
+
+uppercase_letter(char c -> bool) {
+  int unicode = (int) c;
+  return unicode >= (int) 'A' && unicode <= (int) 'Z';
+}
+
+lowercase_letter(char c -> bool) {
+  int unicode = (int) c;
+  return unicode >= (int) 'a' && unicode <= (int) 'z';
+}

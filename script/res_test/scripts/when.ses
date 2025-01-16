@@ -10,7 +10,10 @@
         int num = (int) input;
 
         when (num) {
-            is 16, 4, 1999 -> print("Huzzah!");
+            is 16, 4, 1999 -> {
+                print("Huzzah!");
+                return;
+            }
             matches _ % 4 == 0 -> print("Not bad!");
             otherwise -> print("Try again");
         }

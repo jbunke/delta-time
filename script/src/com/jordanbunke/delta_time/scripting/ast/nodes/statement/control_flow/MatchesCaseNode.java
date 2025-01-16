@@ -27,8 +27,6 @@ public final class MatchesCaseNode extends CaseNode {
     boolean test(
             final ExpressionNode control, final SymbolTable symbolTable
     ) {
-        symbolTable.evaluateScopeVar(control);
-
         return (boolean) condition.evaluate(symbolTable);
     }
 

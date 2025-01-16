@@ -1,0 +1,7 @@
+() {
+  (string, string -> string) string_function =
+          (a, b) -> flip_coin() ? a + b : b + " " + a; // anon. function definition
+
+  string result = string_function.call("race", "car"); // call()
+  print(result);
+}

@@ -1,0 +1,19 @@
+() {
+  ~ color BLACK = #000000;
+  ~ color PINK = #f5a0a0;
+
+  color{} cs = { BLACK, PINK };
+
+  print(#|"Test phrase");
+  print(#|[ 1, 2, 3, 4, 5 ]);
+  print(#|{ 'a' : 1, 'j' : 10, 'z' : 26 });
+
+  print(#|cs);
+  cs.add(rgb(0, 0, 0));
+  print(#|cs);
+  cs.add(rgb(0xff, 0, 0));
+  print(#|cs);
+  cs.remove(BLACK);
+  cs.remove(PINK);
+  print(#|cs);
+}

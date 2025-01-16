@@ -77,7 +77,7 @@ public final class ForLoopNode extends StatementNode {
 
     @Override
     public String toString() {
-        return "for (" + initialization + " " + loopCondition + "; " +
+        return "for (" + initialization + "; " + loopCondition + "; " +
                 incrementation + ")\n" + loopBody;
     }
 }

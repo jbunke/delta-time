@@ -1,0 +1,11 @@
+() {
+  ~ int REPS = 100;
+
+  for (int i = 0; i < REPS; i++) {
+    when (flip_coin()) {
+      is true, false -> print("Matched literals");
+      matches _ || !_ -> print("Matched pattern");
+      otherwise -> print("No match");
+    }
+  }
+}
