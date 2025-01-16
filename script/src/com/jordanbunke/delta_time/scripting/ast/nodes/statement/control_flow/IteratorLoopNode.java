@@ -66,7 +66,7 @@ public final class IteratorLoopNode extends StatementNode {
             ScriptErrorLog.fireError(
                     ScriptErrorLog.Message.NOT_ITERABLE,
                     collection.getPosition(),
-                    "string\", \"list - <>\" or \"array - []\"",
+                    "string\", \"array - []\", \"list - <>\" or \"set - {}\"",
                     colType.toString());
     }
 
