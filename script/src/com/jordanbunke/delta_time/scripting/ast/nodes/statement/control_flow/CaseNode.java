@@ -1,6 +1,5 @@
 package com.jordanbunke.delta_time.scripting.ast.nodes.statement.control_flow;
 
-import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.statement.StatementNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import com.jordanbunke.delta_time.scripting.util.FuncControlFlow;
@@ -17,7 +16,7 @@ public abstract class CaseNode extends StatementNode {
         this.executionBody = executionBody;
     }
 
-    abstract boolean test(final ExpressionNode control, final SymbolTable symbolTable);
+    abstract boolean test(final SymbolTable symbolTable);
 
     @Override
     public void semanticErrorCheck(final SymbolTable symbolTable) {
