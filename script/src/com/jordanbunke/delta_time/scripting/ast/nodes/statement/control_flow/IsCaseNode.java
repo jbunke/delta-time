@@ -24,10 +24,8 @@ public final class IsCaseNode extends CaseNode {
     }
 
     @Override
-    boolean test(
-            final ExpressionNode control, final SymbolTable symbolTable
-    ) {
-        final Object cv = control.evaluate(symbolTable),
+    boolean test(final SymbolTable symbolTable) {
+        final Object cv = symbolTable.getScopeVar().get(),
                 mv = matcher.evaluate(symbolTable);
 
         return cv.equals(mv);

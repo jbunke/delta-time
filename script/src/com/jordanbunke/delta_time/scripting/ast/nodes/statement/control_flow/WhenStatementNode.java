@@ -101,12 +101,11 @@ public final class WhenStatementNode extends StatementNode {
     @Override
     public FuncControlFlow execute(final SymbolTable symbolTable) {
         final SymbolTable innerTable = symbolTable.getChild(this);
+        innerTable.evaluateScopeVar(control);
 
-        for (CaseNode c : cases) {
-            innerTable.evaluateScopeVar(control);
-            if (c.test(control, innerTable))
+        for (CaseNode c : cases)
+            if (c.test(innerTable))
                 return c.execute(innerTable);
-        }
 
         return FuncControlFlow.cont();
     }

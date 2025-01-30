@@ -21,19 +21,23 @@ public final class FuncHelper {
             final ExpressionNode[] args,
             final SymbolTable symbolTable
     ) {
-        final SymbolTable funcTable;
-
-        if (func instanceof HelperFuncNode)
-            funcTable = symbolTable.getRoot().getChild(func);
-        else if (func instanceof LambdaFuncNode l && l.getScope() != null)
-            funcTable = l.getScope();
-        else
-            funcTable = new SymbolTable(func, symbolTable);
+        final SymbolTable funcTable = getScopeTable(func, symbolTable);
 
         final Object[] argVals = Arrays.stream(args)
                 .map(a -> a.evaluate(symbolTable)).toArray(Object[]::new);
 
         return func.execute(funcTable, argVals);
+    }
+
+    public static SymbolTable getScopeTable(
+            final ChildFuncNode func, final SymbolTable symbolTable
+    ) {
+        if (func instanceof HelperFuncNode)
+            return symbolTable.getRoot().getChild(func);
+        else if (func instanceof LambdaFuncNode l && l.getScope() != null)
+            return l.getScope();
+        else
+            return new SymbolTable(func, symbolTable);
     }
 
     public static void execute(

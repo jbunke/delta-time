@@ -24,9 +24,7 @@ public final class MatchesCaseNode extends CaseNode {
     }
 
     @Override
-    boolean test(
-            final ExpressionNode control, final SymbolTable symbolTable
-    ) {
+    boolean test(final SymbolTable symbolTable) {
         return (boolean) condition.evaluate(symbolTable);
     }
 

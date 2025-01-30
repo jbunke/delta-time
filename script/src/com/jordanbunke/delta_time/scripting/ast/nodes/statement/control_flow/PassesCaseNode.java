@@ -26,12 +26,13 @@ public final class PassesCaseNode extends CaseNode {
     }
 
     @Override
-    boolean test(final ExpressionNode control, final SymbolTable symbolTable) {
+    boolean test(final SymbolTable symbolTable) {
         final ChildFuncNode p = (ChildFuncNode) predicate.evaluate(symbolTable);
 
         if (p != null)
-            return (Boolean) FuncHelper.evaluate(p,
-                    new ExpressionNode[] { control }, symbolTable);
+            return (Boolean) p.execute(
+                    FuncHelper.getScopeTable(p, symbolTable),
+                    new Object[] { symbolTable.getScopeVar().get() });
 
         return false;
     }

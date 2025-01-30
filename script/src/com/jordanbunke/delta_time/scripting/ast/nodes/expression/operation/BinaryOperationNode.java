@@ -130,19 +130,23 @@ public final class BinaryOperationNode extends ExpressionNode {
 
     @Override
     public Object evaluate(final SymbolTable symbolTable) {
-        final Object o1Value = o1.evaluate(symbolTable),
-                o2Value = o2.evaluate(symbolTable);
+        final Object o1Value = o1.evaluate(symbolTable);
 
         return switch (operator) {
             case AND, OR -> {
-                final boolean b1 = (Boolean) o1Value, b2 = (Boolean) o2Value;
+                final boolean b1 = (Boolean) o1Value;
 
-                yield operator == Operator.AND ? b1 && b2 : b1 || b2;
+                if (operator == Operator.AND && !b1)
+                    yield false;
+                else if (operator == Operator.OR && b1)
+                    yield true;
+
+                yield (Boolean) o2.evaluate(symbolTable);
             }
             case GT, LT, GEQ, LEQ -> {
                 final double
                         n1 = ((Number) o1Value).doubleValue(),
-                        n2 = ((Number) o2Value).doubleValue();
+                        n2 = ((Number) o2.evaluate(symbolTable)).doubleValue();
 
                 yield switch (operator) {
                     case GT -> n1 > n2;
@@ -152,11 +156,13 @@ public final class BinaryOperationNode extends ExpressionNode {
                 };
             }
             case EQUAL, NOT_EQUAL -> {
-                final boolean equal = o1Value.equals(o2Value);
+                final boolean equal = o1Value.equals(o2.evaluate(symbolTable));
 
                 yield (operator == Operator.EQUAL) == equal;
             }
             case ADD, SUBTRACT, MULTIPLY, DIVIDE, MODULO, RAISE -> {
+                final Object o2Value = o2.evaluate(symbolTable);
+
                 if (operator == Operator.ADD &&
                         o1Value instanceof String s1 &&
                         o2Value instanceof String s2)
