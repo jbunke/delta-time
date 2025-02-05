@@ -27,11 +27,7 @@ public class SpriteMap<T> {
     }
 
     public void redraw() {
-        Set<String> inMap = new HashSet<>(spriteMap.keySet());
-
-        for (String validSpriteID : inMap)
-            spriteMap.remove(validSpriteID);
-
+        spriteMap.clear();
         draw();
     }
 
