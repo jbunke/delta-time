@@ -9,7 +9,7 @@ import com.jordanbunke.delta_time.utility.math.Coord2D;
 
 public final class Scrollable extends InvisibleMenuElement {
     private final MenuElement associated;
-    private final Coord2D originalPosition;
+    private Coord2D originalPosition;
     private Coord2D offset;
 
     public Scrollable(final MenuElement associated) {
@@ -119,5 +119,17 @@ public final class Scrollable extends InvisibleMenuElement {
     @Override
     public String toString() {
         return super.toString() + ": " + associated;
+    }
+
+    public void resetPosition() {
+        originalPosition = getPosition();
+    }
+
+    public void resetX() {
+        originalPosition = new Coord2D(getX(), originalPosition.y);
+    }
+
+    public void resetY() {
+        originalPosition = new Coord2D(originalPosition.x, getY());
     }
 }
