@@ -6,6 +6,10 @@ public record Bounds2D(int width, int height) {
             throw new IllegalArgumentException();
     }
 
+    public Bounds2D augment(final int deltaW, final int deltaH) {
+        return new Bounds2D(width + deltaW, height + deltaH);
+    }
+
     @Override
     public boolean equals(final Object o) {
         return o instanceof Bounds2D that &&

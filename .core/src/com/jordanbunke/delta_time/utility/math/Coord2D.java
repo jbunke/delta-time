@@ -27,6 +27,14 @@ public final class Coord2D {
         return new Coord2D(x + deltaX, y + deltaY);
     }
 
+    public Coord2D displaceX(final int deltaX) {
+        return displace(deltaX, 0);
+    }
+
+    public Coord2D displaceY(final int deltaY) {
+        return displace(0, deltaY);
+    }
+
     public Coord2D scale(final int scaleFactor) {
         return new Coord2D(x * scaleFactor, y * scaleFactor);
     }
