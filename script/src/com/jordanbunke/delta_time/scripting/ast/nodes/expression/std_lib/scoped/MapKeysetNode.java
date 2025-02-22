@@ -10,7 +10,7 @@ import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
 import java.util.Set;
 
-public final class MapKeysetNode extends ScopedNativeCallNode {
+public final class MapKeysetNode extends StdLibMemberCallNode {
     public MapKeysetNode(
             final TextPosition position,
             final ExpressionNode owner

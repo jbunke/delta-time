@@ -10,7 +10,7 @@ import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
 import java.util.Set;
 
-public final class ImageSectionNode extends ScopedNativeCallNode {
+public final class ImageSectionNode extends StdLibMemberCallNode {
     final ExpressionNode x, y, width, height;
 
     public ImageSectionNode(

@@ -12,7 +12,7 @@ import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
 import java.util.Set;
 
-public final class ContainsNode extends ScopedNativeCallNode {
+public final class ContainsNode extends StdLibMemberCallNode {
     private final ExpressionNode element;
 
     public ContainsNode(

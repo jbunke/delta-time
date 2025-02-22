@@ -8,7 +8,7 @@ import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
 import java.util.Set;
 
-public final class ImageBoundNode extends ScopedNativeCallNode {
+public final class ImageBoundNode extends StdLibMemberCallNode {
     private final boolean width;
 
     public ImageBoundNode(

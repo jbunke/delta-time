@@ -8,7 +8,7 @@ import com.jordanbunke.delta_time.scripting.util.TextPosition;
 import java.awt.*;
 import java.util.Set;
 
-public final class ColorChannelNode extends ScopedNativeCallNode {
+public final class ColorChannelNode extends StdLibMemberCallNode {
     public enum Channel {
         RED, GREEN, BLUE, ALPHA;
 

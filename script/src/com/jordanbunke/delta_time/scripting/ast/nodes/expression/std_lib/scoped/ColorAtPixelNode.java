@@ -11,7 +11,7 @@ import com.jordanbunke.delta_time.scripting.util.TextPosition;
 import java.awt.*;
 import java.util.Set;
 
-public final class ColorAtPixelNode extends ScopedNativeCallNode {
+public final class ColorAtPixelNode extends StdLibMemberCallNode {
     private final ExpressionNode x, y;
 
     public ColorAtPixelNode(

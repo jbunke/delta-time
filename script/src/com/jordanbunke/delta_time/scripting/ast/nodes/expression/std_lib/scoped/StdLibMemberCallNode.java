@@ -8,11 +8,11 @@ import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
 import java.util.Set;
 
-public abstract class ScopedNativeCallNode extends ExpressionNode {
+public abstract class StdLibMemberCallNode extends ExpressionNode {
     private final ExpressionNode scope;
     private final Set<TypeNode> acceptedTypes;
 
-    ScopedNativeCallNode(
+    StdLibMemberCallNode(
             final TextPosition position,
             final ExpressionNode scope,
             final Set<TypeNode> acceptedTypes

@@ -9,7 +9,7 @@ import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
 import java.util.Set;
 
-public final class SubstringNode extends ScopedNativeCallNode {
+public final class SubstringNode extends StdLibMemberCallNode {
     private final ExpressionNode beginning, end;
 
     public SubstringNode(
