@@ -177,6 +177,14 @@ public abstract class MenuElement implements ProgramContext {
         return dimensions.height();
     }
 
+    public Coord2D below() {
+        return getRenderPosition().displaceY(getHeight());
+    }
+
+    public Coord2D rightOf() {
+        return getRenderPosition().displaceX(getWidth());
+    }
+
     public Anchor getAnchor() {
         return anchor;
     }

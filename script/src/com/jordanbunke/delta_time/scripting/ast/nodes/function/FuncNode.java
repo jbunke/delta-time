@@ -25,7 +25,7 @@ public sealed abstract class FuncNode extends ASTNode
     }
 
     public Object execute(
-            final SymbolTable symbolTable, final Object[] args
+            final SymbolTable symbolTable, final Object... args
     ) {
         signature.execute(symbolTable, args);
         final Object res = body.execute(symbolTable).value;
@@ -39,7 +39,7 @@ public sealed abstract class FuncNode extends ASTNode
         return res;
     }
 
-    public boolean paramsMatch(final TypeNode[] spec) {
+    public boolean paramsMatch(final TypeNode... spec) {
         return signature.paramsMatch(spec);
     }
 

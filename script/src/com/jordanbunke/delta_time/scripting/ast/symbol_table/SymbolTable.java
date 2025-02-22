@@ -5,6 +5,7 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.function.FuncNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.function.HeadFuncNode;
 
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,14 +14,21 @@ public final class SymbolTable {
     private final SymbolTable parent;
     private final Map<ASTNode, SymbolTable> children;
     private final Map<String, Variable> contents;
+    private final Path path;
     private Variable scopeVar;
 
     public SymbolTable(
-            final ASTNode scope,
-            final SymbolTable parent
+            final ASTNode scope, final SymbolTable parent
+    ) {
+        this(scope, parent, null);
+    }
+
+    public SymbolTable(
+            final ASTNode scope, final SymbolTable parent, final Path path
     ) {
         this.scope = scope;
         this.parent = parent;
+        this.path = path;
 
         children = new HashMap<>();
         contents = new HashMap<>();
@@ -35,13 +43,17 @@ public final class SymbolTable {
     }
 
     public static SymbolTable root(
-            final HeadFuncNode func
+            final HeadFuncNode script, final Path scriptPath
     ) {
-        return new SymbolTable(func, null);
+        return new SymbolTable(script, null, scriptPath);
     }
 
     public SymbolTable getRoot() {
         return parent != null ? parent.getRoot() : this;
+    }
+
+    public Path getScriptPath() {
+        return getRoot().path;
     }
 
     public FuncNode getFunc() {

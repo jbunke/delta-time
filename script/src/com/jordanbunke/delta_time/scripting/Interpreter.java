@@ -10,6 +10,7 @@ import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 
+import java.nio.file.Path;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.function.Consumer;
@@ -45,11 +46,12 @@ public class Interpreter {
     }
 
     public Object run(
-            final HeadFuncNode script, final Object... args
+            final HeadFuncNode script, final Path scriptPath,
+            final Object... args
     ) {
         ScriptErrorLog.clearErrors();
 
-        final SymbolTable scriptTable = SymbolTable.root(script);
+        final SymbolTable scriptTable = SymbolTable.root(script, scriptPath);
 
         final boolean passedChecks = check(script, scriptTable);
 
@@ -65,6 +67,12 @@ public class Interpreter {
             displayErrors();
 
         return null;
+    }
+
+    public Object run(
+            final HeadFuncNode script, final Object... args
+    ) {
+        return run(script, null, args);
     }
 
     public HeadFuncNode build(final String content) {
@@ -105,7 +113,7 @@ public class Interpreter {
     private static Optional<Object> execute(
             final HeadFuncNode script,
             final SymbolTable scriptTable,
-            final Object[] args
+            final Object... args
     ) {
         try {
             TypeCompatibility.prepArgs(args);

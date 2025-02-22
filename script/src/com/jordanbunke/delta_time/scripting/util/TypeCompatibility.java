@@ -18,7 +18,7 @@ public final class TypeCompatibility {
                 GameImage.class, Color.class, String.class));
     }
 
-    public static void prepArgs(final Object[] args) {
+    public static void prepArgs(final Object... args) {
         for (int i = 0; i < args.length; i++)
             args[i] = prepArg(args[i]);
     }

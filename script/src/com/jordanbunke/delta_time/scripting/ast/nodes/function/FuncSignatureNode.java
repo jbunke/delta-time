@@ -36,12 +36,12 @@ public final class FuncSignatureNode extends ASTNode {
     }
 
     public void execute(
-            final SymbolTable symbolTable, final Object[] args
+            final SymbolTable symbolTable, final Object... args
     ) {
         parameters.populateArgs(symbolTable, args);
     }
 
-    public boolean paramsMatch(final TypeNode[] spec) {
+    public boolean paramsMatch(final TypeNode... spec) {
         final TypeNode[] actual = parameters.getTypes();
 
         if (actual.length != spec.length)
