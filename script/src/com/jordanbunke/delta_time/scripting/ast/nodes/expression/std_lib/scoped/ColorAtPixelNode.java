@@ -33,7 +33,7 @@ public final class ColorAtPixelNode extends MemberFuncCallNode {
         final int x = (int) vals[X], y = (int) vals[Y];
         final GameImage img = ((GameImage) receiver.evaluate(symbolTable));
 
-        if (x < 0 || y >= img.getWidth())
+        if (x < 0 || x >= img.getWidth())
             ScriptErrorLog.fireError(
                     ScriptErrorLog.Message.PIX_ARG_OUT_OF_BOUNDS,
                     getPosition(), "X", String.valueOf(x),
