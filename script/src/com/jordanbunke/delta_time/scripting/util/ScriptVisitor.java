@@ -27,6 +27,7 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.global.
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.global.img_gen.ImageFromPathNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.global.img_gen.ImageOfBoundsNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.global.io.PromptNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.global.io.ReadFileNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.global.io.ReadNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.global.min_max.AbsoluteNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.global.min_max.ClampNode;
@@ -53,6 +54,8 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.statement.declaration.Init
 import com.jordanbunke.delta_time.scripting.ast.nodes.statement.function.FuncExecuteNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.statement.std_lib.*;
 import com.jordanbunke.delta_time.scripting.ast.nodes.statement.std_lib.global.PrintNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.statement.std_lib.global.WriteFileNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.statement.std_lib.global.WriteImageNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.*;
 
 import java.util.ArrayList;
@@ -84,8 +87,9 @@ public class ScriptVisitor
             ABS = "abs", MIN = "min", MAX = "max", CLAMP = "clamp",
             RAND = "rand", PROB = "prob", FLIP_COIN = "flip_coin",
             PRINT = "print", READ = "read", PROMPT = "prompt",
-            READ_IMAGE = "read_image", NEW_IMAGE_OF = "new_image_of",
-            RGB = "rgb", RGBA = "rgba";
+            READ_FILE = "read_file", WRITE_FILE = "write_file",
+            READ_IMAGE = "read_image", WRITE_IMAGE = "write_image",
+            NEW_IMAGE_OF = "new_image_of", RGB = "rgb", RGBA = "rgba";
 
     // to extend
     @Override
@@ -693,10 +697,19 @@ public class ScriptVisitor
         final String functionID = ctx.ident().getText();
         final TextPosition position = TextPosition.fromToken(ctx.start);
 
-        if (functionID.equals(PRINT) && args.length == 1)
-            return new PrintNode(position, args[0]);
+        final Supplier<StatementNode> scriptDefined =
+                () -> new FuncExecuteNode(position, functionID, args);
 
-        return new FuncExecuteNode(position, functionID, args);
+        return switch (functionID) {
+            case PRINT -> args.length == 1
+                    ? new PrintNode(position, args[0]) : scriptDefined.get();
+            case WRITE_FILE -> args.length == 2
+                    ? new WriteFileNode(position, args[0], args[1])
+                    : scriptDefined.get();
+            case WRITE_IMAGE -> args.length == 2
+                    ? new WriteImageNode(position, args[0], args[1])
+                    : scriptDefined.get();
+        };
     }
 
     @Override
@@ -943,6 +956,9 @@ public class ScriptVisitor
                     : scriptDefined.get();
             case PROB -> args.length == 1
                     ? new ProbabilityNode(position, args[0])
+                    : scriptDefined.get();
+            case READ_FILE -> args.length == 1
+                    ? new ReadFileNode(position, args[0])
                     : scriptDefined.get();
             case READ_IMAGE -> args.length == 1
                     ? new ImageFromPathNode(position, args[0])
