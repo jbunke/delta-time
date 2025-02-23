@@ -14,7 +14,7 @@ public final class RandTwoArgNode extends NumBinOpNode {
     }
 
     @Override
-    protected String callName() {
+    protected String funcName() {
         return "rand";
     }
 }

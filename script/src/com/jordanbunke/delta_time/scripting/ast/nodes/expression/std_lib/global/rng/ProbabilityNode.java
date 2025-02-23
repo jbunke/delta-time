@@ -1,51 +1,31 @@
 package com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.global.rng;
 
-import com.jordanbunke.delta_time.utility.math.RNG;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
-import com.jordanbunke.delta_time.scripting.ast.nodes.types.BaseTypeNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.DefFuncCallNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
-import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
+import com.jordanbunke.delta_time.scripting.util.Arguments;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
+import com.jordanbunke.delta_time.scripting.util.TypeUtils;
+import com.jordanbunke.delta_time.utility.math.RNG;
 
-public final class ProbabilityNode extends ExpressionNode {
-    private final ExpressionNode p;
-
+public final class ProbabilityNode extends DefFuncCallNode {
     public ProbabilityNode(
             final TextPosition position,
             final ExpressionNode p
     ) {
-        super(position);
-
-        this.p = p;
-    }
-
-    @Override
-    public void semanticErrorCheck(final SymbolTable symbolTable) {
-        p.semanticErrorCheck(symbolTable);
-
-        final TypeNode pType = p.getType(symbolTable);
-        final BaseTypeNode floatType = TypeNode.getFloat();
-
-        if (!pType.equals(floatType))
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.ARG_NOT_TYPE,
-                    p.getPosition(), "Probability p",
-                    floatType.toString(), pType.toString());
+        super(new Arguments(Arguments.argsOf(p),
+                TypeUtils.expectExact(TypeNode.getFloat())),
+                TypeNode.getBool(), position);
     }
 
     @Override
     public Boolean evaluate(final SymbolTable symbolTable) {
-        return RNG.prob((double) p.evaluate(symbolTable));
+        return RNG.prob((double) arguments.get(0).evaluate(symbolTable));
     }
 
     @Override
-    public TypeNode getType(final SymbolTable symbolTable) {
-        return TypeNode.getBool();
-    }
-
-    @Override
-    public String toString() {
-        return "prob(" + p + ")";
+    protected String funcName() {
+        return "prob";
     }
 }

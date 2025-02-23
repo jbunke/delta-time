@@ -6,6 +6,7 @@ import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
+// TODO - refactor: should extend DefFuncCallNode
 public final class AbsoluteNode extends ExpressionNode {
     private final ExpressionNode n;
 

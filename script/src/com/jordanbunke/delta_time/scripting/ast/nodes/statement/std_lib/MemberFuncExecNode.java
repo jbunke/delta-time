@@ -1,4 +1,4 @@
-package com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib;
+package com.jordanbunke.delta_time.scripting.ast.nodes.statement.std_lib;
 
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
@@ -7,31 +7,21 @@ import com.jordanbunke.delta_time.scripting.util.Arguments;
 import com.jordanbunke.delta_time.scripting.util.Receiver;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
-public abstract class MemberFuncCallNode extends DefFuncCallNode {
+public abstract class MemberFuncExecNode extends DefFuncExecNode {
     protected final Receiver receiver;
 
-    public MemberFuncCallNode(
+    public MemberFuncExecNode(
             final TextPosition position,
             final ExpressionNode receiver, final TypeNode expectedReceiver,
-            final TypeNode returnType,
             final ExpressionNode[] args, final TypeNode[]... expectedArgs
     ) {
-        this(position, new Receiver(receiver, expectedReceiver),
-                returnType, args, expectedArgs);
-    }
+        super(new Arguments(args, expectedArgs), position);
 
-    public MemberFuncCallNode(
-            final TextPosition position, final Receiver receiver,
-            final TypeNode returnType,
-            final ExpressionNode[] args, final TypeNode[]... expectedArgs
-    ) {
-        super(new Arguments(args, expectedArgs), returnType, position);
-
-        this.receiver = receiver;
+        this.receiver = new Receiver(receiver, expectedReceiver);
     }
 
     @Override
-    public void semanticErrorCheck(final SymbolTable symbolTable) {
+    public void semanticErrorCheck(SymbolTable symbolTable) {
         super.semanticErrorCheck(symbolTable);
         receiver.semanticErrorCheck(symbolTable);
     }

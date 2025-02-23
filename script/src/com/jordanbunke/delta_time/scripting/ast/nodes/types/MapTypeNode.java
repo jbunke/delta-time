@@ -7,6 +7,10 @@ public final class MapTypeNode extends TypeNode {
     private final TypeNode keyType;
     private final TypeNode valueType;
 
+    public MapTypeNode() {
+        this(wildcard(), wildcard());
+    }
+
     public MapTypeNode(
             final TypeNode keyType, final TypeNode valueType
     ) {

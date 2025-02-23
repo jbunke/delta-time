@@ -1,14 +1,14 @@
 package com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.scoped;
 
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.PropertyNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
 import java.awt.*;
-import java.util.Set;
 
-public final class ColorChannelNode extends StdLibMemberCallNode {
+public final class ColorChannelNode extends PropertyNode {
     public enum Channel {
         RED, GREEN, BLUE, ALPHA;
 
@@ -25,27 +25,21 @@ public final class ColorChannelNode extends StdLibMemberCallNode {
     private final Channel channel;
 
     public ColorChannelNode(
-            final TextPosition position,
-            final ExpressionNode owner,
+            final TextPosition position, final ExpressionNode receiver,
             final Channel channel
     ) {
-        super(position, owner, Set.of(TypeNode.getColor()));
+        super(position, receiver, TypeNode.getColor(), TypeNode.getInt());
 
         this.channel = channel;
     }
 
     @Override
     public Integer evaluate(final SymbolTable symbolTable) {
-        return channel.evaluate(((Color) getScope().evaluate(symbolTable)));
+        return channel.evaluate(((Color) receiver.evaluate(symbolTable)));
     }
 
     @Override
-    public TypeNode getType(final SymbolTable symbolTable) {
-        return TypeNode.getInt();
-    }
-
-    @Override
-    String callName() {
+    protected String funcName() {
         return channel.name().toLowerCase();
     }
 }

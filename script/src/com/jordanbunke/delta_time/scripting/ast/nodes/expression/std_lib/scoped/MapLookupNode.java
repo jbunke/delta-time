@@ -2,39 +2,38 @@ package com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.scoped
 
 import com.jordanbunke.delta_time.scripting.ast.collection.ScriptMap;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.MemberFuncCallNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.MapTypeNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
-import java.util.Set;
+import static com.jordanbunke.delta_time.scripting.util.Arguments.argsOf;
+import static com.jordanbunke.delta_time.scripting.util.TypeUtils.expectExact;
 
-public final class MapLookupNode extends StdLibMemberCallNode {
+public final class MapLookupNode extends MemberFuncCallNode {
     private final ExpressionNode element;
 
     public MapLookupNode(
-            TextPosition position,
-            ExpressionNode owner,
+            final TextPosition position,
+            final ExpressionNode receiver,
             final ExpressionNode element
     ) {
-        super(position, owner, Set.of(
-                new MapTypeNode(TypeNode.wildcard(), TypeNode.wildcard())));
+        super(position, receiver, new MapTypeNode(), TypeNode.wildcard(),
+                argsOf(element), expectExact(TypeNode.wildcard()));
 
         this.element = element;
     }
 
     @Override
     public void semanticErrorCheck(final SymbolTable symbolTable) {
-        element.semanticErrorCheck(symbolTable);
-
         super.semanticErrorCheck(symbolTable);
 
-        final TypeNode
-                ownerType = getScope().getType(symbolTable),
+        final TypeNode receiverType = receiver.getType(symbolTable),
                 elemType = element.getType(symbolTable);
 
-        if (ownerType instanceof MapTypeNode mapType) {
+        if (receiverType instanceof MapTypeNode mapType) {
             final TypeNode keyType = mapType.getKeyType();
 
             if (!keyType.equals(elemType))
@@ -46,16 +45,16 @@ public final class MapLookupNode extends StdLibMemberCallNode {
 
     @Override
     public Object evaluate(final SymbolTable symbolTable) {
-        final Object owner = getScope().evaluate(symbolTable);
+        final Object rec = receiver.evaluate(symbolTable);
         final Object elemValue = element.evaluate(symbolTable);
 
-        if (owner instanceof ScriptMap map) {
+        if (rec instanceof ScriptMap map) {
             if (map.containsKey(elemValue))
                 return map.get(elemValue);
             else
                 ScriptErrorLog.fireError(
                         ScriptErrorLog.Message.MAP_DOES_NOT_CONTAIN_ELEMENT,
-                        getPosition(), elemValue.toString());
+                        element.getPosition(), elemValue.toString());
         }
 
         return null;
@@ -63,18 +62,11 @@ public final class MapLookupNode extends StdLibMemberCallNode {
 
     @Override
     public TypeNode getType(final SymbolTable symbolTable) {
-        return ((MapTypeNode) getScope().getType(symbolTable)).getValueType();
+        return ((MapTypeNode) receiver.getType(symbolTable)).getValueType();
     }
 
     @Override
-    String callName() {
-        return "lookup()";
-    }
-
-    @Override
-    public String toString() {
-        final String base = super.toString();
-
-        return base.substring(0, base.length() - 2) + "(" + element + ")";
+    protected String funcName() {
+        return "lookup";
     }
 }

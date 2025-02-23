@@ -9,6 +9,7 @@ import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
 import java.util.Set;
 
+// TODO - refactor: should extend DefFuncCallNode
 public final class ClampNode extends ExpressionNode {
     private final ExpressionNode min, value, max;
 

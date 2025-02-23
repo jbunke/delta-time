@@ -12,6 +12,7 @@ import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
 import java.awt.*;
 
+// TODO - refactor: should extend MemberFuncExecNode
 public final class DotNode extends StatementNode {
     private final ExpressionNode canvas, color, x, y;
 

@@ -2,53 +2,32 @@ package com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.global
 
 import com.jordanbunke.delta_time.image.GameImage;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
-import com.jordanbunke.delta_time.scripting.ast.nodes.types.BaseTypeNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.DefFuncCallNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
+import com.jordanbunke.delta_time.scripting.util.Arguments;
 import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
+import com.jordanbunke.delta_time.scripting.util.TypeUtils;
 
-public final class ImageOfBoundsNode extends ExpressionNode {
-    private final ExpressionNode width, height;
+public final class ImageOfBoundsNode extends DefFuncCallNode {
+    private static final int W = 0, H = 1;
 
     public ImageOfBoundsNode(
             final TextPosition position,
             final ExpressionNode width,
             final ExpressionNode height
     ) {
-        super(position);
-
-        this.width = width;
-        this.height = height;
-    }
-
-    @Override
-    public void semanticErrorCheck(final SymbolTable symbolTable) {
-        width.semanticErrorCheck(symbolTable);
-        height.semanticErrorCheck(symbolTable);
-
-        final BaseTypeNode intType = TypeNode.getInt();
-
-        final TypeNode
-                widthType = width.getType(symbolTable),
-                heightType = height.getType(symbolTable);
-
-        if (!widthType.equals(intType))
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.ARG_NOT_TYPE,
-                    width.getPosition(), "Width",
-                    "int", widthType.toString());
-        if (!heightType.equals(intType))
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.ARG_NOT_TYPE,
-                    height.getPosition(), "Height",
-                    "int", heightType.toString());
+        super(new Arguments(Arguments.argsOf(width, height),
+                TypeUtils.expectExact(TypeNode.getInt(), TypeNode.getInt())),
+                TypeNode.getImage(), position);
     }
 
     @Override
     public GameImage evaluate(final SymbolTable symbolTable) {
-        final int w = (int) width.evaluate(symbolTable),
-                h = (int) height.evaluate(symbolTable);
+        final Object[] vals = arguments.evaluate(symbolTable);
+
+        final int w = (int) vals[W], h = (int) vals[H];
 
         if (w > 0 && h > 0)
             return new GameImage(w, h);
@@ -56,23 +35,20 @@ public final class ImageOfBoundsNode extends ExpressionNode {
             if (w <= 0)
                 ScriptErrorLog.fireError(
                         ScriptErrorLog.Message.NON_POSITIVE_IMAGE_BOUND,
-                        width.getPosition(), "Width", String.valueOf(w));
+                        arguments.get(W).getPosition(),
+                        "Width", String.valueOf(w));
             if (h <= 0)
                 ScriptErrorLog.fireError(
                         ScriptErrorLog.Message.NON_POSITIVE_IMAGE_BOUND,
-                        height.getPosition(), "Height", String.valueOf(h));
+                        arguments.get(H).getPosition(),
+                        "Height", String.valueOf(h));
         }
 
         return null;
     }
 
     @Override
-    public TypeNode getType(final SymbolTable symbolTable) {
-        return TypeNode.getImage();
-    }
-
-    @Override
-    public String toString() {
-        return "new_image_of(" + width + ", " + height + ")";
+    protected String funcName() {
+        return "new_image_of";
     }
 }

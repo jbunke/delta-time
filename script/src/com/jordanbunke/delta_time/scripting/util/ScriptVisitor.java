@@ -4,30 +4,58 @@ import com.jordanbunke.delta_time.scripting.ScriptParser;
 import com.jordanbunke.delta_time.scripting.ScriptParserBaseVisitor;
 import com.jordanbunke.delta_time.scripting.ast.nodes.ASTNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.GenericIllegalNode;
-import com.jordanbunke.delta_time.scripting.ast.nodes.expression.*;
-import com.jordanbunke.delta_time.scripting.ast.nodes.expression.assignable.*;
-import com.jordanbunke.delta_time.scripting.ast.nodes.expression.collection_init.*;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.CastNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.IllegalExpressionNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.assignable.ArrayAssignableNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.assignable.AssignableNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.assignable.IdentifierNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.assignable.ListAssignableNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.collection_init.ExplicitCollectionInitNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.collection_init.ExplicitMapInitNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.collection_init.NewArrayNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.collection_init.NewMapNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.function.FuncCallNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.function.HOFuncCallNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.function.HOFuncNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.function.LambdaExpressionNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.literal.*;
-import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.global.color_def.*;
-import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.global.img_gen.*;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.operation.BinaryOperationNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.operation.TernaryOperationNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.operation.UnaryOperationNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.global.RGBNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.global.img_gen.ImageFromPathNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.global.img_gen.ImageOfBoundsNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.global.io.PromptNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.global.io.ReadFileNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.global.io.ReadNode;
-import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.global.min_max.*;
-import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.global.rng.*;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.global.min_max.AbsoluteNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.global.min_max.ClampNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.global.min_max.MinMaxCollectionNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.global.min_max.MinMaxTwoArgNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.global.rng.FlipCoinNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.global.rng.ProbabilityNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.global.rng.RandNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.global.rng.RandTwoArgNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.scoped.*;
-import com.jordanbunke.delta_time.scripting.ast.nodes.expression.operation.*;
 import com.jordanbunke.delta_time.scripting.ast.nodes.function.*;
-import com.jordanbunke.delta_time.scripting.ast.nodes.statement.*;
-import com.jordanbunke.delta_time.scripting.ast.nodes.statement.assignment.*;
+import com.jordanbunke.delta_time.scripting.ast.nodes.statement.BodyStatementNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.statement.IllegalStatementNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.statement.StatementNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.statement.assignment.AssignmentNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.statement.assignment.NoOperandAssignmentNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.statement.assignment.OperandAssignmentNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.statement.assignment.StandardAssignmentNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.statement.control_flow.*;
-import com.jordanbunke.delta_time.scripting.ast.nodes.statement.declaration.*;
+import com.jordanbunke.delta_time.scripting.ast.nodes.statement.declaration.DeclarationNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.statement.declaration.ExplicitDeclarationNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.statement.declaration.ImplicitDeclarationNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.statement.declaration.InitializationNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.statement.function.FuncExecuteNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.statement.std_lib.*;
 import com.jordanbunke.delta_time.scripting.ast.nodes.statement.std_lib.global.PrintNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.statement.std_lib.global.WriteFileNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.statement.std_lib.global.WriteImageNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.*;
 
 import java.util.ArrayList;
@@ -59,8 +87,9 @@ public class ScriptVisitor
             ABS = "abs", MIN = "min", MAX = "max", CLAMP = "clamp",
             RAND = "rand", PROB = "prob", FLIP_COIN = "flip_coin",
             PRINT = "print", READ = "read", PROMPT = "prompt",
-            READ_IMAGE = "read_image", NEW_IMAGE_OF = "new_image_of",
-            RGB = "rgb", RGBA = "rgba";
+            READ_FILE = "read_file", WRITE_FILE = "write_file",
+            READ_IMAGE = "read_image", WRITE_IMAGE = "write_image",
+            NEW_IMAGE_OF = "new_image_of", RGB = "rgb", RGBA = "rgba";
 
     // to extend
     @Override
@@ -668,10 +697,20 @@ public class ScriptVisitor
         final String functionID = ctx.ident().getText();
         final TextPosition position = TextPosition.fromToken(ctx.start);
 
-        if (functionID.equals(PRINT) && args.length == 1)
-            return new PrintNode(position, args[0]);
+        final Supplier<StatementNode> scriptDefined =
+                () -> new FuncExecuteNode(position, functionID, args);
 
-        return new FuncExecuteNode(position, functionID, args);
+        return switch (functionID) {
+            case PRINT -> args.length == 1
+                    ? new PrintNode(position, args[0]) : scriptDefined.get();
+            case WRITE_FILE -> args.length == 2
+                    ? new WriteFileNode(position, args[0], args[1])
+                    : scriptDefined.get();
+            case WRITE_IMAGE -> args.length == 2
+                    ? new WriteImageNode(position, args[0], args[1])
+                    : scriptDefined.get();
+            default -> scriptDefined.get();
+        };
     }
 
     @Override
@@ -919,6 +958,9 @@ public class ScriptVisitor
             case PROB -> args.length == 1
                     ? new ProbabilityNode(position, args[0])
                     : scriptDefined.get();
+            case READ_FILE -> args.length == 1
+                    ? new ReadFileNode(position, args[0])
+                    : scriptDefined.get();
             case READ_IMAGE -> args.length == 1
                     ? new ImageFromPathNode(position, args[0])
                     : scriptDefined.get();
@@ -926,11 +968,10 @@ public class ScriptVisitor
                     ? new ImageOfBoundsNode(position, args[0], args[1])
                     : scriptDefined.get();
             case RGB -> args.length == 3
-                    ? new RGBColorNode(position, args[0], args[1], args[2])
+                    ? new RGBNode(position, args[0], args[1], args[2], null)
                     : scriptDefined.get();
             case RGBA -> args.length == 4
-                    ? new RGBAColorNode(
-                            position, args[0], args[1], args[2], args[3])
+                    ? new RGBNode(position, args[0], args[1], args[2], args[3])
                     : scriptDefined.get();
             case MIN -> switch (args.length) {
                 case 1 -> new MinMaxCollectionNode(position, false, args[0]);
