@@ -709,6 +709,7 @@ public class ScriptVisitor
             case WRITE_IMAGE -> args.length == 2
                     ? new WriteImageNode(position, args[0], args[1])
                     : scriptDefined.get();
+            default -> scriptDefined.get();
         };
     }
 
