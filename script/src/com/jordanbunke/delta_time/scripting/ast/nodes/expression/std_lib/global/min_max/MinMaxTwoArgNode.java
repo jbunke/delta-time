@@ -17,7 +17,7 @@ public final class MinMaxTwoArgNode extends NumBinOpNode {
         this.isMax = isMax;
     }
 
-    protected String callName() {
+    protected String funcName() {
         return isMax ? "max" : "min";
     }
 }

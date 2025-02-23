@@ -10,6 +10,7 @@ import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
 import java.util.stream.Stream;
 
+// TODO - refactor: should extend DefFuncCallNode
 public final class MinMaxCollectionNode extends ExpressionNode {
     private final boolean isMax;
     private final ExpressionNode col;

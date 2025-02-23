@@ -9,6 +9,9 @@ import java.util.Arrays;
 import static com.jordanbunke.delta_time.scripting.util.TypeUtils.*;
 
 public record Arguments(ExpressionNode[] args, TypeNode[]... expectedArgs) {
+    public static Arguments none() {
+        return new Arguments(argsOf());
+    }
 
     public static ExpressionNode[] argsOf(final ExpressionNode... args) {
         return args;

@@ -1,14 +1,15 @@
 package com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.global.rng;
 
-import com.jordanbunke.delta_time.utility.math.RNG;
-import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.DefFuncCallNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
+import com.jordanbunke.delta_time.scripting.util.Arguments;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
+import com.jordanbunke.delta_time.utility.math.RNG;
 
-public final class FlipCoinNode extends ExpressionNode {
+public final class FlipCoinNode extends DefFuncCallNode {
     public FlipCoinNode(TextPosition position) {
-        super(position);
+        super(Arguments.none(), TypeNode.getBool(), position);
     }
 
     @Override
@@ -20,12 +21,7 @@ public final class FlipCoinNode extends ExpressionNode {
     }
 
     @Override
-    public TypeNode getType(final SymbolTable symbolTable) {
-        return TypeNode.getBool();
-    }
-
-    @Override
-    public String toString() {
-        return "flip_coin()";
+    protected String funcName() {
+        return "flip_coin";
     }
 }

@@ -1,16 +1,17 @@
 package com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.global.rng;
 
-import com.jordanbunke.delta_time.utility.math.RNG;
-import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.DefFuncCallNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
+import com.jordanbunke.delta_time.scripting.util.Arguments;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
+import com.jordanbunke.delta_time.utility.math.RNG;
 
-public final class RandNode extends ExpressionNode {
+public final class RandNode extends DefFuncCallNode {
     public RandNode(
             final TextPosition position
     ) {
-        super(position);
+        super(Arguments.none(), TypeNode.getFloat(), position);
     }
 
     @Override
@@ -22,12 +23,7 @@ public final class RandNode extends ExpressionNode {
     }
 
     @Override
-    public TypeNode getType(SymbolTable symbolTable) {
-        return TypeNode.getFloat();
-    }
-
-    @Override
-    public String toString() {
-        return "rand()";
+    protected String funcName() {
+        return "rand";
     }
 }

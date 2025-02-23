@@ -3,39 +3,24 @@ package com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.global
 import com.jordanbunke.delta_time.image.GameImage;
 import com.jordanbunke.delta_time.io.GameImageIO;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.DefFuncCallNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
-import com.jordanbunke.delta_time.scripting.util.PathHelper;
-import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
-import com.jordanbunke.delta_time.scripting.util.TextPosition;
+import com.jordanbunke.delta_time.scripting.util.*;
 
-public final class ImageFromPathNode extends ExpressionNode {
-    private final ExpressionNode path;
-
+public final class ImageFromPathNode extends DefFuncCallNode {
     public ImageFromPathNode(
-            final TextPosition position,
-            final ExpressionNode path
+            final TextPosition position, final ExpressionNode path
     ) {
-        super(position);
-
-        this.path = path;
-    }
-
-    @Override
-    public void semanticErrorCheck(final SymbolTable symbolTable) {
-        path.semanticErrorCheck(symbolTable);
-
-        final TypeNode pathType = path.getType(symbolTable);
-
-        if (!pathType.equals(TypeNode.getString()))
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.ARG_NOT_TYPE,
-                    path.getPosition(), "Image filepath",
-                    TypeNode.getString().toString(), pathType.toString());
+        super(new Arguments(Arguments.argsOf(path),
+                TypeUtils.expectExact(TypeNode.getString())),
+                TypeNode.getImage(), position);
     }
 
     @Override
     public GameImage evaluate(final SymbolTable symbolTable) {
+        final ExpressionNode path = arguments.get(0);
+
         final String fp = (String) path.evaluate(symbolTable);
         final GameImage image = GameImageIO.readImage(
                 PathHelper.process(fp, symbolTable, path.getPosition()));
@@ -49,12 +34,7 @@ public final class ImageFromPathNode extends ExpressionNode {
     }
 
     @Override
-    public TypeNode getType(final SymbolTable symbolTable) {
-        return TypeNode.getImage();
-    }
-
-    @Override
-    public String toString() {
-        return "read_image(" + path + ")";
+    protected String funcName() {
+        return "read_image";
     }
 }

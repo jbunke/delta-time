@@ -1,14 +1,15 @@
 package com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.global.io;
 
 import com.jordanbunke.delta_time.scripting.Interpreter;
-import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.DefFuncCallNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
+import com.jordanbunke.delta_time.scripting.util.Arguments;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
-public final class ReadNode extends ExpressionNode {
+public final class ReadNode extends DefFuncCallNode {
     public ReadNode(final TextPosition position) {
-        super(position);
+        super(Arguments.none(), TypeNode.getString(), position);
     }
 
     @Override
@@ -20,12 +21,7 @@ public final class ReadNode extends ExpressionNode {
     }
 
     @Override
-    public TypeNode getType(final SymbolTable symbolTable) {
-        return TypeNode.getString();
-    }
-
-    @Override
-    public String toString() {
-        return "read()";
+    protected String funcName() {
+        return "read";
     }
 }
