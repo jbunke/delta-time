@@ -19,17 +19,15 @@ public record Receiver(ExpressionNode receiver, TypeNode[] typeOptions) {
         return receiver.getType(symbolTable);
     }
 
-    public void semanticErrorCheck(
-            final SymbolTable symbolTable, final TextPosition position
-    ) {
+    public void semanticErrorCheck(final SymbolTable symbolTable) {
         receiver.semanticErrorCheck(symbolTable);
 
         final TypeNode type = receiver.getType(symbolTable);
 
         if (!contains(typeOptions, type))
             ScriptErrorLog.fireError(ScriptErrorLog.Message.ARG_NOT_TYPE,
-                    position, "receiver", expectedString(typeOptions),
-                    type.toString());
+                    receiver.getPosition(), "receiver",
+                    expectedString(typeOptions), type.toString());
     }
 
     @Override

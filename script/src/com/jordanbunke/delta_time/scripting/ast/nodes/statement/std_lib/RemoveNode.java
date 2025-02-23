@@ -11,6 +11,7 @@ import com.jordanbunke.delta_time.scripting.util.FuncControlFlow;
 import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
+// TODO - refactor: should extend MemberFuncExecNode
 public final class RemoveNode extends StatementNode {
     private final ExpressionNode collection, arg;
 
