@@ -6,15 +6,15 @@ import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 
 import java.util.Arrays;
 
+import static com.jordanbunke.delta_time.scripting.util.TypeUtils.*;
+
 public record Arguments(ExpressionNode[] args, TypeNode[]... expectedArgs) {
 
-    public static TypeNode[][] exact(final TypeNode... expectedArgs) {
-        return Arrays.stream(expectedArgs)
-                .map(ea -> new TypeNode[] { ea })
-                .toArray(TypeNode[][]::new);
+    public static ExpressionNode[] argsOf(final ExpressionNode... args) {
+        return args;
     }
 
-    public Object[] getValues(final SymbolTable symbolTable) {
+    public Object[] evaluate(final SymbolTable symbolTable) {
         return Arrays.stream(args)
                 .map(a -> a.evaluate(symbolTable))
                 .toArray(Object[]::new);
@@ -50,19 +50,8 @@ public record Arguments(ExpressionNode[] args, TypeNode[]... expectedArgs) {
         }
     }
 
-    private boolean contains(final TypeNode[] expected, final TypeNode actual) {
-        for (TypeNode option : expected)
-            if (option.equals(actual))
-                return true;
-
-        return false;
-    }
-
-    private String expectedString(final TypeNode[] expected) {
-        if (expected.length == 1) return expected[0].toString();
-
-        return Arrays.stream(expected).map(TypeNode::toString)
-                .reduce((a, b) -> a + "\" or \"").orElse("");
+    public ExpressionNode get(final int index) {
+        return args[index];
     }
 
     @Override

@@ -14,11 +14,20 @@ public abstract class MemberFuncCallNode extends DefFuncCallNode {
             final TextPosition position,
             final ExpressionNode receiver, final TypeNode expectedReceiver,
             final TypeNode returnType,
-            final ExpressionNode[] args, final TypeNode... expectedArgs
+            final ExpressionNode[] args, final TypeNode[]... expectedArgs
+    ) {
+        this(position, new Receiver(receiver, expectedReceiver),
+                returnType, args, expectedArgs);
+    }
+
+    public MemberFuncCallNode(
+            final TextPosition position, final Receiver receiver,
+            final TypeNode returnType,
+            final ExpressionNode[] args, final TypeNode[]... expectedArgs
     ) {
         super(new Arguments(args, expectedArgs), returnType, position);
 
-        this.receiver = new Receiver(receiver, expectedReceiver);
+        this.receiver = receiver;
     }
 
     @Override

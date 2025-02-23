@@ -1,91 +1,62 @@
 package com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.scoped;
 
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
-import com.jordanbunke.delta_time.scripting.ast.nodes.types.BaseTypeNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.MemberFuncCallNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
-import java.util.Set;
+import static com.jordanbunke.delta_time.scripting.util.Arguments.argsOf;
+import static com.jordanbunke.delta_time.scripting.util.TypeUtils.expectExact;
 
-public final class SubstringNode extends StdLibMemberCallNode {
-    private final ExpressionNode beginning, end;
+public final class SubstringNode extends MemberFuncCallNode {
+    private static final int BEG = 0, END = 1;
 
     public SubstringNode(
             final TextPosition position,
-            final ExpressionNode owner,
+            final ExpressionNode receiver,
             final ExpressionNode beginning,
             final ExpressionNode end
     ) {
-        super(position, owner,
-                Set.of(TypeNode.getString()));
-
-        this.beginning = beginning;
-        this.end = end;
-    }
-
-    @Override
-    public void semanticErrorCheck(final SymbolTable symbolTable) {
-        beginning.semanticErrorCheck(symbolTable);
-        end.semanticErrorCheck(symbolTable);
-
-        super.semanticErrorCheck(symbolTable);
-
-        final BaseTypeNode intType = TypeNode.getInt();
-
-        final TypeNode
-                begType = beginning.getType(symbolTable),
-                endType = end.getType(symbolTable);
-
-        if (!begType.equals(intType))
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.ARG_NOT_TYPE,
-                    beginning.getPosition(), "Beginning index",
-                    "int", begType.toString());
-        if (!endType.equals(intType))
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.ARG_NOT_TYPE,
-                    beginning.getPosition(), "End index",
-                    "int", endType.toString());
+        super(position, receiver, TypeNode.getString(),
+                TypeNode.getString(), argsOf(beginning, end),
+                expectExact(TypeNode.getInt(), TypeNode.getInt()));
     }
 
     @Override
     public String evaluate(final SymbolTable symbolTable) {
-        final int begIndex = (int) beginning.evaluate(symbolTable),
-                endIndex = (int) end.evaluate(symbolTable);
+        final Object[] vals = arguments.evaluate(symbolTable);
 
-        final String s = (String) getScope().evaluate(symbolTable);
+        final int beg = (int) vals[BEG], end = (int) vals[END];
 
-        if (begIndex >= 0 && endIndex <= s.length() && begIndex < endIndex)
-            return s.substring(begIndex, endIndex);
+        final String s = (String) receiver.evaluate(symbolTable);
+
+        if (beg >= 0 && end <= s.length() && beg < end)
+            return s.substring(beg, end);
         else {
-            if (begIndex < 0)
+            if (beg < 0)
                 ScriptErrorLog.fireError(
                         ScriptErrorLog.Message.SUB_BEG_OUT_OF_BOUNDS,
-                        beginning.getPosition(), String.valueOf(begIndex));
-            if (endIndex > s.length())
+                        arguments.get(BEG).getPosition(),
+                        String.valueOf(beg));
+            if (end > s.length())
                 ScriptErrorLog.fireError(
                         ScriptErrorLog.Message.SUB_END_OUT_OF_BOUNDS,
-                        end.getPosition(), String.valueOf(s.length()),
-                        String.valueOf(endIndex));
-            if (begIndex >= endIndex)
+                        arguments.get(END).getPosition(),
+                        String.valueOf(s.length()), String.valueOf(end));
+            if (beg >= end)
                 ScriptErrorLog.fireError(
                         ScriptErrorLog.Message.SUB_END_GEQ_BEG,
-                        beginning.getPosition(), String.valueOf(begIndex),
-                        String.valueOf(endIndex));
+                        arguments.get(BEG).getPosition(),
+                        String.valueOf(beg), String.valueOf(end));
         }
 
         return null;
     }
 
     @Override
-    public TypeNode getType(final SymbolTable symbolTable) {
-        return TypeNode.getString();
-    }
-
-    @Override
-    String callName() {
-        return "sub()";
+    protected String funcName() {
+        return "sub";
     }
 }
