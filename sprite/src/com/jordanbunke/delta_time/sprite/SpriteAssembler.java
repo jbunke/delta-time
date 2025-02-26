@@ -1,5 +1,6 @@
 package com.jordanbunke.delta_time.sprite;
 
+import com.jordanbunke.color_proc.ColorAlgo;
 import com.jordanbunke.delta_time.error.GameError;
 import com.jordanbunke.delta_time.image.GameImage;
 import com.jordanbunke.delta_time.sprite.constituents.SpriteConstituent;
@@ -78,18 +79,7 @@ public class SpriteAssembler<T, R> {
 
                     if (filterIsEnabled && notCalledOnItself && notTrivial) {
                         final Function<Color, Color> filterFunction = filterFunctionMap.get(filterID);
-
-                        final int width = layer.getWidth(), height = layer.getHeight();
-                        final GameImage filteredLayer = new GameImage(width, height);
-
-                        for (int x = 0; x < width; x++) {
-                            for (int y = 0; y < height; y++) {
-                                final Color sample = layer.getColorAt(x, y);
-                                filteredLayer.dot(filterFunction.apply(sample), x, y);
-                            }
-                        }
-
-                        layer = filteredLayer.submit();
+                        layer = ColorAlgo.run(filterFunction, layer);
                     }
                 }
 
@@ -250,5 +240,10 @@ public class SpriteAssembler<T, R> {
         filterFunctionMap.put(filterID, filterFunction);
         layerFilterMap.put(appliedToLayerID, filterID);
         layerIsEnabledMap.put(filterID, true);
+    }
+
+    public List<T> getEnabledLayerIDs() {
+        return layerIDs.stream().filter(layerIsEnabledMap::containsKey)
+                .filter(layerIsEnabledMap::get).toList();
     }
 }
