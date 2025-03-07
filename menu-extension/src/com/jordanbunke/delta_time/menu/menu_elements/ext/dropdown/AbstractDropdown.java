@@ -35,7 +35,7 @@ public sealed abstract class AbstractDropdown extends MenuElement
 
     protected void make() {
         ddButton = makeDDButton();
-        ddContainer = makeDDContainer(getPosition()
+        ddContainer = makeDDContainer(getRenderPosition()
                 .displace(contentsDisplacement()));
     }
 
