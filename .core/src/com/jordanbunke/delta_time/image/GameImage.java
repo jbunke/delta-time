@@ -1,5 +1,6 @@
 package com.jordanbunke.delta_time.image;
 
+import com.jordanbunke.delta_time.utility.math.Bounds2D;
 import com.jordanbunke.delta_time.utility.math.Coord2D;
 
 import java.awt.*;
@@ -17,6 +18,10 @@ public class GameImage extends BufferedImage {
         super(width, height, TYPE_INT_ARGB);
 
         g = null;
+    }
+
+    public GameImage(final Bounds2D dims) {
+        this(dims.width(), dims.height());
     }
 
     public GameImage(final BufferedImage image) {
