@@ -52,4 +52,8 @@ public class SpriteSheet {
         );
         return new GameImage(singleSpriteWidth, singleSpriteHeight);
     }
+
+    public GameImage getSheet() {
+        return sheet;
+    }
 }
