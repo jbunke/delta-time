@@ -5,6 +5,7 @@ import com.jordanbunke.delta_time.utility.math.Coord2D;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.IndexColorModel;
 
 public class GameImage extends BufferedImage {
 
@@ -12,6 +13,15 @@ public class GameImage extends BufferedImage {
 
     public static GameImage dummy() {
         return new GameImage(1, 1);
+    }
+
+    public GameImage(
+            final int width, final int height,
+            final int imageType, final IndexColorModel icm
+    ) {
+        super(width, height, imageType, icm);
+
+        g = null;
     }
 
     public GameImage(final int width, final int height) {
