@@ -14,8 +14,9 @@ public final class PrintNode extends DefFuncExecNode {
     public PrintNode(
             final TextPosition position, final ExpressionNode message
     ) {
-        super(new Arguments(Arguments.argsOf(message),
-                TypeUtils.expectExact(TypeNode.wildcard())), position);
+        super(new Arguments(Arguments.argsOf(message), TypeUtils.options(
+                TypeNode.wildcard(), TypeNode.array(),
+                TypeNode.list(), TypeNode.set())), position);
     }
 
     @Override
