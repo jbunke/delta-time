@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="delta-time-fonts">
+    <output-path>$PROJECT_DIR$/out/artifacts/dt_modules</output-path>
+    <root id="archive" name="delta-time-fonts.jar">
+      <element id="module-output" name="fonts" />
+    </root>
+  </artifact>
+</component>

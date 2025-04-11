@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="delta-time-menu-extension">
+    <output-path>$PROJECT_DIR$/out/artifacts/dt_modules</output-path>
+    <root id="archive" name="delta-time-menu-extension.jar">
+      <element id="module-output" name="menu-extension" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../funke/out/artifacts/funke/funke.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

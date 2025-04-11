@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="funke">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../funke/out/artifacts/funke/funke.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

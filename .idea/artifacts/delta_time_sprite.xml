@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="delta-time-sprite">
+    <output-path>$PROJECT_DIR$/out/artifacts/dt_modules</output-path>
+    <root id="archive" name="delta-time-sprite.jar">
+      <element id="module-output" name="sprite" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../color-processing/out/artifacts/builds/color-proc-dt.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

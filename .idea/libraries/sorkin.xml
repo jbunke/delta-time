@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="sorkin">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../sorkin/out/artifacts/build/sorkin.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

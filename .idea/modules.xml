@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.core/.core.iml" filepath="$PROJECT_DIR$/.core/.core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fonts/fonts.iml" filepath="$PROJECT_DIR$/fonts/fonts.iml" />
+      <module fileurl="file://$PROJECT_DIR$/game_dev/game_dev.iml" filepath="$PROJECT_DIR$/game_dev/game_dev.iml" />
+      <module fileurl="file://$PROJECT_DIR$/menu-extension/menu-extension.iml" filepath="$PROJECT_DIR$/menu-extension/menu-extension.iml" />
+      <module fileurl="file://$PROJECT_DIR$/script/script.iml" filepath="$PROJECT_DIR$/script/script.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sound/sound.iml" filepath="$PROJECT_DIR$/sound/sound.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sprite/sprite.iml" filepath="$PROJECT_DIR$/sprite/sprite.iml" />
+    </modules>
+  </component>
+</project>

@@ -1,0 +1,18 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="experimental-dt">
+    <output-path>$PROJECT_DIR$/out/artifacts/experimental_dt</output-path>
+    <root id="archive" name="delta-time-complete.jar">
+      <element id="module-output" name="game_dev" />
+      <element id="module-output" name=".core" />
+      <element id="module-output" name="menu-extension" />
+      <element id="module-output" name="script" />
+      <element id="module-output" name="sprite" />
+      <element id="module-output" name="sound" />
+      <element id="module-output" name="fonts" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../funke/out/artifacts/funke/funke.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../color-processing/out/artifacts/builds/color-proc-dt.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../sorkin/out/artifacts/build/sorkin.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../animation-encoder/out/artifacts/animation_encoder/animation-encoder.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="delta-time-game-dev">
+    <output-path>$PROJECT_DIR$/out/artifacts/dt_modules</output-path>
+    <root id="archive" name="delta-time-game-dev.jar">
+      <element id="module-output" name="game_dev" />
+    </root>
+  </artifact>
+</component>

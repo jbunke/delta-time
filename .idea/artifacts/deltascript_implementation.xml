@@ -1,0 +1,19 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="deltascript-implementation">
+    <output-path>$PROJECT_DIR$/out/artifacts/deltascript</output-path>
+    <root id="archive" name="deltascript-implementation.jar">
+      <element id="module-output" name=".core" />
+      <element id="module-output" name="script" />
+      <element id="module-output" name="sprite" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/antlr/antlr4/4.13.1/antlr4-4.13.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/antlr/antlr4-runtime/4.13.1/antlr4-runtime-4.13.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/antlr/antlr-runtime/3.5.3/antlr-runtime-3.5.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/antlr/ST4/4.3.4/ST4-4.3.4.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/abego/treelayout/org.abego.treelayout.core/1.0.3/org.abego.treelayout.core-1.0.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/ibm/icu/icu4j/72.1/icu4j-72.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../color-processing/out/artifacts/builds/color-proc-dt.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../sorkin/out/artifacts/build/sorkin.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../animation-encoder/out/artifacts/animation_encoder/animation-encoder.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="color-proc-dt">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../color-processing/out/artifacts/builds/color-proc-dt.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
