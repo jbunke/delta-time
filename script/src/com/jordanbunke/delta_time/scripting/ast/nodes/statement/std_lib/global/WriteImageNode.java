@@ -38,6 +38,6 @@ public final class WriteImageNode extends DefFuncExecNode {
 
     @Override
     protected String funcName() {
-        return "write_file";
+        return "write_image";
     }
 }
