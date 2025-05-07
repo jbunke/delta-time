@@ -6,7 +6,7 @@ import com.jordanbunke.delta_time.scripting.ast.symbol_table.Variable;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
 public final class HelperFuncNode extends ChildFuncNode {
-    private final String name;
+    public final String name;
 
     public HelperFuncNode(
             final TextPosition position,

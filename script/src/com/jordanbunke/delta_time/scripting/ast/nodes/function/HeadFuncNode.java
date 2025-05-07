@@ -4,6 +4,8 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.statement.StatementNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
+import java.util.Arrays;
+
 public final class HeadFuncNode extends FuncNode {
     private final HelperFuncNode[] helpers;
 
@@ -27,5 +29,10 @@ public final class HeadFuncNode extends FuncNode {
             helper.semanticErrorCheck(symbolTable);
 
         super.semanticErrorCheck(symbolTable);
+    }
+
+    public HelperFuncNode getHelper(final String name) {
+        return Arrays.stream(helpers).filter(h -> h.name.equals(name))
+                .findFirst().orElse(null);
     }
 }
