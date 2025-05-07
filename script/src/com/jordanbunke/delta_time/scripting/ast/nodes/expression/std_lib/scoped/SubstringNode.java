@@ -5,6 +5,7 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.MemberF
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
+import com.jordanbunke.delta_time.scripting.util.ScriptVisitor;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
 import static com.jordanbunke.delta_time.scripting.util.Arguments.argsOf;
@@ -57,6 +58,6 @@ public final class SubstringNode extends MemberFuncCallNode {
 
     @Override
     protected String funcName() {
-        return "sub";
+        return ScriptVisitor.SUB;
     }
 }

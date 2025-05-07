@@ -67,7 +67,7 @@ public class ScriptVisitor
     protected static final String SCOPE_SEP = ".";
 
     // function IDs
-    protected static final String
+    public static final String
             // properties
             RED_L = "red", RED_S = "r",
             GREEN_L = "green", GREEN_S = "g",
@@ -79,7 +79,7 @@ public class ScriptVisitor
             CALL = "call",
             HAS = "has", LOOKUP = "lookup", KEYS = "keys",
             SECTION = "section", PIXEL = "pixel",
-            AT = "at", SUB = "sub",
+            AT = "at", SUB = "sub", SPLIT = "split",
             ADD = "add", REMOVE = "remove",
             DEFINE = "define",
             DRAW = "draw", DOT = "dot", LINE = "line", FILL = "fill",
@@ -1067,6 +1067,9 @@ public class ScriptVisitor
                     : extension.get();
             case SUB -> args.length == 2
                     ? new SubstringNode(position, scope, args[0], args[1])
+                    : extension.get();
+            case SPLIT -> args.length == 1
+                    ? new SplitStringNode(position, scope, args[0])
                     : extension.get();
             default -> extension.get();
         };
