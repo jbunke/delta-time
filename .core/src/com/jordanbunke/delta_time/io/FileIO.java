@@ -5,12 +5,80 @@ import com.jordanbunke.delta_time.utility.StringProcessing;
 import com.jordanbunke.sorkin.IFileDialog;
 
 import java.io.*;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Optional;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public class FileIO {
     private static IFileDialog FILE_DIALOG = IFileDialog.make();
+
+    public static Path extractZipToTempDir(final String zipPath) {
+        try {
+            final Path tempDir = Files.createTempDirectory(null);
+            extractZipToDir(zipPath, tempDir);
+            return tempDir;
+        } catch (IOException e) {
+            GameError.send(e.getMessage());
+        }
+
+        return null;
+    }
+
+    public static void deleteDirRecursive(final Path dir) {
+        try {
+            Files.walkFileTree(dir, new SimpleFileVisitor<>() {
+                @Override
+                public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
+                    Files.delete(file);
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(final Path dir, final IOException exc) throws IOException {
+                    Files.delete(dir);
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        } catch (IOException e) {
+            GameError.send(e.getMessage());
+        }
+    }
+
+    public static void extractZipToDir(final String zipPath, final Path dir) {
+        try (ZipInputStream zipInputStream =
+                     new ZipInputStream(new FileInputStream(zipPath))) {
+            ZipEntry entry;
+            while ((entry = zipInputStream.getNextEntry()) != null) {
+                final File extractedFile = new File(dir.toFile(), entry.getName());
+
+                if (entry.isDirectory()) {
+                    if (!extractedFile.mkdirs())
+                        GameError.send("Failed to create directory: " +
+                                extractedFile);
+                } else {
+                    final File parentDir = extractedFile.getParentFile();
+                    if (!parentDir.exists() && !parentDir.mkdirs())
+                        GameError.send("Failed to create directory: " + parentDir);
+
+                    try (FileOutputStream fos = new FileOutputStream(extractedFile)) {
+                        byte[] buffer = new byte[1024];
+                        int length;
+                        while ((length = zipInputStream.read(buffer)) > 0) {
+                            fos.write(buffer, 0, length);
+                        }
+                    }
+                }
+                zipInputStream.closeEntry();
+            }
+        } catch (IOException e) {
+            GameError.send(e.getMessage());
+        }
+    }
 
     public static void safeMakeDirectory(final Path dirPath) {
         File dir = dirPath.toFile();
@@ -43,7 +111,7 @@ public class FileIO {
             while (br.ready())
                 contents.append(br.readLine()).append("\n");
 
-            if (contents.toString().length() > 0)
+            if (!contents.toString().isEmpty())
                 contents.deleteCharAt(contents.toString().length() - 1);
         } catch (IOException e) {
             GameError.send("Couldn't read: " + name);
