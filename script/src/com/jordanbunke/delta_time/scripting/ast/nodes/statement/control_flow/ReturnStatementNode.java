@@ -35,6 +35,9 @@ public final class ReturnStatementNode extends StatementNode {
 
     @Override
     public void semanticErrorCheck(final SymbolTable symbolTable) {
+        if (expression != null)
+            expression.semanticErrorCheck(symbolTable);
+
         final FuncNode func = symbolTable.getFunc();
 
         if (func != null) {
