@@ -49,8 +49,20 @@ public final class BaseTypeNode extends TypeNode {
 
     @Override
     public boolean equals(final Object o) {
-        return o instanceof BaseTypeNode that && (this.type == that.type ||
-                this.type == Type.WILDCARD || that.type == Type.WILDCARD);
+        if (o instanceof BaseTypeNode that)
+            return this.type == that.type ||
+                    this.type == Type.WILDCARD ||
+                    that.type == Type.WILDCARD;
+        else if (o instanceof TypeNode t) {
+            if (t instanceof FuncTypeNode ||
+                    t instanceof CollectionTypeNode ||
+                    t instanceof MapTypeNode)
+                return false;
+            else
+                return type == Type.WILDCARD;
+        }
+
+        return false;
     }
 
     @Override
