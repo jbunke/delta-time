@@ -17,10 +17,10 @@ import java.util.zip.ZipInputStream;
 public class FileIO {
     private static IFileDialog FILE_DIALOG = IFileDialog.make();
 
-    public static Path extractZipToTempDir(final String zipPath) {
+    public static Path extractZipToTempDir(final InputStream zipIn) {
         try {
             final Path tempDir = Files.createTempDirectory(null);
-            extractZipToDir(zipPath, tempDir);
+            extractZipToDir(zipIn, tempDir);
             return tempDir;
         } catch (IOException e) {
             GameError.send(e.getMessage());
@@ -49,9 +49,8 @@ public class FileIO {
         }
     }
 
-    public static void extractZipToDir(final String zipPath, final Path dir) {
-        try (ZipInputStream zipInputStream =
-                     new ZipInputStream(new FileInputStream(zipPath))) {
+    public static void extractZipToDir(final InputStream zipIn, final Path dir) {
+        try (ZipInputStream zipInputStream = new ZipInputStream(zipIn)) {
             ZipEntry entry;
             while ((entry = zipInputStream.getNextEntry()) != null) {
                 final File extractedFile = new File(dir.toFile(), entry.getName());
