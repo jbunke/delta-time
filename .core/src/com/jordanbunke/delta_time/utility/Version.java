@@ -108,7 +108,7 @@ public final class Version {
             return true;
         else if (n < vn)
             return false;
-        else if (index < 3 && hasBuild)
+        else if (index < 2 || index == 2 && hasBuild)
             return isLater(index + 1, v);
 
         return false;
