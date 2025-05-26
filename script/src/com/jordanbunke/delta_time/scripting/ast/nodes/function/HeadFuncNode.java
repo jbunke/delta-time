@@ -25,10 +25,10 @@ public final class HeadFuncNode extends FuncNode {
         for (HelperFuncNode helper : helpers)
             helper.link(symbolTable);
 
+        super.semanticErrorCheck(symbolTable);
+
         for (HelperFuncNode helper : helpers)
             helper.semanticErrorCheck(symbolTable);
-
-        super.semanticErrorCheck(symbolTable);
     }
 
     public HelperFuncNode getHelper(final String name) {

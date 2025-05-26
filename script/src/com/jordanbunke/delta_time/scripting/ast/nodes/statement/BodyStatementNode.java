@@ -21,7 +21,7 @@ public final class BodyStatementNode extends StatementNode {
 
     @Override
     public void semanticErrorCheck(final SymbolTable symbolTable) {
-        final SymbolTable innerTable = new SymbolTable(this, symbolTable);
+        final SymbolTable innerTable = SymbolTable.bodyTable(this, symbolTable);
 
         for (StatementNode statement : statements)
             statement.semanticErrorCheck(innerTable);

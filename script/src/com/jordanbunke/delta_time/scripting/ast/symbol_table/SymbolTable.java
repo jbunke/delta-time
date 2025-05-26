@@ -4,6 +4,7 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.ASTNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.function.FuncNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.function.HeadFuncNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.statement.BodyStatementNode;
 
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -48,6 +49,15 @@ public final class SymbolTable {
         return new SymbolTable(script, null, scriptPath);
     }
 
+    public static SymbolTable bodyTable(
+            final BodyStatementNode scope, final SymbolTable outer
+    ) {
+        if (outer.scope instanceof HeadFuncNode)
+            return outer;
+
+        return new SymbolTable(scope, outer);
+    }
+
     public SymbolTable getRoot() {
         return parent != null ? parent.getRoot() : this;
     }
@@ -70,6 +80,10 @@ public final class SymbolTable {
     }
 
     public SymbolTable getChild(final ASTNode subScope) {
+        if (scope instanceof HeadFuncNode &&
+                subScope instanceof BodyStatementNode)
+            return this;
+
         return children.getOrDefault(subScope, null);
     }
 
