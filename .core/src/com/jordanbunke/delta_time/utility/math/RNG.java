@@ -4,7 +4,21 @@ import java.util.Optional;
 import java.util.Random;
 
 public final class RNG {
-    private static final Random r = new Random();
+    private static final Random ur = new Random();
+
+    private static Random r;
+
+    static {
+        reset();
+    }
+
+    public static void reset() {
+        r = ur;
+    }
+
+    public static void seed(final long seed) {
+        r = new Random(seed);
+    }
 
     public static boolean prob(final double p) {
         return r.nextDouble() < p;
