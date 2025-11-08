@@ -18,7 +18,8 @@ public final class ContainsNode extends MemberFuncCallNode {
     ) {
         super(position, new Receiver(receiver,
                 TypeUtils.options(new MapTypeNode(), TypeNode.set(),
-                        TypeNode.list(), TypeNode.array())),
+                        TypeNode.list(), TypeNode.array(),
+                        TypeNode.getString())),
                 TypeNode.getBool(), Arguments.argsOf(element),
                 TypeUtils.expectExact(TypeNode.wildcard()));
     }
