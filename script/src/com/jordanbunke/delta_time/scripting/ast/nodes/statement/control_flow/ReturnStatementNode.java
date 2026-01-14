@@ -2,12 +2,14 @@ package com.jordanbunke.delta_time.scripting.ast.nodes.statement.control_flow;
 
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.function.FuncNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.function.HeadFuncNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.statement.StatementNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import com.jordanbunke.delta_time.scripting.util.FuncControlFlow;
-import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
+
+import static com.jordanbunke.delta_time.scripting.util.ScriptErrorLog.*;
 
 public final class ReturnStatementNode extends StatementNode {
     private final ExpressionNode expression;
@@ -54,11 +56,13 @@ public final class ReturnStatementNode extends StatementNode {
                     bothEqual = bothNonNull && exprType.equals(returnType);
             final boolean typeEquality = bothNull || bothEqual;
 
-            if (!typeEquality)
-                ScriptErrorLog.fireError(
-                        ScriptErrorLog.Message.RETURN_TYPE_MISMATCH,
-                        pos, String.valueOf(returnType),
-                        String.valueOf(exprType));
+            if (!typeEquality) {
+                final boolean script = func instanceof HeadFuncNode;
+                fireCompileError(pos, "Return expression does not match " +
+                        (script ? "script" : "function") +
+                        " signature return type: " +
+                        expectedButGot(returnType, exprType));
+            }
         }
     }
 

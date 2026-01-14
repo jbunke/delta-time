@@ -31,9 +31,8 @@ public sealed abstract class FuncNode extends ASTNode
         final Object res = body.execute(symbolTable).value;
 
         if (res == null && signature.getReturnType() != null)
-            ScriptErrorLog.fireError(ScriptErrorLog.Message.CUSTOM_RT,
-                    getPosition(), "Function did not return a value;" +
-                            " expected return type \"" +
+            ScriptErrorLog.fireRuntimeError(getPosition(),
+                    "Function did not return a value; expected return type \"" +
                             signature.getReturnType() + "\"");
 
         return res;

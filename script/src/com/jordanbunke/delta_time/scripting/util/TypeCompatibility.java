@@ -2,20 +2,25 @@ package com.jordanbunke.delta_time.scripting.util;
 
 import com.jordanbunke.delta_time.image.GameImage;
 import com.jordanbunke.delta_time.scripting.ast.collection.*;
+import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 
 import java.awt.*;
-import java.util.HashSet;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public final class TypeCompatibility {
-    private static final Set<Class<?>> BASE_TYPES;
+    private static final Map<TypeNode, Class<?>> BASE_TYPES;
 
     static {
-        BASE_TYPES = new HashSet<>(Set.of(Integer.class,
-                Boolean.class, Double.class, Character.class,
-                GameImage.class, Color.class, String.class));
+        BASE_TYPES = new HashMap<>();
+
+        BASE_TYPES.put(TypeNode.getInt(), Integer.class);
+        BASE_TYPES.put(TypeNode.getBool(), Boolean.class);
+        BASE_TYPES.put(TypeNode.getFloat(), Float.class);
+        BASE_TYPES.put(TypeNode.getChar(), Character.class);
+        BASE_TYPES.put(TypeNode.getImage(), GameImage.class);
+        BASE_TYPES.put(TypeNode.getColor(), Color.class);
+        BASE_TYPES.put(TypeNode.getString(), String.class);
     }
 
     public static void prepArgs(final Object... args) {
@@ -69,12 +74,37 @@ public final class TypeCompatibility {
         return arg;
     }
 
-    public static <T> void addBaseType(final Class<T> typeObjectClass) {
-        BASE_TYPES.add(typeObjectClass);
+    public static <T> void addBaseType(
+            final TypeNode typeNode, final Class<T> typeObjectClass
+    ) {
+        BASE_TYPES.put(typeNode, typeObjectClass);
+    }
+
+    public static TypeNode resolveType(final Class<?> objectClass) {
+        if (objectClass == null)
+            return null;
+
+        for (TypeNode type : BASE_TYPES.keySet()) {
+            final Class<?> typeClass = BASE_TYPES.get(type);
+
+            if (typeClass.isAssignableFrom(objectClass))
+                return type;
+        }
+
+        return null;
+    }
+
+    public static String resolveTypeName(final Class<?> objectClass) {
+        final TypeNode type = resolveType(objectClass);
+
+        if (type == null)
+            return objectClass == null ? "null" : objectClass.getName();
+
+        return type.toString();
     }
 
     private static boolean notABaseType(final Object arg) {
-        for (Class<?> baseType : BASE_TYPES)
+        for (Class<?> baseType : BASE_TYPES.values())
             if (baseType.isInstance(arg))
                 return false;
 

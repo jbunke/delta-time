@@ -12,13 +12,13 @@ public record TextPosition(int line, int column) {
 
     @Override
     public String toString() {
-        if (isNA())
-            return "N/A";
+        if (exists())
+            return line + ":" + column;
 
-        return line + ":" + column;
+        return "N/A";
     }
 
-    private boolean isNA() {
-        return line == N_A.line && column == N_A.column;
+    public boolean exists() {
+        return line != N_A.line && column != N_A.column;
     }
 }

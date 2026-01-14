@@ -1,5 +1,7 @@
 package com.jordanbunke.delta_time.scripting.util;
 
+import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +62,6 @@ public final class ScriptErrorLog {
         VAR_NOT_NUM,
         VAR_NOT_STRING,
         VAR_TYPE_MISMATCH,
-        RETURN_TYPE_MISMATCH,
         VAR_ALREADY_DEFINED,
         ADD_TO_ARRAY,
         REMOVE_FROM_ARRAY,
@@ -274,9 +275,6 @@ public final class ScriptErrorLog {
                 case VAR_ALREADY_DEFINED ->
                         "Attempting to declare a variable \"" + args[0] +
                                 "\", which already has a definition in this scope";
-                case RETURN_TYPE_MISMATCH ->
-                        typeMismatch("return expression does not match " +
-                                "method signature", args[0], args[1]);
                 case INCONSISTENT_COL_TYPES -> typeMismatch(
                         "at index " + args[0] + " of explicit " +
                                 args[1] + " initialization", args[2], args[3]);
@@ -369,11 +367,23 @@ public final class ScriptErrorLog {
         fireError(Message.CUSTOM_RT, position, text);
     }
 
+    public static String expectedButGot(
+            final TypeNode expected, final TypeNode actual
+    ) {
+        return expectedButGot(String.valueOf(expected), String.valueOf(actual));
+    }
+
+    public static String expectedButGot(
+            final String expected, final String actual
+    ) {
+        return "expected \"" + expected + "\" but got \"" + actual + "\"";
+    }
+
     private static String formatError(
-            final Message message, final TextPosition position,
+            final Message message, final TextPosition pos,
             final String[] args
     ) {
-        return message.get(args) + " [at " + position + "]";
+        return (pos.exists() ? "[" + pos + "] " : "") + message.get(args);
     }
 
     public static boolean hasNoErrors() {
