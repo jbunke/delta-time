@@ -6,10 +6,7 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.function.HeadFuncNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.function.HelperFuncNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.statement.StatementNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
-import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
-import com.jordanbunke.delta_time.scripting.util.ScriptVisitor;
-import com.jordanbunke.delta_time.scripting.util.TextPosition;
-import com.jordanbunke.delta_time.scripting.util.TypeCompatibility;
+import com.jordanbunke.delta_time.scripting.util.*;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -81,22 +78,11 @@ public class Interpreter {
         return run(script, null, args);
     }
 
-    public HeadFuncNode build(final String content) {
+    public HeadFuncNode build(final String source) {
         try {
-            final CharStream input = CharStreams.fromString(content);
-
-            final ScriptLexer lexer = new ScriptLexer(input);
-            lexer.removeErrorListeners();
-
-            final ScriptParser parser = new ScriptParser(
-                    new CommonTokenStream(lexer));
-            parser.removeErrorListeners();
-
+            final ScriptParser parser = parse(source);
             return visitor.visitHead_rule(parser.head_rule());
         } catch (Exception e) {
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.COULD_NOT_READ,
-                    TextPosition.N_A);
             displayErrors();
             return null;
         }
@@ -108,20 +94,9 @@ public class Interpreter {
 
     public ExpressionNode buildExpression(final String expr) {
         try {
-            final CharStream input = CharStreams.fromString(expr);
-
-            final ScriptLexer lexer = new ScriptLexer(input);
-            lexer.removeErrorListeners();
-
-            final ScriptParser parser = new ScriptParser(
-                    new CommonTokenStream(lexer));
-            parser.removeErrorListeners();
-
+            final ScriptParser parser = parse(expr);
             return (ExpressionNode) visitor.visit(parser.expr());
         } catch (Exception e) {
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.COULD_NOT_READ,
-                    TextPosition.N_A);
             displayErrors();
             return null;
         }
@@ -129,45 +104,23 @@ public class Interpreter {
 
     public StatementNode buildStatement(final String stat) {
         try {
-            final CharStream input = CharStreams.fromString(stat);
-
-            final ScriptLexer lexer = new ScriptLexer(input);
-            lexer.removeErrorListeners();
-
-            final ScriptParser parser = new ScriptParser(
-                    new CommonTokenStream(lexer));
-            parser.removeErrorListeners();
-
+            final ScriptParser parser = parse(stat);
             return (StatementNode) visitor.visit(parser.stat());
         } catch (Exception e) {
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.COULD_NOT_READ,
-                    TextPosition.N_A);
             displayErrors();
             return null;
         }
     }
 
     private <N extends ASTNode, R> N build(
-            final String content,
+            final String source,
             final Function<ScriptParser, R> contextGetter,
             final BiFunction<ScriptVisitor, R, N> fNode
     ) {
         try {
-            final CharStream input = CharStreams.fromString(content);
-
-            final ScriptLexer lexer = new ScriptLexer(input);
-            lexer.removeErrorListeners();
-
-            final ScriptParser parser = new ScriptParser(
-                    new CommonTokenStream(lexer));
-            parser.removeErrorListeners();
-
+            final ScriptParser parser = parse(source);
             return fNode.apply(visitor, contextGetter.apply(parser));
         } catch (Exception e) {
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.COULD_NOT_READ,
-                    TextPosition.N_A);
             displayErrors();
             return null;
         }
@@ -203,6 +156,21 @@ public class Interpreter {
             errorHandling(true);
             return Optional.empty();
         }
+    }
+
+    protected ScriptParser parse(final String source) {
+        final CharStream input = CharStreams.fromString(source);
+
+        final ScriptLexer lexer = new ScriptLexer(input);
+        lexer.removeErrorListeners();
+        lexer.addErrorListener(SyntaxErrorListener.get());
+
+        final ScriptParser parser = new ScriptParser(
+                new CommonTokenStream(lexer));
+        parser.removeErrorListeners();
+        parser.addErrorListener(SyntaxErrorListener.get());
+
+        return parser;
     }
 
     private static void errorHandling(

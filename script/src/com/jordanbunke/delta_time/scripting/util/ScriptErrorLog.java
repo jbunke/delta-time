@@ -11,7 +11,7 @@ public final class ScriptErrorLog {
     }
 
     private enum ErrorClass {
-        COMPILE, RUNTIME, IO;
+        SYNTAX, COMPILE, RUNTIME;
 
         private String prefix() {
             return name() + " ERROR: ";
@@ -19,6 +19,7 @@ public final class ScriptErrorLog {
     }
 
     public enum Message {
+        CUSTOM_SYNTAX,
         CUSTOM_CT, CUSTOM_RT,
         TYPE_MISMATCH,
         NOT_HOF,
@@ -66,7 +67,6 @@ public final class ScriptErrorLog {
         ASSIGN_EXPR_NOT_NUM,
         ASSIGN_EXPR_NOT_STRING,
         NOT_ITERABLE,
-        COULD_NOT_READ,
         SUB_BEG_OUT_OF_BOUNDS,
         SUB_END_OUT_OF_BOUNDS,
         SUB_END_GEQ_BEG
@@ -74,7 +74,7 @@ public final class ScriptErrorLog {
 
         private String get(final String[] args) {
             return errorClass().prefix() + switch (this) {
-                case CUSTOM_CT, CUSTOM_RT -> args[0];
+                case CUSTOM_SYNTAX, CUSTOM_CT, CUSTOM_RT -> args[0];
                 case TYPE_MISMATCH ->
                         typeMismatch(args[0], args[1], args[2]);
                 case VOID_F_AS_EXPRESSION ->
@@ -122,7 +122,6 @@ public final class ScriptErrorLog {
                             ") is greater than or equal to end index " +
                             "argument (" + end + ")";
                 }
-                case COULD_NOT_READ -> "Couldn't read the script file";
                 case NOT_ITERABLE ->
                     typeMismatch("non-iterable type used in iterator loop",
                             args[0], args[1]);
@@ -339,7 +338,7 @@ public final class ScriptErrorLog {
                         SUB_END_OUT_OF_BOUNDS,
                         CUSTOM_RT ->
                         ErrorClass.RUNTIME;
-                case COULD_NOT_READ -> ErrorClass.IO;
+                case CUSTOM_SYNTAX -> ErrorClass.SYNTAX;
                 default -> ErrorClass.COMPILE;
             };
         }
@@ -350,6 +349,24 @@ public final class ScriptErrorLog {
             final String... args
     ) {
         errors.add(formatError(message, position, args));
+    }
+
+    public static void fireSyntaxError(
+            final TextPosition position, final String text
+    ) {
+        fireError(Message.CUSTOM_SYNTAX, position, text);
+    }
+
+    public static void fireCompileError(
+            final TextPosition position, final String text
+    ) {
+        fireError(Message.CUSTOM_CT, position, text);
+    }
+
+    public static void fireRuntimeError(
+            final TextPosition position, final String text
+    ) {
+        fireError(Message.CUSTOM_RT, position, text);
     }
 
     private static String formatError(
