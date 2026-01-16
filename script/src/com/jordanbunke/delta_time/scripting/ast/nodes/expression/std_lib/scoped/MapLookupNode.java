@@ -6,11 +6,12 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.MemberF
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.MapTypeNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
-import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
+import com.jordanbunke.delta_time.scripting.util.ScriptVisitor;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
 import static com.jordanbunke.delta_time.scripting.util.Arguments.argsOf;
 import static com.jordanbunke.delta_time.scripting.util.TypeUtils.expectExact;
+import static com.jordanbunke.delta_time.scripting.util.ScriptErrorLog.*;
 
 public final class MapLookupNode extends MemberFuncCallNode {
     private final ExpressionNode element;
@@ -37,9 +38,10 @@ public final class MapLookupNode extends MemberFuncCallNode {
             final TypeNode keyType = mapType.getKeyType();
 
             if (!keyType.equals(elemType))
-                ScriptErrorLog.fireError(
-                        ScriptErrorLog.Message.MAP_KEY_TYPE_MISMATCH,
-                        element.getPosition(), elemType.toString());
+                semanticError(element.getPosition(),
+                        typeMismatch(funcName() + "() key argument expression type",
+                                "receiver map expression key type",
+                                keyType, elemType));
         }
     }
 
@@ -52,9 +54,9 @@ public final class MapLookupNode extends MemberFuncCallNode {
             if (map.containsKey(elemValue))
                 return map.get(elemValue);
             else
-                ScriptErrorLog.fireError(
-                        ScriptErrorLog.Message.MAP_DOES_NOT_CONTAIN_ELEMENT,
-                        element.getPosition(), elemValue.toString());
+                runtimeError(element.getPosition(),
+                        "Attempted to fetch element with key \"" + elemValue +
+                                "\" from a map, but the map contains no such entry");
         }
 
         return null;
@@ -67,6 +69,6 @@ public final class MapLookupNode extends MemberFuncCallNode {
 
     @Override
     protected String funcName() {
-        return "lookup";
+        return ScriptVisitor.LOOKUP;
     }
 }

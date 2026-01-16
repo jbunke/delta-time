@@ -20,9 +20,8 @@ public abstract class AssignableNode extends ExpressionNode {
     @Override
     public void semanticErrorCheck(final SymbolTable symbolTable) {
         if (symbolTable.get(name) == null)
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.UNDEFINED_VAR,
-                    getPosition(), name);
+            ScriptErrorLog.semanticError(getPosition(), "Variable \"" + getName() +
+                    "\" is referenced in a scope where it is not defined");
     }
 
     public String getName() {

@@ -1,11 +1,13 @@
 package com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.global.min_max;
 
+import com.jordanbunke.delta_time.scripting.util.ScriptVisitor;
 import com.jordanbunke.delta_time.utility.math.MathPlus;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
-import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
+
+import static com.jordanbunke.delta_time.scripting.util.ScriptErrorLog.*;
 
 import java.util.Set;
 
@@ -40,18 +42,17 @@ public final class ClampNode extends ExpressionNode {
                 maxType = max.getType(symbolTable);
 
         if (!minType.equals(valType))
-            ScriptErrorLog.fireError(ScriptErrorLog.Message.DIFFERENT_TYPES,
-                    min.getPosition(), "Clamp arguments", "min", "value",
-                    minType.toString(), valType.toString());
+            semanticError(min.getPosition(),
+                    typeMismatch(ScriptVisitor.CLAMP + "() minimum argument",
+                            "value argument", valType, minType));
         if (!maxType.equals(valType))
-            ScriptErrorLog.fireError(ScriptErrorLog.Message.DIFFERENT_TYPES,
-                    value.getPosition(), "Clamp arguments", "max", "value",
-                    maxType.toString(), valType.toString());
-
+            semanticError(max.getPosition(),
+                    typeMismatch(ScriptVisitor.CLAMP + "() maximum argument",
+                            "value argument", valType, maxType));
         if (!acceptedTypes.contains(valType))
-            ScriptErrorLog.fireError(ScriptErrorLog.Message.ARG_NOT_TYPE,
-                    value.getPosition(), "Clamp value",
-                    "int\" or \"float", valType.toString());
+            semanticError(value.getPosition(), ScriptVisitor.CLAMP +
+                    "() value argument is of a non-numeric type: " +
+                    expectedNumberButGot(valType));
     }
 
     @Override
@@ -73,6 +74,6 @@ public final class ClampNode extends ExpressionNode {
 
     @Override
     public String toString() {
-        return "clamp(" + min + ", " + value + ", " + max + ")";
+        return ScriptVisitor.CLAMP + "(" + min + ", " + value + ", " + max + ")";
     }
 }

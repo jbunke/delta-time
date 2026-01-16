@@ -7,6 +7,8 @@ import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 
 import java.util.Arrays;
 
+import static com.jordanbunke.delta_time.scripting.util.ScriptErrorLog.*;
+
 public final class CollectionHelper {
     public static TypeNode getConcreteType(
             final ExpressionNode[] elements, final SymbolTable symbolTable
@@ -35,12 +37,11 @@ public final class CollectionHelper {
             final TypeNode type = elements[i].getType(symbolTable);
 
             if (!type.equals(firstElemType))
-                ScriptErrorLog.fireError(
-                        ScriptErrorLog.Message.INCONSISTENT_COL_TYPES,
-                        elements[i].getPosition(),
-                        String.valueOf(i), initDescriptor,
-                        String.valueOf(firstElemType),
-                        String.valueOf(type));
+                semanticError(elements[i].getPosition(),
+                        typeMismatch("Element at index " + i + " of " +
+                                        initDescriptor + " initializer",
+                                "the type of the element at index 0",
+                                firstElemType, type));
         }
     }
 }

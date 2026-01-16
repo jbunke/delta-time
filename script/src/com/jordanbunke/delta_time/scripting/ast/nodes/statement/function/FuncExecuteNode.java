@@ -38,9 +38,10 @@ public final class FuncExecuteNode extends StatementNode implements IHookable {
                 .toArray(TypeNode[]::new);
 
         if (!func.paramsMatch(argTypes))
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.ARGS_SIGNATURE_MISMATCH,
-                    getPosition(), name);
+            // TODO: improve error reporting with unique messages for length mismatch vs. type mismatch
+            ScriptErrorLog.semanticError(getPosition(),
+                    "Attempting to call the function \"" + name +
+                            "\" with a set of arguments that do not match its signature");
     }
 
     @Override

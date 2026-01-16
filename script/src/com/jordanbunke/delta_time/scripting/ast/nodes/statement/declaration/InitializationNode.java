@@ -6,8 +6,9 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import com.jordanbunke.delta_time.scripting.util.FuncControlFlow;
 import com.jordanbunke.delta_time.scripting.util.FuncHelper;
-import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
+
+import static com.jordanbunke.delta_time.scripting.util.ScriptErrorLog.*;
 
 public final class InitializationNode extends ExplicitDeclarationNode {
     private final ExpressionNode value;
@@ -32,10 +33,10 @@ public final class InitializationNode extends ExplicitDeclarationNode {
         final TypeNode initType = value.getType(symbolTable);
 
         if (!declarationType.equals(initType))
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.VAR_TYPE_MISMATCH,
-                    value.getPosition(), getType().toString(),
-                    initType.toString());
+            semanticError(value.getPosition(),
+                    typeMismatch("Initialization expression type",
+                            "variable's declared type",
+                            declarationType, initType));
     }
 
     @Override

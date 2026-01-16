@@ -8,6 +8,7 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.types.MapTypeNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import com.jordanbunke.delta_time.scripting.util.Arguments;
+import com.jordanbunke.delta_time.scripting.util.ScriptVisitor;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
 public final class MapKeysetNode extends MemberFuncCallNode {
@@ -34,6 +35,6 @@ public final class MapKeysetNode extends MemberFuncCallNode {
 
     @Override
     protected String funcName() {
-        return "keys";
+        return ScriptVisitor.KEYS;
     }
 }

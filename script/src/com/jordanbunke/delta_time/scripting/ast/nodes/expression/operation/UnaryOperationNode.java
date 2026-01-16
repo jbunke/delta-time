@@ -3,10 +3,13 @@ package com.jordanbunke.delta_time.scripting.ast.nodes.expression.operation;
 import com.jordanbunke.delta_time.scripting.ast.collection.ScriptCollection;
 import com.jordanbunke.delta_time.scripting.ast.collection.ScriptMap;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
+import com.jordanbunke.delta_time.scripting.ast.nodes.types.MapTypeNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
-import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
+import com.jordanbunke.delta_time.scripting.util.TypeUtils;
+
+import static com.jordanbunke.delta_time.scripting.util.ScriptErrorLog.*;
 
 import java.util.Set;
 
@@ -56,23 +59,28 @@ public final class UnaryOperationNode extends ExpressionNode {
             case NOT -> {
                 if (!operandType.equals(
                         TypeNode.getBool()))
-                    ScriptErrorLog.fireError(
-                            ScriptErrorLog.Message.OPERAND_NOT_BOOL,
-                            getPosition(), operandType.toString());
+                    semanticError(operand.getPosition(),
+                            notBool("Logical negation (" +
+                                    operator + ") operand", operandType));
             }
             case NEGATE -> {
                 final Set<TypeNode> acceptedTypes = TypeNode.numTypes();
 
                 if (!acceptedTypes.contains(operandType))
-                    ScriptErrorLog.fireError(
-                            ScriptErrorLog.Message.OPERAND_NAN_SEM,
-                            getPosition(), operandType.toString());
+                    semanticError(operand.getPosition(),
+                            "Arithmetic negation (" + operator +
+                                    ") operand is of a non-numeric type: " +
+                                    expectedNumberButGot(operandType));
             }
             case SIZE -> {
                 if (!operandType.hasSize())
-                    ScriptErrorLog.fireError(
-                            ScriptErrorLog.Message.OPERAND_NOT_A_COLLECTION_SEM,
-                            getPosition(), operandType.toString());
+                    semanticError(operand.getPosition(),
+                            "Cannot evaluate the length/size (" + operator +
+                                    ") of an operand of this type: " +
+                                    expectedButGot(TypeUtils.options(
+                                            TypeNode.array(), TypeNode.list(),
+                                            TypeNode.set(), new MapTypeNode(),
+                                            TypeNode.getString()), operandType));
             }
         }
     }
@@ -91,9 +99,9 @@ public final class UnaryOperationNode extends ExpressionNode {
                 else if (operandValue instanceof ScriptMap m)
                     yield m.size();
 
-                ScriptErrorLog.fireError(
-                        ScriptErrorLog.Message.OPERAND_NOT_A_COLLECTION_RT,
-                        getPosition());
+                runtimeError(operand.getPosition(),
+                        "Could not evaluate the length/size of the operand " +
+                                "because the operand was not evaluated to a collection");
                 yield null;
             }
             case NEGATE -> {
@@ -104,9 +112,9 @@ public final class UnaryOperationNode extends ExpressionNode {
                 else if (operandValue instanceof Float f)
                     yield -f;
                 else {
-                    ScriptErrorLog.fireError(
-                            ScriptErrorLog.Message.OPERAND_NAN_RT,
-                            getPosition());
+                    runtimeError(operand.getPosition(),
+                            "Operand could not be arithmetically negated " +
+                                    "because the operand was not evaluated to a number");
                     yield null;
                 }
             }

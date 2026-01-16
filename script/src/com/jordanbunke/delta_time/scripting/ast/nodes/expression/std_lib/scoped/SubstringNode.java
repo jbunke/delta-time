@@ -4,12 +4,12 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.MemberFuncCallNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
-import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
 import com.jordanbunke.delta_time.scripting.util.ScriptVisitor;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
 import static com.jordanbunke.delta_time.scripting.util.Arguments.argsOf;
 import static com.jordanbunke.delta_time.scripting.util.TypeUtils.expectExact;
+import static com.jordanbunke.delta_time.scripting.util.ScriptErrorLog.*;
 
 public final class SubstringNode extends MemberFuncCallNode {
     private static final int BEG = 0, END = 1;
@@ -37,20 +37,18 @@ public final class SubstringNode extends MemberFuncCallNode {
             return s.substring(beg, end);
         else {
             if (beg < 0)
-                ScriptErrorLog.fireError(
-                        ScriptErrorLog.Message.SUB_BEG_OUT_OF_BOUNDS,
-                        arguments.get(BEG).getPosition(),
-                        String.valueOf(beg));
+                runtimeError(arguments.get(BEG).getPosition(),
+                        "Substring index out of bounds; " +
+                                "beginning index was less than 0 (" + beg + ")");
             if (end > s.length())
-                ScriptErrorLog.fireError(
-                        ScriptErrorLog.Message.SUB_END_OUT_OF_BOUNDS,
-                        arguments.get(END).getPosition(),
-                        String.valueOf(s.length()), String.valueOf(end));
+                runtimeError(arguments.get(END).getPosition(),
+                        "Substring index out of bounds; " + "end index (" +
+                                end + ") was greater than the length of the string (" +
+                                s.length() + ")");
             if (beg >= end)
-                ScriptErrorLog.fireError(
-                        ScriptErrorLog.Message.SUB_END_GEQ_BEG,
-                        arguments.get(BEG).getPosition(),
-                        String.valueOf(beg), String.valueOf(end));
+                runtimeError(arguments.get(BEG).getPosition(),
+                        "Illegal substring index; beginning index (" + beg +
+                                ") must be less than end index (" + end + ")");
         }
 
         return null;

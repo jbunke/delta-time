@@ -23,6 +23,6 @@ public class SyntaxErrorListener extends BaseErrorListener {
             final String message,
             final RecognitionException e
     ) {
-        ScriptErrorLog.fireSyntaxError(new TextPosition(line, column), message);
+        ScriptErrorLog.syntaxError(new TextPosition(line, column), message);
     }
 }

@@ -36,6 +36,6 @@ public final class WriteFileNode extends DefFuncExecNode {
 
     @Override
     protected String funcName() {
-        return "write_file";
+        return ScriptVisitor.WRITE_FILE;
     }
 }

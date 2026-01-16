@@ -5,8 +5,11 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.CollectionTypeNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
-import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
+import com.jordanbunke.delta_time.scripting.util.ScriptVisitor;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
+import com.jordanbunke.delta_time.scripting.util.TypeUtils;
+
+import static com.jordanbunke.delta_time.scripting.util.ScriptErrorLog.*;
 
 import java.util.stream.Stream;
 
@@ -32,14 +35,15 @@ public final class MinMaxCollectionNode extends ExpressionNode {
         final TypeNode colType = col.getType(symbolTable);
 
         if (!(colType instanceof CollectionTypeNode c))
-            ScriptErrorLog.fireError(ScriptErrorLog.Message.ARG_NOT_TYPE,
-                    col.getPosition(), "Collection",
-                    "array - []\", \"list - <>\" or \"set - {}",
-                    String.valueOf(colType));
+            semanticError(col.getPosition(),
+                    "Argument is not a collection type: " +
+                            expectedButGot(TypeUtils.options(
+                                    TypeNode.array(), TypeNode.list(),
+                                            TypeNode.set()), colType));
         else if (!c.getElementType().isNum())
-            ScriptErrorLog.fireError(ScriptErrorLog.Message.NAN,
-                    col.getPosition(), "Collection element type",
-                    c.getElementType().toString());
+            semanticError(col.getPosition(),
+                    "Collection elements are of a non-numeric type: " +
+                            expectedNumberButGot(c.getElementType()));
     }
 
     @Override
@@ -51,9 +55,8 @@ public final class MinMaxCollectionNode extends ExpressionNode {
         final TypeNode elemType = colType.getElementType();
 
         if (c.size() == 0) {
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.CANNOT_REDUCE_EMPTY_COL,
-                    col.getPosition());
+            runtimeError(col.getPosition(),
+                    "Attempted to reduce an empty collection");
 
             return null;
         }
@@ -80,7 +83,7 @@ public final class MinMaxCollectionNode extends ExpressionNode {
 
     @Override
     public String toString() {
-        return (isMax ? "max" : "min") + "(" + col + ")";
+        return (isMax ? ScriptVisitor.MAX : ScriptVisitor.MIN) + "(" + col + ")";
     }
 
     private int intID() {

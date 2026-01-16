@@ -5,8 +5,9 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.types.BaseTypeNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import com.jordanbunke.delta_time.scripting.util.FuncControlFlow;
-import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
+
+import static com.jordanbunke.delta_time.scripting.util.ScriptErrorLog.*;
 
 public final class NoOperandAssignmentNode extends AssignmentNode {
     private final boolean increment;
@@ -30,9 +31,10 @@ public final class NoOperandAssignmentNode extends AssignmentNode {
                 intType = TypeNode.getInt();
 
         if (!assignableType.equals(intType))
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.VAR_NOT_INT,
-                    getPosition(), assignableType.toString());
+            semanticError(getAssignable().getPosition(),
+                    "Assignable is of an invalid type for a " +
+                            (increment ? "in" : "de") + "crementation operation: " +
+                            expectedButGot(intType, assignableType));
     }
 
     @Override

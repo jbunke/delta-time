@@ -7,6 +7,7 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.function.HelperFuncNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.statement.StatementNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import com.jordanbunke.delta_time.scripting.util.*;
+import com.jordanbunke.delta_time.scripting.util.Error;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -173,20 +174,22 @@ public class Interpreter {
         return parser;
     }
 
-    private static void errorHandling(
-            final boolean runtime
-    ) {
-        if (ScriptErrorLog.hasNoErrors())
-            ScriptErrorLog.fireError(runtime
-                            ? ScriptErrorLog.Message.CUSTOM_RT
-                            : ScriptErrorLog.Message.CUSTOM_CT,
-                    TextPosition.N_A, "Unknown and unexpected");
+    private static void errorHandling(final boolean runtime) {
+        if (ScriptErrorLog.hasNoErrors()) {
+            final String message = "Unknown and unexpected";
+            final TextPosition pos = TextPosition.N_A;
+
+            if (runtime)
+                ScriptErrorLog.runtimeError(pos, message);
+            else
+                ScriptErrorLog.semanticError(pos, message);
+        }
     }
 
     protected void displayErrors() {
-        final String[] errors = ScriptErrorLog.getErrors();
+        final Error[] errors = ScriptErrorLog.getErrors();
 
-        for (String error : errors)
+        for (Error error : errors)
             System.out.println(error);
     }
 

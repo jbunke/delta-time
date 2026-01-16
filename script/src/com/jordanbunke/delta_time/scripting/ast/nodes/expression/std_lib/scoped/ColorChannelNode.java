@@ -4,6 +4,7 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.PropertyNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
+import com.jordanbunke.delta_time.scripting.util.ScriptVisitor;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
 import java.awt.*;
@@ -40,6 +41,11 @@ public final class ColorChannelNode extends PropertyNode {
 
     @Override
     protected String funcName() {
-        return channel.name().toLowerCase();
+        return switch (channel) {
+            case RED -> ScriptVisitor.RED_L;
+            case GREEN -> ScriptVisitor.GREEN_L;
+            case BLUE -> ScriptVisitor.BLUE_L;
+            case ALPHA -> ScriptVisitor.ALPHA_L;
+        };
     }
 }

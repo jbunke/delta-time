@@ -1,5 +1,6 @@
 package com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.global.rng;
 
+import com.jordanbunke.delta_time.scripting.util.ScriptVisitor;
 import com.jordanbunke.delta_time.utility.math.RNG;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.global.min_max.NumBinOpNode;
@@ -15,6 +16,6 @@ public final class RandTwoArgNode extends NumBinOpNode {
 
     @Override
     protected String funcName() {
-        return "rand";
+        return ScriptVisitor.RAND;
     }
 }

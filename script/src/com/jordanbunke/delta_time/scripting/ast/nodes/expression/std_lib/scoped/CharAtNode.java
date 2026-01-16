@@ -4,10 +4,7 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.MemberFuncCallNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
-import com.jordanbunke.delta_time.scripting.util.Arguments;
-import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
-import com.jordanbunke.delta_time.scripting.util.TextPosition;
-import com.jordanbunke.delta_time.scripting.util.TypeUtils;
+import com.jordanbunke.delta_time.scripting.util.*;
 
 public final class CharAtNode extends MemberFuncCallNode {
     public CharAtNode(
@@ -27,16 +24,15 @@ public final class CharAtNode extends MemberFuncCallNode {
         if (i >= 0 && i < s.length())
             return s.charAt(i);
         else
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.INDEX_OUT_OF_BOUNDS,
-                    arguments.get(0).getPosition(), String.valueOf(i),
-                    String.valueOf(s.length()), String.valueOf(false));
+            ScriptErrorLog.runtimeError(arguments.get(0).getPosition(),
+                    "Index out of bounds; attempted to access char at index " +
+                            i + " in a " + s.length() + "-char string");
 
         return null;
     }
 
     @Override
     protected String funcName() {
-        return "at";
+        return ScriptVisitor.AT;
     }
 }

@@ -3,8 +3,10 @@ package com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.global
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
-import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
+import com.jordanbunke.delta_time.scripting.util.ScriptVisitor;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
+
+import static com.jordanbunke.delta_time.scripting.util.ScriptErrorLog.*;
 
 // TODO - refactor: should extend DefFuncCallNode
 public final class AbsoluteNode extends ExpressionNode {
@@ -26,8 +28,9 @@ public final class AbsoluteNode extends ExpressionNode {
         final TypeNode nType = n.getType(symbolTable);
 
         if (!nType.isNum())
-            ScriptErrorLog.fireError(ScriptErrorLog.Message.NAN,
-                    n.getPosition(), "abs() argument", nType.toString());
+            semanticError(n.getPosition(),
+                    ScriptVisitor.ABS + "() argument is of a non-numeric type: " +
+                            expectedNumberButGot(nType));
     }
 
     @Override
@@ -49,6 +52,6 @@ public final class AbsoluteNode extends ExpressionNode {
 
     @Override
     public String toString() {
-        return "abs(" + n + ")";
+        return ScriptVisitor.ABS + "(" + n + ")";
     }
 }

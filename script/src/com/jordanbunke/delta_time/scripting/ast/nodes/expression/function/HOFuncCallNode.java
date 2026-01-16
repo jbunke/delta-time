@@ -6,8 +6,9 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.types.FuncTypeNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import com.jordanbunke.delta_time.scripting.util.FuncHelper;
-import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
+
+import static com.jordanbunke.delta_time.scripting.util.ScriptErrorLog.*;
 
 import java.util.Arrays;
 
@@ -36,8 +37,9 @@ public final class HOFuncCallNode extends ExpressionNode {
         final TypeNode fType = f.getType(symbolTable);
 
         if (!(fType instanceof FuncTypeNode funcType)) {
-            ScriptErrorLog.fireError(ScriptErrorLog.Message.NOT_HOF,
-                    f.getPosition(), f.toString(), fType.toString());
+            semanticError(f.getPosition(),
+                    "Cannot invoke an expression of the non-functional type \"" +
+                            fType + "\" as a function");
             return;
         }
 
@@ -48,18 +50,15 @@ public final class HOFuncCallNode extends ExpressionNode {
         final TypeNode[] paramTypes = funcType.getParamTypes();
 
         if (paramTypes.length != argTypes.length) {
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.ARGS_SIGNATURE_MISMATCH,
-                    getPosition(), "function pointer " + f.toString());
+            semanticError(getPosition(), unexpectedNumberOfArgs(paramTypes.length, argTypes.length));
             return;
         }
 
         for (int i = 0; i < paramTypes.length; i++)
             if (!argTypes[i].equals(paramTypes[i]))
-                ScriptErrorLog.fireError(
-                        ScriptErrorLog.Message.ARG_NOT_TYPE,
-                        args[i].getPosition(), "function pointer",
-                        paramTypes[i].toString(), argTypes[i].toString());
+                semanticError(args[i].getPosition(), typeMismatch(
+                        "Argument type", "parameter type",
+                        paramTypes[i], argTypes[i]));
     }
 
     @Override

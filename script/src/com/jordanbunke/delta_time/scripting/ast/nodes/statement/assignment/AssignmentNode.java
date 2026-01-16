@@ -31,8 +31,7 @@ public abstract class AssignmentNode extends StatementNode {
 
         if (assignable instanceof IdentifierNode &&
                 var != null && !var.isMutable())
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.REASSIGN_FINAL,
-                    assignable.getPosition(), assignable.getName());
+            ScriptErrorLog.semanticError(assignable.getPosition(),
+                    "Cannot reassign variable that is declared as immutable");
     }
 }

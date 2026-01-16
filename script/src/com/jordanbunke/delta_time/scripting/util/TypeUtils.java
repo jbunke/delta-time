@@ -22,11 +22,4 @@ public final class TypeUtils {
 
         return false;
     }
-
-    public static String expectedString(final TypeNode[] expected) {
-        if (expected.length == 1) return expected[0].toString();
-
-        return Arrays.stream(expected).map(TypeNode::toString)
-                .reduce((a, b) -> a + "\" or \"").orElse("");
-    }
 }

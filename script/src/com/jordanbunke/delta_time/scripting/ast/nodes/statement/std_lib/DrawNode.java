@@ -2,86 +2,42 @@ package com.jordanbunke.delta_time.scripting.ast.nodes.statement.std_lib;
 
 import com.jordanbunke.delta_time.image.GameImage;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
-import com.jordanbunke.delta_time.scripting.ast.nodes.statement.StatementNode;
-import com.jordanbunke.delta_time.scripting.ast.nodes.types.BaseTypeNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import com.jordanbunke.delta_time.scripting.util.FuncControlFlow;
-import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
+import com.jordanbunke.delta_time.scripting.util.ScriptVisitor;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
+import com.jordanbunke.delta_time.scripting.util.TypeUtils;
 
-// TODO - refactor: should extend MemberFuncExecNode
-public final class DrawNode extends StatementNode {
-    private final ExpressionNode canvas, superimposed, x, y;
-
+public final class DrawNode extends MemberFuncExecNode {
     public DrawNode(
             final TextPosition position,
             final ExpressionNode canvas,
             final ExpressionNode superimposed,
             final ExpressionNode x, final ExpressionNode y
     ) {
-        super(position);
-
-        this.canvas = canvas;
-        this.superimposed = superimposed;
-        this.x = x;
-        this.y = y;
-    }
-
-    @Override
-    public void semanticErrorCheck(final SymbolTable symbolTable) {
-        canvas.semanticErrorCheck(symbolTable);
-        superimposed.semanticErrorCheck(symbolTable);
-        x.semanticErrorCheck(symbolTable);
-        y.semanticErrorCheck(symbolTable);
-
-        final BaseTypeNode
-                imgType = TypeNode.getImage(),
-                intType = TypeNode.getInt();
-
-        final TypeNode
-                cType = canvas.getType(symbolTable),
-                sType = superimposed.getType(symbolTable),
-                xType = x.getType(symbolTable),
-                yType = y.getType(symbolTable);
-
-        if (!cType.equals(imgType))
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.ARG_NOT_TYPE,
-                    canvas.getPosition(), "Canvas",
-                    "image", cType.toString());
-        if (!sType.equals(imgType))
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.ARG_NOT_TYPE,
-                    superimposed.getPosition(), "Superimposed",
-                    "image", sType.toString());
-        if (!xType.equals(intType))
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.ARG_NOT_TYPE,
-                    x.getPosition(), "X", "int", xType.toString());
-        if (!yType.equals(intType))
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.ARG_NOT_TYPE,
-                    y.getPosition(), "Y", "int", yType.toString());
+        super(position, canvas, TypeNode.getImage(),
+                new ExpressionNode[] { superimposed, x, y },
+                TypeUtils.expectExact(TypeNode.getImage(),
+                        TypeNode.getInt(), TypeNode.getInt()));
     }
 
     @Override
     public FuncControlFlow execute(final SymbolTable symbolTable) {
-        final GameImage
-                c = (GameImage) canvas.evaluate(symbolTable),
-                s = (GameImage) superimposed.evaluate(symbolTable);
+        final Object[] vs = arguments.evaluate(symbolTable);
 
-        final int xCoord = (int) x.evaluate(symbolTable),
-                yCoord = (int) y.evaluate(symbolTable);
+        final int x = (int) vs[1], y = (int) vs[2];
+        final GameImage superimposed = (GameImage) vs[0],
+                canvas = (GameImage) receiver.evaluate(symbolTable);
 
-        c.draw(s, xCoord, yCoord);
-        c.free();
+        canvas.draw(superimposed, x, y);
+        canvas.free();
 
         return FuncControlFlow.cont();
     }
 
     @Override
-    public String toString() {
-        return canvas + ".draw(" + superimposed + ", " + x + ", " + y + ");";
+    protected String funcName() {
+        return ScriptVisitor.DRAW;
     }
 }

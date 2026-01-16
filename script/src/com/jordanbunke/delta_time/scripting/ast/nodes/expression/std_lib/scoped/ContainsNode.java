@@ -10,6 +10,8 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import com.jordanbunke.delta_time.scripting.util.*;
 
+import static com.jordanbunke.delta_time.scripting.util.ScriptErrorLog.*;
+
 public final class ContainsNode extends MemberFuncCallNode {
     public ContainsNode(
             final TextPosition position,
@@ -37,25 +39,28 @@ public final class ContainsNode extends MemberFuncCallNode {
             final TypeNode keyType = mapType.getKeyType();
 
             if (!keyType.equals(elemType))
-                ScriptErrorLog.fireError(
-                        ScriptErrorLog.Message.MAP_KEY_TYPE_MISMATCH,
-                        element.getPosition(),
-                        keyType.toString(), elemType.toString());
+                semanticError(element.getPosition(),
+                        typeMismatch(funcName() +
+                                "() element argument expression type",
+                                "receiver map expression key type",
+                                keyType, elemType));
         } else if (recType instanceof CollectionTypeNode colType) {
             final TypeNode colElemType = colType.getElementType();
 
             if (!colElemType.equals(elemType))
-                ScriptErrorLog.fireError(
-                        ScriptErrorLog.Message.ELEMENT_DOES_NOT_MATCH_COL,
-                        element.getPosition(),
-                        colElemType.toString(), elemType.toString());
+                semanticError(element.getPosition(),
+                        typeMismatch(funcName() +
+                                        "() element argument expression type",
+                                "receiver collection expression element type",
+                                colElemType, elemType));
         } else if (recType.equals(TypeNode.getString())) {
             if (!(elemType.equals(TypeNode.getChar()) ||
                     elemType.equals(TypeNode.getString())))
-                ScriptErrorLog.fireError(
-                        ScriptErrorLog.Message.EXPECTED_FOR_CALL,
-                        getPosition(), funcName(), "\"char\" or \"string\"",
-                        elemType.toString());
+                semanticError(element.getPosition(),
+                        funcName() + "() element argument expression is of an " +
+                                "invalid type for a receiver expression of type \"string\": " +
+                                expectedButGot(TypeUtils.options(
+                                        TypeNode.getChar(), TypeNode.getString()), elemType));
         }
     }
 
@@ -85,6 +90,6 @@ public final class ContainsNode extends MemberFuncCallNode {
 
     @Override
     protected String funcName() {
-        return "has";
+        return ScriptVisitor.HAS;
     }
 }

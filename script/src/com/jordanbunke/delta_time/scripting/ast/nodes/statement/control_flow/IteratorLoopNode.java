@@ -9,8 +9,10 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.types.CollectionTypeNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import com.jordanbunke.delta_time.scripting.util.FuncControlFlow;
-import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
+import com.jordanbunke.delta_time.scripting.util.TypeUtils;
+
+import static com.jordanbunke.delta_time.scripting.util.ScriptErrorLog.*;
 
 public final class IteratorLoopNode extends StatementNode {
     private final DeclarationNode declaration;
@@ -58,16 +60,15 @@ public final class IteratorLoopNode extends StatementNode {
 
         if (elemType != null) {
             if (!varType.equals(elemType))
-                ScriptErrorLog.fireError(
-                        ScriptErrorLog.Message.ELEMENT_DOES_NOT_MATCH_COL,
-                        declaration.getPosition(),
-                        elemType.toString(), varType.toString());
+                semanticError(declaration.getPosition(),
+                        typeMismatch("Loop variable type",
+                                "the element type of the iterable expression",
+                                elemType, varType));
         } else
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.NOT_ITERABLE,
-                    collection.getPosition(),
-                    "string\", \"array - []\", \"list - <>\" or \"set - {}\"",
-                    colType.toString());
+            semanticError(collection.getPosition(),
+                    "Iterator loop collection expression is of a non-iterable type: " +
+                            expectedButGot(TypeUtils.options(stringType,
+                                    TypeNode.array(), TypeNode.list(), TypeNode.set()), colType));
     }
 
     @Override

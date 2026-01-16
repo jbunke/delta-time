@@ -4,8 +4,9 @@ import com.jordanbunke.delta_time.scripting.ast.collection.ScriptArray;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
-import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
+
+import static com.jordanbunke.delta_time.scripting.util.ScriptErrorLog.*;
 
 public final class NewArrayNode extends ExpressionNode {
     private final TypeNode elementType;
@@ -27,12 +28,12 @@ public final class NewArrayNode extends ExpressionNode {
         length.semanticErrorCheck(symbolTable);
         elementType.semanticErrorCheck(symbolTable);
 
-        final TypeNode lengthType = length.getType(symbolTable);
+        final TypeNode lengthType = length.getType(symbolTable), intType = TypeNode.getInt();
 
-        if (!lengthType.equals(TypeNode.getInt()))
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.ARR_LENGTH_NOT_INT,
-                    getPosition(), lengthType.toString());
+        if (!lengthType.equals(intType))
+            semanticError(length.getPosition(),
+                    "Length expression of array creation by size is an invalid type: " +
+                            expectedButGot(intType, lengthType));
     }
 
     @Override
@@ -40,9 +41,8 @@ public final class NewArrayNode extends ExpressionNode {
         final int l = (int) length.evaluate(symbolTable);
 
         if (l < 0)
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.ARR_LENGTH_NEGATIVE,
-                    getPosition(), String.valueOf(l));
+            runtimeError(length.getPosition(), "Attempted to create an array with " +
+                    l + " elements; array length must be non-negative");
 
         return new ScriptArray(l);
     }

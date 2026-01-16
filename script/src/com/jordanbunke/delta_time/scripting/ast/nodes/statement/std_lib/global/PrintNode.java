@@ -5,10 +5,7 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.statement.std_lib.DefFuncExecNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
-import com.jordanbunke.delta_time.scripting.util.Arguments;
-import com.jordanbunke.delta_time.scripting.util.FuncControlFlow;
-import com.jordanbunke.delta_time.scripting.util.TextPosition;
-import com.jordanbunke.delta_time.scripting.util.TypeUtils;
+import com.jordanbunke.delta_time.scripting.util.*;
 
 public final class PrintNode extends DefFuncExecNode {
     public PrintNode(
@@ -29,6 +26,6 @@ public final class PrintNode extends DefFuncExecNode {
 
     @Override
     protected String funcName() {
-        return "print";
+        return ScriptVisitor.PRINT;
     }
 }

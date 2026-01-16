@@ -5,6 +5,7 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.DefFunc
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import com.jordanbunke.delta_time.scripting.util.Arguments;
+import com.jordanbunke.delta_time.scripting.util.ScriptVisitor;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
 import com.jordanbunke.delta_time.scripting.util.TypeUtils;
 import com.jordanbunke.delta_time.utility.math.RNG;
@@ -26,6 +27,6 @@ public final class ProbabilityNode extends DefFuncCallNode {
 
     @Override
     protected String funcName() {
-        return "prob";
+        return ScriptVisitor.PROB;
     }
 }

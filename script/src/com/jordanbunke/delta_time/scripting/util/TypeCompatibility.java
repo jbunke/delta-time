@@ -66,9 +66,9 @@ public final class TypeCompatibility {
         else if (arg instanceof char[] a)
             return prepArg(objectifyCharArray(a));
         else if (notABaseType(arg)) {
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.INVALID_ARG_TYPE,
-                    TextPosition.N_A, arg.getClass().getSimpleName());
+            ScriptErrorLog.runtimeError(TextPosition.N_A,
+                    "Attempting to execute script with argument of an invalid data type: " +
+                            arg.getClass().getSimpleName());
         }
 
         return arg;

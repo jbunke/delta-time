@@ -5,9 +5,10 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.DefFunc
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import com.jordanbunke.delta_time.scripting.util.Arguments;
-import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
 import com.jordanbunke.delta_time.scripting.util.TypeUtils;
+
+import static com.jordanbunke.delta_time.scripting.util.ScriptErrorLog.*;
 
 import java.util.function.BinaryOperator;
 
@@ -45,13 +46,12 @@ public abstract class NumBinOpNode extends DefFuncCallNode {
                 bType = arguments.get(1).getType(symbolTable);
 
         if (!aType.equals(bType))
-            ScriptErrorLog.fireError(ScriptErrorLog.Message.ARG_NOT_TYPE,
-                    getPosition(), "Second " + funcName(),
-                    aType.toString(), bType.toString());
+            semanticError(getPosition(), typeMismatch("Second operand type",
+                    "first operand type", aType, bType));
         if (!aType.isNum())
-            ScriptErrorLog.fireError(ScriptErrorLog.Message.NAN,
-                    a.getPosition(), "First " + funcName() + " argument",
-                    aType.toString());
+            semanticError(a.getPosition(),
+                    "First operand is of a non-numeric type: " +
+                            expectedNumberButGot(aType));
     }
 
     @Override

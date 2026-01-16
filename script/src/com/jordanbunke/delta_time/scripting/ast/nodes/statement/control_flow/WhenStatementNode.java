@@ -8,8 +8,9 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import com.jordanbunke.delta_time.scripting.util.DebugUtils;
 import com.jordanbunke.delta_time.scripting.util.FuncControlFlow;
-import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
+
+import static com.jordanbunke.delta_time.scripting.util.ScriptErrorLog.*;
 
 public final class WhenStatementNode extends StatementNode {
     private final ExpressionNode control;
@@ -47,51 +48,43 @@ public final class WhenStatementNode extends StatementNode {
                 final TypeNode pType = p.predicate.getType(innerTable);
 
                 if (!(pType instanceof FuncTypeNode pFuncType)) {
-                    ScriptErrorLog.fireError(ScriptErrorLog.Message.NOT_HOF,
-                            p.predicate.getPosition(), p.predicate.toString(),
-                            pType.toString());
+                    final FuncTypeNode expectedFuncType =
+                            new FuncTypeNode(new TypeNode[] { cType }, boolType);
+                    semanticError(p.predicate.getPosition(),
+                            "Predicate expression is not of a functional type: " +
+                                    expectedButGot(expectedFuncType, pType));
                 } else {
                     final TypeNode[] params = pFuncType.getParamTypes();
                     final TypeNode returnType = pFuncType.getReturnType();
 
                     if (params.length != 1)
-                        ScriptErrorLog.fireError(
-                                ScriptErrorLog.Message.CUSTOM_CT,
-                                p.predicate.getPosition(),
-                                "when statement case predicate should accept" +
-                                        " 1 argument; accepts " + params.length
-                        );
+                        semanticError(p.predicate.getPosition(),
+                                "Predicate function should accept " +
+                                        "1 argument; accepts " + params.length);
                     else if (!cType.equals(params[0]))
-                        ScriptErrorLog.fireError(
-                                ScriptErrorLog.Message.TYPE_MISMATCH,
-                                p.predicate.getPosition(),
-                                "when statement case predicate parameter type",
-                                cType.toString(), params[0].toString());
+                        semanticError(p.predicate.getPosition(),
+                                typeMismatch("Predicate function parameter type",
+                                        "\"when\" statement control expression type",
+                                        cType, params[0]));
                     else if (!boolType.equals(returnType))
-                        ScriptErrorLog.fireError(
-                                ScriptErrorLog.Message.TYPE_MISMATCH,
-                                p.predicate.getPosition(),
-                                "when statement case predicate return type",
-                                boolType.toString(), returnType.toString());
+                        semanticError(p.predicate.getPosition(),
+                                "Predicate function return type is invalid: " +
+                                        expectedButGot(boolType, returnType));
                 }
             } else if (c instanceof MatchesCaseNode m) {
                 final TypeNode condType = m.condition.getType(innerTable);
 
                 if (!boolType.equals(condType))
-                    ScriptErrorLog.fireError(
-                            ScriptErrorLog.Message.TYPE_MISMATCH,
-                            m.condition.getPosition(),
-                            "when statement \"matches\" case condition type",
-                            boolType.toString(), condType.toString());
+                    semanticError(m.condition.getPosition(),
+                            notBool("\"matches\" case expression", condType));
             } else if (c instanceof IsCaseNode is) {
                 final TypeNode isType = is.matcher.getType(innerTable);
 
                 if (!cType.equals(isType))
-                    ScriptErrorLog.fireError(
-                            ScriptErrorLog.Message.TYPE_MISMATCH,
-                            is.matcher.getPosition(),
-                            "when statement case",
-                            cType.toString(), isType.toString());
+                    semanticError(is.matcher.getPosition(),
+                            typeMismatch("\"is\" case expression type",
+                                    "\"when\" statement control expression type",
+                                    cType, isType));
             }
 
             c.semanticErrorCheck(innerTable);

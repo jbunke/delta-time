@@ -26,15 +26,15 @@ public final class ImageFromPathNode extends DefFuncCallNode {
                 PathHelper.process(fp, symbolTable, path.getPosition()));
 
         if (image == null)
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.PATH_DOES_NOT_CONTAIN_IMAGE,
-                    path.getPosition(), PathHelper.formatPathString(fp));
+            ScriptErrorLog.runtimeError(path.getPosition(),
+                    "Could not read an image at the location \"" +
+                            PathHelper.formatPathString(fp) + "\"");
 
         return image;
     }
 
     @Override
     protected String funcName() {
-        return "read_image";
+        return ScriptVisitor.READ_IMAGE;
     }
 }

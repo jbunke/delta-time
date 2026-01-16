@@ -3,8 +3,9 @@ package com.jordanbunke.delta_time.scripting.ast.nodes.expression;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.BaseTypeNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
-import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
+
+import static com.jordanbunke.delta_time.scripting.util.ScriptErrorLog.*;
 
 import java.util.Map;
 import java.util.Set;
@@ -50,54 +51,58 @@ public final class CastNode extends ExpressionNode {
 
         final TypeNode eType = e.getType(symbolTable);
 
-        if (!CAST_MATRIX.containsKey(type))
-            ScriptErrorLog.fireError(ScriptErrorLog.Message.CUSTOM_CT,
-                    type.getPosition(), "Type \"" + type + "\" is uncastable");
-        else if (!CAST_MATRIX.get(type).contains(eType))
-            ScriptErrorLog.fireError(ScriptErrorLog.Message.CUSTOM_CT,
-                    e.getPosition(), "Type \"" + eType +
-                            "\" cannot be cast to \"" + type + "\"");
+        if (!TypeNode.getString().equals(type)) {
+            if (!CAST_MATRIX.containsKey(type))
+                semanticError(type.getPosition(), "Cannot cast to type \"" + type + "\"");
+            else if (!CAST_MATRIX.get(type).contains(eType))
+                semanticError(e.getPosition(), "Cannot cast type \"" + eType + "\" to type \"" + type + "\"");
+        }
     }
 
     @Override
     public Object evaluate(final SymbolTable symbolTable) {
         final Object val = e.evaluate(symbolTable);
 
-        return switch (((BaseTypeNode) type).getType()) {
-            case INT -> {
-                if (val instanceof Double d)
-                    yield d.intValue();
-                else if (val instanceof Character c)
-                    yield (int) c;
-                else if (val instanceof String s) {
-                    try {
-                        yield Integer.parseInt(s);
-                    } catch (NumberFormatException e) {
-                        ScriptErrorLog.fireError(
-                                ScriptErrorLog.Message.CUSTOM_RT,
-                                this.e.getPosition(),
-                                "The string \"" + s +
-                                        "\" could not be cast to an int");
+        if (type instanceof BaseTypeNode baseType) {
+            return switch (baseType.getType()) {
+                case INT -> {
+                    if (val instanceof Double d)
+                        yield d.intValue();
+                    else if (val instanceof Character c)
+                        yield (int) c;
+                    else if (val instanceof String s) {
+                        try {
+                            yield Integer.parseInt(s);
+                        } catch (NumberFormatException e) {
+                            runtimeError(this.e.getPosition(), "Attempted to cast the string \"" + s + "\" as an int");
+                        }
                     }
+
+                    yield null;
                 }
+                case FLOAT -> {
+                    if (val instanceof Integer i)
+                        yield i.doubleValue();
 
-                yield val;
-            }
-            case FLOAT -> {
-                if (val instanceof Integer i)
-                    yield i.doubleValue();
+                    yield failedToCast();
+                }
+                case CHAR -> {
+                    if (val instanceof Integer i)
+                        yield (char) ((int) i);
 
-                yield val;
-            }
-            case CHAR -> {
-                if (val instanceof Integer i)
-                    yield (char) ((int) i);
+                    yield failedToCast();
+                }
+                case STRING -> String.valueOf(val);
+                default -> failedToCast();
+            };
+        }
 
-                yield val;
-            }
-            case STRING -> String.valueOf(val);
-            default -> val;
-        };
+        return failedToCast();
+    }
+
+    private Object failedToCast() {
+        runtimeError(e.getPosition(), "Could not cast object to type \"" + type + "\"");
+        return null;
     }
 
     @Override

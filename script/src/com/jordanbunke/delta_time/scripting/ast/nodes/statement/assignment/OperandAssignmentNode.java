@@ -6,10 +6,12 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.types.BaseTypeNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import com.jordanbunke.delta_time.scripting.util.FuncControlFlow;
-import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
+import com.jordanbunke.delta_time.scripting.util.TypeUtils;
 
 import java.util.Set;
+
+import static com.jordanbunke.delta_time.scripting.util.ScriptErrorLog.*;
 
 public final class OperandAssignmentNode extends AssignmentNode {
     public enum Operator {
@@ -64,51 +66,49 @@ public final class OperandAssignmentNode extends AssignmentNode {
                 charType = TypeNode.getChar(),
                 stringType = TypeNode.getString();
 
-        final Set<TypeNode> numTypes = Set.of(intType, floatType),
+        final Set<TypeNode> numTypes = TypeNode.numTypes(),
                 textTypes = Set.of(stringType, charType);
 
         if (operator.isLogic()) {
             if (!assignableType.equals(boolType))
-                ScriptErrorLog.fireError(
-                        ScriptErrorLog.Message.VAR_NOT_BOOL,
-                        getAssignable().getPosition(),
-                        assignableType.toString());
+                semanticError(getAssignable().getPosition(), notBool(describeAssignable(), assignableType));
             if (!operandType.equals(boolType))
-                ScriptErrorLog.fireError(
-                        ScriptErrorLog.Message.VAR_NOT_BOOL,
-                        operand.getPosition(),
-                        operandType.toString());
+                semanticError(operand.getPosition(), notBool(describeOperand(), operandType));
         } else if (operator == Operator.ADD) {
             if (numTypes.contains(assignableType)) {
                 if (!numTypes.contains(operandType))
-                    ScriptErrorLog.fireError(
-                            ScriptErrorLog.Message.ASSIGN_EXPR_NOT_NUM,
-                            operand.getPosition(),
-                            operandType.toString());
+                    semanticError(operand.getPosition(), describeOperand() +
+                            " is of a non-numeric type: " + expectedNumberButGot(operandType));
             } else if (assignableType.equals(stringType)) {
                 if (!textTypes.contains(operandType))
-                    ScriptErrorLog.fireError(
-                            ScriptErrorLog.Message.ASSIGN_EXPR_NOT_STRING,
-                            operand.getPosition(),
-                            operandType.toString());
+                    semanticError(operand.getPosition(), describeOperand() +
+                            " cannot be concatenated to a string assignable: " +
+                            expectedButGot(textTypes.toArray(TypeNode[]::new), operandType));
             } else {
-                ScriptErrorLog.fireError(
-                        ScriptErrorLog.Message.VAR_NOT_NUM,
-                        getAssignable().getPosition(),
-                        assignableType.toString());
+                semanticError(getAssignable().getPosition(),
+                        describeAssignable() + " is of an invalid type: " +
+                                expectedButGot(TypeUtils.options(intType, floatType, stringType), assignableType));
             }
         } else {
             if (!numTypes.contains(assignableType))
-                ScriptErrorLog.fireError(
-                        ScriptErrorLog.Message.VAR_NOT_NUM,
-                        getAssignable().getPosition(),
-                        assignableType.toString());
+                semanticError(getAssignable().getPosition(),
+                        describeAssignable() + " is of a non-numeric type: " +
+                                expectedNumberButGot(assignableType));
             if (!numTypes.contains(operandType))
-                ScriptErrorLog.fireError(
-                        ScriptErrorLog.Message.ASSIGN_EXPR_NOT_NUM,
-                        operand.getPosition(),
-                        operandType.toString());
+                semanticError(operand.getPosition(),
+                        describeOperand() + " is of a non-numeric type: " +
+                                expectedNumberButGot(operandType));
         }
+    }
+
+    private String describeAssignable() {
+        return "Left-hand side assignable expression in" + operator +
+                "compound assignment operation";
+    }
+
+    private String describeOperand() {
+        return "Right-hand side operand expression in" + operator +
+                "compound assignment operation";
     }
 
     @Override
@@ -140,9 +140,7 @@ public final class OperandAssignmentNode extends AssignmentNode {
                                     op = on.doubleValue();
 
                             if (op == 0d && operator.isDiv())
-                                ScriptErrorLog.fireError(
-                                        ScriptErrorLog.Message.DIV_BY_ZERO,
-                                        operand.getPosition());
+                                runtimeError(operand.getPosition(), "Attempted to divide by 0");
 
                             final Double res = switch (operator) {
                                 case ADD -> bef + op;

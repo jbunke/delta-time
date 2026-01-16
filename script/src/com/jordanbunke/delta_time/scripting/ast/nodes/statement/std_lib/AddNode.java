@@ -8,10 +8,13 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.types.CollectionTypeNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import com.jordanbunke.delta_time.scripting.util.FuncControlFlow;
-import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
+import com.jordanbunke.delta_time.scripting.util.ScriptVisitor;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
+import com.jordanbunke.delta_time.scripting.util.TypeUtils;
 
 import java.util.Optional;
+
+import static com.jordanbunke.delta_time.scripting.util.ScriptErrorLog.*;
 
 // TODO - refactor: should extend MemberFuncExecNode
 public final class AddNode extends StatementNode {
@@ -40,8 +43,7 @@ public final class AddNode extends StatementNode {
         if (hasIndex)
             index.semanticErrorCheck(symbolTable);
 
-        final TypeNode
-                colType = collection.getType(symbolTable),
+        final TypeNode colType = collection.getType(symbolTable),
                 elemType = (colType instanceof CollectionTypeNode ct)
                         ? ct.getElementType() : null,
                 addType = toAdd.getType(symbolTable),
@@ -51,23 +53,21 @@ public final class AddNode extends StatementNode {
                         ? ct.getType() : null;
 
         if (elemType == null || typeOfCol == null)
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.EXPECTED_FOR_CALL,
-                    collection.getPosition(), "add()",
-                    "list - <>\" or \"set - {}", colType.toString());
+            semanticError(collection.getPosition(),
+                    "add() receiver expression is of an invalid type: " +
+                            expectedButGot(TypeUtils.options(TypeNode.list(), TypeNode.set()), colType));
         else if (!elemType.equals(addType))
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.ELEMENT_DOES_NOT_MATCH_COL,
-                    toAdd.getPosition(),
-                    elemType.toString(), addType.toString());
+            semanticError(toAdd.getPosition(),
+                    typeMismatch("Type of element to be added",
+                            "the collection's element type", elemType, addType));
         else if (typeOfCol == CollectionTypeNode.Type.ARRAY)
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.ADD_TO_ARRAY,
-                    collection.getPosition());
+            semanticError(collection.getPosition(),
+                    "add() receiver expression is of type \"" + colType +
+                            "\"; cannot add an element to an array");
         if (hasIndex && !iType.equals(TypeNode.getInt()))
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.INDEX_NOT_INT,
-                    index.getPosition(), iType.toString());
+            semanticError(index.getPosition(),
+                    "add() index argument expression is of an invalid type: " +
+                            expectedButGot(TypeNode.getInt(), iType));
     }
 
     @Override
@@ -85,10 +85,9 @@ public final class AddNode extends StatementNode {
             try {
                 l.add(index, element);
             } catch (IllegalArgumentException e) {
-                ScriptErrorLog.fireError(
-                        ScriptErrorLog.Message.INDEX_OUT_OF_BOUNDS,
-                        this.index.getPosition(), String.valueOf(index),
-                        String.valueOf(c.size()), String.valueOf(true));
+                runtimeError(this.index.getPosition(),
+                        "Index out of bounds; attempted to add an element at index " +
+                                i + " of a " + l.size() + "-element collection");
             }
         } else
             c.add(element);
@@ -98,7 +97,7 @@ public final class AddNode extends StatementNode {
 
     @Override
     public String toString() {
-        return collection + ".add(" + toAdd +
+        return collection + "." + ScriptVisitor.ADD + "(" + toAdd +
                 (index != null ? ", " + index : "") + ");";
     }
 }

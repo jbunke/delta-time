@@ -5,8 +5,7 @@ import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
 public interface IllegalLanguageFeature {
     default void fireError() {
-        ScriptErrorLog.fireError(ScriptErrorLog.Message.CUSTOM_CT,
-                getPosition(), getError());
+        ScriptErrorLog.semanticError(getPosition(), getError());
     }
 
     TextPosition getPosition();

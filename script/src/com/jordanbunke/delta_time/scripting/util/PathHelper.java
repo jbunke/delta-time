@@ -25,7 +25,7 @@ public final class PathHelper {
                 return workingDir.resolve(specified);
             }
 
-            ScriptErrorLog.fireError(ScriptErrorLog.Message.CUSTOM_RT, codePos,
+            ScriptErrorLog.runtimeError(codePos,
                     "Unable to resolve the relative path \"" + pathAsString +
                             "\" because the working directory is unknown");
         }

@@ -5,6 +5,7 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 
 import static com.jordanbunke.delta_time.scripting.util.TypeUtils.*;
+import static com.jordanbunke.delta_time.scripting.util.ScriptErrorLog.*;
 
 public record Receiver(ExpressionNode receiver, TypeNode[] typeOptions) {
     public Receiver(final ExpressionNode receiver, final TypeNode only) {
@@ -25,9 +26,9 @@ public record Receiver(ExpressionNode receiver, TypeNode[] typeOptions) {
         final TypeNode type = receiver.getType(symbolTable);
 
         if (!contains(typeOptions, type))
-            ScriptErrorLog.fireError(ScriptErrorLog.Message.ARG_NOT_TYPE,
-                    receiver.getPosition(), "receiver",
-                    expectedString(typeOptions), type.toString());
+            semanticError(receiver.getPosition(),
+                    "Receiver expression is of an invalid type: " +
+                            expectedButGot(typeOptions, type));
     }
 
     @Override

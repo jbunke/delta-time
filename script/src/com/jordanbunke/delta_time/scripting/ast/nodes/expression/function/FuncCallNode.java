@@ -37,14 +37,15 @@ public final class FuncCallNode extends ExpressionNode implements IHookable {
                 .toArray(TypeNode[]::new);
 
         if (!func.paramsMatch(argTypes))
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.ARGS_SIGNATURE_MISMATCH,
-                    getPosition(), name);
+            // TODO: improve error reporting with unique messages for length mismatch vs. type mismatch
+            ScriptErrorLog.semanticError(getPosition(),
+                    "Attempting to call the function \"" + name +
+                            "\" with a set of arguments that do not match its signature");
 
         if (func.getReturnType() == null)
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.VOID_F_AS_EXPRESSION,
-                    getPosition(), name);
+            ScriptErrorLog.semanticError(getPosition(),
+                    "The function \"" + name +
+                            "\" is void; it cannot be invoked as an expression");
     }
 
     @Override

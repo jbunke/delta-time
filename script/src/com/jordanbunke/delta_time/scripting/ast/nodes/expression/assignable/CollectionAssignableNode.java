@@ -7,8 +7,9 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.types.CollectionTypeNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.Variable;
-import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
+
+import static com.jordanbunke.delta_time.scripting.util.ScriptErrorLog.*;
 
 public sealed abstract class CollectionAssignableNode extends AssignableNode
         permits ListAssignableNode, ArrayAssignableNode {
@@ -55,9 +56,9 @@ public sealed abstract class CollectionAssignableNode extends AssignableNode
         final TypeNode indexType = index.getType(symbolTable);
 
         if (!indexType.equals(intType))
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.INDEX_NOT_INT,
-                    index.getPosition(), indexType.toString());
+            semanticError(index.getPosition(),
+                    "Collection assignable index expression is of an invalid type: " +
+                            expectedButGot(intType, indexType));
     }
 
     @Override
@@ -65,9 +66,8 @@ public sealed abstract class CollectionAssignableNode extends AssignableNode
         final Variable var = symbolTable.get(getName());
 
         if (var == null) {
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.UNDEFINED_VAR,
-                    getPosition(), getName());
+            semanticError(getPosition(), "Variable \"" + getName() +
+                    "\" is referenced in a scope where it is not defined");
             return null;
         }
 

@@ -4,6 +4,7 @@ import com.jordanbunke.delta_time.image.GameImage;
 import com.jordanbunke.delta_time.io.FileIO;
 import com.jordanbunke.delta_time.io.ResourceLoader;
 import com.jordanbunke.delta_time.scripting.ast.nodes.function.HeadFuncNode;
+import com.jordanbunke.delta_time.scripting.util.Error;
 import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
 import org.junit.Assert;
 
@@ -34,9 +35,9 @@ public final class ScriptTestHelper {
     }
 
     private static void printErrors() {
-        final String[] errors = ScriptErrorLog.getErrors();
+        final Error[] errors = ScriptErrorLog.getErrors();
 
-        for (String error : errors)
+        for (Error error : errors)
             System.out.println(error);
     }
 }

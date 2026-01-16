@@ -5,8 +5,9 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.statement.declaration.Decl
 import com.jordanbunke.delta_time.scripting.ast.nodes.statement.declaration.ImplicitDeclarationNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
-import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
+
+import static com.jordanbunke.delta_time.scripting.util.ScriptErrorLog.*;
 
 public final class LambdaFuncNode extends ChildFuncNode {
     private SymbolTable scope;
@@ -30,10 +31,8 @@ public final class LambdaFuncNode extends ChildFuncNode {
         final DeclarationNode[] params = signature.parameters.params;
 
         if (params.length != paramTypes.length) {
-            ScriptErrorLog.fireError(ScriptErrorLog.Message.CUSTOM_CT,
-                    getPosition(), "Lambda accepts " + params.length +
-                            " arguments instead of the expected " +
-                            paramTypes.length);
+            semanticError(getPosition(),
+                    unexpectedNumberOfArgs(params.length, paramTypes.length));
             return;
         }
 

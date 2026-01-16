@@ -5,10 +5,11 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.statement.declaration.Decl
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.Variable;
-import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
 import java.util.Arrays;
+
+import static com.jordanbunke.delta_time.scripting.util.ScriptErrorLog.*;
 
 public final class ParametersNode extends ASTNode {
     final DeclarationNode[] params;
@@ -26,10 +27,7 @@ public final class ParametersNode extends ASTNode {
             final Object... args
     ) {
         if (params.length != args.length) {
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.ARGS_PARAMS_MISMATCH,
-                    getPosition(), String.valueOf(params.length),
-                    String.valueOf(args.length));
+            runtimeError(getPosition(), unexpectedNumberOfArgs(params.length, args.length));
             return;
         }
 
@@ -42,9 +40,9 @@ public final class ParametersNode extends ASTNode {
             if (type.complies(arg))
                 symbolTable.update(param.getIdent(), arg);
             else
-                ScriptErrorLog.fireError(
-                        ScriptErrorLog.Message.ARG_PARAM_TYPE_MISMATCH,
-                        param.getPosition(), type.toString());
+                runtimeError(param.getPosition(),
+                        "Argument does not match parameter type: " +
+                                expected(type));
 
             symbolTable.put(param.getIdent(),
                     new Variable(param.isMutable(), param.getType(), arg));

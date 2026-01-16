@@ -7,6 +7,7 @@ import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import java.util.Arrays;
 
 import static com.jordanbunke.delta_time.scripting.util.TypeUtils.*;
+import static com.jordanbunke.delta_time.scripting.util.ScriptErrorLog.*;
 
 public record Arguments(ExpressionNode[] args, TypeNode[]... expectedArgs) {
     public static Arguments none() {
@@ -33,12 +34,8 @@ public record Arguments(ExpressionNode[] args, TypeNode[]... expectedArgs) {
                 .toArray(TypeNode[]::new);
 
         if (argTypes.length != expectedArgs.length) {
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.CUSTOM_CT,
-                    args.length > 0 ? args[0].getPosition() : position,
-                    "Passing " + args.length +
-                            " arguments into a function expecting " +
-                            expectedArgs.length + " arguments");
+            semanticError(args.length > 0 ? args[0].getPosition() : position,
+                    unexpectedNumberOfArgs(expectedArgs.length, argTypes.length));
             return;
         }
 
@@ -47,9 +44,9 @@ public record Arguments(ExpressionNode[] args, TypeNode[]... expectedArgs) {
             final TypeNode actual = argTypes[i];
 
             if (!contains(expected, actual))
-                ScriptErrorLog.fireError(ScriptErrorLog.Message.ARG_NOT_TYPE,
-                        args[i].getPosition(), "function",
-                        expectedString(expected), actual.toString());
+                semanticError(args[i].getPosition(),
+                        "Function argument is of an invalid type: " +
+                                expectedButGot(expected, actual));
         }
     }
 

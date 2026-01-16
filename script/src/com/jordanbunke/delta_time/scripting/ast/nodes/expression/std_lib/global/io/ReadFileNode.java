@@ -25,9 +25,8 @@ public final class ReadFileNode extends DefFuncCallNode {
                 PathHelper.process(fp, symbolTable, path.getPosition()));
 
         if (content == null)
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.CUSTOM_RT,
-                    path.getPosition(), "Failed to read the file at \"" +
+            ScriptErrorLog.runtimeError(path.getPosition(),
+                    "Could not read a file at the location \"" +
                             PathHelper.formatPathString(fp) + "\"");
 
         return content;
@@ -35,6 +34,6 @@ public final class ReadFileNode extends DefFuncCallNode {
 
     @Override
     protected String funcName() {
-        return "read_file";
+        return ScriptVisitor.READ_FILE;
     }
 }

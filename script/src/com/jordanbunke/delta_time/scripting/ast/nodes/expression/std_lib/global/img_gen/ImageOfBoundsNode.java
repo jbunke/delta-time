@@ -5,10 +5,7 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.DefFuncCallNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
-import com.jordanbunke.delta_time.scripting.util.Arguments;
-import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
-import com.jordanbunke.delta_time.scripting.util.TextPosition;
-import com.jordanbunke.delta_time.scripting.util.TypeUtils;
+import com.jordanbunke.delta_time.scripting.util.*;
 
 public final class ImageOfBoundsNode extends DefFuncCallNode {
     private static final int W = 0, H = 1;
@@ -33,15 +30,11 @@ public final class ImageOfBoundsNode extends DefFuncCallNode {
             return new GameImage(w, h);
         else {
             if (w <= 0)
-                ScriptErrorLog.fireError(
-                        ScriptErrorLog.Message.NON_POSITIVE_IMAGE_BOUND,
-                        arguments.get(W).getPosition(),
-                        "Width", String.valueOf(w));
+                ScriptErrorLog.runtimeError(arguments.get(W).getPosition(),
+                        "Attempted to create a new image with a non-positive width argument (" + w + ")");
             if (h <= 0)
-                ScriptErrorLog.fireError(
-                        ScriptErrorLog.Message.NON_POSITIVE_IMAGE_BOUND,
-                        arguments.get(H).getPosition(),
-                        "Height", String.valueOf(h));
+                ScriptErrorLog.runtimeError(arguments.get(H).getPosition(),
+                        "Attempted to create a new image with a non-positive height argument (" + h + ")");
         }
 
         return null;
@@ -49,6 +42,6 @@ public final class ImageOfBoundsNode extends DefFuncCallNode {
 
     @Override
     protected String funcName() {
-        return "new_image_of";
+        return ScriptVisitor.NEW_IMAGE_OF;
     }
 }

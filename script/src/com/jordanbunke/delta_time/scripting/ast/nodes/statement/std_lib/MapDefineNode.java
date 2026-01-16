@@ -7,8 +7,10 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.types.MapTypeNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import com.jordanbunke.delta_time.scripting.util.FuncControlFlow;
-import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
+import com.jordanbunke.delta_time.scripting.util.ScriptVisitor;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
+
+import static com.jordanbunke.delta_time.scripting.util.ScriptErrorLog.*;
 
 // TODO - refactor: should extend MemberFuncExecNode
 public final class MapDefineNode extends StatementNode {
@@ -39,20 +41,19 @@ public final class MapDefineNode extends StatementNode {
                 valueType = value.getType(symbolTable);
 
         if (!(mapType instanceof MapTypeNode m))
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.EXPECTED_FOR_CALL,
-                    map.getPosition(), "define()", "map - {:}",
-                    mapType.toString());
+            semanticError(map.getPosition(),
+                    "define() receiver expression is of an invalid type: " +
+                            expectedButGot(new MapTypeNode(), mapType));
         else if (!keyType.equals(m.getKeyType()))
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.MAP_KEY_TYPE_MISMATCH,
-                    key.getPosition(), m.getKeyType().toString(),
-                    keyType.toString());
+            semanticError(key.getPosition(),
+                    typeMismatch("define() key argument expression type",
+                            "receiver map expression key type",
+                            m.getKeyType(), keyType));
         else if (!valueType.equals(m.getValueType()))
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.MAP_VALUE_TYPE_MISMATCH,
-                    value.getPosition(), m.getValueType().toString(),
-                    valueType.toString());
+            semanticError(value.getPosition(),
+                    typeMismatch("define() value argument expression type",
+                            "receiver map expression value type",
+                            m.getValueType(), valueType));
     }
 
     @Override
@@ -69,6 +70,6 @@ public final class MapDefineNode extends StatementNode {
 
     @Override
     public String toString() {
-        return map + ".define(" + key + ", " + value + ");";
+        return map + "." + ScriptVisitor.DEFINE + "(" + key + ", " + value + ");";
     }
 }

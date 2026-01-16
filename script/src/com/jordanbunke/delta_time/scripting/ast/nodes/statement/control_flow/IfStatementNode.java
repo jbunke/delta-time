@@ -7,10 +7,11 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.types.BaseTypeNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import com.jordanbunke.delta_time.scripting.util.FuncControlFlow;
-import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
 import java.util.Arrays;
+
+import static com.jordanbunke.delta_time.scripting.util.ScriptErrorLog.*;
 
 public final class IfStatementNode extends StatementNode {
     private final ExpressionNode[] conditions;
@@ -39,10 +40,8 @@ public final class IfStatementNode extends StatementNode {
             final TypeNode condType = condition.getType(symbolTable);
 
             if (!condType.equals(boolType))
-                ScriptErrorLog.fireError(
-                        ScriptErrorLog.Message.ARG_NOT_TYPE,
-                        condition.getPosition(), "Condition",
-                        boolType.toString(), condType.toString());
+                semanticError(condition.getPosition(),
+                        notBool("\"if\" statement condition expression", condType));
         }
 
         for (StatementNode body : bodies)

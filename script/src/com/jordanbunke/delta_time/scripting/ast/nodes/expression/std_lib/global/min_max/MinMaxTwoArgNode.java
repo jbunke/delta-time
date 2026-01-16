@@ -1,6 +1,7 @@
 package com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.global.min_max;
 
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
+import com.jordanbunke.delta_time.scripting.util.ScriptVisitor;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
 public final class MinMaxTwoArgNode extends NumBinOpNode {
@@ -18,6 +19,6 @@ public final class MinMaxTwoArgNode extends NumBinOpNode {
     }
 
     protected String funcName() {
-        return isMax ? "max" : "min";
+        return isMax ? ScriptVisitor.MAX : ScriptVisitor.MIN;
     }
 }

@@ -5,10 +5,7 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.MemberFuncCallNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
-import com.jordanbunke.delta_time.scripting.util.Arguments;
-import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
-import com.jordanbunke.delta_time.scripting.util.TextPosition;
-import com.jordanbunke.delta_time.scripting.util.TypeUtils;
+import com.jordanbunke.delta_time.scripting.util.*;
 
 public final class ImageSectionNode extends MemberFuncCallNode {
     private static final int X = 0, Y = 1, W = 2, H = 3;
@@ -41,13 +38,11 @@ public final class ImageSectionNode extends MemberFuncCallNode {
             return section.submit();
         } else {
             if (w <= 0)
-                ScriptErrorLog.fireError(
-                        ScriptErrorLog.Message.NON_POSITIVE_IMAGE_BOUND,
-                        arguments.get(W).getPosition(), "Width", String.valueOf(w));
+                ScriptErrorLog.runtimeError(arguments.get(W).getPosition(),
+                        funcName() + "() width argument must be positive, but was " + w);
             if (h <= 0)
-                ScriptErrorLog.fireError(
-                        ScriptErrorLog.Message.NON_POSITIVE_IMAGE_BOUND,
-                        arguments.get(H).getPosition(), "Height", String.valueOf(h));
+                ScriptErrorLog.runtimeError(arguments.get(H).getPosition(),
+                        funcName() + "() height argument must be positive, but was " + h);
         }
 
         return null;
@@ -55,6 +50,6 @@ public final class ImageSectionNode extends MemberFuncCallNode {
 
     @Override
     protected String funcName() {
-        return "section";
+        return ScriptVisitor.SECTION;
     }
 }

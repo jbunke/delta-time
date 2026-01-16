@@ -5,6 +5,7 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.DefFunc
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import com.jordanbunke.delta_time.scripting.util.Arguments;
+import com.jordanbunke.delta_time.scripting.util.ScriptVisitor;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
 public final class ReadNode extends DefFuncCallNode {
@@ -22,6 +23,6 @@ public final class ReadNode extends DefFuncCallNode {
 
     @Override
     protected String funcName() {
-        return "read";
+        return ScriptVisitor.READ;
     }
 }

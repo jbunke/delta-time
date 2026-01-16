@@ -8,8 +8,11 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.types.CollectionTypeNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import com.jordanbunke.delta_time.scripting.util.FuncControlFlow;
-import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
+import com.jordanbunke.delta_time.scripting.util.ScriptVisitor;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
+import com.jordanbunke.delta_time.scripting.util.TypeUtils;
+
+import static com.jordanbunke.delta_time.scripting.util.ScriptErrorLog.*;
 
 // TODO - refactor: should extend MemberFuncExecNode
 public final class RemoveNode extends StatementNode {
@@ -31,8 +34,7 @@ public final class RemoveNode extends StatementNode {
         collection.semanticErrorCheck(symbolTable);
         arg.semanticErrorCheck(symbolTable);
 
-        final TypeNode
-                colType = collection.getType(symbolTable),
+        final TypeNode colType = collection.getType(symbolTable),
                 elemType = (colType instanceof CollectionTypeNode ct)
                         ? ct.getElementType() : null;
         final CollectionTypeNode.Type typeOfCol =
@@ -40,14 +42,13 @@ public final class RemoveNode extends StatementNode {
                         ? ct.getType() : null;
 
         if (elemType == null || typeOfCol == null)
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.EXPECTED_FOR_CALL,
-                    collection.getPosition(),
-                    "remove()", "list - <>, set - {}", colType.toString());
+            semanticError(collection.getPosition(),
+                    "remove() receiver expression is of an invalid type: " +
+                            expectedButGot(TypeUtils.options(TypeNode.list(), TypeNode.set()), colType));
         else if (typeOfCol == CollectionTypeNode.Type.ARRAY)
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.REMOVE_FROM_ARRAY,
-                    collection.getPosition());
+            semanticError(collection.getPosition(),
+                    "remove() receiver expression is of type \"" + colType +
+                            "\"; cannot remove an element from an array");
     }
 
     @Override
@@ -60,10 +61,9 @@ public final class RemoveNode extends StatementNode {
             try {
                 l.removeAt(i);
             } catch (IllegalArgumentException e) {
-                ScriptErrorLog.fireError(
-                        ScriptErrorLog.Message.INDEX_OUT_OF_BOUNDS,
-                        this.arg.getPosition(), String.valueOf(i),
-                        String.valueOf(l.size()), String.valueOf(false));
+                runtimeError(arg.getPosition(),
+                        "Index out of bounds; attempted to remove the element at index " +
+                                i + " of a " + l.size() + "-element collection");
             }
         } else {
             c.remove(evalArg);
@@ -74,6 +74,6 @@ public final class RemoveNode extends StatementNode {
 
     @Override
     public String toString() {
-        return collection + ".remove(" + arg + ");";
+        return collection + "." + ScriptVisitor.REMOVE + "(" + arg + ");";
     }
 }

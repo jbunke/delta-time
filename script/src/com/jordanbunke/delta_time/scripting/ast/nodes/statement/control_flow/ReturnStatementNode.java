@@ -58,10 +58,10 @@ public final class ReturnStatementNode extends StatementNode {
 
             if (!typeEquality) {
                 final boolean script = func instanceof HeadFuncNode;
-                fireCompileError(pos, "Return expression does not match " +
+                semanticError(pos, typeMismatch("Return expression",
                         (script ? "script" : "function") +
-                        " signature return type: " +
-                        expectedButGot(returnType, exprType));
+                                " signature return type",
+                        returnType, exprType));
             }
         }
     }

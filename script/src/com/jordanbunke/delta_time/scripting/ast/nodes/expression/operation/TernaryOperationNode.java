@@ -4,8 +4,9 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.BaseTypeNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
-import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
+
+import static com.jordanbunke.delta_time.scripting.util.ScriptErrorLog.*;
 
 public final class TernaryOperationNode extends ExpressionNode {
     private final ExpressionNode condition, a, b;
@@ -36,15 +37,12 @@ public final class TernaryOperationNode extends ExpressionNode {
         final BaseTypeNode boolType = TypeNode.getBool();
 
         if (!cType.equals(boolType))
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.ARG_NOT_TYPE,
-                    getPosition(), "Ternary condition",
-                    boolType.toString(), cType.toString());
+            semanticError(condition.getPosition(),
+                    notBool("Ternary expression condition", cType));
         if (!aType.equals(bType))
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.DIFFERENT_TYPES, getPosition(),
-                    "Ternary branches", "true case", "false case",
-                    aType.toString(), bType.toString());
+            semanticError(getPosition(),
+                    typeMismatch("Ternary expression false branch type",
+                            "true branch type", aType, bType));
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.PropertyNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
+import com.jordanbunke.delta_time.scripting.util.ScriptVisitor;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
 
 public final class ImageBoundNode extends PropertyNode {
@@ -29,6 +30,6 @@ public final class ImageBoundNode extends PropertyNode {
 
     @Override
     protected String funcName() {
-        return width ? "width" : "height";
+        return width ? ScriptVisitor.WIDTH_L : ScriptVisitor.HEIGHT_L;
     }
 }

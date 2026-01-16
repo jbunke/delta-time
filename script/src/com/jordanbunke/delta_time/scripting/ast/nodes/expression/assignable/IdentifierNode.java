@@ -31,9 +31,9 @@ public final class IdentifierNode extends AssignableNode {
         final Object value = var.get();
 
         if (value == null)
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.UNINITIALIZED_VAR,
-                    getPosition(), getName());
+            ScriptErrorLog.runtimeError(getPosition(),
+                    "Attempted to use the variable \"" + this +
+                            "\" before it was initialized");
 
         return value;
     }
@@ -44,9 +44,8 @@ public final class IdentifierNode extends AssignableNode {
 
         // this if statement should never pass; consider refactoring
         if (var == null) {
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.UNDEFINED_VAR,
-                    getPosition(), getName());
+            ScriptErrorLog.semanticError(getPosition(), "Variable \"" + this +
+                    "\" is referenced in a scope where it is not defined");
             return null;
         }
 
@@ -56,9 +55,8 @@ public final class IdentifierNode extends AssignableNode {
     @Override
     public void semanticErrorCheck(final SymbolTable symbolTable) {
         if (get(symbolTable) == null)
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.UNDEFINED_VAR,
-                    getPosition(), getName());
+            ScriptErrorLog.semanticError(getPosition(), "Variable \"" + this +
+                    "\" is referenced in a scope where it is not defined");
     }
 
     private Variable get(final SymbolTable symbolTable) {

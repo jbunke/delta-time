@@ -6,8 +6,9 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.types.BaseTypeNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import com.jordanbunke.delta_time.scripting.util.FuncControlFlow;
-import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
+
+import static com.jordanbunke.delta_time.scripting.util.ScriptErrorLog.*;
 
 public sealed class WhileLoopNode extends StatementNode
         permits DoWhileLoopNode {
@@ -34,10 +35,8 @@ public sealed class WhileLoopNode extends StatementNode
         final TypeNode condType = loopCondition.getType(symbolTable);
 
         if (!condType.equals(boolType))
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.ARG_NOT_TYPE,
-                    loopCondition.getPosition(), "Condition",
-                    boolType.toString(), condType.toString());
+            semanticError(loopCondition.getPosition(),
+                    notBool("\"while\" loop condition expression", condType));
     }
 
     boolean evaluateCondition(final SymbolTable symbolTable) {

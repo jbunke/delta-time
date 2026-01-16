@@ -4,10 +4,7 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.DefFuncCallNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
-import com.jordanbunke.delta_time.scripting.util.Arguments;
-import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
-import com.jordanbunke.delta_time.scripting.util.TextPosition;
-import com.jordanbunke.delta_time.scripting.util.TypeUtils;
+import com.jordanbunke.delta_time.scripting.util.*;
 
 import java.awt.*;
 
@@ -61,9 +58,10 @@ public final class RGBNode extends DefFuncCallNode {
             final int val = channels[c];
 
             if (val < MIN || val > MAX) {
-                ScriptErrorLog.fireError(
-                        ScriptErrorLog.Message.COLOR_CHANNEL_OUT_OF_BOUNDS,
-                        getPosition(), channelName, String.valueOf(val));
+                ScriptErrorLog.runtimeError(arguments.get(c).getPosition(),
+                        channelName + " channel value (" + val +
+                                ") is out of bounds; should be between " +
+                                MIN + " and " + MAX);
                 return null;
             }
         }
@@ -73,6 +71,6 @@ public final class RGBNode extends DefFuncCallNode {
 
     @Override
     protected String funcName() {
-        return "rgb" + (hasAlpha ? "a" : "");
+        return hasAlpha ? ScriptVisitor.RGBA : ScriptVisitor.RGB;
     }
 }

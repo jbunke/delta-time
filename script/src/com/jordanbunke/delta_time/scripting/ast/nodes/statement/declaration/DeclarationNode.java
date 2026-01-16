@@ -32,9 +32,8 @@ public abstract sealed class DeclarationNode extends StatementNode
     @Override
     public void semanticErrorCheck(final SymbolTable symbolTable) {
         if (symbolTable.hasVarAtLevel(getIdent()))
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.VAR_ALREADY_DEFINED,
-                    ident.getPosition(), getIdent());
+            ScriptErrorLog.semanticError(ident.getPosition(),
+                    "Variable \"" + getIdent() + "\" is already defined in this scope");
         else
             symbolTable.put(getIdent(), new Variable(isMutable(), getType()));
     }

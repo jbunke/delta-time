@@ -6,8 +6,9 @@ import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
 import com.jordanbunke.delta_time.scripting.ast.symbol_table.SymbolTable;
 import com.jordanbunke.delta_time.scripting.util.FuncControlFlow;
 import com.jordanbunke.delta_time.scripting.util.FuncHelper;
-import com.jordanbunke.delta_time.scripting.util.ScriptErrorLog;
 import com.jordanbunke.delta_time.scripting.util.TextPosition;
+
+import static com.jordanbunke.delta_time.scripting.util.ScriptErrorLog.*;
 
 public final class StandardAssignmentNode extends AssignmentNode {
     private final ExpressionNode expression;
@@ -32,10 +33,10 @@ public final class StandardAssignmentNode extends AssignmentNode {
         final TypeNode exprType = expression.getType(symbolTable);
 
         if (!assignableType.equals(exprType))
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.VAR_TYPE_MISMATCH,
-                    getPosition(), assignableType.toString(),
-                    exprType.toString());
+            semanticError(expression.getPosition(),
+                    typeMismatch("Assignment expression type",
+                            "the type of the left-hand side assignable",
+                            assignableType, exprType));
     }
 
     @Override

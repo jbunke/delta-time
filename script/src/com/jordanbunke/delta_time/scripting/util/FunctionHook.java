@@ -11,9 +11,9 @@ public abstract class FunctionHook {
         final Variable var = symbolTable.get(SymbolTable.funcWithName(h.getName()));
 
         if (var == null) {
-            ScriptErrorLog.fireError(
-                    ScriptErrorLog.Message.UNDEFINED_FUNC,
-                    h.getPosition(), h.getName());
+            ScriptErrorLog.semanticError(h.getPosition(),
+                    "Attempted to call function \"" + h.getName() +
+                            "\" that is not defined in this script");
 
             return null;
         }
