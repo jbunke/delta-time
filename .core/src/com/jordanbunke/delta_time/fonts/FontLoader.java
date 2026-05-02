@@ -36,6 +36,12 @@ public final class FontLoader {
                 scaleMultiplier, charSpecificSpacing);
         map.put(REPLACEMENT, replacementGrapheme);
 
+        // manual insertion of macOS command character (⌘)
+        final Grapheme commandGrapheme = graphemeFromCoordinates(
+                image, COMMAND, asciiToCoordinates((char) (STARTING_ASCII - 1)),
+                scaleMultiplier, charSpecificSpacing);
+        map.put(COMMAND, commandGrapheme);
+
         mapLoader(map, image, charSpecificSpacing, STARTING_ASCII,
                 FINAL_ASCII, i -> (char) i.intValue(), c -> false);
 

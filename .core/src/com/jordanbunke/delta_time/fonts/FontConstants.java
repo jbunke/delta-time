@@ -17,7 +17,7 @@ public class FontConstants {
             FONT_SOURCE_BASE_WIDTH = 319,
             FONT_SOURCE_BASE_HEIGHT = 303,
             LINE_HEIGHT = 37;
-    public static final char REPLACEMENT = '�';
+    public static final char REPLACEMENT = '�', COMMAND = '⌘';
 
     // language supplement characters
     public static final char

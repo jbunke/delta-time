@@ -15,7 +15,7 @@ import com.jordanbunke.delta_time.utility.math.Coord2D;
 
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public abstract class AbstractTextbox extends MenuButtonStub {
@@ -32,7 +32,7 @@ public abstract class AbstractTextbox extends MenuButtonStub {
 
     private final Supplier<String> prefixGetter, suffixGetter;
     private final TextboxDrawingFunction fDraw;
-    private final Function<String, Boolean> textValidator;
+    private final Predicate<String> textValidator;
     private final Consumer<String> setter;
     private final int maxLength;
 
@@ -48,7 +48,7 @@ public abstract class AbstractTextbox extends MenuButtonStub {
             final Coord2D position, final Bounds2D dimensions, final Anchor anchor,
             final Supplier<String> prefixGetter, final String initialText,
             final Supplier<String> suffixGetter,
-            final Function<String, Boolean> textValidator,
+            final Predicate<String> textValidator,
             final Consumer<String> setter,
             final TextboxDrawingFunction fDraw, final int maxLength
     ) {
@@ -80,7 +80,7 @@ public abstract class AbstractTextbox extends MenuButtonStub {
             for (int iHighlighting = 0; iHighlighting <= I_TRUE; iHighlighting++)
                 for (int iTyping = 0; iTyping <= I_TRUE; iTyping++)
                     imageMatrix[iValidity][iHighlighting][iTyping] = fDraw.draw(
-                            new Coord2D(getWidth(), getHeight()),
+                            new Bounds2D(getWidth(), getHeight()),
                             prefix, text, suffix,
                             cursorIndex, selectionIndex,
                             iValidity == I_TRUE, iHighlighting == I_TRUE,
@@ -252,7 +252,7 @@ public abstract class AbstractTextbox extends MenuButtonStub {
         selectionIndex = cursorIndex;
     }
 
-    private void attemptAccept() {
+    protected void attemptAccept() {
         validate();
 
         if (valid)
@@ -292,7 +292,7 @@ public abstract class AbstractTextbox extends MenuButtonStub {
     }
 
     public void validate() {
-        valid = textValidator.apply(text);
+        valid = textValidator.test(text);
     }
 
     public boolean isValid() {

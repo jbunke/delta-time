@@ -4,6 +4,8 @@
       <root url="jar://$PROJECT_DIR$/../animation-encoder/out/artifacts/animation_encoder/animation-encoder.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../animation-encoder/src" />
+    </SOURCES>
   </library>
 </component>

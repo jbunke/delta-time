@@ -6,6 +6,7 @@ import com.jordanbunke.delta_time.utility.math.Coord2D;
 import com.jordanbunke.funke.core.Property;
 
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public abstract class AbstractDynamicTextbox extends AbstractTextbox {
@@ -16,7 +17,7 @@ public abstract class AbstractDynamicTextbox extends AbstractTextbox {
             final Anchor anchor,
             final Supplier<String> prefixGetter, final String initialText,
             final Supplier<String> suffixGetter,
-            final Function<String, Boolean> textValidator,
+            final Predicate<String> textValidator,
             final Property<String> property,
             final TextboxDrawingFunction fDraw, final int maxLength
     ) {

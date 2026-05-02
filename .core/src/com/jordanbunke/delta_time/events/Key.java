@@ -1,12 +1,15 @@
 package com.jordanbunke.delta_time.events;
 
+import com.jordanbunke.delta_time.utility.OSUtils;
+
 import java.awt.event.KeyEvent;
 
 public enum Key {
     // arrow keys
     DOWN_ARROW, UP_ARROW, LEFT_ARROW, RIGHT_ARROW,
     // special keys
-    ENTER, BACKSPACE, DELETE, TAB, SHIFT, ESCAPE, SPACE, CTRL, ALT,
+    ENTER, BACKSPACE, DELETE, TAB, SHIFT, ESCAPE, SPACE, ALT,
+    CTRL, CTRL_OR_COMMAND, COMMAND,
     // punctuation keys
     COMMA, PERIOD, MINUS, EQUALS, SEMICOLON, APOSTROPHE, SLASH, BACKSLASH,
     OPEN_SQUARE_BRACKET, CLOSE_SQUARE_BRACKET,
@@ -17,16 +20,36 @@ public enum Key {
 
     UNSUPPORTED;
 
+    private static boolean ctrlCommandMatch;
+
+    static {
+        ctrlCommandMatch = false;
+    }
+
+    public static boolean isCtrlCommandMatch() {
+        return ctrlCommandMatch;
+    }
+
+    public static void setCtrlCommandMatch(final boolean ctrlCommandMatch) {
+        Key.ctrlCommandMatch = ctrlCommandMatch;
+    }
+
     @Override
     public String toString() {
-        return "[ " + switch (this) {
+        return "[ " + simpleName() + " ]";
+    }
+
+    public String simpleName() {
+        return switch (this) {
             case A, B, C, D, E, F, G, H, I, J, K, L, M,
-                    N, O, P, Q, R, S, T, U, V, W, X, Y, Z,
-                    ENTER, BACKSPACE, DELETE, TAB, SHIFT,
-                    ESCAPE, SPACE, CTRL, ALT -> name();
+                 N, O, P, Q, R, S, T, U, V, W, X, Y, Z,
+                 ENTER, BACKSPACE, DELETE, TAB, SHIFT,
+                 ESCAPE, SPACE, CTRL, ALT -> name();
             case _0, _1, _2, _3, _4, _5, _6, _7, _8, _9 -> name().substring(1);
             case UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW ->
                     name().replace("_", " ");
+            case CTRL_OR_COMMAND -> resolveCtrlCommand().simpleName();
+            case COMMAND -> "⌘";
             case COMMA -> ",";
             case PERIOD -> ".";
             case MINUS -> "-";
@@ -38,7 +61,11 @@ public enum Key {
             case OPEN_SQUARE_BRACKET -> "[";
             case CLOSE_SQUARE_BRACKET -> "]";
             default -> "UNKNOWN INPUT";
-        } + " ]";
+        };
+    }
+
+    private static Key resolveCtrlCommand() {
+        return OSUtils.isMacOS() ? COMMAND : CTRL;
     }
 
     public static Key fromKeyEvent(final KeyEvent keyEvent) {
@@ -60,33 +87,41 @@ public enum Key {
     
     private static Key fromCode(final int code) {
         return switch (code) {
-            case 8 -> BACKSPACE;
-            case 9 -> TAB;
-            case 10 -> ENTER;
-            case 16 -> SHIFT;
-            case 17 -> CTRL;
-            case 18 -> ALT;
-            case 27 -> ESCAPE;
-            case 37 -> LEFT_ARROW;
-            case 38 -> UP_ARROW;
-            case 39 -> RIGHT_ARROW;
-            case 40 -> DOWN_ARROW;
-            case 44 -> COMMA;
-            case 45 -> MINUS;
-            case 46 -> PERIOD;
-            case 47 -> SLASH;
+            case KeyEvent.VK_BACK_SPACE -> BACKSPACE;
+            case KeyEvent.VK_TAB -> TAB;
+            case KeyEvent.VK_ENTER -> ENTER;
+            case KeyEvent.VK_SHIFT -> SHIFT;
+            case KeyEvent.VK_CONTROL ->
+                    (ctrlCommandMatch && !OSUtils.isMacOS())
+                            ? CTRL_OR_COMMAND : CTRL;
+            case KeyEvent.VK_META -> {
+                if (OSUtils.isMacOS())
+                    yield ctrlCommandMatch ? CTRL_OR_COMMAND : COMMAND;
+
+                yield UNSUPPORTED;
+            }
+            case KeyEvent.VK_ALT -> ALT;
+            case KeyEvent.VK_ESCAPE -> ESCAPE;
+            case KeyEvent.VK_LEFT -> LEFT_ARROW;
+            case KeyEvent.VK_UP -> UP_ARROW;
+            case KeyEvent.VK_RIGHT -> RIGHT_ARROW;
+            case KeyEvent.VK_DOWN -> DOWN_ARROW;
+            case KeyEvent.VK_COMMA -> COMMA;
+            case KeyEvent.VK_MINUS -> MINUS;
+            case KeyEvent.VK_PERIOD -> PERIOD;
+            case KeyEvent.VK_SLASH -> SLASH;
             case 49, 50, 51, 52, 53, 54, 55, 56, 57 ->
                     Key.valueOf("_" + (char) code);
-            case 59 -> SEMICOLON;
-            case 61 -> EQUALS;
+            case KeyEvent.VK_SEMICOLON -> SEMICOLON;
+            case KeyEvent.VK_EQUALS -> EQUALS;
             case 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78,
                     79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90 ->
                     Key.valueOf(String.valueOf((char) code));
             case 91 -> OPEN_SQUARE_BRACKET;
             case 92 -> BACKSLASH;
             case 93 -> CLOSE_SQUARE_BRACKET;
-            case 127 -> DELETE;
-            case 222 -> APOSTROPHE;
+            case KeyEvent.VK_DELETE -> DELETE;
+            case KeyEvent.VK_QUOTE -> APOSTROPHE;
             default -> UNSUPPORTED;
         };
     }

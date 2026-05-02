@@ -154,7 +154,7 @@ public class SpriteCompositionExample {
     private static void saveSpriteSheet(
             final SpriteMap<Layer> spriteMap, final List<String> spriteIDs, final String prefix
     ) {
-        final int s = 5, w = WIDTH * s, h = HEIGHT * s, intervalMillis = 250, reps = 5;
+        final int s = 5, w = WIDTH * s, h = HEIGHT * s, intervalMillis = 250;
 
         final GameImage spriteSheet = new GameImage(w * spriteIDs.size(), h);
         final GameImage[] frames = new GameImage[spriteIDs.size()];
@@ -172,7 +172,7 @@ public class SpriteCompositionExample {
         final Animation animation = Animation.makeUniform(intervalMillis, frames);
 
         GameImageIO.writeImage(basePath.resolve(Path.of(prefix + "-spritesheet.png")), spriteSheet.submit());
-        GIFWriter.get().write(basePath.resolve(Path.of(prefix + "-anim.gif")), animation, reps);
+        GIFWriter.get().write(basePath.resolve(Path.of(prefix + "-anim.gif")), animation);
     }
 
     private static GameImage drawText(final String text) {
