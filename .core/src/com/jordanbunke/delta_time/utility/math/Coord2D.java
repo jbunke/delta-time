@@ -39,6 +39,10 @@ public final class Coord2D {
         return new Coord2D(x * scaleFactor, y * scaleFactor);
     }
 
+    public Coord2D scale(final double scaleFactor) {
+        return new Coord2D((int) (x * scaleFactor), (int) (y * scaleFactor));
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (o instanceof Coord2D that)

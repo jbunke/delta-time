@@ -89,4 +89,24 @@ public final class MathPlus {
     public static double maxMagnitude(final double a, final double b) {
         return Math.abs(a) > Math.abs(b) ? a : b;
     }
+
+    public static double lerp(
+            final double input,
+            final double thresholdLow, final double thresholdHigh,
+            final double valueLow, final double valueHigh,
+            final boolean bounded
+    ) {
+        final double tRange = thresholdHigh - thresholdLow,
+                t = (input - thresholdLow) / tRange,
+                vRange = valueHigh - valueLow,
+                v = valueLow + (t * vRange);
+
+        if (bounded) {
+            final double min = Math.min(valueLow, valueHigh),
+                    max = Math.max(valueLow, valueHigh);
+            return bounded(min, v, max);
+        }
+
+        return v;
+    }
 }

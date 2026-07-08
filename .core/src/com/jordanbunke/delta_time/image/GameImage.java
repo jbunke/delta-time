@@ -4,6 +4,7 @@ import com.jordanbunke.delta_time.utility.math.Bounds2D;
 import com.jordanbunke.delta_time.utility.math.Coord2D;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.IndexColorModel;
 
@@ -59,6 +60,11 @@ public class GameImage extends BufferedImage {
     public void setColor(final Color color) {
         initializeGraphics();
         g.setColor(color);
+    }
+
+    public void draw(final Image toDraw, final AffineTransform transform) {
+        initializeGraphics();
+        g.drawImage(toDraw, transform, null);
     }
 
     public void drawOval(
@@ -120,6 +126,16 @@ public class GameImage extends BufferedImage {
     public void fillRectangle(final Color color, final int x, final int y, final int width, final int height) {
         setColor(color);
         fillRectangle(x, y, width, height);
+    }
+
+    public void fillOval(final int x, final int y, final int width, final int height) {
+        initializeGraphics();
+        g.fillOval(x, y, width, height);
+    }
+
+    public void fillOval(final Color color, final int x, final int y, final int width, final int height) {
+        setColor(color);
+        fillOval(x, y, width, height);
     }
 
     public void fill(final Color color) {

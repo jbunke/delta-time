@@ -13,9 +13,28 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 public class FileIO {
     private static IFileDialog FILE_DIALOG = IFileDialog.make();
+
+    public static void writeZip(
+            final Path zipPath, final ZipEntryData<?>... toZip
+    ) throws IOException {
+        try (ZipOutputStream zos = new ZipOutputStream(
+                new BufferedOutputStream(Files.newOutputStream(zipPath)))) {
+            for (ZipEntryData<?> data : toZip) {
+                // Open entry
+                zos.putNextEntry(new ZipEntry(data.path));
+
+                // Write data
+                data.write(zos);
+
+                // Close entry
+                zos.closeEntry();
+            }
+        }
+    }
 
     public static Path extractZipToTempDir(final InputStream zipIn) {
         try {

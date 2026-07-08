@@ -200,7 +200,7 @@ public abstract class AbstractTextbox extends MenuButtonStub {
                             }
                         }
 
-                        attemptAccept();
+                        attemptSend();
                     } else if (keyEvent.matchesAction(GameKeyEvent.Action.TYPE)) {
                         keyEvent.markAsProcessed();
 
@@ -218,7 +218,7 @@ public abstract class AbstractTextbox extends MenuButtonStub {
                         cursorIndex++;
                         selectionIndex = cursorIndex;
 
-                        attemptAccept();
+                        attemptSend();
                         DeltaTimeGlobal.setStatus(typingCode, true);
                     }
                 }
@@ -246,17 +246,21 @@ public abstract class AbstractTextbox extends MenuButtonStub {
     }
 
     private void clickedOffBehaviour() {
-        attemptAccept();
+        attemptSend();
 
         cursorIndex = text.length();
         selectionIndex = cursorIndex;
     }
 
-    protected void attemptAccept() {
+    protected void attemptSend() {
         validate();
 
         if (valid)
-            setter.accept(text);
+            send();
+    }
+
+    protected void send() {
+        setter.accept(text);
     }
 
     @Override

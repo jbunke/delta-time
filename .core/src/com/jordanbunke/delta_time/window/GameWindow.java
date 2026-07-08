@@ -16,47 +16,42 @@ public class GameWindow {
     private final GameCanvas canvas;
     private final InputEventLogger eventLogger;
 
+    private final BiConsumer<Integer, Integer> onResize;
+    private final Runnable onClose;
+
     private String title;
+
     private int width, height;
     private int minWidth, minHeight, maxWidth, maxHeight;
-    private BiConsumer<Integer, Integer> postResizeLogic;
 
-    private Runnable onCloseBehaviour;
-
-    public GameWindow(final String title, final GameImage icon) {
-        this(title, Toolkit.getDefaultToolkit().getScreenSize().width,
-                Toolkit.getDefaultToolkit().getScreenSize().height,
-                icon, true);
-    }
-
-    public GameWindow(final String title, final int width, final int height,
-                      final GameImage icon, final boolean maximized) {
-        this(title, width, height, icon, true, false, maximized);
-    }
-
-    public GameWindow(
-            final String title, final int width, final int height, final GameImage icon,
-            final boolean exitOnClose, final boolean resizable, final boolean maximized
+    private GameWindow(
+            final String title, final GameImage icon,
+            final int width, final int height,
+            final int minWidth, final int minHeight,
+            final int maxWidth, final int maxHeight,
+            final boolean fullscreen, final boolean canResize,
+            final boolean exitOnClose,
+            final BiConsumer<Integer, Integer> onResize,
+            final Runnable onClose
     ) {
         this.title = title;
 
         this.width = width;
         this.height = height;
 
-        this.minWidth = width;
-        this.maxWidth = width;
-        this.minHeight = height;
-        this.maxHeight = height;
+        this.minWidth = minWidth;
+        this.maxWidth = maxWidth;
+        this.minHeight = minHeight;
+        this.maxHeight = maxHeight;
 
-        postResizeLogic = (w, h) -> {};
+        this.onResize = onResize;
+        this.onClose = onClose;
 
         frame = new JFrame(title);
         canvas = new GameCanvas(width, height);
         eventLogger = InputEventLogger.create(canvas);
 
-        onCloseBehaviour = null;
-
-        if (maximized) {
+        if (fullscreen) {
             frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
             frame.setUndecorated(true);
         }
@@ -78,9 +73,9 @@ public class GameWindow {
 
         frame.setIconImage(icon);
 
-        frame.setResizable(resizable);
+        frame.setResizable(canResize);
 
-        if (resizable)
+        if (canResize)
             addResizeListener();
 
         frame.setDefaultCloseOperation(
@@ -89,6 +84,28 @@ public class GameWindow {
 
         frame.setVisible(true);
         clearCanvas();
+    }
+
+    @Deprecated
+    public GameWindow(final String title, final GameImage icon) {
+        this(title, Toolkit.getDefaultToolkit().getScreenSize().width,
+                Toolkit.getDefaultToolkit().getScreenSize().height,
+                icon, true);
+    }
+
+    @Deprecated
+    public GameWindow(final String title, final int width, final int height,
+                      final GameImage icon, final boolean fullscreen) {
+        this(title, width, height, icon, true, false, fullscreen);
+    }
+
+    @Deprecated
+    public GameWindow(
+            final String title, final int width, final int height, final GameImage icon,
+            final boolean exitOnClose, final boolean canResize, final boolean fullscreen
+    ) {
+        this(title, icon, width, height, width, height, width, height,
+                fullscreen, canResize, exitOnClose, (w, h) -> {}, () -> {});
     }
 
     public void setSize(final int width, final int height) {
@@ -103,19 +120,14 @@ public class GameWindow {
         frame.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(final ComponentEvent e) {
-                onResize();
+                resized();
             }
         });
     }
 
-    public void setPostResizeLogic(final BiConsumer<Integer, Integer> postResizeLogic) {
-        if (postResizeLogic != null)
-            this.postResizeLogic = postResizeLogic;
-    }
-
-    private void onResize() {
+    private void resized() {
         enforceSizeBounds();
-        postResizeLogic.accept(width, height);
+        onResize.accept(width, height);
     }
 
     private void enforceSizeBounds() {
@@ -140,7 +152,7 @@ public class GameWindow {
     }
 
     public void setMinSize(final int minWidth, final int minHeight) {
-        if (minWidth <= 0 || minHeight <= 0)
+        if (minWidth < 1 || minHeight < 1)
             return;
 
         canvas.setMinimumSize(new Dimension(minWidth, minHeight));
@@ -152,7 +164,7 @@ public class GameWindow {
     }
 
     public void setMaxSize(final int maxWidth, final int maxHeight) {
-        if (maxWidth <= 0 || maxHeight <= 0)
+        if (maxWidth < 1 || maxHeight < 1)
             return;
 
         canvas.setMaximumSize(new Dimension(maxWidth, maxHeight));
@@ -191,8 +203,8 @@ public class GameWindow {
     }
 
     public void executeOnClose() {
-        if (onCloseBehaviour != null)
-            onCloseBehaviour.run();
+        if (onClose != null)
+            onClose.run();
     }
 
     public void focus() {
@@ -205,10 +217,6 @@ public class GameWindow {
 
     public void clearCanvas() {
         canvas.clear();
-    }
-
-    public void setOnCloseBehaviour(final Runnable onCloseBehaviour) {
-        this.onCloseBehaviour = onCloseBehaviour;
     }
 
     public InputEventLogger getEventLogger() {
@@ -225,5 +233,132 @@ public class GameWindow {
 
     public int getHeight() {
         return height;
+    }
+
+    public static class Builder {
+        private String title;
+        private GameImage icon;
+
+        private int width, height, minWidth, minHeight, maxWidth, maxHeight;
+
+        private boolean canResize, fullscreen, exitOnClose;
+
+        private BiConsumer<Integer, Integer> onResize;
+        private Runnable onClose;
+
+        public Builder() {
+            title = "";
+            icon = GameImage.dummy();
+
+            final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            width = screenSize.width;
+            height = screenSize.height;
+            minWidth = width;
+            minHeight = height;
+            maxWidth = width;
+            maxHeight = height;
+
+            canResize = false;
+            fullscreen = true;
+            exitOnClose = true;
+
+            onResize = (w, h) -> {};
+            onClose = () -> {};
+        }
+
+        public Builder setMaxWidth(final int maxWidth) {
+            this.maxWidth = Math.max(maxWidth, 1);
+            return this;
+        }
+
+        public Builder setMaxHeight(final int maxHeight) {
+            this.maxHeight = Math.max(maxHeight, 1);
+            return this;
+        }
+
+        public Builder setMinWidth(final int minWidth) {
+            this.minWidth = Math.max(minWidth, 1);
+            return this;
+        }
+
+        public Builder setMinHeight(final int minHeight) {
+            this.minHeight = Math.max(minHeight, 1);
+            return this;
+        }
+
+        public Builder setWidth(final int width) {
+            return setWidth(width, true);
+        }
+
+        public Builder setWidth(final int width, final boolean overrideMinMax) {
+            this.width = Math.max(width, 1);
+
+            if (overrideMinMax) {
+                if (this.width > maxWidth)
+                    setMaxWidth(this.width);
+                if (this.width < minWidth)
+                    setMinWidth(this.width);
+            }
+
+            return this;
+        }
+
+        public Builder setHeight(final int height) {
+            return setHeight(height, true);
+        }
+
+        public Builder setHeight(final int height, final boolean overrideMinMax) {
+            this.height = Math.max(height, 1);
+
+            if (overrideMinMax) {
+                if (this.height > maxHeight)
+                    setMaxHeight(this.height);
+                if (this.height < minHeight)
+                    setMinHeight(this.height);
+            }
+
+            return this;
+        }
+
+        public Builder setCanResize(final boolean canResize) {
+            this.canResize = canResize;
+            return this;
+        }
+
+        public Builder setOnResize(final BiConsumer<Integer, Integer> onResize) {
+            this.onResize = onResize;
+            return setCanResize(true);
+        }
+
+        public Builder setOnClose(final Runnable onClose) {
+            this.onClose = onClose;
+            return this;
+        }
+
+        public Builder setExitOnClose(final boolean exitOnClose) {
+            this.exitOnClose = exitOnClose;
+            return this;
+        }
+
+        public Builder setFullscreen(final boolean fullscreen) {
+            this.fullscreen = fullscreen;
+            return this;
+        }
+
+        public Builder setTitle(final String title) {
+            this.title = title;
+            return this;
+        }
+
+        public Builder setIcon(final GameImage icon) {
+            this.icon = icon;
+            return this;
+        }
+
+        public GameWindow build() {
+            return new GameWindow(title, icon, width, height,
+                    minWidth, minHeight, maxWidth, maxHeight,
+                    fullscreen, canResize, exitOnClose, onResize, onClose);
+        }
     }
 }

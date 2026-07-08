@@ -36,6 +36,14 @@ public final class RNG {
         return flipCoin() ? heads : tails;
     }
 
+    public static double deviate(final double maxMagnitude) {
+        return randomInRange(-maxMagnitude, maxMagnitude);
+    }
+
+    public static double factor(final double max) {
+        return randomInRange(1 / max, max);
+    }
+
     public static int randomInRange(final int min, final int maxEx) {
         return min + (int)(r.nextDouble() * (maxEx - min));
     }
