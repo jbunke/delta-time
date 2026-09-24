@@ -35,4 +35,8 @@ public class ResourceLoader {
 
         return null;
     }
+
+    public static GameImage[] loadGIFResourceFrames(final Path resource) {
+        return GameImageIO.readGIFAsFrames(loadResource(resource));
+    }
 }

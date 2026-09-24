@@ -1,6 +1,7 @@
 package com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.global.io;
 
 import com.jordanbunke.delta_time.io.FileIO;
+import com.jordanbunke.delta_time.io.PathUtils;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.DefFuncCallNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
@@ -27,7 +28,7 @@ public final class ReadFileNode extends DefFuncCallNode {
         if (content == null)
             ScriptErrorLog.runtimeError(path.getPosition(),
                     "Could not read a file at the location \"" +
-                            PathHelper.formatPathString(fp) + "\"");
+                            PathUtils.formatPathString(fp) + "\"");
 
         return content;
     }

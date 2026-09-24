@@ -2,6 +2,7 @@ package com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.global
 
 import com.jordanbunke.delta_time.image.GameImage;
 import com.jordanbunke.delta_time.io.GameImageIO;
+import com.jordanbunke.delta_time.io.PathUtils;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.ExpressionNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.expression.std_lib.DefFuncCallNode;
 import com.jordanbunke.delta_time.scripting.ast.nodes.types.TypeNode;
@@ -28,7 +29,7 @@ public final class ImageFromPathNode extends DefFuncCallNode {
         if (image == null)
             ScriptErrorLog.runtimeError(path.getPosition(),
                     "Could not read an image at the location \"" +
-                            PathHelper.formatPathString(fp) + "\"");
+                            PathUtils.formatPathString(fp) + "\"");
 
         return image;
     }

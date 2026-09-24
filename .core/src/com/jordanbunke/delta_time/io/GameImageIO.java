@@ -12,6 +12,7 @@ import javax.imageio.ImageReader;
 import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.stream.ImageInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 
 public class GameImageIO {
@@ -33,6 +34,22 @@ public class GameImageIO {
         }
     }
 
+    public static GameImage[] readGIFAsFrames(final InputStream stream) {
+        try {
+            ImageReader reader = ImageIO
+                    .getImageReadersBySuffix("gif").next();
+            ImageInputStream in = ImageIO
+                    .createImageInputStream(stream);
+            reader.setInput(in);
+
+            return readGIFAsFrames(reader);
+        } catch (IOException e) {
+            GameError.send("Couldn't read GIF from input stream");
+        }
+
+        return null;
+    }
+
     public static GameImage[] readGIFAsFrames(final Path filepath) {
         try {
             ImageReader reader = ImageIO
@@ -41,29 +58,33 @@ public class GameImageIO {
                     .createImageInputStream(filepath.toFile());
             reader.setInput(in);
 
-            final int fc = reader.getNumImages(true);
-            final GameImage[] frames = new GameImage[fc];
-
-            final GameImage master = new GameImage(reader.read(0));
-            frames[0] = master;
-
-            for (int i = 1; i < fc; i++) {
-                final GameImage frame = new GameImage(frames[i - 1]),
-                        change = new GameImage(reader.read(i));
-
-                final IIOMetadata metadata = reader.getImageMetadata(i);
-                final Coord2D pos = getGIFFrameCoord(metadata);
-
-                frame.draw(change, pos.x, pos.y);
-                frames[i] = frame.submit();
-            }
-
-            return frames;
+            return readGIFAsFrames(reader);
         } catch (IOException e) {
             GameError.send("Couldn't read GIF file: " + filepath);
         }
 
         return null;
+    }
+
+    private static GameImage[] readGIFAsFrames(final ImageReader reader) throws IOException {
+        final int fc = reader.getNumImages(true);
+        final GameImage[] frames = new GameImage[fc];
+
+        final GameImage master = new GameImage(reader.read(0));
+        frames[0] = master;
+
+        for (int i = 1; i < fc; i++) {
+            final GameImage frame = new GameImage(frames[i - 1]),
+                    change = new GameImage(reader.read(i));
+
+            final IIOMetadata metadata = reader.getImageMetadata(i);
+            final Coord2D pos = getGIFFrameCoord(metadata);
+
+            frame.draw(change, pos.x, pos.y);
+            frames[i] = frame.submit();
+        }
+
+        return frames;
     }
 
     private static Coord2D getGIFFrameCoord(final IIOMetadata metadata) {
